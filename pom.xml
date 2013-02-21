@@ -43,8 +43,8 @@
         </snapshotRepository>
     </distributionManagement>
     <scm>
-		<developerConnection>scm:svn:https://subversion.renater.fr/esup-helpdesk/trunk</developerConnection>
-		<url>https://subversion.renater.fr/esup-helpdesk</url>
+		<developerConnection>scm:git:ssh://git@github.com/EsupPortail/esup-helpdesk</developerConnection>
+		<url>https://www.esup-portail.org/display/PROJHELPDESK/esup-helpdesk+-+user+support+at+establishment-level</url>
     </scm> 
     <build>
         <defaultGoal>install</defaultGoal>
@@ -99,7 +99,6 @@
                 <version>2.2.2</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-					<tagBase>https://subversion.renater.fr/esup-helpdesk/tags</tagBase>
                     <tagNameFormat>@{project.version}</tagNameFormat>
                     <goals />
                 </configuration>
