@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>helpdesk</artifactId>
+        <groupId>org.esupportail</groupId>
+        <version>3.3.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>helpdesk-web-jsf-servlet</artifactId>
+    <packaging>war</packaging>
+    <description>couche d'acces aux donnees</description>
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+	    	<plugin>
+		        <artifactId>maven-war-plugin</artifactId>
+		        <version>2.1</version>
+		        <configuration>
+		            <warName>${project.parent.artifactId}</warName>
+		        </configuration>
+		    </plugin>
+	    </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.esupportail</groupId>
+            <artifactId>helpdesk-core</artifactId>
+            <version>3.3.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>

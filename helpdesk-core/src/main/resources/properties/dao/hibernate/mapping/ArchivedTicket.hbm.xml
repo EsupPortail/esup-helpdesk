@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="ArchivedTicket" table="h_arch_tick">
+		<cache usage="nonstrict-read-write"/>
+		<id name="id">
+			<generator class="native">
+			    <param name="sequence">s_arch_tick</param>
+			</generator>
+		</id>
+		<many-to-one name="owner" column="owne_id" not-null="true" fetch="join"/>
+		<many-to-one name="manager" column="mana_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="department" column="depa_id" not-null="true" fetch="join"/>
+		<property name="origin" column="orig_id" not-null="true"/>
+		<property name="ticketId" column="tick_id" index="i_arch_tick_tick_id" />
+		<property name="computer" column="comp"/>
+		<property name="label" column="labe" not-null="true"/>
+		<property name="priorityLevel" column="prio_leve" not-null="true"/>
+		<property name="effectiveScope" column="effe_scop" index="i_arch_tick_effe_scop" />
+		<many-to-one name="connectionTicket" column="conn_tick_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="connectionArchivedTicket" column="conn_arch_tick_id" fetch="join"/> <!-- JOIN-->
+		<property name="creationDate" column="crea_date" index="i_arch_tick_crea_date" not-null="true"/>
+		<property name="archivingDate" column="arch_date" index="i_arch_tick_arch_date" not-null="true"/>
+		<property name="spentTime" column="spen_time"/>
+        <many-to-one name="connectionFaq" column="conn_faq2_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="deprecatedConnectionFaqContainer" column="conn_faq_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="deprecatedConnectionFaqEntry" column="conn_faq_entr_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="creationDepartment" column="crea_depa_id" fetch="join"/>
+		<many-to-one name="creator" column="creator_id" fetch="join"/>
+		<property name="categoryLabel" column="cate_labe" not-null="true"/>
+		<property name="chargeTime" column="char_time" />
+		<property name="closureTime" column="clos_time" />
+		<property name="creationYear" column="crea_year" />
+		<property name="creationMonth" column="crea_month" />
+		<property name="creationDay" column="crea_day" />
+		<property name="creationDow" column="crea_dow" />
+		<property name="creationHour" column="crea_hour" />
+	</class>
+
+</hibernate-mapping>
+
+

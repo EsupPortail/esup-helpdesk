@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean id="assignmentAlgorithmStore"
+		class="org.esupportail.helpdesk.domain.assignment.AssignmentAlgorithmStoreImpl"
+		lazy-init="true"
+    	> 
+		<description>A store for the assignment algorithms.</description>
+		<property name="map" >
+			<map>
+				<entry key="nobody" value-ref="nobodyAssignmentAlgorithm" />
+				<entry key="first" value-ref="firstAssignmentAlgorithm" />
+				<entry key="random" value-ref="randomAssignmentAlgorithm" />
+				<entry key="cyclical" value-ref="cyclicalAssignmentAlgorithm" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="abstractAssignmentAlgorithm"
+		abstract="true"
+    	> 
+		<property name="i18nService" ref="i18nService" />
+	</bean>
+
+	<bean id="nobodyAssignmentAlgorithm"
+		class="org.esupportail.helpdesk.domain.assignment.NobodyAssignmentAlgorithmImpl"
+		lazy-init="true"
+		parent="abstractAssignmentAlgorithm"
+    	> 
+	</bean>
+
+	<bean id="firstAssignmentAlgorithm"
+		class="org.esupportail.helpdesk.domain.assignment.FirstAssignmentAlgorithmImpl"
+		lazy-init="true"
+		parent="abstractAssignmentAlgorithm"
+    	> 
+	</bean>
+
+	<bean id="randomAssignmentAlgorithm"
+		class="org.esupportail.helpdesk.domain.assignment.RandomAssignmentAlgorithmImpl"
+		lazy-init="true"
+		parent="abstractAssignmentAlgorithm"
+    	> 
+	</bean>
+
+	<bean id="cyclicalAssignmentAlgorithm"
+		class="org.esupportail.helpdesk.domain.assignment.CyclicalAssignmentAlgorithmImpl"
+		lazy-init="true"
+		parent="abstractAssignmentAlgorithm"
+    	> 
+	</bean>
+
+</beans>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean id="computerUrlBuilderStore"
+		class="org.esupportail.helpdesk.domain.computerUrl.ComputerUrlBuilderStoreImpl"
+		lazy-init="true"
+    	> 
+		<description>A store for the computer URL builders.</description>
+		<property name="map" >
+			<map>
+				<entry key="null" value-ref="nullComputerUrlBuilder" />
+				<entry key="glpi" value-ref="glpiComputerUrlBuilder" />
+				<entry key="glpiThroughCas" value-ref="glpiThroughCasComputerUrlBuilder" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="abstractComputerUrlBuilder"
+		abstract="true"
+    	> 
+    	<property name="i18nService" ref="i18nService" />
+	</bean>
+
+	<bean id="nullComputerUrlBuilder"
+		parent="abstractComputerUrlBuilder"
+		class="org.esupportail.helpdesk.domain.computerUrl.NullComputerUrlBuilderImpl"
+		lazy-init="true"
+    	> 
+	</bean>
+
+	<bean id="glpiComputerUrlBuilder"
+		parent="abstractComputerUrlBuilder"
+		class="org.esupportail.helpdesk.domain.computerUrl.PatternBasedComputerUrlBuilderImpl"
+		lazy-init="true"
+    	> 
+		<property name="pattern" value="${computerUrl.glpiPattern}" />
+		<property name="i18nDescriptionKey" value="DOMAIN.COMPUTER_URL_BUILDER.GLPI" />
+	</bean>
+
+	<bean id="glpiThroughCasComputerUrlBuilder"
+		parent="abstractComputerUrlBuilder"
+		class="org.esupportail.helpdesk.domain.computerUrl.CasPatternBasedComputerUrlBuilderImpl"
+		lazy-init="true" 
+    	> 
+   		<property name="pattern" value="${computerUrl.glpiPattern}" />
+        <property name="casUrl" value="${cas.url}" />
+        <property name="casServiceUrl" value="${computerUrl.casServiceUrl}" />
+		<property name="i18nDescriptionKey" value="DOMAIN.COMPUTER_URL_BUILDER.GLPI_THROUGH_CAS" />
+	</bean>
+
+</beans>

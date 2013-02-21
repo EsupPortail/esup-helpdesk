@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+          
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="Config" table="h_conf" lazy="false">
+		<cache usage="nonstrict-read-write"/>
+		<id name="id"> 
+			<generator class="native">
+			    <param name="sequence">s_conf</param>
+			</generator>
+		</id> 
+		<property name="ticketsLastIndexTime" column="tick_last_inde_time"/>
+		<property name="faqsLastIndexTime" column="faq_last_inde_time"/>
+		<property name="archivedTicketsLastIndexTime" column="arch_tick_last_inde_time"/>
+		<many-to-one name="defaultDepartmentIcon" column="defa_depa_icon_id" fetch="join"/>
+		<many-to-one name="defaultCategoryIcon" column="defa_cate_icon_id" fetch="join"/>
+		<property name="installDate" column="inst_date"/>
+		<property name="departmentSelectionContextTime" column="depa_sele_cont_time"/>
+	</class>	
+
+</hibernate-mapping>
+
+
+

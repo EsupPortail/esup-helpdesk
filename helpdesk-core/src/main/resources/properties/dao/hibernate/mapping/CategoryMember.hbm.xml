@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="CategoryMember" table="h_cate_memb" lazy="false"> 
+		<cache usage="nonstrict-read-write" />
+		<id name="id">
+			<generator class="native">
+			    <param name="sequence">s_cate_memb</param>
+			</generator>
+		</id> 
+		<many-to-one name="user" column="user_id" not-null="true" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="category" column="cate_id" index="i_cate_memb_orde" not-null="true" fetch="join"/> <!-- JOIN-->
+		<property name="order" column="orde" index="i_cate_memb_orde" not-null="true"/>
+	</class>
+
+</hibernate-mapping>
+
+

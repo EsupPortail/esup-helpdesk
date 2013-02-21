@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/web/helpers.xml
+		This file declares the helpers used by the web interface.
+		It should not be modified but by the developers.
+		This file is referenced by /properties/applicationContext.xml.
+	-->
+
+	<bean id="priorityI18nKeyProvider"
+		class="org.esupportail.helpdesk.web.beans.PriorityI18nKeyProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get i18n keys for priorities.
+		</description>
+	</bean>
+
+	<bean id="priorityStyleClassProvider"
+		class="org.esupportail.helpdesk.web.beans.PriorityStyleClassProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get style classes for priorities.
+		</description>
+	</bean>
+
+	<bean id="ticketScopeI18nKeyProvider"
+		class="org.esupportail.helpdesk.web.beans.TicketScopeI18nKeyProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get i18n keys for ticket scopes.
+		</description>
+	</bean>
+
+	<bean id="ticketStatusI18nKeyProvider"
+		class="org.esupportail.helpdesk.web.beans.TicketStatusI18nKeyProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get i18n keys for ticket status.
+		</description>
+	</bean>
+
+	<bean id="originI18nKeyProvider"
+		class="org.esupportail.helpdesk.web.beans.OriginI18nKeyProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get i18n keys for ticket origins.
+		</description>
+	</bean>
+
+	<bean id="ticketMonitoringI18nKeyProvider"
+		class="org.esupportail.helpdesk.web.beans.TicketMonitoringI18nKeyProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get i18n keys for ticket monitoring.
+		</description>
+	</bean>
+
+	<bean id="categoryMonitoringI18nKeyProvider"
+		class="org.esupportail.helpdesk.web.beans.CategoryMonitoringI18nKeyProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get i18n keys for category monitoring.
+		</description>
+	</bean>
+
+	<bean id="actionI18nTitleProvider"
+		class="org.esupportail.helpdesk.web.beans.ActionI18nTitleProvider"
+		scope="session"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get i18n keys for ticket monitoring.
+		</description>
+		<property name="sessionController" ref="sessionController" />
+		<property name="actionI18nTitleFormatter" ref="actionI18nTitleFormatter" />
+	</bean>
+
+	<bean id="assignmentAlgorithmI18nDescriptionProvider"
+		class="org.esupportail.helpdesk.web.beans.AssignmentAlgorithmI18nDescriptionProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get i18n descriptions for assignment algorithms.
+		</description>
+		<property name="domainService" ref="domainService" />
+		<property name="sessionController" ref="sessionController" />
+	</bean>
+
+	<bean id="computerUrlBuilderI18nDescriptionProvider"
+		class="org.esupportail.helpdesk.web.beans.ComputerUrlBuilderI18nDescriptionProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get i18n descriptions for computer url builders.
+		</description>
+		<property name="domainService" ref="domainService" />
+		<property name="sessionController" ref="sessionController" />
+	</bean>
+
+	<bean id="computerUrlProvider"
+		class="org.esupportail.helpdesk.web.beans.ComputerUrlProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to get URLs corresponding to computers.
+		</description>
+		<property name="domainService" ref="domainService" />
+	</bean>
+
+    <bean id="faqScopeI18nKeyProvider"
+        class="org.esupportail.helpdesk.web.beans.FaqScopeI18nKeyProvider"
+        lazy-init="true"
+        >
+        <description>
+            A bean to get i18n keys for FAQ scopes.
+        </description>
+    </bean>
+
+    <bean id="authTypeI18nKeyProvider"
+        class="org.esupportail.helpdesk.web.beans.AuthTypeI18nKeyProvider"
+        lazy-init="true"
+        >
+        <description>
+            A bean to get i18n keys for auth types.
+        </description>
+    </bean>
+
+	<bean id="elapsedTimeI18nFormatter"
+		class="org.esupportail.helpdesk.web.beans.ElapsedTimeI18nFormatter"
+		lazy-init="true"
+		>
+		<description>
+			A bean to format elapsed times.
+		</description>
+		<property name="i18nService" ref="i18nService" />
+		<property name="sessionController" ref="sessionController" />
+	</bean>
+
+	<bean id="spentTimeI18nFormatter"
+		class="org.esupportail.helpdesk.web.beans.SpentTimeI18nFormatter"
+		lazy-init="true"
+		>
+		<description>
+			A bean to format spent times.
+		</description>
+		<property name="i18nService" ref="i18nService" />
+		<property name="sessionController" ref="sessionController" />
+	</bean>
+
+	<bean id="fileSizeI18nFormatter"
+		class="org.esupportail.helpdesk.web.beans.FileSizeI18nFormatter"
+		lazy-init="true"
+		>
+		<description>
+			A bean to format file sizes.
+		</description>
+		<property name="i18nService" ref="i18nService" />
+		<property name="sessionController" ref="sessionController" />
+	</bean>
+
+	<bean id="userFormatter"
+		class="org.esupportail.helpdesk.web.beans.UserFormatter"
+		lazy-init="true"
+		>
+		<description>
+			A bean to format users.
+		</description>
+		<property name="userFormattingService" ref="userFormattingService" />
+		<property name="sessionController" ref="sessionController" />
+	</bean>
+
+	<bean id="iconUrlProvider"
+		class="org.esupportail.helpdesk.web.beans.IconUrlProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to retrieve the URLs of icons.
+		</description>
+	</bean>
+
+	<bean id="abstractTicketContainerIconUrlProvider"
+		class="org.esupportail.helpdesk.web.beans.DepartmentIconUrlProvider"
+		abstract="true"
+		>
+		<description>
+			A bean to retrieve the URLs of the icons of ticket containers.
+		</description>
+		<property name="domainService" ref="domainService" />
+		<property name="iconUrlProvider" ref="iconUrlProvider" />
+	</bean>
+
+	<bean id="departmentIconUrlProvider"
+		class="org.esupportail.helpdesk.web.beans.DepartmentIconUrlProvider"
+		parent="abstractTicketContainerIconUrlProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to retrieve the URLs of the icons of departments.
+		</description>
+	</bean>
+
+	<bean id="categoryIconUrlProvider"
+		class="org.esupportail.helpdesk.web.beans.CategoryIconUrlProvider"
+		parent="abstractTicketContainerIconUrlProvider"
+		lazy-init="true"
+		>
+		<description>
+			A bean to retrieve the URLs of the icons of categories.
+		</description>
+	</bean>
+
+    <bean id="faqHasChildrenHelper"
+        class="org.esupportail.helpdesk.web.beans.FaqHasChildrenHelper"
+        >
+        <description>
+            A bean to know whether FAQs have children or not.
+        </description>
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+	<bean id="infoController"
+		class="org.esupportail.helpdesk.web.controllers.InfoController"
+		>
+		<description>
+			A bean to retrieve information on the application.
+		</description>
+		<property name="domainService" ref="domainService" />
+		<property name="applicationService" ref="applicationService" />
+	</bean>
+
+</beans>

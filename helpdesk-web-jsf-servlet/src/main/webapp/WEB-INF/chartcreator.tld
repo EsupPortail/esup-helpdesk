@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	*
+	* Copyright 2004 The Apache Software Foundation.
+	* Licensed under the Apache License, Version 2.0 (the "License");
+	* you may not use this file except in compliance with the License.
+	* You may obtain a copy of the License at
+	*
+	*      http://www.apache.org/licenses/LICENSE-2.0
+	*
+	* Unless required by applicable law or agreed to in writing, software
+	* distributed under the License is distributed on an "AS IS" BASIS,
+	* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	* See the License for the specific language governing permissions and
+	* limitations under the License.
+-->
+
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+                        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>chartcreator</short-name>
+	<uri>http://sourceforge.net/projects/jsf-comp</uri>
+	<tag>
+		<name>chart</name>
+		<tag-class>
+			net.sf.jsfcomp.chartcreator.taglib.ChartTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>Renders the generated chart image</description>
+
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				Unique identifier of the component
+			</description>
+		</attribute>
+		
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				If false, chart will not be rendered
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>binding</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<type>java.lang.String</type>
+			<description>
+				Identifies a backing bean property (of type UIComponent
+				or appropriate subclass) to bind to this component
+				instance. This value must be an EL expression.
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>is3d</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Makes the chart 3d</description>
+		</attribute>
+
+		<attribute>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Defines the title</description>
+		</attribute>
+
+		<attribute>
+			<name>type</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Defines the type of the chart, possible values are;
+				pie|ring|timeseries|xyline|polar|scatter|xyarea|xysteparea|
+				xystep|bubble|candlestick|boxandwhisker|highlow|histogram|
+				wind|bar|stackedbar|line|area|stackedarea|gantt|waterfall
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>datasource</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Data to be displayed, must be an EL expression</description>
+		</attribute>
+
+		<attribute>
+			<name>width</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Defines the width</description>
+		</attribute>
+
+		<attribute>
+			<name>height</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Defines the height</description>
+		</attribute>
+
+		<attribute>
+			<name>background</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Background color of the chart</description>
+		</attribute>
+
+		<attribute>
+			<name>foreground</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Foreground color of the chart</description>
+		</attribute>
+
+		<attribute>
+			<name>xlabel</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Label for the x-axis</description>
+		</attribute>
+
+		<attribute>
+			<name>ylabel</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Label for the y-axis</description>
+		</attribute>
+
+		<attribute>
+			<name>orientation</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				vertical|horizontal , Defines the orientation
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>antialias</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				true|false , Sets antialias on chart
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>outline</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				true|false , Enable or disable outline
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>legend</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				true|false , Enable or disable the legend
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>alpha</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Defines the alpha transparency</description>
+		</attribute>
+
+		<attribute>
+			<name>depth</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Used to set the depth</description>
+		</attribute>
+
+		<attribute>
+			<name>startAngle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Start angle for the chart</description>
+		</attribute>
+
+		<attribute>
+			<name>colors</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Comma seperated list of colors</description>
+		</attribute>
+
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Style class for the img tag</description>
+		</attribute>
+
+		<attribute>
+			<name>alt</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Html alt attribute</description>
+		</attribute>
+
+		<attribute>
+			<name>imgTitle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				Refers generated img tag's title attribute
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>onclick</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>ondblclick</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>onmousedown</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>onmouseup</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>onmouseover</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>onmousemove</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>onmouseout</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>onkeypress</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>onkeydown</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>onkeyup</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>DHTML event</description>
+		</attribute>
+
+		<attribute>
+			<name>output</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				png|jpg , format of the output image
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>usemap</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Defines the name of img map</description>
+		</attribute>
+
+		<attribute>
+			<name>legendFontSize</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Font size for the legend</description>
+		</attribute>
+
+		<attribute>
+			<name>generateMap</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				Used for autogeneration of a chart map,
+				ongeneratedimagemapclick can be used to define the event
+				to be fired when a chart region(like a bar for a
+				barchart) is clicked
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>ongeneratedimagemapclick</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				Event to be fired when the autogenerated chart map is
+				clicked
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>domainGridLines</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				true|false, Defines the visibility of domain grid lines
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>rangeGridLines</name>
+			<required>false</required>
+			<description>
+				true|false, Defines the visibility of range grid lines
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>legendBorder</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				true|false , Defines the visibility of legend border
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>lineStokeWidth</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Width of the line stoke</description>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>chartAxis</name>
+		<tag-class>
+			net.sf.jsfcomp.chartcreator.taglib.ChartAxisTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>Child component to customize an axis</description>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				Unique identifier of the component
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>datasource</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Data to be displayed</description>
+		</attribute>
+
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				If false, chart will not be rendered
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>label</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Label of the axis</description>
+		</attribute>
+
+		<attribute>
+			<name>domain</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				true|false , When set to false(by default), the axis
+				will be a range axis
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>format</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				Optional attribute that can be used to customize display
+				pattern of the date or number axis
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				date|number, Optional attribute that can be used to
+				customize the axis as date or number
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>colors</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Color of the axis</description>
+		</attribute>
+
+		<attribute>
+			<name>verticalTickLabels</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>true|false, Attribute to make the tick labels vertical</description>
+		</attribute>
+
+		<attribute>
+			<name>tickLabelFontSize</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>Font size of the tick label</description>
+		</attribute>
+
+		<attribute>
+			<name>tickLabels</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				true|false, Turns on/off the visibility of tick labels
+			</description>
+		</attribute>
+
+		<attribute>
+			<name>tickMarks</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				true|false, Turns on/off the visibility of tick marks
+			</description>
+		</attribute>
+	</tag>
+</taglib>
+

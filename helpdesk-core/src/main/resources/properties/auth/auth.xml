@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean 
+		id="authenticator"
+		parent="abstractDomainAwareBean"
+		lazy-init="true"
+		class="org.esupportail.helpdesk.services.authentication.AuthenticatorImpl">
+		<property name="authenticationService" ref="${auth.bean}" />
+	</bean>
+
+	<bean id="servletAuthenticationService" lazy-init="true"
+		class="org.esupportail.commons.services.authentication.DelegatingAuthenticationService">
+		<property name="authenticationServices">
+			<list>
+				<ref bean="casFilterAuthenticationService" />
+				<ref bean="shibbolethApacheModuleAuthenticationService" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="casFilterAuthenticationService" lazy-init="true"
+		class="org.esupportail.commons.services.authentication.CasFilterAuthenticationService">
+		<property name="enabled" value="${auth.useCas}" />
+	</bean>
+
+	<bean id="shibbolethApacheModuleAuthenticationService" lazy-init="true"
+		class="org.esupportail.commons.services.authentication.ShibbolethApacheModuleAuthenticationService">
+		<property name="enabled" value="${auth.useShibboleth}" />
+		<property name="idHeader" value="${auth.shibbolethIdHeader}" />
+		<property name="attributeHeaders" value="${auth.shibbolethAttributeHeaders}" />
+	</bean>
+
+	<bean id="portletAuthenticationService" lazy-init="true"
+		class="org.esupportail.commons.services.authentication.DelegatingAuthenticationService">
+		<property name="authenticationServices">
+			<list>
+				<ref bean="casifiedPortalAuthenticationService" />
+				<ref bean="shibbolizedPortalAuthenticationService" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="abstractPortalAuthenticationService" abstract="true">
+		<property name="uidPortalAttribute" value="${auth.portal.uidAttribute}" />
+		<property name="portalAttributes" value="${auth.portal.attributes}" />
+	</bean>
+
+	<bean id="casifiedPortalAuthenticationService" lazy-init="true"
+		parent="abstractPortalAuthenticationService"
+		class="org.esupportail.commons.services.authentication.CasifiedPortalAuthenticationService">
+		<property name="enabled" value="${auth.useCas}" />
+	</bean>
+
+	<bean id="shibbolizedPortalAuthenticationService" lazy-init="true"
+		parent="abstractPortalAuthenticationService"
+		class="org.esupportail.commons.services.authentication.ShibbolizedPortalAuthenticationService">
+		<property name="enabled" value="${auth.useShibboleth}" />
+	</bean>
+
+</beans>

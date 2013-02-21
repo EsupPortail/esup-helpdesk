@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean 
+		id="feeder"
+		class="org.esupportail.helpdesk.services.feed.FeederImpl" lazy-init="true"
+		>
+		<property name="mailReaders" >
+			<list>
+                <ref bean="accountReader" />
+ 				<ref bean="replyToReader" />
+			</list>
+		</property> 
+	</bean>
+	
+	<bean
+		id="replyToReader" 
+        class="org.esupportail.helpdesk.services.feed.imap.ActionAccountReaderImpl"
+		lazy-init="true"
+		>
+		<property name="enabled" value="${replyTo.use}" />
+		<property name="server" value="${replyTo.server}" />
+		<property name="account" value="${replyTo.account}" />
+		<property name="password" value="${replyTo.password}" />
+		<property name="folder" value="${replyTo.folder}" />
+		<property name="messageReader" ref="replyToMessageReader" />
+		<property name="domainService" ref="domainService" />
+		<property name="messageIdHandler" ref="messageIdHandler" />
+	</bean>
+
+	<bean 
+		id="replyToMessageReader"
+        class="org.esupportail.helpdesk.services.feed.imap.ActionMessageReaderImpl"
+		lazy-init="true"
+		>
+		<property name="domainService" ref="domainService" />
+		<property name="i18nService" ref="i18nService" />
+        <property name="messageCleaner" ref="replyToMessageCleaner" />
+	</bean>
+
+	<bean 
+		id="accountReader"
+		class="org.esupportail.helpdesk.services.feed.imap.TicketAccountReaderImpl"
+		lazy-init="true"
+		>
+		<property name="enabled" value="${feed.imap.use}" />
+		<property name="address" value="${feed.imap.address}" />
+		<property name="server" value="${feed.imap.server}" />
+		<property name="account" value="${feed.imap.account}" />
+		<property name="password" value="${feed.imap.password}" />
+		<property name="categoryId" value="${feed.imap.categoryId}" />
+		<property name="folder" value="${feed.imap.folder}" />
+		<property name="spamFilter" ref="${feed.imap.spamFilterBean}" />
+		<property name="deleteSpam" value="${feed.imap.deleteSpam}" />
+		<property name="spamCategoryId" value="${feed.imap.spamCategoryId}" />
+		<property name="messageReader" ref="ticketMessageReader" />
+		<property name="domainService" ref="domainService" />
+	</bean>
+
+	<bean 
+		id="ticketMessageReader"
+		class="org.esupportail.helpdesk.services.feed.imap.TicketMessageReaderImpl"
+		lazy-init="true"
+		>
+		<property name="domainService" ref="domainService" />
+		<property name="i18nService" ref="i18nService" />
+	</bean>
+
+	<bean 
+		id="subjectStartsWithSpamFilter"
+		class="org.esupportail.helpdesk.services.feed.imap.spam.SubjectStartsWithSpamFilterImpl"
+		lazy-init="true"
+		>
+		<property name="pattern" value="${feed.imap.spamFilterPattern}" />
+	</bean>
+
+	<bean 
+		id="nullSpamFilter"
+		class="org.esupportail.helpdesk.services.feed.imap.spam.NullSpamFilterImpl"
+		lazy-init="true"
+		/>
+
+	<bean 
+		id="subjectContainsSpamFilter"
+		class="org.esupportail.helpdesk.services.feed.imap.spam.SubjectContainsSpamFilterImpl"
+		lazy-init="true"
+		>
+		<property name="pattern" value="${feed.imap.spamFilterPattern}" />
+	</bean>
+
+	<bean 
+		id="subjectRegexpSpamFilter"
+		class="org.esupportail.helpdesk.services.feed.imap.spam.SubjectRegexpSpamFilterImpl"
+		lazy-init="true"
+		>
+		<property name="pattern" value="${feed.imap.spamFilterPattern}" />
+	</bean>
+
+    <bean
+        id="replyToMessageCleaner"
+        class="org.esupportail.helpdesk.services.feed.imap.replytocleaner.SimpleCleaner"
+        lazy-init="true"
+        >
+        <property name="fromEmail" value="${smtp.fromEmail}" />
+    </bean>
+
+</beans>

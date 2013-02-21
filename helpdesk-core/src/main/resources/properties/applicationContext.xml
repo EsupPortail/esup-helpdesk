@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/applicationContext.xml
+		The main Spring configuration file.
+		This file should not be modified but by the developers.
+		This file is referenced by /webapp/WEB-INF/web.xml.
+	-->
+
+	<bean 
+		id="requestCacheBean" 
+		class="org.esupportail.commons.aop.cache.RequestCachingMethodInterceptor" />
+	<bean 
+		id="sessionCacheBean" 
+		class="org.esupportail.commons.aop.cache.SessionCachingMethodInterceptor" />
+
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<bean id="propertyConfigurer" 
+	    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	  <property name="locations" > 
+	      <list>
+	      	<value>classpath:/properties/defaults.properties</value>
+	      	<value>classpath:/properties/defaults-${deploy.type}.properties</value>
+	      	<value>classpath:/properties/config.properties</value>
+	      </list>
+	  </property>
+	</bean>
+
+	<import resource="auth/auth.xml" />
+	<import resource="cache/cache.xml" />
+	<import resource="dao/dao.xml" />
+ 	<import resource="domain/archiving.xml" />
+ 	<import resource="domain/recall.xml" />
+ 	<import resource="domain/reporting.xml" />
+ 	<import resource="domain/assignment.xml" />
+ 	<import resource="domain/computerUrl.xml" />
+ 	<import resource="domain/expiration.xml" />
+ 	<import resource="domain/categoryConfiguration.xml" />
+ 	<import resource="domain/departmentConfiguration.xml" />
+ 	<import resource="domain/departmentManagerConfiguration.xml" />
+ 	<import resource="domain/departmentSelection.xml" />
+ 	<import resource="domain/userInfo.xml" />
+ 	<import resource="domain/userManagement.xml" />
+ 	<import resource="domain/userManagement-specific.xml" />
+ 	<import resource="domain/indexing.xml" />
+ 	<import resource="domain/domain.xml" />
+ 	<import resource="domain/feed.xml" />
+ 	<import resource="domain/statistics.xml" />
+ 	<import resource="deepLinking/deepLinking.xml" />
+	<import resource="exceptionHandling/exceptionHandling.xml" />
+	<import resource="export/export.xml" />
+	<import resource="i18n/i18n.xml" />
+	<import resource="ldap/ldap.xml" />
+	<import resource="misc/abstractBeans.xml" />
+	<import resource="misc/application.xml" />
+	<import resource="portal/portal.xml" />
+	<import resource="smtp/smtp.xml" />
+	<import resource="init/init.xml" />
+	<import resource="tags/tags.xml" />
+	<import resource="urlGeneration/urlGeneration.xml" />
+	<import resource="web/controllers.xml" />
+	<import resource="web/converters.xml" />
+	<import resource="web/helpers.xml" />
+	<import resource="devel/monitoring.xml" />
+	<import resource="classpath:org/codehaus/xfire/spring/xfire.xml" /> 
+
+</beans>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+    <bean 
+    	id="servletUrlGenerator"
+    	class="org.esupportail.commons.services.urlGeneration.ServletUrlGeneratorImpl"
+    	lazy-init="true"
+    	>
+        <property name="casUrl" value="${cas.url}" />
+        <property name="casLoginUrl" value="${urlGeneration.casLoginUrl}" />
+        <property name="servletUrl" value="${app.servletUrl}" />
+    	<property name="servletCasLoginUrl" value="${urlGeneration.servletCasLoginUrl}" />
+    	<property name="servletShibbolethLoginUrl" value="${urlGeneration.servletShibbolethLoginUrl}" />
+    	<property name="servletGuestUrl" value="${urlGeneration.servletGuestUrl}" />
+    	<property name="mediaPath" value="${mediaPath.servlet}" />
+    </bean>
+
+    <bean 
+    	id="uportalUrlGenerator"
+    	class="org.esupportail.commons.services.urlGeneration.UportalUrlGeneratorImpl"
+    	lazy-init="true"
+    	>
+        <property name="casUrl" value="${cas.url}" />
+    	<property name="casLoginUrl" value="${urlGeneration.casLoginUrl}" />
+    	<property name="uportalFunctionnalName" value="${urlGeneration.uportalFunctionnalName}" />
+        <property name="uportalUrl" value="${app.uportalUrl}" />
+    	<property name="uportalLoginUrl" value="${urlGeneration.uportalLoginUrl}" /> 
+    	<property name="uportalGuestUrl" value="${urlGeneration.uportalGuestUrl}" /> 
+    	<property name="mediaPath" value="${mediaPath.portlet}" />
+    </bean>
+
+    <bean 
+    	id="urlBuilder"
+    	class="org.esupportail.helpdesk.services.urlGeneration.UrlBuilderImpl"
+    	lazy-init="true"
+    	>
+        <property name="urlGenerator" ref="${urlGeneration.bean}" />
+    </bean>
+</beans>

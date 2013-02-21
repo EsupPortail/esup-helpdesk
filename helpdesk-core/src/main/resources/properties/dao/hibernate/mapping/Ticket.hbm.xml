@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="Ticket" table="h_tick">
+		<cache usage="nonstrict-read-write"/>
+		<id name="id">
+			<generator class="native">
+			    <param name="sequence">s_tick</param>
+			</generator>
+		</id>
+		<many-to-one name="owner" column="owne_id" not-null="true" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="manager" column="mana_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="department" column="depa_id" not-null="true" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="category" column="cate_id" fetch="join"/> <!-- JOIN-->
+		<property name="status" column="stat" not-null="true"/>		
+		<property name="origin" column="orig_id" not-null="true"/>
+		<property name="computer" column="comp"/>
+		<property name="label" column="labe" not-null="true"/>
+		<property name="priorityLevel" column="prio_leve" not-null="true"/>		
+		<property name="scope" column="scop" not-null="true"/>
+		<many-to-one name="connectionTicket" column="conn_tick_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="connectionArchivedTicket" column="conn_arch_tick_id" fetch="join"/> <!-- JOIN-->
+		<property name="creationDate" column="crea_date" index="i_tick_crea_date" not-null="true"/>
+		<property name="lastActionDate" column="last_acti_date" index="i_tick_last_acti_date" not-null="true"/>
+		<property name="spentTime" column="spen_time"/>
+        <many-to-one name="connectionFaq" column="conn_faq2_id" fetch="join"/> <!-- JOIN-->
+        <many-to-one name="deprecatedConnectionFaqContainer" column="conn_faq_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="deprecatedConnectionFaqEntry" column="conn_faq_entr2_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="connectionOldFaqPart" column="conn_faq_part_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="connectionOldFaqEntry" column="conn_faq_entr_id" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="creationDepartment" column="crea_depa_id" fetch="join"/>
+		<many-to-one name="creator" column="creator_id" fetch="join"/>
+		<property name="effectiveScope" column="effe_scop" index="i_tick_effe_scop" />
+		<property name="recallDate" column="reca_date" />
+		<property name="chargeTime" column="char_time" />
+		<property name="closureTime" column="clos_time" />
+		<property name="creationYear" column="crea_year" />
+		<property name="creationMonth" column="crea_month" />
+		<property name="creationDay" column="crea_day" />
+		<property name="creationDow" column="crea_dow" />
+		<property name="creationHour" column="crea_hour" />
+		<property name="managerDisplayName" column="mana_disp_name"/>
+	</class>
+
+</hibernate-mapping>
+
+

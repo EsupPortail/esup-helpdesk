@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	<!--
+		/properties/applicationContext.xml The main Spring configuration file.
+		This file should not be modified but by the developers. This file is
+		referenced by /webapp/WEB-INF/web.xml.
+	-->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/properties/defaults.properties</value>
+				<value>classpath:/properties/config.properties</value>
+				<value>file:${conf}</value>
+			</list>
+		</property>
+		<property name = "ignoreResourceNotFound" value="true" />
+	</bean>
+	
+	<bean id="app_context" class="org.esupportail.commons.context.ApplicationContextHolder"/>
+	
+	<import resource="classpath*:META-INF/helpdesk-domain-services-domain.xml" />
+	<import resource="classpath*:META-INF/helpdesk-domain-services-abstractBeans.xml" />
+	<import resource="classpath*:META-INF/helpdesk-domain-services-application.xml" />
+	<import resource="classpath*:META-INF/helpdesk-domain-services-i18n.xml" />
+	<!-- 
+	<import resource="classpath*:META-INF/helpdesk-domain-services-init.xml" />	
+	<import resource="classpath*:META-INF/helpdesk-dao-dao.xml" />
+	 -->
+</beans>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean id="indexer"
+		parent="abstractDomainAwareBean"
+		class="org.esupportail.helpdesk.services.indexing.LuceneIndexerImpl"
+		lazy-init="true"
+    	> 
+		<description>A bean used to index objects.</description>
+		<property name="urlBuilder" ref="urlBuilder" />
+		<property name="path" value="${indexing.path}" />
+		<property name="indexIdProvider" ref="indexIdProvider" />
+		<property name="testUserId" value="${indexing.testUserId}" />
+		<property name="testTokens" value="${indexing.testTokens}" />
+	</bean>
+
+	<bean id="indexIdProvider"
+		class="org.esupportail.helpdesk.services.indexing.IndexIdProviderImpl"
+		lazy-init="true"
+    	> 
+		<description>A bean used to get the index ids of the objects to index.</description>
+	</bean>
+
+</beans>

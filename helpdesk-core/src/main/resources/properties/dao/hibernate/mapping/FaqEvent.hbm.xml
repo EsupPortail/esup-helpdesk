@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="FaqEvent" table="h_faq_even" lazy="false"> 
+		<cache usage="nonstrict-read-write"/>
+		<id name="id">
+			<generator class="native">
+			    <param name="sequence">s_faq_even</param>
+			</generator>
+		</id>
+		<property name="action" column="action" not-null="true"/>
+        <many-to-one name="author" column="auth_id" fetch="join" /> <!-- JOIN-->
+		<property name="label" column="labe" />
+        <many-to-one name="department" column="depa_id" fetch="join" /> <!-- JOIN-->
+        <many-to-one name="fromDepartment" column="from_depa_id" fetch="join" /> <!-- JOIN-->
+        <many-to-one name="toDepartment" column="to_depa_id" fetch="join" /> <!-- JOIN-->
+		<property name="faqId" column="faq_id" />
+		<property name="date" column="dat" />
+	</class>
+
+</hibernate-mapping>
+
+

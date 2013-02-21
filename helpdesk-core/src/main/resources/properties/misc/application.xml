@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/misc/application.xml
+		The configuration file that gives the version of the application.
+		This file should not be modified but by the developers.
+		This file is referenced by /properties/applicationContext.xml.
+	-->
+
+    <bean 
+    	id="applicationService"
+    	class="org.esupportail.commons.services.application.SimpleApplicationServiceImpl"
+		lazy-init="true"
+    	>
+    	<description>
+    		This bean provides basic information (name, version) about 
+    		the application to all the other beans.
+    		The properties of this bean should never be changed but the
+    		developers. This bean should implement interface 
+    		org.esupportail.commons.services.application.ApplicationService.
+    	</description>
+    	<property name="name" value="esup-helpdesk">
+	    	<description>
+	    		The name of the application.
+	    	</description>
+    	</property>
+    	<property name="versionMajorNumber" value="3" >
+	    	<description>
+	    		The major number of the application (1 for version 1.2.3).
+	    	</description>
+    	</property>
+    	<property name="versionMinorNumber" value="29" >
+	    	<description>
+	    		The minor number of the application (2 for version 1.2.3).
+	    	</description>
+    	</property>
+    	<property name="versionUpdate" value="11" >
+	    	<description>
+	    		The update of the application (3 for version 1.2.3).
+	    	</description>
+    	</property>
+    	<property name="copyright" value="Copyright (c) 2004-2011 ESUP-Portail consortium" >
+	    	<description>
+	    		The copyright.
+	    	</description>
+    	</property>
+    	<property name="vendor" value="ESUP-Portail consortium" >
+	    	<description>
+	    		The vendor.
+	    	</description>
+    	</property>
+    	<property name="latestVersionBaseUrl" value="http://sourcesup.cru.fr/esup-helpdesk" >
+	    	<description>
+	    		The base URL where the latest version number should be found.
+	    	</description>
+    	</property>
+    	<property name="quickStart" value="${quick-start}" />
+    	<property name="deployType" value="${deploy.type}" />
+    	<property name="databaseDriver" value="${hibernate.connection.driver_class}" />
+    	<property name="databaseDialect" value="${hibernate.dialect}" />
+    	<property name="databaseUseJndi" value="${hibernate.useJndi}" />
+    </bean>
+
+</beans>

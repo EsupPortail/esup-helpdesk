@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean 
+		id="departmentManagerConfigurator"
+		class="org.esupportail.helpdesk.domain.departmentManagerConfiguration.DepartmentManagerConfiguratorImpl"
+		lazy-init="true"
+		>
+		<property name="available" value="${departmentManagerConfigurator.available}" />
+		<property name="manageProperties" value="${departmentManagerConfigurator.manageProperties}" />
+		<property name="manageManagers" value="${departmentManagerConfigurator.manageManagers}" />
+		<property name="manageCategories" value="${departmentManagerConfigurator.manageCategories}" />
+		<property name="manageFaq" value="${departmentManagerConfigurator.manageFaq}" />
+		<property name="assignTicket" value="${departmentManagerConfigurator.assignTicket}" />
+		<property name="modifyTicketDepartment" value="${departmentManagerConfigurator.modifyTicketDepartment}" />
+		<property name="refuseTicket" value="${departmentManagerConfigurator.refuseTicket}" />
+		<property name="reopenAllTickets" value="${departmentManagerConfigurator.reopenAllTickets}" />
+		<property name="takeAlreadyAssignedTicket" value="${departmentManagerConfigurator.takeAlreadyAssignedTicket}" />
+		<property name="rate" value="${departmentManagerConfigurator.rate}" />
+		<property name="setOwnAvailability" value="${departmentManagerConfigurator.setOwnAvailability}" />
+		<property name="ticketMonitoringAny" value="${departmentManagerConfigurator.ticketMonitoringAny}" />
+		<property name="ticketMonitoringCategory" value="${departmentManagerConfigurator.ticketMonitoringCategory}" />
+		<property name="ticketMonitoringManaged" value="${departmentManagerConfigurator.ticketMonitoringManaged}" />
+		<property name="reportType" value="${departmentManagerConfigurator.reportType}" />
+		<property name="reportTime1" value="${departmentManagerConfigurator.reportTime1}" />
+		<property name="reportTime2" value="${departmentManagerConfigurator.reportTime2}" />
+		<property name="reportWeekend" value="${departmentManagerConfigurator.reportWeekend}" />
+	</bean>
+
+</beans>

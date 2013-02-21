@@ -1,0 +1,49 @@
+.userInfo {
+	background-color: #e7d7b7
+}
+
+.actionApplication {
+	border-left-style:solid;
+	border-left-color:grey;
+}
+
+.actionManager{
+	border-left-style:solid;
+	border-left-color:red;
+}
+
+.actionOwner {
+	border-left-style:solid;
+	border-left-color:orange;
+}
+
+.actionInvited {
+	border-left-style:solid;
+	border-left-color:blue;
+}
+
+.actionUser {
+	border-left-style:solid;
+	border-left-color:green;
+}
+
+.priority1 {
+	color: #0080ff;
+}
+
+.priority2 {
+	color: #004080;
+}
+
+.priority3 {
+	color: #008080;
+}
+
+.priority4 {
+	color: #ff8040;
+}
+
+.priority5 {
+	color: #ff0000;
+}
+

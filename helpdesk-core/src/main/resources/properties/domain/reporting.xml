@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean 
+		id="messageIdHandler"
+        class="org.esupportail.helpdesk.services.feed.imap.messageId.SigningMessageIdHandlerImpl"
+		lazy-init="true"
+		>
+		<property name="emailDomain" value="${replyTo.domain}" />
+		<property name="salt" value="${replyTo.salt}" />
+	</bean>
+
+    <bean id="abstractSender"
+    	abstract="true"
+		lazy-init="true"
+        > 
+        <property name="applicationService" ref="applicationService" />
+        <property name="i18nService" ref="i18nService" />
+		<property name="useReplyTo" value="${replyTo.use}" />
+		<property name="messageIdHandler" ref="messageIdHandler" />
+        <property name="smtpService" ref="smtpService" />
+        <property name="urlBuilder" ref="urlBuilder" />
+    </bean>
+
+    <bean id="passwordSender"
+    	parent="abstractSender"
+    	class="org.esupportail.helpdesk.domain.reporting.PasswordSenderImpl"
+    	lazy-init="true"
+        > 
+    </bean>
+
+    <bean id="abstractSenderFormatter"
+	    parent="abstractSender"
+    	abstract="true"
+        > 
+        <property name="actionI18nTitleFormatter" ref="actionI18nTitleFormatter" />
+        <property name="userFormattingService" ref="userFormattingService" />
+        <property name="urlGenerator" ref="${urlGeneration.bean}" />
+    </bean>
+
+    <bean id="ticketReporter"
+    	parent="abstractSenderFormatter"
+        class="org.esupportail.helpdesk.domain.reporting.TicketReporterImpl"
+        lazy-init="true"
+        > 
+        <description>A bean used to send ticket reports.</description>
+    </bean>
+
+    <bean id="faqReporter"
+	    parent="abstractSenderFormatter"
+        class="org.esupportail.helpdesk.domain.reporting.FaqReporterImpl"
+        lazy-init="true"
+        > 
+        <description>A bean used to send FAQ reports.</description>
+    </bean>
+
+    <bean id="invitationSender"
+	    parent="abstractSenderFormatter"
+        class="org.esupportail.helpdesk.domain.reporting.InvitationSenderImpl"
+        lazy-init="true"
+        > 
+        <description>A bean used to send invitations.</description>
+    </bean>
+
+    <bean id="monitoringSender"
+	    parent="abstractSenderFormatter"
+        class="org.esupportail.helpdesk.domain.reporting.MonitoringSenderImpl"
+        lazy-init="true"
+        > 
+        <description>A bean used to send ticket alerts.</description>
+    </bean>
+
+    <bean id="ticketPrinter"
+    	parent="abstractSenderFormatter"
+        class="org.esupportail.helpdesk.domain.reporting.TicketPrinterImpl"
+        lazy-init="true"
+        > 
+        <description>A bean used to print tickets.</description>
+    </bean>
+
+</beans>

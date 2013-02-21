@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>helpdesk</artifactId>
+		<groupId>org.esupportail</groupId>
+		<version>3.3.0-SNAPSHOT</version>
+	</parent>
+	<groupId>org.esupportail</groupId>
+	<artifactId>helpdesk-batch</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>org.esupportail</groupId>
+			<artifactId>helpdesk-core</artifactId>
+			<version>3.3.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<!-- signals the main class -->
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>org.esupportail.blank.batch.Launcher</mainClass>
+								</transformer>
+								<!-- concat spring file -->
+								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>META-INF/spring.handlers</resource>
+								</transformer>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>META-INF/spring.schemas</resource>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="User" table="h_user" lazy="false"> 
+		<cache usage="nonstrict-read-write" />
+		<id name="id" >
+			<generator class="assigned" />
+		</id> 
+		<property name="authType" column="auth_type" />
+		<property name="realId" column="real_id" />
+		<property name="displayName" column="disp_name" />
+		<property name="email" column="email" />
+		<property name="password" column="pass" />
+		<property name="admin" column="admi" not-null="true" />
+		<property name="language" column="lang" />
+        <many-to-one name="controlPanelUserDepartmentFilter" column="cont_pane_depa_filt" fetch="join"/> <!-- JOIN-->
+        <many-to-one name="controlPanelManagerDepartmentFilter" column="cont_pane_mana_depa_filt" fetch="join"/> <!-- JOIN-->
+        <property name="controlPanelUserStatusFilter" column="cont_pane_stat_filt2" />
+        <property name="controlPanelManagerStatusFilter" column="cont_pane_mana_stat_filt" />
+		<property name="controlPanelUserInvolvementFilter" column="cont_pane_invo_filt2" />
+		<property name="controlPanelManagerInvolvementFilter" column="cont_pane_mana_invo_filt" />
+		<property name="controlPanelUserInterface" column="cont_pane_user_inte" />
+		<many-to-one name="searchDepartmentFilter" column="sear_depa_filt" fetch="join"/> <!-- JOIN-->
+		<property name="searchTypeFilter" column="sear_type_filt"/>
+		<property name="controlPanelPageSize" column="cont_pane_page_size" />
+		<property name="authSecret" column="auth_secr" />
+		<property name="authLimit" column="auth_limit" />
+		<property name="ownerMonitoring" column="owne_moni" />
+		<property name="invitedMonitoring" column="invi_moni" />
+		<property name="startPage" column="star_page" />
+		<property name="showAddTicketHelp" column="show_add_tick_help" />
+		<property name="showPopupOnClosure" column="show_popu_on_clos" />
+		<property name="advancedSearch" column="adva_sear" />
+		<many-to-one name="journalDepartmentFilter" column="jour_depa_filt" fetch="join"/> <!-- JOIN-->
+		<property name="journalPageSize" column="jour_page_size" />
+		<property name="searchSortByDate" column="sear_sort_by_date"/>
+		<many-to-one name="controlPanelCategoryFilter" column="cont_panel_cate_filt" fetch="join"/>
+		<property name="controlPanelColumns" column="cont_panel_colu"/>
+		<property name="controlPanelCategoryMemberFilter" column="cont_panel_cate_memb_filt"/>
+        <property name="receiveTicketReports" column="rece_repo"/>
+        <property name="receiveFaqReports" column="rece_faq_repo"/>
+		<property name="receiveManagerMonitoring" column="rece_mana_moni"/>
+		<property name="storedControlPanelOrder" column="cont_pane_orde"/>
+		<property name="bookmarkMonitoring" column="book_moni" />
+		<property name="controlPanelRefreshDelay" column="cont_pane_refr_dela" />
+		<property name="receiveTicketReportsAllInOne" column="rece_repo_all_in_one"/>
+		<property name="showTicketAfterClosure" column="show_tick_afte_clos" />
+		<property name="pageTransition" column="page_tran" />
+		<property name="encodedAttributes" column="enco_attr" length="4096" />
+		<property name="searchDate1" column="sear_date_1"/>
+		<property name="searchDate2" column="sear_date_2"/>
+		<property name="departmentSelectionContextTime" column="depa_sele_cont_time"/>
+        <property name="expirationMonitoring" column="expi_moni"/>
+	</class>
+
+</hibernate-mapping>
+
+

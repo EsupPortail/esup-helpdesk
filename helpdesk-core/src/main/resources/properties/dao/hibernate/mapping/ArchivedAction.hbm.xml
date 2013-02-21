@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="ArchivedAction" table="h_arch_acti" lazy="false" > 
+		<cache usage="nonstrict-read-write" />
+		<id name="id">
+			<generator class="native">
+			    <param name="sequence">s_arch_acti</param>
+			</generator>
+		</id> 
+		<many-to-one name="archivedTicket" column="arch_tick_id" not-null="true" fetch="join"/>
+		<many-to-one name="user" column="user_id" fetch="join" />
+		<property name="date" column="date" not-null="true"/>
+		<property name="effectiveScope" column="effe_scop" not-null="true"/>
+		<property name="actionType" column="acti_type" not-null="true" />
+		<property name="categoryBeforeLabel" column="cate_befo_labe" />
+		<property name="categoryAfterLabel" column="cate_afte_labe" />
+		<property name="computerBefore" column="comp_befo"/>
+		<property name="computerAfter" column="comp_afte"/>
+		<many-to-one name="departmentBefore" column="depa_befo_id" fetch="join"/>
+		<many-to-one name="departmentAfter" column="depa_afte_id" fetch="join"/>
+		<many-to-one name="invitedUser" column="invi_user_id" fetch="join"/>
+		<property name="labelBefore" column="labe_befo"/>
+		<property name="labelAfter" column="labe_afte"/>
+		<many-to-one name="managerBefore" column="mana_befo_id" fetch="join"/>
+		<many-to-one name="managerAfter" column="mana_afte_id" fetch="join"/>
+		<property name="message" column="mess" length="8192"/>
+		<property name="priorityLevelBefore" column="prio_leve_befo"/>
+		<property name="priorityLevelAfter" column="prio_leve_afte"/>
+		<property name="scopeBefore" column="scop_befo"/>
+		<property name="scopeAfter" column="scop_afte"/>
+		<property name="spentTimeBefore" column="spen_time_befo"/>
+		<property name="spentTimeAfter" column="spen_time_afte"/>		
+		<property name="statusBefore" column="stat_befo" not-null="true"/>
+		<property name="statusAfter" column="stat_afte" not-null="true"/>
+		<many-to-one name="ticketOwnerBefore" column="tick_owne_befo_id" fetch="join"/>
+		<many-to-one name="ticketOwnerAfter" column="tick_owne_afte_id" fetch="join"/>
+		<property name="filename" column="file_name" /> 
+		<property name="recallDate" column="reca_date" />
+	</class>
+
+</hibernate-mapping>
+
+

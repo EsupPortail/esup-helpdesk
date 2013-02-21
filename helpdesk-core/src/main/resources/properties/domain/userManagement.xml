@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean 
+		id="userStore"
+		class="org.esupportail.helpdesk.domain.userManagement.UserStoreImpl"
+		lazy-init="true"
+		>
+		<property name="daoService" ref="daoService" />
+		<property name="i18nService" ref="i18nService" />
+		<property name="applicationAuthAllowed" value="${auth.useApplication}" />
+		<property name="casAuthAllowed" value="${auth.useCas}" />
+		<property name="shibbolethAuthAllowed" value="${auth.useShibboleth}" />
+		<property name="specificAuthAllowed" value="${auth.useSpecific}" />
+		<property name="applicationUserManager" ref="applicationUserManager" />
+		<property name="casUserManager" ref="casUserManager" />
+		<property name="shibbolethUserManager" ref="shibbolethUserManager" />
+		<property name="specificUserManager" ref="specificUserManager" />
+	</bean>
+
+	<bean 
+		id="abstractUserManager"
+		abstract="true"
+		>
+		<property name="daoService" ref="daoService" />
+		<property name="i18nService" ref="i18nService" />
+	</bean>
+
+	<bean 
+		id="applicationUserManager"
+		parent="abstractUserManager"
+		class="org.esupportail.helpdesk.domain.userManagement.ApplicationUserManagerImpl"
+		lazy-init="true"
+		>
+		<property name="passwordSender" ref="passwordSender" />
+		<property name="userPasswordManager" ref="userPasswordManager" />
+	</bean>
+
+	<bean 
+		id="userPasswordManager"
+		class="org.esupportail.commons.domain.UserPasswordManagerImpl"
+		lazy-init="true"
+ 		>
+		<property name="i18nService" ref="i18nService" />
+		<property name="passwordMaxLength" value="8" /> 
+		<property name="passwordMinLength" value="4" /> 
+	</bean>
+
+	<bean 
+		id="casUserManager"
+		parent="abstractUserManager"
+		class="org.esupportail.helpdesk.domain.userManagement.CasUserManagerImpl"
+		lazy-init="true"
+		>
+		<property name="ldapUserService" ref="ldapUserService" />
+		<property name="displayNameLdapAttribute" value="${ldap.displayNameAttribute}" />
+		<property name="emailLdapAttribute" value="${ldap.emailAttribute}" />
+		<property name="emailAliasLdapAttribute" value="${ldap.emailAliasAttribute}" />
+		<property name="portalService" ref="portalService" />
+	</bean>
+
+	<bean 
+		id="shibbolethUserManager"
+		parent="abstractUserManager"
+		class="org.esupportail.helpdesk.domain.userManagement.ShibbolethUserManagerImpl"
+		lazy-init="true"
+		>
+		<property name="displayNameShibbolethAttribute" value="${shibboleth.displayNameAttribute}" />
+		<property name="emailShibbolethAttribute" value="${shibboleth.emailAttribute}" />
+		<property name="portalService" ref="portalService" />
+	</bean>
+
+</beans>

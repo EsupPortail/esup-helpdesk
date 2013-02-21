@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/web/controllers.xml
+		This file declares the visual beans used by the web interface.
+		It should not be modified but by the developers.
+		This file is referenced by /properties/applicationContext.xml.
+	-->
+
+	<bean id="abstractDaoAwarePaginator"
+		abstract="true"
+    	> 
+		<description>An abstract paginator.</description>
+		<property name="daoService" ref="daoService" />
+	</bean> 
+
+	<bean id="abstractDomainAwarePaginator"
+		abstract="true"
+    	> 
+		<description>An abstract domain aware paginator.</description>
+		<property name="domainService" ref="domainService" />
+	</bean> 
+
+	<bean id="abstractDaoAndDomainAwarePaginator"
+		abstract="true"
+		parent="abstractDaoAwarePaginator"
+    	> 
+		<description>An abstract dao and domain aware paginator.</description>
+		<property name="domainService" ref="domainService" />
+	</bean> 
+
+	<bean id="sessionController"
+		class="org.esupportail.helpdesk.web.controllers.SessionController"
+		parent="abstractDomainAwareBean"
+		scope="session"
+		lazy-init="true"
+		>
+		<description>
+			A bean to store the context of the application.
+		</description>
+		<property name="exceptionController" ref="exceptionController">
+			<description>The exception controller.</description>
+		</property>
+		<property name="authenticator" ref="authenticator">
+			<description>The authentication service.</description>
+		</property>
+		<property name="casLogoutUrl" value="${cas.url}/logout?service=%s">
+			<description>The CAS logout URL.</description>
+		</property>
+		<property name="passwordSender" ref="passwordSender" />
+		<property name="timeZone" value="${timezone}" />
+	</bean>
+
+	<bean id="abstractContextAwareController" 
+		abstract="true"
+		parent="abstractDomainAwareBean"
+		scope="session"
+		lazy-init="true"
+		>
+		<description>
+			An abstract bean to factorize the declaration of beans of
+			which class inherits from AbstractContextAwareController.
+		</description>
+		<property name="sessionController" ref="sessionController">
+			<description>The session controller.</description>
+		</property>
+		<property name="userFormatter" ref="userFormatter">
+			<description>The user formatter.</description>
+		</property>
+	</bean>
+
+	<bean id="administratorsController"
+		class="org.esupportail.helpdesk.web.controllers.AdministratorsController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+		>
+		<description>A bean to manage administrators.</description>
+		<property name="ldapUserService" ref="ldapUserService">
+			<description>The LDAP service.</description>
+		</property>
+		<property name="paginator" ref="administratorsPaginator" />
+		<property name="indexer" ref="indexer" />
+	</bean>
+
+	<bean id="administratorsPaginator"
+		class="org.esupportail.helpdesk.web.beans.AdministratorPaginator"
+		scope="session"
+		lazy-init="true"
+		parent="abstractDaoAwarePaginator"
+    	> 
+		<description>A paginator for the administrators page.</description>
+		<property name="defaultPageSize" value="10" />
+		<property name="pageSizeValues" >
+			<list>
+				<value>10</value>
+				<value>20</value>
+			</list>
+		</property>
+	</bean> 
+
+	<bean id="departmentsController"
+		class="org.esupportail.helpdesk.web.controllers.DepartmentsController" 
+ 		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+		>
+		<description>A bean to manage departments.</description>
+		<property name="departmentPaginator" ref="departmentPaginator" />
+		<property name="departmentManagerPaginator" ref="departmentManagerPaginator" />
+		<property name="departmentInvitationPaginator" ref="departmentInvitationPaginator" />
+	</bean>
+
+	<bean id="departmentPaginator"
+		class="org.esupportail.helpdesk.web.beans.ManagedDepartmentPaginator"
+		scope="session"
+		lazy-init="true"
+		parent="abstractDomainAwarePaginator"
+    	> 
+		<description>A paginator for the departments.</description>
+		<property name="sessionController" ref="sessionController" />
+		<property name="defaultPageSize" value="10" />
+		<property name="pageSizeValues" >
+			<list>
+				<value>10</value>
+				<value>25</value>
+				<value>50</value>
+			</list>
+		</property>
+	</bean> 
+
+	<bean id="departmentManagerPaginator"
+		class="org.esupportail.helpdesk.web.beans.DepartmentManagerPaginator"
+		scope="session"
+		lazy-init="true"
+		parent="abstractDomainAwarePaginator"
+    	> 
+		<description>A paginator for the department managers.</description>
+		<property name="defaultPageSize" value="20" />
+		<property name="pageSizeValues" >
+			<list>
+				<value>10</value>
+				<value>20</value>
+				<value>30</value>
+			</list>
+		</property>
+	</bean> 
+
+	<bean id="departmentInvitationPaginator"
+		class="org.esupportail.helpdesk.web.beans.DepartmentInvitationPaginator"
+		scope="session"
+		lazy-init="true"
+		parent="abstractDomainAwarePaginator"
+    	> 
+		<description>A paginator for the department invitations.</description>
+		<property name="defaultPageSize" value="5" />
+		<property name="pageSizeValues" >
+			<list>
+				<value>5</value>
+				<value>10</value>
+				<value>20</value>
+			</list>
+		</property>
+	</bean> 
+
+	<bean id="preferencesController"
+		class="org.esupportail.helpdesk.web.controllers.PreferencesController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	>
+		<description>A bean to manage user preferences.</description>
+		<property name="controlPanelRefreshDelays" value="${controlPanel.refreshDelays}" />
+	</bean>
+
+	<bean id="welcomeController"
+		class="org.esupportail.helpdesk.web.controllers.WelcomeController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	>
+		<description>A bean to manage the welcome page.</description>
+	</bean>
+
+	<bean id="aboutController"
+		class="org.esupportail.helpdesk.web.controllers.AboutController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the about page.</description>
+	</bean>
+
+	<bean id="controlPanelSubjectTruncator"
+		class="org.esupportail.helpdesk.web.beans.ControlPanelSubjectTruncator"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to truncate the ticket subjects on the control panel.</description>
+		<property name="i18nService" ref="i18nService" />
+		<property name="sessionController" ref="sessionController" />
+		<property name="maxLength" value="${controlPanel.subjectMaxLength}" />
+	</bean>
+
+	<bean id="controlPanelController"
+		class="org.esupportail.helpdesk.web.controllers.ControlPanelController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the control panel.</description>
+		<property name="paginator" ref="controlPanelPaginator" />
+		<property name="ticketController" ref="ticketController" />
+		<property name="archivedTicketController" ref="archivedTicketController" />
+	</bean>
+
+	<bean id="controlPanelPaginator"
+		class="org.esupportail.helpdesk.web.beans.ControlPanelPaginator"
+		scope="session"
+		lazy-init="true"
+		parent="abstractDaoAndDomainAwarePaginator"
+    	> 
+		<description>A paginator for the control panel.</description>
+		<property name="defaultPageSize" value="20" />
+		<property name="pageSizeValues" >
+			<list>
+				<value>10</value>
+				<value>20</value>
+				<value>40</value>
+				<value>80</value>
+			</list>
+		</property>
+		<property name="sessionController" ref="sessionController" />
+		<property name="ticketExtractor" ref="ticketExtractor" />
+	</bean> 
+
+	<bean id="journalController"
+		class="org.esupportail.helpdesk.web.controllers.JournalController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the journal.</description>
+		<property name="paginator" ref="journalPaginator" />
+		<property name="ticketController" ref="ticketController" />
+	</bean>
+
+	<bean id="journalPaginator"
+		class="org.esupportail.helpdesk.web.beans.JournalPaginator"
+		scope="session"
+		lazy-init="true"
+		parent="abstractDaoAndDomainAwarePaginator"
+    	> 
+		<description>A paginator for the journal.</description>
+		<property name="defaultPageSize" value="20" />
+		<property name="pageSizeValues" >
+			<list>
+				<value>10</value>
+				<value>20</value>
+				<value>30</value>
+				<value>40</value>
+			</list>
+		</property>
+		<property name="sessionController" ref="sessionController" />
+	</bean> 
+
+	<bean id="statisticsController"
+		class="org.esupportail.helpdesk.web.controllers.StatisticsController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the statistics.</description>
+		<property name="statisticsExtrator" ref="statisticsExtractor" />
+		<property name="originI18nKeyProvider" ref="originI18nKeyProvider" />
+	</bean>
+
+	<bean id="searchController"
+		class="org.esupportail.helpdesk.web.controllers.SearchController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the search interface.</description>
+		<property name="indexer" ref="indexer" />
+	</bean>
+
+	<bean id="bookmarksController"
+		class="org.esupportail.helpdesk.web.controllers.BookmarksController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the bookmarks interface.</description>
+	</bean>
+
+	<bean id="ticketController"
+		class="org.esupportail.helpdesk.web.controllers.TicketController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	>
+		<description>A bean to manage the ticket pages.</description>
+		<property name="ticketExtractor" ref="ticketExtractor" />
+		<property name="ticketNavigator" ref="ticketNavigator" />
+		<property name="userInfoProvider" ref="userInfoProvider" />
+		<property name="paginator" ref="controlPanelPaginator" />
+		<property name="userFormattingService" ref="userFormattingService" /> 
+	</bean>
+
+	<bean id="archivedTicketController"
+		class="org.esupportail.helpdesk.web.controllers.ArchivedTicketController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the archived ticket pages.</description>
+	</bean>
+
+	<bean id="faqsController"
+		class="org.esupportail.helpdesk.web.controllers.FaqsController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the FAQs pages.</description>
+	</bean>
+
+	<bean id="utilsController"
+		class="org.esupportail.helpdesk.web.controllers.UtilsController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the utilities.</description>
+		<property name="ldapUserService" ref="ldapUserService" />
+		<property name="portalService" ref="portalService" />
+	</bean>
+
+	<bean id="departmentSelectionController"
+		class="org.esupportail.helpdesk.web.controllers.DepartmentSelectionController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the utilities.</description>
+		<property name="departmentSelector" ref="departmentSelector" />
+	</bean>
+
+	<bean id="responsesController"
+		class="org.esupportail.helpdesk.web.controllers.ResponsesController"
+		parent="abstractContextAwareController"
+		scope="session"
+		lazy-init="true"
+    	> 
+		<description>A bean to manage the responses.</description>
+	</bean>
+
+	<bean id="ldapSearchController"
+		class="org.esupportail.helpdesk.web.controllers.LdapSearchController"
+		parent="abstractApplicationAwareBean"
+		scope="session"
+		lazy-init="true"
+    	>
+		<description>A bean to manage LDAP searches.</description>
+		<property name="ldapUserService" ref="ldapUserService">
+			<description>The LDAP service.</description>
+		</property>
+		<property name="sessionController" ref="sessionController">
+			<description>The context bean.</description>
+		</property>
+	</bean>
+
+	<bean id="exceptionController"
+		class="org.esupportail.commons.web.controllers.ExceptionController"
+		scope="session"
+		lazy-init="true"
+    	>
+		<description>A bean to manage exception reports.</description>
+	</bean>
+
+</beans>

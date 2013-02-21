@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+          
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="DepartmentManager" table="h_depa_mana" lazy="false">
+		<cache usage="nonstrict-read-write"/>
+		<id name="id">
+			<generator class="native">
+			    <param name="sequence">s_depa_mana</param>
+			</generator>
+		</id>
+		<many-to-one name="user" column="user_id" not-null="true" fetch="join" class="User" /> <!-- JOIN-->
+		<many-to-one name="department" column="depa_id" index="i_depa_mana_orde" not-null="true" fetch="join" class="Department" /> <!-- JOIN-->
+		<property name="manageProperties" column="mana_depa" />
+		<property name="manageManagers" column="mana_mana" />
+		<property name="manageCategories" column="mana_cate" />
+		<property name="manageFaq" column="mana_faq" />
+		<property name="available" column="avai" not-null="true" />
+		<property name="refuseTicket" column="refu_tick" not-null="true" />
+		<property name="takeFreeTicket" column="take_free_tick" not-null="true" />
+		<property name="assignTicket" column="assi_tick" not-null="true" />
+		<property name="takeAlreadyAssignedTicket" column="take_alre_assi_tick" not-null="true" />
+		<property name="modifyTicketDepartment" column="modi_tick_depa" not-null="true" />
+		<property name="ticketMonitoringAny" column="tick_moni_any" />
+		<property name="ticketMonitoringCategory" column="tick_moni_cate" />
+		<property name="ticketMonitoringManaged" column="tick_moni_mana" />
+		<property name="rate" not-null="true" />
+		<property name="setOwnAvailability" column="set_own_avai" />
+		<property name="reopenAllTickets" column="reop_all_tick" />
+		<property name="order" column="orde" index="i_depa_mana_orde" not-null="true" />
+		<property name="reportType" column="repo_type"  />
+		<property name="reportTime1" column="repo_tim1"  />
+		<property name="reportTime2" column="repo_tim2"  />
+		<property name="reportWeekend" column="repo_week"  />
+	</class>
+
+</hibernate-mapping>
+
+
