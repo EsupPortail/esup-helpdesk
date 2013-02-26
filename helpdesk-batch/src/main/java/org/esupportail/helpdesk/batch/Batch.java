@@ -4,6 +4,7 @@
 package org.esupportail.helpdesk.batch;
 
 import org.esupportail.commons.batch.BatchException;
+import org.esupportail.commons.exceptions.ConfigException;
 import org.esupportail.commons.services.application.ApplicationService;
 import org.esupportail.commons.services.application.ApplicationUtils;
 import org.esupportail.commons.services.application.VersionningUtils;
@@ -120,6 +121,60 @@ public class Batch {
 		VersionningUtils.createVersionningService();
 	}
 
+
+	/**
+	 *  Initialize the database. 
+	 */
+	private static void initDatabase() {
+		try {
+			DatabaseUtils.open();
+			DatabaseUtils.begin();
+			DatabaseUtils.create(); 
+			DatabaseUtils.commit();
+			DatabaseUtils.close();
+		} catch (Throwable t) {
+			DatabaseUtils.rollback();
+			DatabaseUtils.close();
+			throw new BatchException(t);
+		}
+		doUpgradeDatabase();
+	}
+	
+	/**
+	* Upgrade the database.
+	*/
+	private static void doUpgradeDatabase() {
+		while (true) {
+			try {
+				DatabaseUtils.open();
+				DatabaseUtils.begin();
+				boolean recall = VersionningUtils.createVersionningService().upgradeDatabase();
+				DatabaseUtils.commit();
+				DatabaseUtils.close();
+				if (!recall) {
+					return;
+				}
+			} catch (Throwable t) {
+				closeAndRethrowException(t);
+			}
+		}
+	} 
+	
+	/**
+	* @param t
+	* @throws ConfigException
+	*/
+	private static void closeAndRethrowException(final Throwable t) throws ConfigException {
+		ConfigException ex = null;
+		if (t instanceof ConfigException) {
+			ex = (ConfigException) t;
+		} else {
+			ex = new ConfigException(t);
+		}
+		DatabaseUtils.close();
+		throw ex;
+	} 
+	
 	/**
 	 * @return the indexer
 	 */
@@ -498,7 +553,9 @@ public class Batch {
 		case 1:
 			if ("test-beans".equals(args[0])) {
 				testBeans();
-			} else if ("update-index".equals(args[0])) {
+			} else if ("init-data".equals(args[0])) {
+				initDatabase();
+			}else if ("update-index".equals(args[0])) {
 				updateIndex(false);
 			} else if ("rebuild-index".equals(args[0])) {
 				updateIndex(true);

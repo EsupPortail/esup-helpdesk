@@ -41,12 +41,15 @@
 			This bean is the database manager.
 		</description>
 		<property name="useJdbc" value="true" />
-		<property name="useJndi" value="${hibernate.useJndi}" />
-		<property name="jdbcSessionFactoryBeanName" value="${hibernate.jdbcSessionFactoryBeanName}" />
-		<property name="jndiSessionFactoryBeanName" value="${hibernate.jndiSessionFactoryBeanName}" />
+		<property name="useJndi" value="false" />
+		<!-- <property name="useJndi" value="${hibernate.useJndi}" /> -->
+		<property name="jdbcSessionFactoryBeanName" value="jdbcSessionFactory" />
+<!-- 		<property name="jdbcSessionFactoryBeanName" value="${hibernate.jdbcSessionFactoryBeanName}" /> -->
+		<!-- <property name="jndiSessionFactoryBeanName" value="${hibernate.jndiSessionFactoryBeanName}" /> -->
 		<property name="createSessionFactoryBeanName" value="createSessionFactory" />
-		<property name="jdbcUpgradeSessionFactoryBeanName" value="${hibernate.jdbcUpgradeSessionFactoryBeanName}" />
-		<property name="jndiUpgradeSessionFactoryBeanName" value="${hibernate.jndiUpgradeSessionFactoryBeanName}" />
+		<property name="jdbcUpgradeSessionFactoryBeanName" value="jdbcUpgradeSessionFactory" />
+		<!-- <property name="jdbcUpgradeSessionFactoryBeanName" value="${hibernate.jdbcUpgradeSessionFactoryBeanName}" /> -->
+		<!-- <property name="jndiUpgradeSessionFactoryBeanName" value="${hibernate.jndiUpgradeSessionFactoryBeanName}" /> -->
 	</bean>
 
 	<!-- Session factories -->
@@ -316,7 +319,8 @@
 			the database. It must implement interface org.esupportail.helpdesk.dao.DaoService.
 		</description>
 		<property name="useJdbc" value="true" />
-		<property name="useJndi" value="${hibernate.useJndi}" />
+		<property name="useJndi" value="false" />
+<!-- 		<property name="useJndi" value="${hibernate.useJndi}" /> -->
 		<property name="jdbcHibernateTemplateBeanName" value="${hibernate.jdbcTemplateBeanName}" />
 		<property name="jndiHibernateTemplateBeanName" value="${hibernate.jndiTemplateBeanName}" />
 		<property name="fileManager" ref="fileManager" />

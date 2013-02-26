@@ -28,8 +28,9 @@
 	  <property name="locations" > 
 	      <list>
 	      	<value>classpath:/properties/defaults.properties</value>
-	      	<value>classpath:/properties/defaults-${deploy.type}.properties</value>
-	      	<value>classpath:/properties/config.properties</value>
+	      	<value>classpath:/properties/defaults-servlet.properties</value>
+<!-- 	      	<value>classpath:/properties/defaults-${deploy.type}.properties</value> -->
+             <value>file:${config.location}</value>
 	      </list>
 	  </property>
 	</bean>
@@ -69,7 +70,7 @@
 	<import resource="web/controllers.xml" />
 	<import resource="web/converters.xml" />
 	<import resource="web/helpers.xml" />
-	<import resource="devel/monitoring.xml" />
+<!-- 	<import resource="devel/monitoring.xml" /> -->
 	<import resource="classpath:org/codehaus/xfire/spring/xfire.xml" /> 
 
 </beans>

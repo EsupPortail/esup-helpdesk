@@ -43,7 +43,7 @@
 		</description>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:/properties/applicationContext.xml
+			classpath*:/properties/applicationContext.xml
 		</param-value>
 	</context-param>
 	<listener>
@@ -63,7 +63,7 @@
 			The location of the main configuration file of the JSF framework.
 		</description>
 		<param-name>javax.faces.CONFIG_FILES</param-name>
-		<param-value>
+ 		<param-value>
 			/WEB-INF/classes/properties/jsf/commons-render-kit.xml,/WEB-INF/classes/properties/jsf/navigation-rules.xml,/WEB-INF/classes/properties/jsf/application.xml,/WEB-INF/classes/properties/jsf/fck-faces-config.xml,/WEB-INF/classes/properties/jsf/chartcreator-faces-config.xml,/WEB-INF/classes/properties/jsf/commons-pattern-faces-config.xml
 		</param-value>
 	</context-param>
@@ -196,7 +196,8 @@
 				edu.yale.its.tp.cas.client.filter.validateUrl
 			</param-name>
 			<param-value>
-				${cas.url}/serviceValidate
+				https://sso-cas.univ-rennes1.fr/serviceValidate
+				<!-- ${cas.url}/serviceValidate -->
 			</param-value>
 		</init-param>
 		<init-param>
@@ -264,7 +265,7 @@
 	</servlet-mapping>
 <!--END-SERVLET-ONLY-->
 <!--BEGIN-PORTLET-ONLY-->
-	<servlet> 
+<!-- 	<servlet> 
 		<servlet-name>esup-helpdesk</servlet-name>
 		<servlet-class>
 			org.apache.pluto.core.PortletServlet
@@ -283,7 +284,7 @@
 	<servlet-mapping>
 		<servlet-name>esup-helpdesk</servlet-name>
 		<url-pattern>/esup-helpdesk/*</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping> -->
 <!--END-PORTLET-ONLY-->
 
 <!--
@@ -360,7 +361,8 @@
 
 <!--BEGIN-SERVLET-ONLY-->
     <session-config>
-    	<session-timeout>${sessionTimeout}</session-timeout>
+    	<session-timeout>60</session-timeout>
+<!--     	<session-timeout>${sessionTimeout}</session-timeout> -->
     </session-config>
 <!--END-SERVLET-ONLY-->
 

@@ -106,17 +106,6 @@
 			<version>2.7.5</version>
 		</dependency>
 		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>1.6.2</version>
-			<type>javadoc.jar</type>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>1.6.2</version>
-		</dependency>
-		<dependency>
 			<groupId>axis</groupId>
 			<artifactId>axis</artifactId>
 			<version>1.2.1</version>
@@ -279,11 +268,6 @@
 			<version>1.1.5</version>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>3.1.12</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.portals.bridges</groupId>
 			<artifactId>portals-bridges-portletfilter</artifactId>
 			<version>1.0.3</version>
@@ -378,6 +362,26 @@
 		  <groupId>esup</groupId>
 		  <artifactId>esup-uportal-ws-client</artifactId>
 		  <version>20071207</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.6.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.6.12</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>3.1.12</version>
 		</dependency>
     </dependencies>
 </project>

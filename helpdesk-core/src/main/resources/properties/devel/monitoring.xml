@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+	
+<beans
+ 	xmlns="http://www.springframework.org/schema/beans"
+ 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	xmlns:aop="http://www.springframework.org/schema/aop"
+ 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+ 	>
+ 	
+ 	<!--
+ 	uncomment the lines below to monitor the beans of the application
+ 	(not recommended in production).
+ 	
+ 	<aop:config>
+ 	<aop:pointcut id="monitorPointcut"
+ 	expression="@within(org.esupportail.commons.aop.monitor.Monitor) || @annotation(org.esupportail.commons.aop.monitor.Monitor)" />
+ 	<aop:aspect id="monitorAspect" ref="monitorBean">
+ 	<aop:around method="aroundMonitor" pointcut-ref="monitorPointcut" />
+ 	</aop:aspect>
+ 	</aop:config>
+ 	<bean
+ 	id="monitorBean"
+ 	class="org.esupportail.commons.aop.monitor.MonitoringMethodInterceptor" />
+ 	-->
+ 	
+</beans> 

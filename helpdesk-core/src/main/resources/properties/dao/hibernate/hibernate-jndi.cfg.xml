@@ -11,9 +11,12 @@
 		/properties/dao/hibernate/mapping. 
 	-->
 	<session-factory>
-		<property name="hibernate.connection.driver_class">${hibernate.connection.driver_class}</property>
+<!-- 		<property name="hibernate.connection.driver_class">${hibernate.connection.driver_class}</property>
 		<property name="hibernate.dialect">${hibernate.dialect}</property>
-		<property name="hibernate.connection.datasource">java:/comp/env/${hibernate.connection.jndi.datasource}</property>
+		<property name="hibernate.connection.datasource">java:/comp/env/${hibernate.connection.jndi.datasource}</property> -->
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
+		<property name="hibernate.connection.datasource">java:/comp/env/jdbc/helpdesk</property>
 		<property name="hibernate.connection.autocommit">false</property>
 		<property name="hibernate.connection.charSet">UTF-8</property>
 		<property name="hibernate.show_sql">false</property>
