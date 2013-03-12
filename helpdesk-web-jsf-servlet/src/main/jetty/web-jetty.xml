@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.ERROR_HANDLING</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <!-- for jetty 8 -->
+    <listener>
+        <listener-class>
+            org.apache.myfaces.webapp.StartupServletContextListener
+        </listener-class>
+    </listener>
+</web-app>

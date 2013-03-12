@@ -64,7 +64,7 @@
 		</description>
 		<param-name>javax.faces.CONFIG_FILES</param-name>
  		<param-value>
-			/WEB-INF/classes/properties/jsf/commons-render-kit.xml,/WEB-INF/classes/properties/jsf/navigation-rules.xml,/WEB-INF/classes/properties/jsf/application.xml,/WEB-INF/classes/properties/jsf/fck-faces-config.xml,/WEB-INF/classes/properties/jsf/chartcreator-faces-config.xml,/WEB-INF/classes/properties/jsf/commons-pattern-faces-config.xml
+			/WEB-INF/jsf/commons-render-kit.xml,/WEB-INF/jsf/navigation-rules.xml,/WEB-INF/jsf/application.xml,/WEB-INF/jsf/fck-faces-config.xml,/WEB-INF/jsf/chartcreator-faces-config.xml,/WEB-INF/jsf/commons-pattern-faces-config.xml
 		</param-value>
 	</context-param>
 	<context-param>

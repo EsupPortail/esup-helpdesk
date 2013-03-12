@@ -45,10 +45,12 @@
 		<!-- <property name="useJndi" value="${hibernate.useJndi}" /> -->
 		<property name="jdbcSessionFactoryBeanName" value="jdbcSessionFactory" />
 <!-- 		<property name="jdbcSessionFactoryBeanName" value="${hibernate.jdbcSessionFactoryBeanName}" /> -->
+		<property name="jndiSessionFactoryBeanName" value="jndiSessionFactory" />
 		<!-- <property name="jndiSessionFactoryBeanName" value="${hibernate.jndiSessionFactoryBeanName}" /> -->
 		<property name="createSessionFactoryBeanName" value="createSessionFactory" />
 		<property name="jdbcUpgradeSessionFactoryBeanName" value="jdbcUpgradeSessionFactory" />
 		<!-- <property name="jdbcUpgradeSessionFactoryBeanName" value="${hibernate.jdbcUpgradeSessionFactoryBeanName}" /> -->
+		<property name="jndiUpgradeSessionFactoryBeanName" value="jndiUpgradeSessionFactory" />
 		<!-- <property name="jndiUpgradeSessionFactoryBeanName" value="${hibernate.jndiUpgradeSessionFactoryBeanName}" /> -->
 	</bean>
 
