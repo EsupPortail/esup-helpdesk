@@ -337,7 +337,9 @@ public class VersionningServiceImpl extends AbstractDomainAwareBean implements V
 		DatabaseUtils.create();
 		logger.info("creating the first user of the application thanks to "
 				+ getClass().getName() + ".firstAdministratorId...");
-		User firstAdministrator = getUserStore().getUserFromRealId(firstAdministratorId);
+//		User firstAdministrator = getUserStore().getUserFromRealId(firstAdministratorId);
+		//create for test jar batch (init-data) in version 3.30.0-alpha2
+		User firstAdministrator = new User("cas-"+firstAdministratorId,"cas",firstAdministratorId);
 		getDomainService().addAdmin(firstAdministrator);
 		logger.info("the database has been created.");
 		setDatabaseVersion("0.0.0", true);

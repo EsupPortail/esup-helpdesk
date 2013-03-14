@@ -129,7 +129,8 @@ public class Batch {
 		try {
 			DatabaseUtils.open();
 			DatabaseUtils.begin();
-			DatabaseUtils.create(); 
+//			DatabaseUtils.create(); 
+			VersionningUtils.createVersionningService().initDatabase();
 			DatabaseUtils.commit();
 			DatabaseUtils.close();
 		} catch (Throwable t) {

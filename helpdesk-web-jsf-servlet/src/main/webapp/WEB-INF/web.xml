@@ -5,9 +5,9 @@
 	The main configuration file of the application.
 -->
 
-<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<display-name>esup-helpdesk</display-name>
 
 	<context-param>
@@ -43,7 +43,7 @@
 		</description>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath*:/properties/applicationContext.xml
+			classpath:/properties/applicationContext.xml
 		</param-value>
 	</context-param>
 	<listener>
@@ -188,7 +188,7 @@
 				edu.yale.its.tp.cas.client.filter.loginUrl
 			</param-name>
 			<param-value>
-				${cas.url}/login
+				https://sso-castest.univ-rennes1.fr/login
 			</param-value>
 		</init-param>
 		<init-param>
@@ -196,7 +196,7 @@
 				edu.yale.its.tp.cas.client.filter.validateUrl
 			</param-name>
 			<param-value>
-				https://sso-cas.univ-rennes1.fr/serviceValidate
+				https://sso-castest.univ-rennes1.fr/serviceValidate
 				<!-- ${cas.url}/serviceValidate -->
 			</param-value>
 		</init-param>
@@ -204,7 +204,7 @@
 			<param-name>
 				edu.yale.its.tp.cas.client.filter.serverName
 			</param-name>
-			<param-value>${tomcat.host}${tomcat.cas-port.string}</param-value>
+			<param-value>mr185033.cri.univ-rennes1.fr:8080</param-value>
 		</init-param>
 		<init-param>
 			<param-name>
@@ -235,6 +235,10 @@
 			org.esupportail.commons.web.servlet.FacesServlet
 		</servlet-class>
 		<init-param>
+			<param-name>default-view</param-name>
+			<param-value>/stylesheets/welcome.faces</param-value>
+		</init-param>
+		<init-param>
 			<param-name>use-redirector</param-name>
 			<param-value>false</param-value>
 		</init-param>
@@ -257,6 +261,10 @@
 		<servlet-class>
 			org.esupportail.commons.web.servlet.FacesServlet
 		</servlet-class>
+		<init-param>
+			<param-name>default-view</param-name>
+			<param-value>/stylesheets/welcome.faces</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -365,5 +373,5 @@
 <!--     	<session-timeout>${sessionTimeout}</session-timeout> -->
     </session-config>
 <!--END-SERVLET-ONLY-->
-
+ 
 </web-app>
