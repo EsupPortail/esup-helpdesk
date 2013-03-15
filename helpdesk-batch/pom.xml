@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>helpdesk</artifactId>
 		<groupId>org.esupportail</groupId>
-		<version>3.30.0-alpha4-SNAPSHOT</version>
+		<version>3.30.0-alpha4</version>
 	</parent>
 	<groupId>org.esupportail</groupId>
 	<artifactId>helpdesk-batch</artifactId>
@@ -12,7 +12,7 @@
 		<dependency>
 			<groupId>org.esupportail</groupId>
 			<artifactId>helpdesk-core</artifactId>
-			<version>3.30.0-alpha4-SNAPSHOT</version>
+			<version>3.30.0-alpha4</version>
 		</dependency>
 	</dependencies>
 	<build>
