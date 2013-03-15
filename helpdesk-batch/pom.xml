@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>helpdesk</artifactId>
 		<groupId>org.esupportail</groupId>
-		<version>3.30.0-alpha2-SNAPSHOT</version>
+		<version>3.30.0-alpha4-SNAPSHOT</version>
 	</parent>
 	<groupId>org.esupportail</groupId>
 	<artifactId>helpdesk-batch</artifactId>
