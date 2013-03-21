@@ -174,7 +174,7 @@
 -->
 
 <!--BEGIN-SERVLET-ONLY-->
-	<filter>
+   	<filter>
 		<description>
 			The CAS filter, used to authenticate users.
 		</description>
@@ -188,7 +188,7 @@
 				edu.yale.its.tp.cas.client.filter.loginUrl
 			</param-name>
 			<param-value>
-				https://sso-castest.univ-rennes1.fr/login
+				https://cas.domain.edu/login
 			</param-value>
 		</init-param>
 		<init-param>
@@ -196,15 +196,14 @@
 				edu.yale.its.tp.cas.client.filter.validateUrl
 			</param-name>
 			<param-value>
-				https://sso-castest.univ-rennes1.fr/serviceValidate
-				<!-- ${cas.url}/serviceValidate -->
+				https://cas.domain.edu/serviceValidate
 			</param-value>
 		</init-param>
 		<init-param>
 			<param-name>
 				edu.yale.its.tp.cas.client.filter.serverName
 			</param-name>
-			<param-value>mr185033.cri.univ-rennes1.fr:8080</param-value>
+			<param-value>localhost:8080</param-value>
 		</init-param>
 		<init-param>
 			<param-name>
@@ -217,6 +216,7 @@
 		<filter-name>CAS Filter</filter-name>
 		<url-pattern>/stylesheets/cas.faces</url-pattern>
 	</filter-mapping>
+	    
 <!--END-SERVLET-ONLY-->
 
 <!--

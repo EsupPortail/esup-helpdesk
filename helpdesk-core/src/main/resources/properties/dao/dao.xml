@@ -41,17 +41,12 @@
 			This bean is the database manager.
 		</description>
 		<property name="useJdbc" value="true" />
-		<property name="useJndi" value="false" />
-		<!-- <property name="useJndi" value="${hibernate.useJndi}" /> -->
-		<property name="jdbcSessionFactoryBeanName" value="jdbcSessionFactory" />
-<!-- 		<property name="jdbcSessionFactoryBeanName" value="${hibernate.jdbcSessionFactoryBeanName}" /> -->
-		<property name="jndiSessionFactoryBeanName" value="jndiSessionFactory" />
-		<!-- <property name="jndiSessionFactoryBeanName" value="${hibernate.jndiSessionFactoryBeanName}" /> -->
+		<property name="useJndi" value="${hibernate.useJndi}" />
+ 		<property name="jdbcSessionFactoryBeanName" value="${hibernate.jdbcSessionFactoryBeanName}" />
+		<property name="jndiSessionFactoryBeanName" value="${hibernate.jndiSessionFactoryBeanName}" />
 		<property name="createSessionFactoryBeanName" value="createSessionFactory" />
-		<property name="jdbcUpgradeSessionFactoryBeanName" value="jdbcUpgradeSessionFactory" />
-		<!-- <property name="jdbcUpgradeSessionFactoryBeanName" value="${hibernate.jdbcUpgradeSessionFactoryBeanName}" /> -->
-		<property name="jndiUpgradeSessionFactoryBeanName" value="jndiUpgradeSessionFactory" />
-		<!-- <property name="jndiUpgradeSessionFactoryBeanName" value="${hibernate.jndiUpgradeSessionFactoryBeanName}" /> -->
+		<property name="jdbcUpgradeSessionFactoryBeanName" value="${hibernate.jdbcUpgradeSessionFactoryBeanName}" />
+		<property name="jndiUpgradeSessionFactoryBeanName" value="${hibernate.jndiUpgradeSessionFactoryBeanName}" />
 	</bean>
 
 	<!-- Session factories -->
@@ -174,6 +169,11 @@
                 </value>
 			</list>
 		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+			</props>
+		</property>
 	</bean>
 	
 	<bean 
@@ -208,6 +208,14 @@
 		<description>
 			The 'normal' session factory based on JDBC.
 		</description>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.connection.driver_class">${hibernate.connection.driver_class}</prop>
+				<prop key="hibernate.connection.url">${hibernate.connection.jdbc.url}</prop>
+				<prop key="hibernate.connection.username">${hibernate.connection.jdbc.username}</prop>
+				<prop key="hibernate.connection.password">${hibernate.connection.jdbc.password}</prop>
+			</props>
+		</property>
    	</bean>
 
 	<bean 
@@ -218,6 +226,15 @@
 		<description>
 			The 'normal' session factory based on JNDI.
 		</description>
+		<property name="hibernateProperties">
+			<props>
+ 	  	      	<prop key="hibernate.connection.driver_class">${hibernate.connection.driver_class}</prop>
+		        <prop key="hibernate.connection.datasource">java:/comp/env/${hibernate.connection.jndi.datasource}</prop>
+		        <prop key="hibernate.show_sql">false</prop>
+		        <prop key="hibernate.format_sql">false</prop>
+		        <prop key="hibernate.use_sql_comments">false</prop>
+			</props>
+		</property>
    	</bean>
 
 	<bean 
@@ -321,8 +338,7 @@
 			the database. It must implement interface org.esupportail.helpdesk.dao.DaoService.
 		</description>
 		<property name="useJdbc" value="true" />
-		<property name="useJndi" value="false" />
-<!-- 		<property name="useJndi" value="${hibernate.useJndi}" /> -->
+ 		<property name="useJndi" value="${hibernate.useJndi}" />
 		<property name="jdbcHibernateTemplateBeanName" value="${hibernate.jdbcTemplateBeanName}" />
 		<property name="jndiHibernateTemplateBeanName" value="${hibernate.jndiTemplateBeanName}" />
 		<property name="fileManager" ref="fileManager" />
