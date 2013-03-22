@@ -30,7 +30,6 @@
 	      	<value>classpath:/properties/defaults.properties</value>
 	      	<value>classpath:/properties/config.properties</value>
 	      	<!-- <value>file:${config.location}</value> -->
-	      	<value>classpath:/properties/config.properties</value>
 	      </list>
 	  </property>
 		<property name="ignoreResourceNotFound" value="true" />
