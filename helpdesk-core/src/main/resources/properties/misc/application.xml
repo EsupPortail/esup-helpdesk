@@ -55,7 +55,7 @@
 	    		The vendor.
 	    	</description>
     	</property>
-    	<property name="latestVersionBaseUrl" value="http://sourcesup.cru.fr/esup-helpdesk" >
+    	<property name="latestVersionBaseUrl" value="https://github.com/EsupPortail/esup-helpdesk" >
 	    	<description>
 	    		The base URL where the latest version number should be found.
 	    	</description>

@@ -582,7 +582,7 @@ public class Batch {
 				feed();
 			} else if ("send-reports".equals(args[0])) {
 				throw new IllegalArgumentException(
-						"argument send-reports is obsolete, please use sent-ticket-reports instead");
+						"argument send-reports is obsolete, please use send-ticket-reports instead");
 			} else if ("send-ticket-reports".equals(args[0])) {
 				sendTicketReports();
 			} else if ("send-faq-reports".equals(args[0])) {
