@@ -267,6 +267,10 @@
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.connection.driver_class">${hibernate.connection.driver_class}</prop>
+				<prop key="hibernate.connection.url">${hibernate.connection.jdbc.url}</prop>
+				<prop key="hibernate.connection.username">${hibernate.connection.jdbc.username}</prop>
+				<prop key="hibernate.connection.password">${hibernate.connection.jdbc.password}</prop>
 			</props>
 		</property>
 	</bean>
@@ -284,6 +288,11 @@
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.connection.driver_class">${hibernate.connection.driver_class}</prop>
+		        <prop key="hibernate.connection.datasource">java:/comp/env/${hibernate.connection.jndi.datasource}</prop>
+		        <prop key="hibernate.show_sql">false</prop>
+		        <prop key="hibernate.format_sql">false</prop>
+		        <prop key="hibernate.use_sql_comments">false</prop>
 			</props>
 		</property>
 	</bean>

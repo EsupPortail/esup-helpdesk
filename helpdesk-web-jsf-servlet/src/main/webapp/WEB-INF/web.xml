@@ -105,10 +105,10 @@
 	</context-param>
 <!--END-SERVLET-ONLY-->
 <!--BEGIN-PORTLET-ONLY-->
-	<context-param>
+<!-- 	<context-param>
 		<param-name>net.sf.jsfcomp.chartcreator.USE_CHARTLET</param-name>
 		<param-value>false</param-value>
-	</context-param>
+	</context-param> -->
 <!--END-PORTLET-ONLY-->
 
 	<servlet>
@@ -135,10 +135,10 @@
 	</context-param>
 <!--END-SERVLET-ONLY-->
 <!--BEGIN-PORTLET-ONLY-->
-	<context-param>
+<!-- 	<context-param>
 		<param-name>org.apache.myfaces.CHECK_EXTENSIONS_FILTER</param-name>
 		<param-value>false</param-value>
-	</context-param>
+	</context-param> -->
 <!--END-PORTLET-ONLY-->
 
 	<filter>

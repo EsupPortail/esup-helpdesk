@@ -6,7 +6,7 @@
     	from /properties/cache/cache.xml.
     -->
 
-     <diskStore path="${cache.path}"  />
+     <diskStore path="/tmp" />
 	 
     <cache 
     	name="org.esupportail.commons.services.i18n.BundlesCachingI18nServiceImpl"
