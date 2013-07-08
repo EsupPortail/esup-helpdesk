@@ -556,6 +556,8 @@ public class Batch {
 				testBeans();
 			} else if ("init-data".equals(args[0])) {
 				initDatabase();
+			} else if ("upgrade".equals(args[0])) {
+				doUpgradeDatabase();
 			}else if ("update-index".equals(args[0])) {
 				updateIndex(false);
 			} else if ("rebuild-index".equals(args[0])) {
