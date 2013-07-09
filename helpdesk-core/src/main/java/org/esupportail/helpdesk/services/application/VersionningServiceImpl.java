@@ -355,7 +355,7 @@ public class VersionningServiceImpl extends AbstractDomainAwareBean implements V
 		Version databaseVersion = getDomainService().getDatabaseVersion();
 		Version applicationVersion = getApplicationService().getVersion();
 		if (databaseVersion == null) {
-			String msg = "Your database is not initialized, please run 'ant init-data'.";
+			String msg = "Your database is not initialized, please run 'java -Dconfig.location=$configFile -jar helpdesk-batch-xxx.jar init-data'.";
 			if (throwException) {
 				throw new VersionException(msg);
 			}
@@ -393,7 +393,7 @@ public class VersionningServiceImpl extends AbstractDomainAwareBean implements V
 		}
 		if (databaseVersion.isOlderThan(applicationVersion)) {
 			String msg = "Application version is " + applicationVersion
-			+ ", the database is too old (" + databaseVersion + "), please run 'ant upgrade'.";
+			+ ", the database is too old (" + databaseVersion + "), please run 'java -Dconfig.location=$configFile -jar helpdesk-batch-xxx.jar upgrade'.";
 			if (throwException) {
 				throw new VersionException(msg);
 			}
