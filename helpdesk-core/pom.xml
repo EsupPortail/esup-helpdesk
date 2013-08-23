@@ -58,6 +58,10 @@
 					<artifactId>jmxri</artifactId>
 					<groupId>com.sun.jmx</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>geronimo-spec-javamail</artifactId>
+					<groupId>geronimo-spec</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
