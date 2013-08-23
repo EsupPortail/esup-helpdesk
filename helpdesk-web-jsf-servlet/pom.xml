@@ -37,7 +37,7 @@
 <!--                          <include>**/*.properties</include> <include>**/*.xml</include> </includes>  -->
 <!--                          </scanTargetPattern> </scanTargetPatterns>  -->
                     <webApp>
-                        <jettyEnvXml>src/main/jetty/jetty-env.xml</jettyEnvXml>
+                        <jettyEnvXml>${jettyEnvXml}</jettyEnvXml>
                         <overrideDescriptor>src/main/jetty/web-jetty.xml</overrideDescriptor>
                     </webApp>
                 </configuration>
@@ -64,5 +64,8 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <properties>
+    	<jettyEnvXml>src/main/jetty/jetty-env.xml</jettyEnvXml>
+    </properties>
 
 </project>
