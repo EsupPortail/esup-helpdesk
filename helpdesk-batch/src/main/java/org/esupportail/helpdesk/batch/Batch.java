@@ -98,6 +98,7 @@ public class Batch {
 				+ "\n- send-faq-reports: send FAQ reports"
 				+ "\n- feed: feed the database"
 				+ "\n- delete-all-tickets: delete all the tickets"
+				+ "\n- delete-ticket: delete one ticket ans its associated files"
 				);
 	}
 
@@ -543,6 +544,28 @@ public class Batch {
 	}
 
 	/**
+	 * Delete one ticket ans possibly associated files.
+	 */
+	private static void deleteTicket(final String id, final boolean deleteFiles) {
+		try {
+			DatabaseUtils.open();
+			DatabaseUtils.begin();
+			VersionningUtils.checkVersion(true, false);
+			Ticket ticketToDelete = getDomainService().getTicket(Long.parseLong(id));
+			if (ticketToDelete != null) {
+				getDomainService().deleteTicket(ticketToDelete, deleteFiles);
+			}			
+			getIndexer().updateIndex(true);
+			DatabaseUtils.commit();
+			DatabaseUtils.close();
+		} catch (Throwable t) {
+			DatabaseUtils.rollback();
+			DatabaseUtils.close();
+			throw new BatchException(t);
+		}
+	}
+	
+	/**
 	 * Dispatch depending on the arguments.
 	 * @param args
 	 */
@@ -595,6 +618,11 @@ public class Batch {
 				deleteAllTickets();
 			} else {
 				syntax();
+			}
+			break;
+		case 2:
+			if ("delete-ticket".equals(args[0])) {
+				deleteTicket(args[1], true);
 			}
 			break;
 		default:

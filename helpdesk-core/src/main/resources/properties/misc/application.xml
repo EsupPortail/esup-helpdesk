@@ -40,7 +40,7 @@
 	    		The minor number of the application (2 for version 1.2.3).
 	    	</description>
     	</property>
-    	<property name="versionUpdate" value="0" >
+    	<property name="versionUpdate" value="1" >
 	    	<description>
 	    		The update of the application (3 for version 1.2.3).
 	    	</description>
