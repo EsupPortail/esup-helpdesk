@@ -4,7 +4,7 @@
     <parent>
         <artifactId>helpdesk</artifactId>
         <groupId>org.esupportail</groupId>
-        <version>3.30.1-SNAPSHOT</version>
+        <version>3.30.1</version>
     </parent>
     <artifactId>helpdesk-web-jsf-servlet</artifactId>
     <packaging>war</packaging>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>org.esupportail</groupId>
             <artifactId>helpdesk-core</artifactId>
-            <version>3.30.1-SNAPSHOT</version>
+            <version>3.30.1</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
