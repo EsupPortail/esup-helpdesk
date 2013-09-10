@@ -58,6 +58,10 @@
 					<artifactId>jmxri</artifactId>
 					<groupId>com.sun.jmx</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>geronimo-spec-javamail</artifactId>
+					<groupId>geronimo-spec</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -384,5 +388,10 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>3.1.12</version>
 		</dependency>
+                <dependency>
+                    <groupId>postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>9.0-801.jdbc3</version>
+                </dependency>
     </dependencies>
 </project>

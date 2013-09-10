@@ -77,10 +77,12 @@ public class Batch {
 	 * Print the syntax and exit.
 	 */
 	private static void syntax() {
-		throw new IllegalArgumentException(
-				"syntax: " + Batch.class.getSimpleName() + " <options>"
+		System.out.println(
+				"syntax: java -Dconfig.location=</path/to/config.properties> -jar <jarName> <options>"
 				+ "\nwhere option can be:"
 				+ "\n- test-beans: test the required beans"
+				+ "\n- init-data: init database (RESET!)"
+				+ "\n- upgrade-data: upgrade database"				
 				+ "\n- update-index: update the index"
 				+ "\n- rebuild-index: rebuild the index"
 				+ "\n- unlock-index: unlock the index"
@@ -579,6 +581,8 @@ public class Batch {
 				testBeans();
 			} else if ("init-data".equals(args[0])) {
 				initDatabase();
+			} else if ("upgrade-data".equals(args[0])) {
+				doUpgradeDatabase();
 			}else if ("update-index".equals(args[0])) {
 				updateIndex(false);
 			} else if ("rebuild-index".equals(args[0])) {
@@ -636,12 +640,17 @@ public class Batch {
 	 * @param args
 	 */
 	public static void main(final String[] args) {
-		try {
-			ApplicationService applicationService = ApplicationUtils.createApplicationService();
-			LOG.info(applicationService.getName() + " v" + applicationService.getVersion());
-			dispatch(args);
-		} catch (Throwable t) {
-			ExceptionUtils.catchException(t);
+		if (args.length == 0) {
+			syntax();
+		}
+		else {
+			try {
+				ApplicationService applicationService = ApplicationUtils.createApplicationService();
+				LOG.info(applicationService.getName() + " v" + applicationService.getVersion());
+				dispatch(args);
+			} catch (Throwable t) {
+				ExceptionUtils.catchException(t);
+			}			
 		}
 	}
 

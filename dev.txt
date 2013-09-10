@@ -1,0 +1,24 @@
+Commandes utiles :
+
+Positionnement de l'environnement (export de $configFile, $jettyEnvFile et $log4jFile) :
+source env.sh
+
+Installation des modules dans le repo maven local :
+mvn -Dconfig.location=$configFile -Dlog4j.configuration=file:$log4jFile clean install
+
+Exec du war :
+cd helpdesk-web-jsf-servlet
+export MAVEN_OPTS="-XX:MaxPermSize=128M -Xmx512M"
+mvn -Dconfig.location=$configFile -Dlog4j.configuration=file:$log4jFile -DjettyEnvXml=$jettyEnvFile jetty:run
+cd ..
+
+Exec du batch :
+cd helpdesk-batch
+mvn -Dconfig.location=$configFile -Dlog4j.configuration=file:$log4jFile package
+java -Dconfig.location=$configFile -Dlog4j.configuration=file:$log4jFile -jar target/helpdesk-batch-<version>.jar
+cd ..
+
+Création d'une release :
+mvn release:prepare -Darguments="-Dconfig.location=$configFile -Dlog4j.configuration=file:$log4jFile"
+mvn release:perform -Darguments="-Dconfig.location=$configFile -Dlog4j.configuration=file:$log4jFile"
+

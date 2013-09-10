@@ -188,7 +188,7 @@
 				edu.yale.its.tp.cas.client.filter.loginUrl
 			</param-name>
 			<param-value>
-				https://cas.domain.edu/login
+				https://sso-cas.univ-rennes1.fr/login
 			</param-value>
 		</init-param>
 		<init-param>
@@ -196,7 +196,7 @@
 				edu.yale.its.tp.cas.client.filter.validateUrl
 			</param-name>
 			<param-value>
-				https://cas.domain.edu/serviceValidate
+				https://sso-cas.univ-rennes1.fr/serviceValidate
 			</param-value>
 		</init-param>
 		<init-param>
