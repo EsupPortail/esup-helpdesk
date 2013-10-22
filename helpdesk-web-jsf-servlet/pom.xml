@@ -8,15 +8,9 @@
     </parent>
     <artifactId>helpdesk-web-jsf-servlet</artifactId>
     <packaging>war</packaging>
-    <description>couche d'acces aux donnees</description>
+    <description>couche vue</description>
     <build>
         <defaultGoal>install</defaultGoal>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
 	    	<plugin>
 		        <artifactId>maven-war-plugin</artifactId>

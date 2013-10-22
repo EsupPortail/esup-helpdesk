@@ -30,17 +30,17 @@
 	    		The name of the application.
 	    	</description>
     	</property>
-    	<property name="versionMajorNumber" value="3" >
+    	<property name="versionMajorNumber" value="@@parsedVersion.majorVersion@@" >
 	    	<description>
 	    		The major number of the application (1 for version 1.2.3).
 	    	</description>
     	</property>
-    	<property name="versionMinorNumber" value="30" >
+    	<property name="versionMinorNumber" value="@@parsedVersion.minorVersion@@" >
 	    	<description>
 	    		The minor number of the application (2 for version 1.2.3).
 	    	</description>
     	</property>
-    	<property name="versionUpdate" value="1" >
+    	<property name="versionUpdate" value="@@parsedVersion.incrementalVersion@@" >
 	    	<description>
 	    		The update of the application (3 for version 1.2.3).
 	    	</description>
