@@ -4586,7 +4586,7 @@ implements DaoService {
 		} else if (jdbcUrl.startsWith("jdbc:postgresql")) {
 			databaseType = DATABASE_TYPE_POSTGRES;
 		} else {
-			throw new ConfigException("unknown database type for JDBC URL [" + jdbcUrl + "]");
+			throw new ConfigException("unknown database type for JDBC URL [" + jdbcUrl + "] - note that POSTGRESQL or MYSQL is required");
 		}
 	}
 
