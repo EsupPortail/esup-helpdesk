@@ -22,6 +22,9 @@
 				<value>properties/i18n/bundles/Commons</value>
 				<value>properties/i18n/bundles/Messages</value>
 				<value>properties/i18n/bundles/Custom</value>
+				<value>classpath:META-INF/properties/i18n/bundles/Commons</value>
+                <value>classpath:META-INF/properties/i18n/bundles/Messages</value>
+                <value>classpath:META-INF/properties/i18n/bundles/Custom</value>
 			</list>
 		</property>
 		<property name="cacheManager" ref="cacheManager" >

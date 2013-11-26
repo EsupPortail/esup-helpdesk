@@ -6,7 +6,6 @@
 		<groupId>org.esupportail</groupId>
 		<version>3.30.4-SNAPSHOT</version>
 	</parent>
-	<groupId>org.esupportail</groupId>
 	<artifactId>helpdesk-batch</artifactId>
 	<dependencies>
 		<dependency>

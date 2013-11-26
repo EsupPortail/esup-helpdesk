@@ -3,7 +3,7 @@
 
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
     <New id="myds" class="org.eclipse.jetty.plus.jndi.Resource">
-        <Arg>jdbc/helpdesk</Arg>
+        <Arg>jdbc/helpdeskDB</Arg>
         <Arg>
             <New class="org.apache.commons.dbcp.BasicDataSource">
                 <Set name="driverClassName">org.hsqldb.jdbcDriver</Set>
