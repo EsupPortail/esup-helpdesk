@@ -108,6 +108,22 @@ quick-start=false
 app.servletUrl=http://localhost:8080
 
 #
+# The custom css file URL that will be included in the head part of the output document. 
+# It must be an Absolute URL.
+# Optional : servletMediaPath/custom.css will be used.
+# Warning: this tag is ignored for portlet installations.
+#
+customCss.uri=http://resources.domain.fr/styles/custom.css
+
+#
+# The custom css file URI that will be part of the HTML header for emails or prints.
+# This Css will overide the provided css (email.css).
+# It can be an Absolute URL or a path residing in the file system.
+# Optional : only /properties/domain/email.css will be used.
+#
+emailCss.uri=http://resources.domain.fr/styles/email.css
+
+#
 # The uPortal URL of the application (e.g. http://portal.domain.edu).
 # Required for portlet deployments.
 #
@@ -172,54 +188,127 @@ app.servletUrl=http://localhost:8080
 
 #urlGeneration.uportalFunctionnalName=esup-helpdesk
 
+
+#-------------------------------------------------------------
+# SPRING CONFIG FILES PATH
+#-------------------------------------------------------------
+
+#
+#This files should not be modified but by the developers.
+#This files are referenced by the applicationContext.
+#
+
+#The configuration file for auth features.
+#auth.file=properties/auth/auth.xml
+
+#The configuration file for caching features.
+#cache.file=properties/cache/cache.xml
+
+#The configuration file for Data Access Object.
+#dao.file=properties/dao/dao.xml
+
+#The configuration file descripting a bean used to archive tickets.
+#archiving.file=properties/domain/archiving.xml
+
+#The configuration file descripting a bean used to recall tickets.
+#recall.file=properties/domain/recall.xml
+
+#The configuration file descripting bean used to send or print reports.
+#reporting.file=properties/domain/reporting.xml
+
+#The configuration file for assignment features.
+#assignment.file=properties/domain/assignment.xml
+
+#The configuration file descripting bean used to manage a store for the computer URL builders.
+#computerUrl.file=properties/domain/computerUrl.xml
+
+#The configuration file descripting bean used to manage expire tickets.
+#expiration.file=properties/domain/expiration.xml
+
+#The configuration file descripting bean used to configure categories.
+#categoryConfiguration.file=properties/domain/categoryConfiguration.xml
+
+#The configuration file descripting bean used to configure departments.
+#departmentConfiguration.file=properties/domain/departmentConfiguration.xml
+
+#The configuration file descripting bean used to configure department managers.
+#departmentManagerConfiguration.file=properties/domain/departmentManagerConfiguration.xml
+
+#The configuration file descripting bean used to configure the visibility of departments.
+#departmentSelection.file=properties/domain/departmentSelection.xml
+
+#The configuration file descripting bean used to provide information on users.
+#userInfo.file=properties/domain/userInfo.xml
+
+#The configuration file descripting bean used to manage users.
+#userManagement.file=properties/domain/userManagement.xml
+
+#The configuration file descripting bean used to manage specifics users.
+#userManagement-specific.file=properties/domain/userManagement-specific.xml
+
+#The configuration file descripting bean used to index objects.
+#indexing.file=properties/domain/indexing.xml
+
+#The configuration file descripting bean used to configure the basic implementation of DomainService.
+#domain.file=properties/domain/domain.xml
+
+#The configuration file descripting bean used to feed the helpdesk with tickets created by reading an email address.
+#feed.file=properties/domain/feed.xml
+
+#The configuration file descripting bean used to compute statistics.
+#statistics.file=properties/domain/statistics.xml
+
+#The configuration file descripting bean used to manage deep linking.
+#deepLinking.file=properties/deepLinking/deepLinking.xml
+
+#The configuration file descripting bean used to manage an application-specific exception service.
+#exceptionHandling.file=properties/exceptionHandling/exceptionHandling.xml
+
+#The configuration file descripting bean used to manage remote (web) services.
+#export.file=properties/export/export.xml
+
+#The configuration file descripting bean used to manage files for i18n services.
+#i18n.file=properties/i18n/i18n.xml
+
+#The configuration file for ldap features.
+#ldap.file=properties/ldap/ldap.xml
+
+#The configuration file descripting bean used to manage various abstract beans.
+#abstractBeans.file=properties/misc/abstractBeans.xml
+
+#The configuration file descripting bean used to give the version of the application.
+#application.file=properties/misc/application.xml
+
+#The configuration file descripting bean used to configure portal services.
+#portal.file=properties/portal/portal.xml
+
+#The configuration file descripting bean used to configure smtp services.
+#smtp.file=properties/smtp/smtp.xml
+
+#The configuration file descripting bean used to configure the initialization of the application.
+#init.file=properties/init/init.xml
+
+#The configuration file descripting bean used to manage TagsConfigurator.
+#tags.file=properties/tags/tags.xml
+
+#The configuration file descripting bean used to manage the implementation of UrlBuilder.
+#urlGeneration.file=properties/urlGeneration/urlGeneration.xml
+
+#The configuration file descripting bean used to declare the visual beans used by the web interface.
+#controllers.file=properties/web/controllers.xml
+
+#The configuration file descripting bean used to declare the converters used by the web interface.
+#converters.file=properties/web/converters.xml
+
+#The configuration file descripting bean used to declare the helpers used by the web interface.
+#helpers.file=properties/web/helpers.xml
+
+#The configuration file descripting bean used to monitor the beans of the application.
+#monitoring.file=properties/devel/monitoring.xml
+
 ##############################################################
 # LOGS
 ##############################################################
-
-#
-# The main log level, defaults to WARN.
-# Set to TRACE, DEBUG, INFO, WARN, ERROR or FATAL.
-#
-
-log.level=INFO
-
-#
-# The destination of logs, defaults to file.
-# Set to 'stdout' to print logs on the console or 'file' to print to a file.
-#
-
-log.output=file
-
-#
-# The log4j pattern used, defaults to %d %p [%c] - %m%n.
-#
-
-#log.pattern=%d %p [%c] - %m%n
-
-#-------------------------------------------------------------
-# FILE OUTPUT
-#-------------------------------------------------------------
-
-#
-# The name of the output file, used when log.output is set to file.
-# Defaults to esup-helpdesk.log.
-#
-
-#log.file=esup-helpdesk.log
-log.file=esup-helpdesk.log
-
-#
-# The max size of the output file, used when log.output is set to file.
-# Defaults to 5MB.
-#
-
-#log.maxFileSize=5MB
-
-#
-# The max number of backups, defaults to 3.
-#
-
-#log.maxBackupIndex=3
 
 #-------------------------------------------------------------
 # EXCEPTION HANDLING

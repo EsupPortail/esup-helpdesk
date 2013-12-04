@@ -4,76 +4,313 @@
 	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-		http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
-		http://www.springframework.org/schema/aop 
-		http://www.springframework.org/schema/aop/spring-aop.xsd"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
 	>
 
 	<!-- 
-		/properties/applicationContext.xml
+		/properties/applicationContext.file}
 		The main Spring configuration file.
 		This file should not be modified but by the developers.
-		This file is referenced by /webapp/WEB-INF/web.xml.
+		This file is referenced by /webapp/WEB-INF/web.file}.
 	-->
+		
+	<import resource="classpath*:properties/config/properties.xml"/>
+	<bean name="bootstrap" class="org.esupportail.helpdesk.support.spring.context.SpringWebContextBootstrapper">
+	    <property name="configLocations">
+	        <list>
+				<!-- repeat this here if you would use the property placeholders again -->
+	            <value>classpath*:properties/config/properties.xml</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<!-- and this is a modified content from one of our live applications -->
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${auth.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${dao.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${cache.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${archiving.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${recall.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${reporting.file}</value>
+	        </list>
+	    </property>
+	</bean>	
 
-	<bean 
-		id="requestCacheBean" 
-		class="org.esupportail.commons.aop.cache.RequestCachingMethodInterceptor" />
-	<bean 
-		id="sessionCacheBean" 
-		class="org.esupportail.commons.aop.cache.SessionCachingMethodInterceptor" />
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${assignment.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${computerUrl.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${expiration.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${categoryConfiguration.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${departmentConfiguration.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${departmentManagerConfiguration.file}</value>
+	        </list>
+	    </property>
+	</bean>	
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${departmentSelection.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${userInfo.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${userManagement.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${userManagement-specific.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${indexing.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${domain.file}</value>
+	        </list>
+	    </property>
+	</bean>	
 
-    <aop:aspectj-autoproxy proxy-target-class="true" />
-
-	<bean id="propertyConfigurer" 
-	    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-	  <property name="locations" > 
-	      <list>
-	      	<value>classpath:/properties/defaults.properties</value>
-	      	<value>classpath:/properties/defaults-servlet.properties</value>
-<!-- 	      	<value>classpath:/properties/defaults-${deploy.type}.properties</value> -->
-             <value>file:${config.location}</value>
-	      </list>
-	  </property>
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${feed.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${statistics.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${deepLinking.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${exceptionHandling.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${export.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${i18n.file}</value>
+	        </list>
+	    </property>
 	</bean>
 
-	<import resource="classpath*:properties/auth/auth.xml" />
-	<import resource="classpath*:properties/cache/cache.xml" />
-	<import resource="classpath*:properties/dao/dao.xml" />
- 	<import resource="classpath*:properties/domain/archiving.xml" />
- 	<import resource="classpath*:properties/domain/recall.xml" />
- 	<import resource="classpath*:properties/domain/reporting.xml" />
- 	<import resource="classpath*:properties/domain/assignment.xml" />
- 	<import resource="classpath*:properties/domain/computerUrl.xml" />
- 	<import resource="classpath*:properties/domain/expiration.xml" />
- 	<import resource="classpath*:properties/domain/categoryConfiguration.xml" />
- 	<import resource="classpath*:properties/domain/departmentConfiguration.xml" />
- 	<import resource="classpath*:properties/domain/departmentManagerConfiguration.xml" />
- 	<import resource="classpath*:properties/domain/departmentSelection.xml" />
- 	<import resource="classpath*:properties/domain/userInfo.xml" />
- 	<import resource="classpath*:properties/domain/userManagement.xml" />
- 	<import resource="classpath*:properties/domain/userManagement-specific.xml" />
- 	<import resource="classpath*:properties/domain/indexing.xml" />
- 	<import resource="classpath*:properties/domain/domain.xml" /> 
- 	<import resource="classpath*:properties/domain/feed.xml" />
- 	<import resource="classpath*:properties/domain/statistics.xml" />
- 	<import resource="classpath*:properties/deepLinking/deepLinking.xml" />
-	<import resource="classpath*:properties/exceptionHandling/exceptionHandling.xml" />
-	<import resource="classpath*:properties/export/export.xml" />
-	<import resource="classpath*:properties/i18n/i18n.xml" />
-	<import resource="classpath*:properties/ldap/ldap.xml" />
-	<import resource="classpath*:properties/misc/abstractBeans.xml" />
-	<import resource="classpath*:properties/misc/application.xml" />
-	<import resource="classpath*:properties/portal/portal.xml" />
-	<import resource="classpath*:properties/smtp/smtp.xml" />
-	<import resource="classpath*:properties/init/init.xml" />
-	<import resource="classpath*:properties/tags/tags.xml" />
-	<import resource="classpath*:properties/urlGeneration/urlGeneration.xml" />
-	<import resource="classpath*:properties/web/controllers.xml" />
-	<import resource="classpath*:properties/web/converters.xml" />
-	<import resource="classpath*:properties/web/helpers.xml" />
- 	<import resource="classpath*:properties/devel/monitoring.xml" />
-	<import resource="classpath:org/codehaus/xfire/spring/xfire.xml" /> 
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${ldap.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${abstractBeans.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${application.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${portal.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${smtp.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${init.file}</value>
+	        </list>
+	    </property>
+	</bean>	
 
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${tags.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${urlGeneration.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${controllers.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${converters.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${helpers.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
+	    <property name="configLocations">
+	        <list>
+	            <value>${monitoring.file}</value>
+	        </list>
+	    </property>
+	</bean>
+	
 </beans>

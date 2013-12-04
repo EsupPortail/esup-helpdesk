@@ -7,11 +7,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.validator.UrlValidator;
 import org.esupportail.commons.exceptions.ConfigException;
 import org.esupportail.commons.services.application.ApplicationService;
 import org.esupportail.commons.services.i18n.I18nService;
@@ -22,12 +27,17 @@ import org.esupportail.commons.utils.Assert;
 import org.esupportail.helpdesk.domain.beans.Ticket;
 import org.esupportail.helpdesk.services.feed.imap.messageId.MessageIdHandler;
 import org.esupportail.helpdesk.services.urlGeneration.UrlBuilder;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.StringUtils;
 
 /**
  * An abstract email handler.
  */
-public class AbstractSender implements InitializingBean {
+public class AbstractSender implements InitializingBean, ApplicationContextAware {
 
 	/**
 	 * A logger.
@@ -54,6 +64,9 @@ public class AbstractSender implements InitializingBean {
 	 */
 	private ApplicationService applicationService;
 
+
+	private ApplicationContext context;
+	
 	/**
 	 * The message Id handler.
 	 */
@@ -63,7 +76,12 @@ public class AbstractSender implements InitializingBean {
 	 * True to use the reply-to feature.
 	 */
 	private boolean useReplyTo;
-
+	
+	/**
+	 * The email css path.
+	 */
+	private String emailCssPath;
+	
 	/**
 	 * Bean constructor.
 	 */
@@ -85,6 +103,9 @@ public class AbstractSender implements InitializingBean {
 				"property i18nService of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(this.applicationService,
 				"property applicationService of class " + this.getClass().getName()
+				+ " can not be null");
+		Assert.notNull(this.context,
+				"property context of class " + this.getClass().getName()
 				+ " can not be null");
 		if (useReplyTo) {
             Assert.notNull(messageIdHandler,
@@ -192,7 +213,7 @@ public class AbstractSender implements InitializingBean {
 			final String subject) {
 		String htmlHeader = "<html><head><title>" + subject + "</title><style type=\"text/css\">\n<!--\n";
 		try {
-			InputStream is = getClass().getResourceAsStream("/properties/domain/email.css");
+			InputStream is = new ClassPathResource("/properties/domain/email.css").getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 			String line = reader.readLine();
 			while (line != null) {
@@ -202,6 +223,21 @@ public class AbstractSender implements InitializingBean {
 			is.close();
 		} catch (IOException e) {
 			throw new ConfigException(e);
+		}
+		if(StringUtils.hasText(getEmailCssPath())) {
+			String emailResource  = new UrlValidator().isValid(getEmailCssPath()) ? getEmailCssPath() : "file:"+ getEmailCssPath();
+			try {
+				InputStream is = context.getResource(emailResource).getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+				String line = reader.readLine();
+				while (line != null) {
+					htmlHeader += line + "\n";
+					line = reader.readLine();
+				}
+				is.close();
+			} catch (IOException e) {
+				throw new ConfigException(e);
+			}
 		}
 		htmlHeader += "\n-->\n</style></head><body>";
 		return htmlHeader;
@@ -270,6 +306,20 @@ public class AbstractSender implements InitializingBean {
 	}
 
 	/**
+	 * @return the emailCssPath
+	 */
+	protected String getEmailCssPath() {
+		return emailCssPath;
+	}
+
+	/**
+	 * @param emailCssPath the emailCssPath to set
+	 */
+	public void setEmailCssPath(final String emailCssPath) {
+		this.emailCssPath = emailCssPath;
+	}
+	
+	/**
 	 * @param urlBuilder the urlBuilder to set
 	 */
 	public void setUrlBuilder(final UrlBuilder urlBuilder) {
@@ -283,6 +333,11 @@ public class AbstractSender implements InitializingBean {
 		this.applicationService = applicationService;
 	}
 
+	public void setApplicationContext(ApplicationContext context)
+			throws BeansException {
+		this.context = context;
+	}
+	
 	/**
 	 * @param smtpService the smtpService to set
 	 */

@@ -93,7 +93,7 @@
     			<value>commons.css</value>
     			<value>portlet.css</value>
     			<value>helpdesk.css</value>
-    			<value>custom.css</value>
+    			<value>${customCss.uri}</value>
     		</list>
     	</property>
     	<property name="documentBodyStyleClass" value="portlet-section-body" >

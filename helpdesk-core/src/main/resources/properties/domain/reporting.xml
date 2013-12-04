@@ -25,6 +25,7 @@
 		<property name="messageIdHandler" ref="messageIdHandler" />
         <property name="smtpService" ref="smtpService" />
         <property name="urlBuilder" ref="urlBuilder" />
+ 		<property name="emailCssPath" value="${emailCss.uri}" />
     </bean>
 
     <bean id="passwordSender"

@@ -12,26 +12,21 @@
 		This file is referenced by /properties/applicationContext.xml.
 	-->
 
-	<bean 
-		id="i18nService" 
-		class="org.esupportail.commons.services.i18n.BundlesCachingI18nServiceImpl"
-		lazy-init="true"
-		>
-		<property name="bundleBasenames">
-			<list>
-				<value>properties/i18n/bundles/Commons</value>
-				<value>properties/i18n/bundles/Messages</value>
-				<value>properties/i18n/bundles/Custom</value>
-				<value>classpath:META-INF/properties/i18n/bundles/Commons</value>
-                <value>classpath:META-INF/properties/i18n/bundles/Messages</value>
-                <value>classpath:META-INF/properties/i18n/bundles/Custom</value>
-			</list>
-		</property>
-		<property name="cacheManager" ref="cacheManager" >
-			<description>
-				The cache manager used to cache the bundles.
-			</description>
-		</property>
-	</bean>
+	<bean id="i18nService"
+          class="org.esupportail.helpdesk.services.i18n.ResourceBundleMessageSourceI18nServiceImpl">
+        <property name="messageSource" ref="msgs" />
+    </bean>
+
+    <bean id="msgs"
+          class="org.esupportail.helpdesk.services.i18n.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>classpath:properties/i18n/bundles/Commons</value>
+                <value>classpath:properties/i18n/bundles/Messages</value>
+                <value>classpath:properties/i18n/bundles/Custom</value>
+            </list>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="true" />
+    </bean>
 
 </beans>

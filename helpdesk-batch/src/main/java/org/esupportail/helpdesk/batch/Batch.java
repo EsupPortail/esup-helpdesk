@@ -25,6 +25,7 @@ import org.esupportail.helpdesk.services.feed.ErrorHolder;
 import org.esupportail.helpdesk.services.feed.Feeder;
 import org.esupportail.helpdesk.services.indexing.Indexer;
 import org.esupportail.helpdesk.services.recall.Recaller;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
  * A class with a main method called by ant targets.
@@ -645,7 +646,15 @@ public class Batch {
 		}
 		else {
 			try {
-				ApplicationService applicationService = ApplicationUtils.createApplicationService();
+				//creation d'un context Spring
+				//ATTENTION : A cause d'un pb de résolution de properties dans les balises import de Spring en version < 3.1
+				// on est obligé d'utiliser SpringXmlContextBootstrapper pour lire les properties puis mimer les imports via des beans de type
+				// ConfigLocationProvider.
+				// SpringXmlContextBootstrapper est appelé lors du new FileSystemXmlApplicationContext() et positionne le context Spring dans le 
+				// thread local utilisé par BeanUtils de esup-commons
+				new FileSystemXmlApplicationContext("classpath:properties/applicationContext.xml");
+				
+				ApplicationService applicationService = (ApplicationService) BeanUtils.getBean("applicationService");
 				LOG.info(applicationService.getName() + " v" + applicationService.getVersion());
 				dispatch(args);
 			} catch (Throwable t) {
