@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.esupportail</groupId>
     <artifactId>helpdesk</artifactId>
-    <version>3.30.6</version>
+    <version>3.30.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>An Blank Application to start your project</description>
     <repositories>
