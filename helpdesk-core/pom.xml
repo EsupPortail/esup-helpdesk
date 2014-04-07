@@ -46,7 +46,7 @@
 	    <dependency>
 	  		<groupId>org.esupportail</groupId>
 	  		<artifactId>esup-commons</artifactId>
-	  		<version>1.3.18</version>
+	  		<version>1.3.19</version>
 		</dependency>
 		<dependency>
 			<groupId>org.esupportail</groupId>

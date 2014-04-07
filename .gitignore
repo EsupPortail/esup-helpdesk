@@ -6,3 +6,6 @@ target/
 /esup-blank-web-jsf-mixed/esup-blank.log
 /env.sh
 nbactions.xml
+.idea/
+*.eml
+*.iml
