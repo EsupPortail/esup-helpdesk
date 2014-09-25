@@ -4,14 +4,14 @@
 	<parent>
 		<artifactId>helpdesk</artifactId>
 		<groupId>org.esupportail</groupId>
-		<version>3.30.8-SNAPSHOT</version>
+		<version>3.30.8</version>
 	</parent>
 	<artifactId>helpdesk-batch</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>org.esupportail</groupId>
 			<artifactId>helpdesk-core</artifactId>
-			<version>3.30.8-SNAPSHOT</version>
+			<version>3.30.8</version>
 		</dependency>
 	</dependencies>
 	<build>
