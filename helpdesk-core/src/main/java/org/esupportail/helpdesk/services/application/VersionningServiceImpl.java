@@ -337,8 +337,11 @@ public class VersionningServiceImpl extends AbstractDomainAwareBean implements V
 		DatabaseUtils.create();
 		logger.info("creating the first user of the application thanks to "
 				+ getClass().getName() + ".firstAdministratorId...");
-//		User firstAdministrator = getUserStore().getUserFromRealId(firstAdministratorId);
-		//create for test jar batch (init-data) in version 3.30.0-alpha2
+/*		User firstAdministrator = getUserStore().getUserFromRealId(firstAdministratorId);*/
+		//create for jar batch (init-data) in version 3.30.0-alpha2
+        if(getUserStore().isShibbolethAuthAllowed()) {
+            logger.info("FirstAdministrator couldn't be created with shibboleth auth type without portal. It'll be created with cas auth type");
+        }
 		User firstAdministrator = new User("cas-"+firstAdministratorId,"cas",firstAdministratorId);
 		getDomainService().addAdmin(firstAdministrator);
 		logger.info("the database has been created.");

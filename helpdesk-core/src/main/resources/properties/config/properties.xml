@@ -8,12 +8,6 @@
 		file. This file should not be modified but by the developers. This file is 
 		referenced by /webapp/WEB-INF/web.file}. -->
 
-	<bean id="requestCacheBean"
-		class="org.esupportail.commons.aop.cache.RequestCachingMethodInterceptor" />
-	<bean id="sessionCacheBean"
-		class="org.esupportail.commons.aop.cache.SessionCachingMethodInterceptor" />
-
-	<aop:aspectj-autoproxy proxy-target-class="true" />
 
 	<bean id="propertyPlaceholderConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

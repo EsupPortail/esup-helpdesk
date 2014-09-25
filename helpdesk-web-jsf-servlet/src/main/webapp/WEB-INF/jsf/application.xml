@@ -15,14 +15,17 @@
 		<variable-resolver>
 			org.springframework.web.jsf.DelegatingVariableResolver
 		</variable-resolver>
+        <message-bundle>
+            properties.i18n.bundles.Messages
+        </message-bundle>
 		<locale-config>
-			<default-locale>${defaultLocale}</default-locale>
+			<default-locale>fr</default-locale>
 			<supported-locale>en</supported-locale>
 			<supported-locale>fr</supported-locale>
 			<supported-locale>cs</supported-locale>
 		</locale-config>
 	</application>
-	
+
 	<lifecycle>
 		<phase-listener>org.esupportail.commons.jsf.MessagesPhaseListener</phase-listener>
 	</lifecycle>

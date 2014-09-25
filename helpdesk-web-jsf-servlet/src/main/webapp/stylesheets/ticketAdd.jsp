@@ -12,7 +12,6 @@
 		showSubmitPopupText="#{sessionController.showSubmitPopupText}" 
 		showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
 		id="ticketActionForm" rendered="#{ticketController.userCanAdd}" enctype="multipart/form-data" >
-
 		<e:panelGrid columns="2" width="100%" columnClasses="colLeft,colRight">
 			<e:section value="#{msgs['TICKET_ACTION.TITLE.ADD']}" />
 			<h:panelGroup>
@@ -47,7 +46,7 @@
 						alt="#{msgs['_.BUTTON.NEXT']}" 
 						title="#{msgs['_.BUTTON.NEXT']}" />
 				</h:panelGroup>
-				<e:commandButton style="display: none" id="gotoChooseCategoryButton" 
+				<e:commandButton style="display: none" id="gotoChooseCategoryButton"
 					value="#{msgs['_.BUTTON.NEXT']}" 
 					action="continue" >
 					<t:updateActionListener value="false" property="#{ticketController.showAddHelp}" />

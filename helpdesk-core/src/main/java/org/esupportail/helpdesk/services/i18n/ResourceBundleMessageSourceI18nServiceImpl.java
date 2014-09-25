@@ -14,35 +14,26 @@ import org.springframework.context.MessageSource;
  *
  * See /properties/i18n/i18n-example.xml.
  */
-public class ResourceBundleMessageSourceI18nServiceImpl extends AbstractI18nService implements InitializingBean {
+public class ResourceBundleMessageSourceI18nServiceImpl extends AbstractI18nService {
+	private final ReloadableResourceBundleMessageSource messageSource;
+    private final Map<String, String> mergedProps;
 
-	/**
-	 * The serialization id.
-	 */
-	private static final long serialVersionUID = 4294880275369021655L;
+    private static ResourceBundleMessageSourceI18nServiceImpl instance = null;
 
-	/**
-	 * The basename of the properties files that holds the bundles.
-	 */
-	private ReloadableResourceBundleMessageSource messageSource;
+    private ResourceBundleMessageSourceI18nServiceImpl(ReloadableResourceBundleMessageSource messageSource) {
+        this.messageSource = messageSource;
+        mergedProps = messageSource.getStrings(getDefaultLocale());
+    }
 
-	/**
-	 * Bean constructor.
-	 */
-	public ResourceBundleMessageSourceI18nServiceImpl() {
-		super();
-	}
+    public static ResourceBundleMessageSourceI18nServiceImpl create(ReloadableResourceBundleMessageSource messageSource) {
+        if (instance == null)
+            instance = new ResourceBundleMessageSourceI18nServiceImpl(messageSource);
+        return instance;
+    }
 
-	@Override
-	public void afterPropertiesSet() {
-		Assert.notNull(messageSource,
-				"property messageSource of class " + getClass().getName() + " can not be null");
-		Assert.isInstanceOf(ReloadableResourceBundleMessageSource.class, messageSource, "property messageSource of class " + getClass().getName() + ": ");
-	}
-
-	@Override
+    @Override
 	public Map<String, String> getStrings(final Locale locale) {
-		return messageSource.getStrings(locale);
+		return mergedProps;
 	}
 
 	@Override
@@ -64,12 +55,4 @@ public class ResourceBundleMessageSourceI18nServiceImpl extends AbstractI18nServ
 	public String getString(String key, Object... args) {
 		return messageSource.getMessage(key, args, getDefaultLocale());
 	}
-
-	/**
-	 * @param messageSource the messageSource to set
-	 */
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = (ReloadableResourceBundleMessageSource) messageSource;
-	}
-
 }

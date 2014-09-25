@@ -216,7 +216,6 @@
 		<filter-name>CAS Filter</filter-name>
 		<url-pattern>/stylesheets/cas.faces</url-pattern>
 	</filter-mapping>
-	    
 <!--END-SERVLET-ONLY-->
 
 <!--

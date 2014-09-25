@@ -183,6 +183,7 @@ public interface UserStore extends Serializable {
 	User getUserFromRealId(
 			String realId) throws UserNotFoundException;
 
+
 	/**
 	 * @param user
 	 * @return the LDAP attributes of a user.

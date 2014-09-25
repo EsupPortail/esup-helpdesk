@@ -23,7 +23,14 @@
 	        </list>
 	    </property>
 	</bean>
-	
+
+    <bean id="requestCacheBean"
+          class="org.esupportail.commons.aop.cache.RequestCachingMethodInterceptor" />
+    <bean id="sessionCacheBean"
+          class="org.esupportail.commons.aop.cache.SessionCachingMethodInterceptor" />
+
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
 	<!-- and this is a modified content from one of our live applications -->
 	<bean class="org.esupportail.helpdesk.support.spring.context.ConfigLocationProviderImpl">
 	    <property name="configLocations">

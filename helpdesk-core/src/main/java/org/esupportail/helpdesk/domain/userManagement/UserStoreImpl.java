@@ -542,6 +542,7 @@ public class UserStoreImpl extends AbstractUserStore implements InitializingBean
 				"user [" + realId + "] not found in the database");
 	}
 
+
 	/**
 	 * Eclipse delimiter.
 	 */
