@@ -16,6 +16,7 @@
           class="org.esupportail.helpdesk.services.i18n.ResourceBundleMessageSourceI18nServiceImpl"
           factory-method="create">
         <constructor-arg ref="messageSource" />
+        <constructor-arg value="${defaultLocale}" />
     </bean>
 
     <bean id="messageSource"

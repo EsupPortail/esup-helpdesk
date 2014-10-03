@@ -25,8 +25,7 @@
 			<supported-locale>cs</supported-locale>
 		</locale-config>
 	</application>
-
-	<lifecycle>
+    <lifecycle>
 		<phase-listener>org.esupportail.commons.jsf.MessagesPhaseListener</phase-listener>
 	</lifecycle>
 	

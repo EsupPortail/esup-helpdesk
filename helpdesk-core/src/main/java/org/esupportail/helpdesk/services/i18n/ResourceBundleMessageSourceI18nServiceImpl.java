@@ -3,6 +3,7 @@ package org.esupportail.helpdesk.services.i18n;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.myfaces.shared_impl.util.LocaleUtils;
 import org.esupportail.commons.services.i18n.AbstractI18nService;
 import org.esupportail.commons.utils.Assert;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,15 +20,17 @@ public class ResourceBundleMessageSourceI18nServiceImpl extends AbstractI18nServ
     private final Map<String, String> mergedProps;
 
     private static ResourceBundleMessageSourceI18nServiceImpl instance = null;
+    private Locale defaultLocale;
 
-    private ResourceBundleMessageSourceI18nServiceImpl(ReloadableResourceBundleMessageSource messageSource) {
+    private ResourceBundleMessageSourceI18nServiceImpl(ReloadableResourceBundleMessageSource messageSource, String defLocale) {
+        setDefaultLocale(defLocale);
         this.messageSource = messageSource;
         mergedProps = messageSource.getStrings(getDefaultLocale());
     }
 
-    public static ResourceBundleMessageSourceI18nServiceImpl create(ReloadableResourceBundleMessageSource messageSource) {
+    public static ResourceBundleMessageSourceI18nServiceImpl create(ReloadableResourceBundleMessageSource messageSource, String defLocale) {
         if (instance == null)
-            instance = new ResourceBundleMessageSourceI18nServiceImpl(messageSource);
+            instance = new ResourceBundleMessageSourceI18nServiceImpl(messageSource, defLocale);
         return instance;
     }
 
@@ -43,7 +46,7 @@ public class ResourceBundleMessageSourceI18nServiceImpl extends AbstractI18nServ
 
 	@Override
 	public String getString(String key) {
-		return messageSource.getMessage(key, null, getDefaultLocale());
+		return messageSource.getMessage(key, null, defaultLocale);
 	}
 
 	@Override
@@ -53,6 +56,10 @@ public class ResourceBundleMessageSourceI18nServiceImpl extends AbstractI18nServ
 
 	@Override
 	public String getString(String key, Object... args) {
-		return messageSource.getMessage(key, args, getDefaultLocale());
+		return messageSource.getMessage(key, args, defaultLocale);
 	}
+
+    public void setDefaultLocale(String defaultLocale) {
+        this.defaultLocale = LocaleUtils.toLocale(defaultLocale);
+    }
 }

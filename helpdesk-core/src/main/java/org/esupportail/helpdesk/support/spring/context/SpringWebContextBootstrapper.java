@@ -16,10 +16,7 @@ package org.esupportail.helpdesk.support.spring.context;
  * limitations under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.esupportail.commons.utils.Assert;
 import org.springframework.beans.BeansException;
@@ -46,7 +43,7 @@ public class SpringWebContextBootstrapper implements InitializingBean,
 	protected String[] configLocations;
 	protected AbstractRefreshableWebApplicationContext context;
 
-	public void init() throws Exception {
+    public void init() throws Exception {
 		Set<String> configs = new LinkedHashSet<String>();
 		if (configLocations != null)
 			for (String s : configLocations)

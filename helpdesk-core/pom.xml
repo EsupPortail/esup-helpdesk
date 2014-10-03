@@ -97,8 +97,17 @@
 					<artifactId>geronimo-spec-javamail</artifactId>
 					<groupId>geronimo-spec</groupId>
 				</exclusion>
+                <exclusion>
+                    <artifactId>commons-validator</artifactId>
+                    <groupId>commons-validator</groupId>
+                </exclusion>
 			</exclusions>
 		</dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.4.0</version>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.fulcrum</groupId>
 			<artifactId>fulcrum-yaafi</artifactId>
@@ -228,11 +237,6 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.0.4</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-validator</groupId>
-			<artifactId>commons-validator</artifactId>
-			<version>1.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>dom4j</groupId>

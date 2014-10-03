@@ -6,7 +6,7 @@
     	from /properties/cache/cache.xml.
     -->
 
-     <diskStore path="/tmp" />
+     <diskStore path="java.io.tmpdir" />
 	 
     <cache 
     	name="org.esupportail.commons.services.i18n.BundlesCachingI18nServiceImpl"
