@@ -6,7 +6,10 @@ package org.esupportail.helpdesk.services.feed.imap.messageId;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.esupportail.commons.exceptions.ConfigException;
 import org.esupportail.commons.services.logging.Logger;
@@ -29,7 +32,7 @@ public class SigningMessageIdHandlerImpl extends AbstractMessageIdHandler implem
 	/**
 	 * Regular expression patter to find ticket number.
 	 */
-	private static final String TICKET_ID_PATTERN = "<ticketId\\.(\\d+)\\.([0-9a-v]+)@.*>";
+	private static final Pattern TICKET_ID_PATTERN = Pattern.compile(".*<ticketId\\.(\\d+)\\.([0-9a-z]+).*@[^>]*>.*", Pattern.DOTALL);
 
 	/**
 	 * The base used to hash.
@@ -103,16 +106,17 @@ public class SigningMessageIdHandlerImpl extends AbstractMessageIdHandler implem
      */
     @Override
 	public String genMessageId(final Ticket ticket) {
+    	String uniqueId = new Date().getTime() + "-" + Math.abs(new Random().nextLong());
     	if (ticket == null) {
             // Message-ID according to RFC 822 in form "<yyyyyyyyy@domain>",
             // where yyyyyyyyy is a random number
-            return "<" + Math.abs(new Random().nextLong()) + "@" + emailDomain + ">";
+            return "<" + uniqueId + "@" + emailDomain + ">";
     	}
         // Message-ID according to RFC 822 in form "<ticketId.xxx.yyy@domain>",
         // 		where xxx is the ticket id and and yyy is hash.
     	long ticketId = ticket.getId();
     	String hash = getHash(ticketId);
-        return "<" + "ticketId." + ticketId + "." + hash + "@" + emailDomain + ">";
+        return "<" + "ticketId." + ticketId + "." + hash + "." + uniqueId + "@" + emailDomain + ">";
     }
 
     /**
@@ -122,21 +126,24 @@ public class SigningMessageIdHandlerImpl extends AbstractMessageIdHandler implem
     @Override
 	public Long getTicketIdFromMessageId(
     		final String messageId) throws MessageIdException {
-    	if (!messageId.matches(TICKET_ID_PATTERN)) {
+        logger.debug("Trying to get ticketId from [" + messageId + "]");
+        Matcher messageIdMatcher = TICKET_ID_PATTERN.matcher(messageId);
+    	if (!messageIdMatcher.matches()) {
     		throw new MessageIdException(
-    				"messageId does not match pattern [ticketId.<id>.<hash>@"
+    				"messageId does not match pattern [ticketId.<id>.<hash>.<random>@"
     				+ emailDomain + "]");
     	}
 		long ticketId;
 		try {
-			ticketId = Long.valueOf(messageId.replaceAll(TICKET_ID_PATTERN, "$1"));
+			ticketId = Long.valueOf(messageIdMatcher.replaceFirst("$1"));
 		} catch (NumberFormatException e1) {
-			throw new MessageIdException("invalid ticketId");
+			throw new MessageIdException("invalid ticketId", e1);
 		}
-		String hash = messageId.replaceAll(TICKET_ID_PATTERN, "$2");
+		String hash = messageIdMatcher.replaceFirst("$2");
 		if (!getHash(ticketId).equals(hash)) {
-			throw new MessageIdException("invalid hash");
+			throw new MessageIdException("invalid hash (was: [" + hash + "]; expected: [" + getHash(ticketId) + "]");
 		}
+                logger.info("Got ticket #" + ticketId + " from [" + messageId + "]");
 		return ticketId;
     }
 
