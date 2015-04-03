@@ -14,8 +14,7 @@ cd ..
 
 Exec du batch :
 cd helpdesk-batch
-mvn -Dconfig.location=$configFile -Dlog4j.configuration=file:$log4jFile package
-java -Dconfig.location=$configFile -Dlog4j.configuration=file:$log4jFile -jar target/helpdesk-batch-<version>.jar
+mvn compile exec:java -Dconfig.location=$configFile -Dlog4j.configuration=file:$log4jFile
 cd ..
 
 Création d'une release :

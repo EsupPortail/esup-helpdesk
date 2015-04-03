@@ -79,7 +79,7 @@ public class Batch {
 	 */
 	private static void syntax() {
 		System.out.println(
-				"syntax: java -Dconfig.location=</path/to/config.properties> -jar <jarName> <options>"
+				"syntax: mvn compile exec:java -Dconfig.location=</path/to/config.properties> -Dexec.args=\"<options>\""
 				+ "\nwhere option can be:"
 				+ "\n- test-beans: test the required beans"
 				+ "\n- init-data: init database (RESET!)"
@@ -191,7 +191,7 @@ public class Batch {
 	 * Rebuild or update the index.
 	 * @param rebuild true to rebuild, false to simply update
 	 */
-	private static void updateIndex(final boolean rebuild) {
+	public static void updateIndex(final boolean rebuild) {
 		Indexer indexer = getIndexer();
 		try {
 			DatabaseUtils.open();
@@ -258,7 +258,7 @@ public class Batch {
 	/**
 	 * Archive tickets.
 	 */
-	private static void archiveTickets() {
+	public static void archiveTickets() {
 		Archiver archiver = getArchiver();
 		boolean recall;
 		do {
@@ -307,7 +307,7 @@ public class Batch {
 	 * Expire non approved tickets.
 	 * @param alerts
 	 */
-	private static void expireTickets(final boolean alerts) {
+	public static void expireTickets(final boolean alerts) {
 		Expirator expirator = getExpirator();
 		boolean recall;
 		do {
@@ -355,7 +355,7 @@ public class Batch {
 	/**
 	 * Recall postponed tickets.
 	 */
-	private static void recallTickets() {
+	public static void recallTickets() {
 		Recaller recaller = getRecaller();
 		try {
 			DatabaseUtils.open();
@@ -393,7 +393,7 @@ public class Batch {
 	/**
 	 * Send reports.
 	 */
-	private static void sendTicketReports() {
+	public static void sendTicketReports() {
 		try {
 			DatabaseUtils.open();
 			DatabaseUtils.begin();
@@ -411,7 +411,7 @@ public class Batch {
 	/**
 	 * Send FAQ updates.
 	 */
-	private static void sendFaqReports() {
+	public static void sendFaqReports() {
 		try {
 			DatabaseUtils.open();
 			DatabaseUtils.begin();
