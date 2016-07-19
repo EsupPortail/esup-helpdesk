@@ -533,6 +533,7 @@ public class Batch {
 	protected static void dispatch(final String[] args) {
 		switch (args.length) {
 		case 0:
+			LOG.info("dispatch : case 0");
 			syntax();
 			break;
 		case 1:
