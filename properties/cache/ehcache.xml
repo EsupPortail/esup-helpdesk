@@ -1,0 +1,57 @@
+<ehcache>
+
+    <!-- 
+    	/properties/cache/ehcache.xml
+    	The configuration file for EhCache. This file is referenced 
+    	from /properties/cache/cache.xml.
+    -->
+
+    <diskStore path="${cache.path}"  />
+    
+    <cache 
+    	name="org.esupportail.commons.services.i18n.BundlesCachingI18nServiceImpl"
+    	maxElementsInMemory="1000" 
+    	eternal="true" 
+    	timeToIdleSeconds="300"
+    	timeToLiveSeconds="600" 
+    	overflowToDisk="true" 
+    	/>
+
+    <cache 
+    	name="org.esupportail.commons.services.ldap.CachingLdapServiceImpl"
+    	maxElementsInMemory="1000" 
+    	eternal="false" 
+    	timeToIdleSeconds="300"
+    	timeToLiveSeconds="600" 
+    	overflowToDisk="true" 
+    	/>
+
+    <cache 
+    	name="org.esupportail.commons.services.exceptionHandling.CachingEmailExceptionServiceImpl"
+    	maxElementsInMemory="1000" 
+    	eternal="false" 
+    	timeToIdleSeconds="900"
+    	timeToLiveSeconds="900" 
+    	overflowToDisk="true" 
+    	/>
+
+    <cache 
+    	name="org.esupportail.helpdesk.domain.departmentSelection.DepartmentSelectorImpl"
+    	maxElementsInMemory="2000" 
+    	eternal="false" 
+    	timeToIdleSeconds="300"
+    	timeToLiveSeconds="300" 
+    	overflowToDisk="true" 
+    	/>
+
+    <defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+            />
+</ehcache>

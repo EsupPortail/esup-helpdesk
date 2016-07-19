@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+          
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="State" table="h_stat" lazy="false">
+		<cache usage="nonstrict-read-write"/>
+		<id name="id"> 
+			<generator class="native">
+			    <param name="sequence">s_stat</param>
+			</generator>
+		</id> 
+		<property name="ticketsLastIndexTime" column="tick_last_inde_time"/>
+		<property name="faqContainersLastIndexTime" column="faq_cont_last_inde_time"/>
+		<property name="faqEntriesLastIndexTime" column="faq_entr_last_inde_time"/>
+		<property name="archivedTicketsLastIndexTime" column="arch_tick_last_inde_time"/>
+		<property name="upgradeState" column="upgr_stat"/>
+	</class>	
+</hibernate-mapping>
+
+

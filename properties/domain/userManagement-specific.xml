@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean 
+		id="specificUserManager"
+		parent="abstractUserManager"
+		class="org.esupportail.helpdesk.domain.userManagement.specific.VoidUserManagerImpl"
+		lazy-init="true" />
+
+	<!--bean 
+		id="specificUserManager"
+		parent="abstractUserManager"
+		class="org.esupportail.helpdesk.domain.userManagement.specific.XmlUserManagerImpl"
+		lazy-init="true"
+		>
+		<property name="specificUsers" >
+			<list>
+				<bean class="org.esupportail.helpdesk.domain.userManagement.specific.BasicSpecificUser">
+					<property name="id" value="user1" />
+					<property name="password" value="secret1" />
+					<property name="displayName" value="User #1" />
+					<property name="email" value="user1@domain.edu" />
+				</bean>
+				<bean class="org.esupportail.helpdesk.domain.userManagement.specific.BasicSpecificUser">
+					<property name="id" value="user2" />
+					<property name="password" value="secret2" />
+					<property name="displayName" value="User #2" />
+					<property name="email" value="user2@domain.edu" />
+				</bean>
+			</list>
+		</property>
+	</bean-->
+
+</beans>

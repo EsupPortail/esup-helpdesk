@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="DeprecatedFaqEntry" table="h_faq_entr2" lazy="false"> 
+		<cache usage="nonstrict-read-write"/>
+		<id name="id">
+			<generator class="native">
+			    <param name="sequence">s_faq_entr2</param>
+			</generator>
+		</id>
+		<property name="label" column="labe" length="1024" not-null="true"/>
+		<property name="scope" column="scop" not-null="true"/>
+		<property name="order" column="orde" not-null="true"/>
+		<property name="content" column="cont" length="32708" not-null="true"/>
+		<property name="lastUpdate" column="last_upda" not-null="false"/>
+		<many-to-one name="parent" column="faq_id" fetch="join" not-null="true"/> <!-- JOIN-->
+		<property name="effectiveScope" column="effe_scop" not-null="true"/>
+	</class>
+
+</hibernate-mapping>
+
+

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/ldap/ldap.xml
+		The configuration file for domain services.
+		This file is referenced by /properties/applicationContext.xml.
+	-->
+
+	<bean id="ldapUserService"
+		class="org.esupportail.commons.services.ldap.SearchableLdapUserServiceImpl"
+		lazy-init="true"
+		>
+		<description>
+			This bean provides LDAP facilities to all the other beans.
+			It must implement interface
+			org.esupportail.commons.services.ldap.LdapUserService. This service is
+			used both for searching the attributes of connected users
+			and also for searchin users (get their id from a part of
+			their identity). In the example below, if "smith" is the
+			search string, the search filter will be "cn=*SMITH*", and
+			the corresponding users' ids will be found in attribute uid.
+			This class caches the results of the LDAP requests and
+			supports statistics retrieval.
+		</description>
+		<property name="i18nService" ref="i18nService">
+			<description>
+				The i18nService, used for statistics.
+			</description>
+		</property>
+		<property name="ldapTemplate" ref="ldapTemplate">
+			<description>
+				The LDAP template used to access the LDAP directory.
+			</description>
+		</property>
+		<property name="dnSubPath" value="${ldap.dnSubPath}">
+			<description>The DN sub path.</description>
+		</property>
+		<property name="idAttribute" value="${ldap.uidAttribute}">
+			<description>
+				The LDAP attribute that stores the unique identifier of
+				users in the LDAP directory (optional, "uid" by
+				default).
+			</description>
+		</property>
+		<property name="attributesAsString" value="${ldap.attributes}">
+			<description>
+				The comma-separated list of the LDAP attributes to retrieve.
+			</description>
+		</property>
+		<property name="searchAttribute" value="${ldap.searchAttribute}">
+			<description>The LDAP attribute to search for.</description>
+		</property>
+		<property name="searchDisplayedAttributesAsString" value="${ldap.searchDisplayedAttributes}" >
+			<description>
+				The comma-separated list of the LDAP attributes to display when searching for users.
+			</description>
+		</property>
+		<property name="cacheManager" ref="cacheManager">
+			<description>The cache manager, required.</description>
+		</property>
+		<property name="cacheName" value="">
+			<description>The name of the cache, optional.</description>
+		</property>
+		<property name="testFilter" value="${ldap.testFilter}" >
+			<description>
+				The LDAP filter that will be taken into account when using 
+				ant target test-ldap.
+			</description>
+		</property>
+	</bean>
+
+	<bean 
+		id="ldapTemplate" 
+		class="org.springframework.ldap.LdapTemplate"
+		lazy-init="true"
+		>
+		<description>
+			The LDAP template used to acces the LDAP directory. See
+			http://ldaptemplate.sourceforge.net.
+		</description>
+		<property name="contextSource" ref="contextSource">
+			<description>
+				The data source used by the LDAP template.
+			</description>
+		</property>
+	</bean>
+
+	<bean id="contextSource"
+		class="org.esupportail.commons.services.ldap.MultiUrlLdapContextSource"
+		lazy-init="true"
+		>
+		<description>
+			This bean describes the physical acces to the LDAP
+			directory. In the example below, anonymous and unsecured
+			connections will be done to the LDAP directory running on
+			server ldap.esup-portail.org on port 389, using the search
+			base ou=people,dc=esup-portail,dc=edu, with scope "sub". See
+			http://ldaptemplate.sourceforge.net.
+		</description>
+		<property name="url" value="${ldap.url}"/>
+		<property name="userName" value="${ldap.userName}">
+			<description>
+				The dn used to bind to the LDAP directory.
+			</description>
+		</property>
+		<property name="password" value="${ldap.password}">
+			<description>
+				The password used to bind to the LDAP directory.
+			</description>
+		</property>
+		<property name="base" value="${ldap.base}"/>
+		<property name="baseEnvironmentProperties">
+			<description>
+				The environment properties, for instance to set the
+				timeout.
+			</description>
+			<map>
+				<entry key="com.sun.jndi.ldap.connect.timeout"
+					value="${ldap.connectTimeout}" />
+			</map>
+		</property>
+	</bean>
+
+</beans>

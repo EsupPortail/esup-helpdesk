@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/export/export.xml
+		The configuration file for remote (web) services.
+		This file is referenced by /properties/applicationContext.xml.
+	-->
+
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" 
+		lazy-init="true"
+		>
+		<property name="urlMap">
+			<map>
+				<entry key="/Helpdesk">
+					<ref bean="helpdeskXFire" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="abstractXFire"
+		class="org.codehaus.xfire.spring.remoting.XFireExporter"
+		abstract="true" >
+		<property name="serviceFactory" ref="xfire.serviceFactory" />
+		<property name="xfire" ref="xfire" />
+	</bean> 
+
+	<bean id="helpdeskXFire"
+		lazy-init="true"
+		parent="abstractXFire" >
+		<property name="serviceBean" ref="helpdesk" />
+		<property name="serviceClass" value="org.esupportail.helpdesk.services.remote.Helpdesk" />
+	</bean>
+
+	<bean 
+		id="helpdesk" 
+		lazy-init="true"
+		class="org.esupportail.helpdesk.services.remote.HelpdeskImpl"
+		>
+		<property name="domainService" ref="domainService" />
+		<property name="applicationService" ref="applicationService" />
+		<property name="authorizedClientNames" value="${webService.authorizedClientNames}" />
+		<property name="urlBuilder" ref="urlBuilder" />
+		<property name="daoService" ref="daoService" />
+		<property name="ticketExtractor" ref="ticketExtractor" />
+	</bean>
+
+</beans>

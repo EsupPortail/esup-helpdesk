@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean 
+		id="domainService"
+		class="org.esupportail.helpdesk.domain.DomainServiceImpl"
+		lazy-init="true"
+		>
+		<property name="daoService" ref="daoService" />
+		<property name="userStore" ref="userStore" />
+		<property name="i18nService" ref="i18nService" /> 
+		<property name="applicationService" ref="applicationService" /> 
+		<property name="departmentSelector" ref="departmentSelector" /> 
+		<property name="minPriority" value="${minPriority}" /> 
+		<property name="maxPriority" value="${maxPriority}" /> 
+		<property name="originKeys" value="${origins}" />
+		<property name="webOrigin" value="${webOrigin}" /> 
+		<property name="emailOrigin" value="${emailOrigin}" /> 
+		<property name="categoryConfigurator" ref="categoryConfigurator" />
+		<property name="departmentConfigurator" ref="departmentConfigurator" />
+		<property name="departmentManagerConfigurator" ref="departmentManagerConfigurator" />
+		<property name="departmentDefaultTicketScope" value="${defaultTicketScope}" />
+		<property name="departmentDefaultTicketPriorityLevel" value="${defaultTicketPriorityLevel}" />
+		<property name="departmentDefaultFaqScope" value="${defaultFaqScope}" />
+		<property name="userInfoProvider" ref="userInfoProvider" />
+		<property name="indexIdProvider" ref="indexIdProvider" />
+		<property name="assignmentAlgorithmStore" ref="assignmentAlgorithmStore" />
+		<property name="defaultAssignmentAlgorithmName" value="${defaultAssignmentAlgorithmName}" />
+		<property name="computerUrlBuilderStore" ref="computerUrlBuilderStore" />
+		<property name="defaultComputerUrlBuilderName" value="${defaultComputerUrlBuilderName}" />
+		<property name="defaultControlPanelRefreshDelay" value="${controlPanel.defaultRefreshDelay}" />
+		<property name="historyMaxLength" value="${history.maxLength}" />
+		<property name="fckEditorCodeCleaner" ref="fckEditorCodeCleaner" />
+		<property name="ticketPrinter" ref="ticketPrinter" />
+		<property name="invitationSender" ref="invitationSender" />
+		<property name="monitoringSender" ref="monitoringSender" />
+		<property name="ticketReporter" ref="ticketReporter" />
+		<property name="faqReporter" ref="faqReporter" />
+	</bean>
+
+	<bean id="ticketExtractor"
+		class="org.esupportail.helpdesk.domain.TicketExtractorImpl"
+		lazy-init="true"
+    	> 
+		<description>A bean used to extract tickets (used by the control panel).</description>
+		<property name="domainService" ref="domainService" />
+		<property name="daoService" ref="daoService" />
+	</bean>
+
+	<bean id="ticketNavigator"
+		class="org.esupportail.helpdesk.domain.TicketNavigatorImpl"
+		lazy-init="true"
+    	> 
+		<description>A bean used to navigate through tickets (used by the control panel).</description>
+		<property name="domainService" ref="domainService" />
+		<property name="daoService" ref="daoService" />
+	</bean>
+
+	<bean id="actionI18nTitleFormatter"
+		class="org.esupportail.helpdesk.domain.ActionI18nTitleFormatterImpl"
+		lazy-init="true"
+    	> 
+		<description>A bean used to get format action i18n titles.</description>
+		<property name="i18nService" ref="i18nService" />
+		<property name="userFormattingService" ref="userFormattingService" />
+	</bean>
+
+	<bean id="userFormattingService"
+		class="org.esupportail.helpdesk.domain.userFormatting.UserFormattingServiceImpl"
+		lazy-init="true"
+    	> 
+		<description>A bean used to format users.</description>
+		<property name="i18nService" ref="i18nService" />
+		<property name="printId" value="${userFormat.printId}" />
+		<property name="displayNameMaxLength" value="${userFormat.displayNameMaxLength}" />
+		<property name="idMaxLength" value="${userFormat.idMaxLength}" />
+	</bean>
+
+	<bean id="fckEditorCodeCleaner"
+		class="org.esupportail.helpdesk.domain.FckEditorCodeCleanerImpl"
+		lazy-init="true"
+    	/>
+
+</beans>

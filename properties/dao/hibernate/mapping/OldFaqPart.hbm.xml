@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="OldFaqPart" table="h_faq_part">
+		<cache usage="nonstrict-read-write"/>
+		<id name="id">
+			<generator class="native"/> 
+		</id>
+		<property name="label" column="labe" length="1024" />
+		<property name="scope" column="scop" />
+		<property name="order" column="orde" />
+		<property name="content" column="cont" length="32708" />
+		<property name="lastUpdate" column="last_upda" />
+		<many-to-one name="parent" column="faq_id" not-null="true" fetch="join"/> <!-- JOIN-->
+	</class>
+
+</hibernate-mapping>
+
+

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<!-- 
+		/properties/dao/hibernate/hibernate.cfg.xml
+		The main Hibernate configuration file.
+		It is referenced from /properties/dao/dao.xml
+		and the database mapping is in folder 
+		/properties/dao/hibernate/mapping. 
+	-->
+	<session-factory>
+		<property name="hibernate.connection.driver_class">${hibernate.connection.driver_class}</property>
+		<property name="hibernate.dialect">${hibernate.dialect}</property>
+		<property name="hibernate.connection.url">${hibernate.connection.jdbc.url}</property>
+		<property name="hibernate.connection.username">${hibernate.connection.jdbc.username}</property>
+		<property name="hibernate.connection.password">${hibernate.connection.jdbc.password}</property>
+		<property name="hibernate.connection.autocommit">false</property>
+		<property name="hibernate.connection.charSet">UTF-8</property>
+		<property name="hibernate.show_sql">false</property>
+		<property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+		<property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+		<property name="connection.autoReconnectForPools">true</property>
+		<property name="connection.is-connection-validation-required">true</property>
+		<property name="connection.autoReconnect">true</property>
+		<property name="query.substitutions">true 1, false 0, yes 'Y', no 'N'</property>
+		<property name="hibernate.jdbc.fetch_size">25</property>
+		<property name="hibernate.jdbc.batch_size">25</property>
+		<property name="hibernate.jdbc.use_scrollable_resultset">true</property>
+		<property name="hibernate.jdbc.use_streams_for_binary">true</property>
+		<property name="hibernate.max_fetch_depth">1</property>
+		<property name="hibernate.c3p0.min_size">10</property>
+        <property name="hibernate.c3p0.max_size">100</property>
+        <property name="hibernate.c3p0.timeout">10</property>
+        <property name="hibernate.c3p0.acquire_increment">5</property>
+        <property name="hibernate.c3p0.idle_test_period">300</property>
+        <property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.cache.use_query_cache">false</property>
+		<property name="hibernate.cache.use_second_level_cache">false</property>
+		<property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+	</session-factory>
+</hibernate-configuration>
+

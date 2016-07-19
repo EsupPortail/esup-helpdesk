@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/web/converters.xml
+		This file declares the converters used by the web interface.
+		It should not be modified but by the developers.
+		This file is referenced by /properties/applicationContext.xml.
+	-->
+
+	<bean 
+		id="localeConverter"
+		class="org.esupportail.commons.web.converters.LocaleConverter"
+		lazy-init="true"
+		>
+    	<description>
+			A converter for Locale objects.
+    	</description>
+	</bean>
+
+	<bean 
+		id="timestampConverter"
+		class="org.esupportail.commons.web.converters.TimestampConverter"
+		lazy-init="true"
+		>
+    	<description>
+			A converter for Timestamp objects.
+    	</description>
+	</bean>
+
+	<bean 
+		id="departmentConverter"
+		class="org.esupportail.helpdesk.web.converters.DepartmentConverter"
+		parent="abstractDomainAwareBean"
+		lazy-init="true"
+		>
+    	<description>
+			A converter for Department objects.
+    	</description>
+	</bean>
+
+	<bean 
+		id="userConverter"
+		class="org.esupportail.helpdesk.web.converters.UserConverter"
+		parent="abstractDomainAwareBean"
+		lazy-init="true"
+		>
+    	<description>
+			A converter for User objects.
+    	</description>
+	</bean>
+
+	<bean 
+		id="categoryConverter"
+		class="org.esupportail.helpdesk.web.converters.CategoryConverter"
+		parent="abstractDomainAwareBean"
+		lazy-init="true"
+		>
+    	<description>
+			A converter for Category objects.
+    	</description>
+	</bean>
+
+	<bean 
+		id="iconConverter"
+		class="org.esupportail.helpdesk.web.converters.IconConverter"
+		parent="abstractDomainAwareBean"
+		lazy-init="true"
+		>
+    	<description>
+			A converter for Icon objects.
+    	</description>
+	</bean>
+
+</beans>

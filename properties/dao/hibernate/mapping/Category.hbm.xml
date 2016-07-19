@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="Category" table="h_cate" lazy="false"> 
+		<cache usage="nonstrict-read-write" />
+		<id name="id">
+			<generator class="native">
+			    <param name="sequence">s_cate</param>
+			</generator>
+		</id> 
+		<property name="label" column="labe" not-null="true"/>
+		<property name="xlabel" column="xlab"/>
+		<property name="url"/>
+		<property name="autoExpire" column="auto_expi" />
+		<many-to-one name="department" column="depa_id" index="i_cate_orde" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="parent" column="pare_id" index="i_cate_orde" fetch="join"/> <!-- JOIN-->
+		<many-to-one name="realCategory" column="real_cate_id" fetch="join"/> <!-- JOIN-->
+		<property name="order" column="orde" index="i_cate_orde" not-null="true"/>
+		<property name="assignmentAlgorithmState" column="algo_stat"/>
+		<property name="defaultTicketScope" column="defa_tick_scop" />		
+		<property name="defaultTicketPriority" column="tick_temp_prio_leve"/>
+		<property name="defaultTicketLabel" column="tick_temp_labe"/>
+		<property name="defaultTicketMessage" column="tick_temp_mess" length="4096"/>
+		<property name="inheritMembers" column="inhe_memb" />
+		<property name="effectiveDefaultTicketScope" column="effe_defa_tick_scop" />		
+		<property name="assignmentAlgorithmName" column="assi_algo_name" />
+		<property name="oldDefaultPriorityLevel" column="defa_prio_leve" not-null="true" />
+		<property name="addNewTickets" column="add_new_tick" />
+		<property name="hideToExternalUsers" column="hide_to_exte_user" />
+		<property name="monitoringEmail" column="moni_emai" />
+		<property name="monitoringLocalEmails" column="moni_loca_emai" />
+		<property name="monitoringEmailAuthType" column="moni_emai_auth_type" />
+		<property name="inheritMonitoring" column="inhe_moni" />
+		<property name="monitoringLevel" column="moni_leve" />
+		<many-to-one name="icon" column="icon_id" fetch="join"/>
+		<property name="inheritFaqLinks" column="inhe_faq_link" />
+	</class>
+
+</hibernate-mapping>
+
+

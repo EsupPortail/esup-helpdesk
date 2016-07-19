@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<portlet-app
+	xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+	version="1.0">
+
+	<portlet>
+		<portlet-name>esup-helpdesk</portlet-name>
+		<portlet-class>org.apache.portals.bridges.portletfilter.FilterPortlet</portlet-class>
+        <init-param>
+            <name>portlet-class</name>
+            <value>org.esupportail.commons.web.portlet.FacesPortlet</value>
+        </init-param>
+        <init-param>
+            <name>portlet-filters</name>
+            <value>jp.sf.pal.facesresponse.FacesResponseFilter,jp.sf.pal.tomahawk.filter.ExtensionsPortletFilter</value>
+        </init-param>
+		<init-param>
+			<name>default-view</name>
+			<value>/stylesheets/welcome.jsp</value>
+		</init-param>
+		<init-param>
+			<name>default-view-selector</name>
+			<value>org.esupportail.commons.web.deepLinking.UportalDefaultViewSelector</value>
+		</init-param>
+		<expiration-cache>-1</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>esup-helpdesk</title>
+			<short-title>esup-helpdesk portlet</short-title>
+			<keywords>esup helpdesk</keywords>
+		</portlet-info>
+	</portlet>
+	<user-attribute>
+		<description>the uid of the portal user</description>
+		<name>uid</name>
+	</user-attribute>
+</portlet-app>

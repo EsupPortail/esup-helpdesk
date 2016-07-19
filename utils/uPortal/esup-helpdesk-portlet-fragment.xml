@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	ESUP-Portail Helpdesk - Copyright (c) 2006 ESUP-Portail consortium
+	http://sourcesup.cru.fr/projects/esup-helpdesk
+-->
+<!-- 
+	This file can be used to push a fragment to uPortal users.
+	In order to do it:
+	1. copy this file to folder uPortal_dir/properties/al
+	2. run ant pubfragments -DfragmentFile=/properties/al/esup-helpdesk-portlet-fragment.xml
+	Note: the ant target is named uportal.pushfragments in package uPortal-esup.
+-->
+<fragments>
+	<fragment name="esup-helpdesk-portlet" type="pushed">
+		<description>ESUP-Portail Helpdesk Portlet</description>
+		<groups>
+			<group>Tous les groupes de personnes</group>
+		</groups>
+		<restrictions>
+			<restriction path="local" name="priority" value="10000"/>
+			<restriction path="local" name="depth" value="1"/>
+		</restrictions>
+		<folder name="esup-helpdesk-folder" immutable="Y" unremovable="Y" hidden="N">
+			<folder name="column1" immutable="Y" unremovable="Y" hidden="N">
+				<channel fname="esup-helpdesk" immutable="Y" unremovable="Y" hidden="N"/>
+			</folder>
+		</folder>
+	</fragment>
+
+</fragments>

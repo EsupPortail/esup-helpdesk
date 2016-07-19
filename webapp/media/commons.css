@@ -1,0 +1,166 @@
+.colLeft {
+	text-align: left;
+	vertical-align: top;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colRight {
+	text-align: right;
+	vertical-align: top;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colCenter {
+	text-align: center;
+	vertical-align: top;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colLeftNowrap {
+	text-align: left;
+	white-space: nowrap;
+	vertical-align: top;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colRightNowrap {
+	text-align: right;
+	white-space: nowrap;
+	vertical-align: top;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colCenterNowrap {
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: top;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colLeftMax {
+	text-align: left;
+	vertical-align: top;
+	width: 100%;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colCenterMax {
+	text-align: center;
+	vertical-align: top;
+	width: 100%;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colRightMax {
+	text-align: right;
+	vertical-align: top;
+	width: 100%;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colLeftMaxNowrap {
+	text-align: left;
+	vertical-align: top;
+	white-space: nowrap;
+	width: 100%;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.colRightMaxNowrap {
+	text-align: right;
+	vertical-align: top;
+	white-space: nowrap;
+	width: 100%;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}
+
+.headerImage {
+	 float: left;
+	 border: 0;
+}
+
+div.paginator{
+	clear:both;
+}
+
+div.paginator div.itemsNumbers {
+	float:left;
+	padding:5px;
+	width:22%;
+}
+
+div.paginator div.navigation {
+	float:left;
+	text-align:center;
+	width:55%;
+	/*utilisé dans le cas où ce div serait vide : permet de conserver sa taille*/
+	border:1px solid transparent;
+}
+
+
+div.paginator ul{
+	margin: 0;
+	padding: 2px;
+
+}
+
+div.paginator li{
+	list-style-type: none;
+	display: inline;
+	margin-left:2px;
+	margin-right:2px;
+	padding:1px;
+	border: 1px solid #6363cd;
+	z-index:10;
+}
+
+div.paginator input{
+	text-decoration: underline;
+	text-align:center;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	padding:0px;
+	margin:0px;
+	background-color:transparent;
+	border:none;
+}
+
+/*li.hover use for IE*/
+div.paginator li:hover,
+div.paginator li.hover{
+	background-color: #FFFFCC;
+}
+
+
+div.paginator li.currentpage{
+	border: 1px solid #4848B7;
+	background-color: #eeeef8;
+}
+
+div.paginator li.currentpage input{
+    font-weight: bold;
+	text-decoration: none;
+}
+
+.form-submit-popup {
+	font-size: 24px;
+	opacity: 1;
+	filter: alpha(opacity=100);
+	visibility: hidden;
+	left: 0;
+	top: 40%;
+	position: absolute;
+ 	width:100%;
+	text-align: center;
+}

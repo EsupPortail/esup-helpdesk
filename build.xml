@@ -1,0 +1,325 @@
+<project name="esup-helpdesk" default="compile" basedir=".">
+
+	<property name="recover.previous-versions" value="3.29.10,3.29.9,3.29.8,3.29.7,3.29.6,3.29.5,3.29.4,3.29.3,3.29.2,3.29.1,3.29.0,3.28.8,3.28.7,3.28.6,3.28.5,3.28.4,3.28.3,3.28.2,3.28.1,3.28.0,3.27.3,3.27.2,3.27.1,3.27.0,3.26.5,3.26.4,3.26.3,3.26.2,3.26.1,3.26.0,3.25.2,3.25.1,3.25.0,3.24.3,3.24.2,3.24.1,3.24.0,3.23.2,3.23.1,3.23.0,3.22.0,3.21.1,3.21.0,3.20.0,3.19.6,3.19.5,3.19.4,3.19.3,3.19.2,3.19.1,3.19.0,3.18.1,3.18.0,3.17.3,3.17.2,3.17.1,3.17.0,3.16.1,3.16.0,3.15.2,3.15.1,3.15.0,3.14.8,3.14.7,3.14.6,3.14.5,3.14.4,3.14.3,3.14.2,3.14.1,3.14.0,3.13.6,3.13.5,3.13.4,3.13.3,3.13.2,3.13.1,3.13.0,3.12.5,3.12.4,3.12.3,3.12.2,3.12.1,3.12.0,3.11.2,3.11.1,3.11.0,3.10.5,3.10.4,3.10.3,3.10.2,3.10.1,3.10.0,3.9.1,3.9.0,3.8.3,3.8.2,3.8.1,3.8.0,3.7.0,3.6.2,3.6.1,3.6.0,3.5.7,3.5.6,3.5.5,3.5.4,3.5.3,3.5.2,3.5.1,3.5.0,3.4.0,3.3.2,3.3.1,3.3.0,3.2.5,3.2.4,3.2.3,3.2.2,3.2.1,3.2.0,3.1.0,3.0.6,3.0.5,3.0.4,3.0.3,3.0.2,3.0.1,3.0.0,2.18.4,2.17.3" />
+	<property name="app.recover.files" value="" />
+	<property name="batch-class" value="org.esupportail.helpdesk.batch.Batch" />
+	<import file="${basedir}/build-commons.xml" />
+	<property file="${props.dir}/config.properties" />
+	<property file="${props.dir}/defaults.properties" />
+	
+	<target name="check-shared-config" depends="commons-check-shared-config" >
+		<property name="init.config" value="${props.dir}/init/init.xml"/>
+		<if>
+			<not>
+				<available file="${init.config}"/>
+			</not>
+			<then>
+				<fail message="${init.config} not found." />	
+			</then>
+		</if>
+		<property name="local.config" value="${props.dir}/config.properties"/>
+		<if>
+			<not>
+				<available file="${local.config}"/>
+			</not>
+			<then>
+				<fail message="${local.config} not found." />	
+			</then>
+		</if>
+	</target>
+
+	<target name="check-web-config" depends="commons-check-web-config,check-shared-config" />
+
+	<target name="check-batch-config" depends="commons-check-batch-config,check-shared-config" />
+
+	<target name="test-config" depends="check-batch-config,check-web-config,compile" description="test the configuration" >
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.batch-config}" />
+			<arg value="test-beans"/>
+	    </java>
+	</target>
+
+	<target name="test-config-batch" depends="check-batch-config,compile-batch" description="test the configuration for a batch only" >
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.batch-config}" />
+			<arg value="test-beans"/>
+	    </java>
+	</target>
+
+	<target name="set-download-properties" depends="read-commons-properties" >
+		<property file="${app.config}" />
+		<property name="app.repository.libs" value="
+			htmlcleaner1_6.jar
+			jcommon-1.0.9.jar
+			jfreechart-1.0.5.jar
+			lucene-core-2.3.1.jar
+			turbine-mime-2.3.1.jar
+			turbine-2.3.3.jar
+		" />
+		<!--property name="app.repository.path-prefix" value="https://sourcesup.cru.fr/scm/viewvc.php/*checkout*/tags/${app.version}/${app.name}" /-->
+		<!--property name="app.repository.path-prefix" value="https://sourcesup.cru.fr/scm/viewvc.php/tags/${app.version}/${app.name}" />
+		<property name="app.repository.path-suffix" value="?root=${app.name}" /-->
+		<property name="app.repository.path-prefix" value="http://subversion.cru.fr/esup-helpdesk/tags/${app.version}/${app.name}" />
+		<property name="app.repository.path-suffix" value="" />
+	</target>
+
+	<target name="prepare" depends="commons-prepare" />
+
+	<target name="compile-shared" depends="check-shared-config,prepare,commons-compile-shared" />
+
+	<target name="compile-batch" depends="compile-shared,commons-compile-batch" description="compile the project for a batch only" />
+
+	<target name="compile-web" depends="compile-shared,commons-compile-web" description="compile the project for the web" />
+
+	<target name="compile" depends="compile-web,compile-batch" description="compile the project" />
+
+	<target name="deploy" depends="compile-web,commons-deploy" description="deploy the application" />
+
+	<target name="clean" depends="commons-clean" description="clean the project" />
+
+	<target name="recover-config" depends="commons-recover-config" description="recover configuration files from an older version" />
+
+	<target name="init" >
+		<fail message="target init is deprecated, please use target init-data instead"/>
+	</target>
+
+	<target name="init-data" depends="compile-batch,check-batch-config,commons-init-data" description="initialize the database" />
+
+	<target name="upgrade" depends="compile-batch,check-batch-config,commons-upgrade" description="upgrade the database" /> 
+	
+	<target name="check-version" depends="compile-batch,check-batch-config,commons-check-version" description="check the database version" /> 
+
+	<target name="start" depends="deploy,check-web-config,commons-start-tomcat" description="Start the application" />
+
+	<target name="stop" depends="commons-stop-tomcat" description="Stop the application" />
+
+	<property name="log4j.indexing-config" value="${basedir}/properties/logging/log4j-indexing.properties" />
+	<target name="check-indexing-config" depends="compile-batch,check-batch-config" >
+		<if>
+			<not>
+				<available file="${log4j.indexing-config}"/>
+			</not>
+			<then>
+				<fail message="${log4j.indexing-config} not found." />	
+			</then>
+		</if>
+	</target>
+	<target name="update-index" depends="check-indexing-config" description="update the index" >
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.indexing-config}" />
+			<arg value="update-index"/>
+	    </java>
+	</target>
+	<target name="rebuild-index" depends="check-indexing-config" description="rebuild the index" >
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.indexing-config}" />
+			<arg value="rebuild-index"/>
+	    </java>
+	</target>
+	<target name="unlock-index" depends="check-indexing-config" description="unlock the index" >
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.indexing-config}" />
+			<arg value="unlock-index"/>
+	    </java>
+	</target>
+
+	<target name="test-department-selection" >
+		<fail message="target test-department-selection is obsolete" />
+	</target>
+
+	<target name="test-user-info" depends="compile-batch,check-batch-config" description="test the user info" >
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.batch-config}" />
+			<arg value="test-user-info"/>
+	    </java>
+	</target>
+
+	<property name="log4j.archiving-config" value="${basedir}/properties/logging/log4j-archiving.properties" />
+	<target name="check-archiving-config" depends="compile-batch,check-batch-config" >
+		<if>
+			<not>
+				<available file="${log4j.archiving-config}"/>
+			</not>
+			<then>
+				<fail message="${log4j.archiving-config} not found." />	
+			</then>
+		</if>
+	</target>
+	<target name="archive-tickets" depends="check-archiving-config" description="archive old tickets" >
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.archiving-config}" />
+			<arg value="archive-tickets"/>
+	    </java>
+	</target>
+	<target name="unlock-archive-tickets" depends="check-archiving-config" description="unlock archive-tickets" >
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.archiving-config}" />
+			<arg value="unlock-archive-tickets"/>
+	    </java>
+	</target>
+
+	<property name="log4j.feeding-config" value="${basedir}/properties/logging/log4j-feeding.properties" />
+	<target name="check-feeding-config" >
+		<if>
+			<not>
+				<available file="${log4j.feeding-config}"/>
+			</not>
+			<then>
+				<fail message="${log4j.feeding-config} not found." />	
+			</then>
+		</if>
+	</target>
+	<target name="feed" depends="compile-batch,check-batch-config,check-feeding-config" description="feed the database" >
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.feeding-config}" />
+			<arg value="feed"/>
+	    </java>
+	</target>
+
+	<property name="log4j.expiration-config" value="${basedir}/properties/logging/log4j-expiration.properties" />
+	<target name="check-expiration-config" depends="compile-batch,check-batch-config" >
+		<if>
+			<not>
+				<available file="${log4j.expiration-config}"/>
+			</not>
+			<then>
+				<fail message="${log4j.expiration-config} not found." />	
+			</then>
+		</if>
+	</target>
+	<target 
+		name="expire-tickets" depends="check-expiration-config" 
+		description="expire non approved tickets" 
+		>
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.expiration-config}" />
+			<arg value="expire-tickets"/>
+	    </java>
+	</target>
+	<target 
+		name="expire-tickets-no-email" depends="check-expiration-config" 
+		description="expire non approved tickets" 
+		>
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.expiration-config}" />
+			<arg value="expire-tickets-no-email"/>
+	    </java>
+	</target>
+	<target 
+		name="unlock-expire-tickets" depends="check-expiration-config" 
+		description="unlock expire-tickets" 
+		>
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.expiration-config}" />
+			<arg value="unlock-expire-tickets"/>
+	    </java>
+	</target>
+
+	<property name="log4j.recall-config" value="${basedir}/properties/logging/log4j-recall.properties" />
+	<target name="check-recall-config" depends="compile-batch,check-batch-config" >
+		<if>
+			<not>
+				<available file="${log4j.recall-config}"/>
+			</not>
+			<then>
+				<fail message="${log4j.recall-config} not found." />	
+			</then>
+		</if>
+	</target>
+	<target 
+		name="recall-tickets" 
+		depends="check-recall-config" 
+		description="recall postponed tickets" 
+		>
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.recall-config}" />
+			<arg value="recall-tickets"/>
+	    </java>
+	</target>
+	<target 
+		name="unlock-recall-tickets" 
+		depends="check-recall-config" 
+		description="unlock recall-tickets" 
+		>
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.recall-config}" />
+			<arg value="unlock-recall-tickets"/>
+	    </java>
+	</target>
+
+	<target name="compute-statistics" >
+		<fail message="target compute-statistics is obsolete" />
+	</target>
+	<target name="unlock-compute-statistics" >
+		<fail message="target unlock-compute-statistics is obsolete" />
+	</target>
+
+	<property name="log4j.reporting-config" value="${basedir}/properties/logging/log4j-reporting.properties" />
+	<target name="check-reporting-config" >
+		<if>
+			<not>
+				<available file="${log4j.reporting-config}"/>
+			</not>
+			<then>
+				<fail message="${log4j.reporting-config} not found." />	
+			</then>
+		</if>
+	</target>
+    <target name="send-reports" >
+    	<fail message="task send-reports is obsolete, use task send-ticket-reports instead" />
+    </target>
+    <target name="send-ticket-reports" depends="compile-batch,check-batch-config,check-reporting-config" description="send ticket reports" >
+        <java fork="true" dir="${build.dir}" classname="${batch-class}">
+            <classpath refid="batch.classpath" />
+            <sysproperty key="log4j.configuration" value="file:${log4j.reporting-config}" />
+            <arg value="send-ticket-reports"/>
+        </java>
+    </target>
+    <target name="send-faq-reports" depends="compile-batch,check-batch-config,check-reporting-config" description="send FAQ reports" >
+        <java fork="true" dir="${build.dir}" classname="${batch-class}">
+            <classpath refid="batch.classpath" />
+            <sysproperty key="log4j.configuration" value="file:${log4j.reporting-config}" />
+            <arg value="send-faq-reports"/>
+        </java>
+    </target>
+
+	<target name="test-search" depends="compile-batch,commons-check-batch-config" description="test the search engine"> 
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.batch-config}" />
+			<arg value="test-search"/>
+	    </java>
+	</target>	
+
+	<target name="test-consistency" depends="compile-batch,commons-check-batch-config" description="(experts only)"> 
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.batch-config}" />
+			<arg value="test-consistency"/>
+	    </java>
+	</target>	
+
+	<target name="delete-all-tickets" depends="compile-batch,commons-check-batch-config" description="(experts only)"> 
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.batch-config}" />
+			<arg value="delete-all-tickets"/>
+	    </java>
+	</target>	
+</project>
+
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/portal/portal.xml
+		The configuration file for portal services.
+		This file is referenced by /properties/applicationContext.xml.
+	-->
+
+	<bean 
+		id="portalService" 
+		class="org.esupportail.portal.ws.client.support.uportal.CachingUportalServiceImpl"
+		lazy-init="true"
+		>
+		<property name="url" value="${portal.webServiceUrl}" />
+		<property name="testUserId" value="${portal.testUser}" />
+		<property name="testGroupId" value="${portal.testGroupId}" />
+		<property name="testGroupName" value="${portal.testGroupName}" />
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+
+</beans>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/deepLinking/deepLinking.xml
+		The configuration file for deep linking.
+		This file is referenced by /properties/applicationContext.xml.
+		It should not be modified but by the developers.
+	-->
+
+	<bean 
+		id="deepLinkingRedirector" 
+		class="org.esupportail.helpdesk.web.deepLinking.DeepLinkingRedirectorImpl"
+		parent="abstractI18nAwareBean" 
+		scope="session"
+		lazy-init="true"
+		>
+		<property name="domainService" ref="domainService" />
+		<property name="sessionController" ref="sessionController" />
+		<property name="ticketController" ref="ticketController" />
+		<property name="archivedTicketController" ref="archivedTicketController" />
+		<property name="preferencesController" ref="preferencesController" />
+		<property name="searchController" ref="searchController" />
+		<property name="controlPanelController" ref="controlPanelController" />
+		<property name="departmentsController" ref="departmentsController" />
+		<property name="administratorsController" ref="administratorsController" />
+		<property name="journalController" ref="journalController" />
+		<property name="faqsController" ref="faqsController" />
+		<property name="statisticsController" ref="statisticsController" />
+		<property name="bookmarksController" ref="bookmarksController" />
+		<property name="responsesController" ref="responsesController" />
+	</bean>
+
+</beans>

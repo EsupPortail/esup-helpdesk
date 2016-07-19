@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Implementation-Title: esup-helpdesk
+Implementation-Version: 3.29.11
+Implementation-Vendor: ESUP-Portail consortium

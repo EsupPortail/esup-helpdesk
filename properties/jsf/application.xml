@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+                              "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+<!-- 
+	/properties/jsf/application.xml
+	The configuration file of Java Server Faces that gives 
+	the main configuration of the application .
+	This file is referenced by /webapp/WEB-INF/web.xml. 
+	It should not be modified but by the developers. 
+-->
+
+<faces-config>
+
+	<application>
+		<variable-resolver>
+			org.springframework.web.jsf.DelegatingVariableResolver
+		</variable-resolver>
+		<locale-config>
+			<default-locale>${defaultLocale}</default-locale>
+			<supported-locale>en</supported-locale>
+			<supported-locale>fr</supported-locale>
+			<supported-locale>cs</supported-locale>
+		</locale-config>
+	</application>
+
+</faces-config>

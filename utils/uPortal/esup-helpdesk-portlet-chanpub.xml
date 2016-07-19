@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	ESUP-Portail Helpdesk - Copyright (c) 2006 ESUP-Portail consortium
+	http://sourcesup.cru.fr/projects/esup-helpdesk
+-->
+<!DOCTYPE channel-definition SYSTEM "channelDefinition.dtd">
+<channel-definition>
+	<title>ESUP-Portail Helpdesk</title>
+	<name>ESUP-Portail Helpdesk</name>
+	<fname>esup-helpdesk</fname>
+	<desc>The ESUP-Portail Helpdesk Portlet</desc>
+	<type>Portlet</type>
+	<class>org.jasig.portal.channels.portlet.CPortletAdapter</class>
+	<timeout>20000</timeout>
+	<hasedit>N</hasedit>
+	<hashelp>N</hashelp>
+	<hasabout>N</hasabout>
+	<secure>N</secure>
+	<locale>en_US</locale>
+	<categories>
+		<category>uPortal</category>
+	</categories>
+	<groups>
+		<group>Tous les groupes de personnes</group>
+	</groups>
+	<parameters>
+		<parameter>
+			<name>portletDefinitionId</name>
+			<value>esup-helpdesk.esup-helpdesk</value>
+			<ovrd>N</ovrd>
+		</parameter>
+	</parameters>
+</channel-definition>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+    <bean 
+    	id="smtpService" 
+    	class="org.esupportail.commons.services.smtp.AsynchronousSmtpServiceImpl" 
+    	lazy-init="true"
+    	>
+        <property name="servers">
+			<list>
+				<ref bean="smtpServer" />
+			</list>
+		</property>
+		<property name="fromAddress" ref="smtpFromAddress" />
+		<property name="interceptAll" value="${smtp.interceptAll}" />
+		<property name="interceptAddress" ref="smtpIntercept" />
+		<property name="notInterceptedAddresses" value="${smtp.notInterceptedAddresses}" />
+		<property name="testAddress" ref="smtpTestAddress" />
+		<property name="charset" value="${smtp.charset}" />
+		<property name="messageSigner" ref="messageSigner" />
+    </bean>
+
+    <bean 
+    	id="smtpFromAddress" 
+    	class="javax.mail.internet.InternetAddress"
+    	lazy-init="true"
+    	>
+        <property name="address" value="${smtp.fromEmail}" />
+        <property name="personal" value="${smtp.fromName}" />
+    </bean>
+    
+	<bean 
+		id="smtpIntercept" 
+		class="javax.mail.internet.InternetAddress"
+    	lazy-init="true"
+		>
+		<property name="address" value="${smtp.interceptEmail}" /> 
+		<property name="personal" value="${smtp.interceptName}" /> 
+	</bean>
+
+	<bean 
+		id="smtpTestAddress" 
+		class="javax.mail.internet.InternetAddress"
+		lazy-init="true"
+		>
+		<property name="address" value="${smtp.testEmail}" /> 
+		<property name="personal" value="${smtp.testName}" /> 
+	</bean>
+
+    <bean 
+    	id="smtpServer" 
+    	class="org.esupportail.commons.services.smtp.SmtpServer" 
+		lazy-init="true"
+    	>
+        <property name="host" value="${smtp.host}" />
+        <property name="port" value="${smtp.port}" />
+		<property name="user" value="${smtp.user}" />
+		<property name="password" value="${smtp.password}" />
+    </bean>
+
+    <bean
+    	id="messageSigner"
+    	class="org.esupportail.commons.services.smtp.signing.SMIMEMessageSignerImpl"
+    	lazy-init="true">
+		<property name="enabled" value="${smtp.signing.enabled}" />
+		<property name="certificateFile" value="${smtp.signing.certificate.file}" />
+		<property name="certificatePassword" value="${smtp.signing.certificate.password}" />
+		<property name="certificateAlias" value="${smtp.signing.certificate.alias}" />
+    </bean>
+    
+    <bean 
+    	id="voidSmtpService" 
+    	class="org.esupportail.commons.services.smtp.VoidSmtpServiceImpl" 
+    	lazy-init="true"
+    	/>
+
+</beans>

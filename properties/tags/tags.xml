@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+    <bean 
+    	id="tagsConfigurator"
+    	class="org.esupportail.commons.web.tags.config.TagsConfigurator"
+    	parent="abstractApplicationAwareBean"
+		lazy-init="true"
+    	>
+    	<description>
+    		The bean 'tagsConfigurator' is used to set up the configuration of
+    		the custom tags of consortium ESUP-Portail (see esup-commons.tld).
+    	</description>
+    	<property name="messagesInfoClass" value="portlet-msg-info" >
+    		<description>
+    			The default value used for attribute infoClass of tags message 
+    			and messages. It is the CSS class used for info messages.
+    		</description>
+    	</property>
+    	<property name="messagesWarnClass" value="portlet-msg-alert" >
+    		<description>
+    			The default value used for attribute warnClass of tags message 
+    			and messages. It is the CSS class used for warn messages.
+    		</description>
+    	</property>
+    	<property name="messagesErrorClass" value="portlet-msg-error" >
+    		<description>
+    			The default value used for attribute errorClass of tags message 
+    			and messages. It is the CSS class used for error messages.
+    		</description>
+    	</property>
+    	<property name="messagesFatalClass" value="portlet-msg-error" >
+    		<description>
+    			The default value used for attribute fatalClass of tags message 
+    			and messages. It is the CSS class used for fatal messages.
+    		</description>
+    	</property>
+    	<property name="messagesLayout" value="table" >
+    		<description>
+    			The default value used for attribute layout of tag messages. 
+    		</description>
+    	</property>
+    	<property name="documentTitle" value="${title}" >
+    		<description>
+    			The default value for attribute title of tag document, used to 
+    			generate the content of output tag TITLE, optional.
+    		</description>
+    	</property>
+    	<property name="documentTitleI18nKey" value="${titleI18nKey}" >
+    		<description>
+    			The name oh the i18n key to use for the window title, optional.
+    			Overrides documentTitle.
+    		</description>
+    	</property>
+    	<property name="doctype" value="" >
+    		<description>
+    			The doctype of the document, optional.
+    		</description>
+    	</property>
+    	<property name="servletMediaPath" value="${mediaPath.servlet}" >
+    		<description>
+    			The path to the media files, used for scripts.
+    		</description>
+    	</property>
+    	<property name="portletMediaPath" value="${mediaPath.portlet}" >
+    		<description>
+    			The path to the media files, used for scripts and styleheets.
+    		</description>
+    	</property>
+    	<property name="scripts" >
+    		<description>
+    			A list of URLs that will be automatically included in the head part
+    			of the output document as scripts. Absolute URLs are used as-is, relative
+    			URLs are prefixed by property portletMediaPath or servletMediaPath.
+    		</description>
+    		<list>
+    			<value>functions.js</value>
+    		</list>
+    	</property>
+    	<property name="stylesheets" >
+    		<description>
+    			A list of URLs that will be automatically included in the head part
+    			of the output document. Absolute URLs are used as-is, relative
+    			URLs are prefixed by property servletMediaPath.
+    			Warning: this tag is ignored for portlet installations.
+    		</description>
+    		<list>
+    			<value>commons.css</value>
+    			<value>portlet.css</value>
+    			<value>helpdesk.css</value>
+    			<value>custom.css</value>
+    		</list>
+    	</property>
+    	<property name="documentBodyStyleClass" value="portlet-section-body" >
+    		<description>
+    			The default value used for attribute class of HTML tag BODY. 
+    		</description>
+    	</property>
+    	<property name="menuLayout" value="table" >
+    		<description>
+    			The default value used for attribute layout of tag panelNavigation. 
+    		</description>
+    	</property>
+    	<property name="menuStyleClass" value="portlet-menu" >
+    		<description>
+    			The default value used for attribute styleClass of tag panelNavigation. 
+    		</description>
+    	</property>
+    	<property name="menuItemStyleClass" value="portlet-menu-item" >
+    		<description>
+    			The default value used for attribute itemClass of tag panelNavigationItem. 
+    		</description>
+    	</property>
+    	<property name="menuActiveItemStyleClass" value="portlet-menu-item-selected" >
+    		<description>
+    			The default value used for attribute activeItemClass of tag panelNavigationItem. 
+    		</description>
+    	</property>
+    	<property name="footerStyleClass" value="portlet-menu" >
+    		<description>
+    			The default value used for attribute styleClass of tag footer. 
+    		</description>
+    	</property>
+    	<property name="footerItemStyleClass" value="portlet-menu-item" >
+    		<description>
+    			The default value used for attribute itemClass of tag footer. 
+    		</description>
+    	</property>
+    	<property name="footerText" value="" >
+    		<description>
+    			The footer text printed by tag 'page'. If this property is ommited, no
+    			footer will be printed. If it is empty, a default value will be used.
+    		</description>
+    	</property>
+    	<property name="labelStyleClass" value="portlet-form-field-label" >
+    		<description>
+    			The default value used for attribute styleClass of tag outputLabel. 
+    		</description>
+    	</property>
+    	<property name="buttonStyleClass" value="portlet-form-button" >
+    		<description>
+    			The default value used for attribute styleClass of tag commandButton. 
+    		</description>
+    	</property>
+    	<property name="inputFieldStyleClass" value="portlet-form-input-field" >
+    		<description>
+    			The default value used for attribute styleClass of tag inputText. 
+    		</description>
+    	</property>
+    	<property name="checkboxStyleClass" value="portlet-form-field" >
+    		<description>
+    			The default value used for attribute styleClass of tag SelectBooleanCheckbox. 
+    		</description>
+    	</property>
+    	<property name="dataTableHeaderClass" value="portlet-table-header" >
+    		<description>
+    			The default value used for attribute headerClass of tag dataTable. 
+    		</description>
+    	</property>
+    	<property name="dataTableFooterClass" value="portlet-table-footer" >
+    		<description>
+    			The default value used for attribute footerClass of tag dataTable. 
+    		</description>
+    	</property>
+    	<property name="dataTableRowClass" value="portlet-table-text" >
+    		<description>
+    			The CSS class used for table rows. 
+    		</description>
+    	</property>
+    	<property name="dataTableRowAlternateClass" value="portlet-table-alternate" >
+    		<description>
+    			The CSS class used for alternate table rows. 
+    		</description>
+    	</property>
+    	<property name="dataTableColumnClass" value="portlet-table-text" >
+    		<description>
+    			The default value used for attribute columnClass of tag dataTable. 
+    		</description>
+    	</property>
+    	<property name="sectionTag" value="h1" >
+    		<description>
+    			The tag used to wrap the input of tag 'section'.
+    		</description>
+    	</property>
+    	<property name="sectionStyleClass" value="portlet-section-header" >
+    		<description>
+    			The default CSS class used for tag 'section'.
+    		</description>
+    	</property>
+    	<property name="subSectionTag" value="h2" >
+    		<description>
+    			The tag used to wrap the input of tag 'subSection'.
+    		</description>
+    	</property>
+    	<property name="subSectionStyleClass" value="portlet-section-subheader" >
+    		<description>
+    			The default CSS class used for tag 'subSection'.
+    		</description>
+    	</property>
+    	<property name="paragraphTag" value="p" >
+    		<description>
+    			The tag used to wrap the input of tag 'paragraph'.
+    		</description>
+    	</property>
+    	<property name="paragraphStyleClass" value="portlet-section-text" >
+    		<description>
+    			The default CSS class used for tag 'paragraph'.
+    		</description>
+    	</property>
+    	<property name="textStyleClass" value="portlet-section-text" >
+    		<description>
+    			The default CSS class used for tag 'text'.
+    		</description>
+    	</property>
+    	<property name="paginatorStyleClass" value="paginator" >
+    		<description>
+    			The default CSS class used for tag 'paginator'.
+    		</description>
+    	</property>
+     </bean>
+
+</beans>

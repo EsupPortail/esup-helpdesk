@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+                              "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+<faces-config>
+	<component>
+		<component-type>org.fckfaces.Editor</component-type>
+		<component-class>org.fckfaces.component.html.FCKFaceEditor</component-class>
+	</component>
+	<render-kit>
+		<renderer>
+			<component-family>org.fckfaces.FCKFacesFamily</component-family>
+			<renderer-type>org.fckfaces.EditorRenderer</renderer-type> 
+			<renderer-class>org.fckfaces.renderkit.html.FCKFaceEditorRenderer</renderer-class> 
+		</renderer>
+	</render-kit>
+</faces-config>

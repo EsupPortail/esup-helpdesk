@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<!-- 
+		/properties/misc/abstractBeans.xml
+		Various abstract beans.
+		This file should not be modified but by the developers.
+		This file is referenced by /properties/applicationContext.xml.
+	-->
+
+    <bean 
+    	id="abstractI18nAwareBean"
+    	abstract="true"
+    	>
+    	<description>
+			An abstract bean to factorize the declaration of beans of which 
+			class inherits from AbstractI18nAwareBean. 
+    	</description>
+		<property name="i18nService" ref="i18nService" />
+    </bean>
+
+    <bean 
+    	id="abstractApplicationAwareBean"
+    	parent="abstractI18nAwareBean"
+    	abstract="true"
+    	>
+    	<description>
+			An abstract bean to factorize the declaration of beans of which 
+			class inherits from AbstractApplicationAwareBean.
+    	</description>
+		<property name="applicationService" ref="applicationService" />
+    </bean>
+
+    <bean 
+    	id="abstractDomainAwareBean"
+    	abstract="true"
+    	parent="abstractApplicationAwareBean"
+    	>
+    	<description>
+			An abstract bean to factorize the declaration of beans of which 
+			class inherits from AbstractDomainAwareBean.
+    	</description>
+		<property name="domainService" ref="domainService" />
+		<property name="urlBuilder" ref="urlBuilder" />
+    </bean>
+
+</beans>

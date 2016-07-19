@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="org.esupportail.helpdesk.domain.beans">
+
+	<class name="Department" table="h_depa" lazy="false"> 
+		<cache usage="nonstrict-read-write" />
+		<id name="id">
+			<generator class="native">
+			    <param name="sequence">s_depa</param>
+			</generator>
+		</id> 
+		<property name="label" column="labe" not-null="true"/>
+		<property name="xlabel" column="xlab"/>
+		<property name="enabled" column="visi" not-null="true"/>
+		<property name="url"/>
+		<property name="autoExpire" column="auto_expi2" />
+		<property name="spentTimeNeeded" column="spen_time_need" not-null="true"/>
+		<property name="filter" column="filt"/>
+		<property name="order" column="orde" index="i_depa_orde" not-null="true"/>
+		<property name="defaultTicketScope" column="defa_tick_scop" />		
+		<property name="effectiveDefaultTicketScope" column="effe_defa_tick_scop" />		
+		<property name="defaultTicketPriority" column="tick_temp_prio_leve"/>
+		<property name="defaultTicketLabel" column="tick_temp_labe"/>
+		<property name="defaultTicketMessage" column="tick_temp_mess" length="4096"/>
+		<property name="defaultFaqScope" column="defa_faq_scop" />		
+		<property name="effectiveDefaultFaqScope" column="effe_defa_faq_scop" />		
+		<many-to-one name="realDepartment" column="real_depa_id" fetch="join"/>
+		<property name="assignmentAlgorithmName" column="assi_algo_name" />		
+		<property name="computerUrlBuilderName" column="comp_url_buil_name" />		
+		<property name="hideToExternalUsers" column="hide_to_exte_user" />
+		<property name="monitoringEmail" column="moni_emai" />
+		<property name="monitoringLocalEmails" column="moni_loca_emai" />
+		<property name="monitoringEmailAuthType" column="moni_emai_auth_type" />
+		<property name="monitoringLevel" column="moni_leve" />
+		<many-to-one name="icon" column="icon_id" fetch="join"/>
+	</class>
+
+</hibernate-mapping>
+
+

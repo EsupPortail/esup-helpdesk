@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+	>
+
+	<bean id="userInfoProvider"
+		class="org.esupportail.helpdesk.domain.userInfo.LdapUserInfoProviderImpl"
+		lazy-init="true"
+    	> 
+		<description>A bean used to provide information on users.</description>
+		<property name="ldapUserService" ref="ldapUserService" />
+		<property name="i18nService" ref="i18nService" />
+		<property name="showAdministrator" value="${userInfo.showAdministrator}" />
+		<property name="showManagedDepartments" value="${userInfo.showManagedDepartments}" />
+		<property name="showTicketCreationDepartments" value="${userInfo.showTicketCreationDepartments}" />
+		<property name="showTicketViewDepartments" value="${userInfo.showTicketViewDepartments}" />
+		<property name="showFaqViewDepartments" value="${userInfo.showFaqViewDepartments}" />
+		<property name="showLdapAttributes" value="${userInfo.showLdapAttributes}" />
+        <property name="ldapAttributeNames" value="${userInfo.ldapAttributes}" />
+        <property name="showShibbolethAttributes" value="${userInfo.showShibbolethAttributes}" />
+        <property name="shibbolethAttributeNames" value="${userInfo.shibbolethAttributes}" />
+		<property name="showBrowser" value="${userInfo.showBrowser}" />
+		<property name="testUserId" value="${userInfo.testUserId}" />
+	</bean>
+
+</beans>

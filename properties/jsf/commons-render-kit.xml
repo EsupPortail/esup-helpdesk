@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+                              "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+<!-- 
+	/properties/esup-commons-faces-config.xml
+	The configuration file of Java Server Faces for the ESUP-Portail commons stuff.
+	This file is referenced by /webapp/WEB-INF/web.xml. 
+	It should not be modified but by the developers. 
+-->
+
+<faces-config>
+	<!-- The components -->
+	<component>
+		<component-type>org.esupportail.commons.component.paginator</component-type>
+		<component-class>org.esupportail.commons.web.component.UIPaginator</component-class>
+	</component>
+	
+	<component>	
+		<component-type>org.esupportail.commons.component.paginatorStyle</component-type>
+		<component-class>org.esupportail.commons.web.component.UIPaginatorStyle</component-class>
+	</component>
+
+	<component>
+		<component-type>org.esupportail.commons.component.form</component-type>
+		<component-class>org.esupportail.commons.web.component.UIForm</component-class>
+	</component>
+	
+	<!-- 
+		A render kit for the ESUP-Portail customized tags (see /webapp/WEB-INF/esup-commons.tld).
+	-->
+	<render-kit>
+		<renderer>
+			<component-family>javax.faces.Output</component-family>
+			<renderer-type>org.esupportail.SubSectionRenderer</renderer-type>
+			<renderer-class>
+				org.esupportail.commons.web.renderers.SubSectionRenderer
+			</renderer-class>
+		</renderer>
+		<renderer>
+			<component-family>javax.faces.Output</component-family>
+			<renderer-type>org.esupportail.SectionRenderer</renderer-type>
+			<renderer-class>
+				org.esupportail.commons.web.renderers.SectionRenderer
+			</renderer-class>
+		</renderer>
+		<renderer>
+			<component-family>javax.faces.Output</component-family>
+			<renderer-type>org.esupportail.ParagraphRenderer</renderer-type>
+			<renderer-class>
+				org.esupportail.commons.web.renderers.ParagraphRenderer
+			</renderer-class>
+		</renderer>
+		<renderer>
+			<component-family>javax.faces.Output</component-family>
+			<renderer-type>org.esupportail.TextRenderer</renderer-type>
+			<renderer-class>
+				org.esupportail.commons.web.renderers.TextRenderer
+			</renderer-class>
+		</renderer>
+		<renderer>
+			<component-family>javax.faces.Output</component-family>
+			<renderer-type>org.esupportail.LiRenderer</renderer-type>
+			<renderer-class>
+				org.esupportail.commons.web.renderers.LiRenderer
+			</renderer-class>
+		</renderer>
+		<renderer>
+			<component-family>javax.faces.Output</component-family>
+			<renderer-type>org.esupportail.FooterRenderer</renderer-type>
+			<renderer-class>
+				org.esupportail.commons.web.renderers.FooterRenderer
+			</renderer-class>
+		</renderer>
+		<renderer>
+			<component-family>javax.faces.Command</component-family>
+			<renderer-type>org.esupportail.MenuItemRenderer</renderer-type>
+			<renderer-class>
+				org.esupportail.commons.web.renderers.MenuItemRenderer
+			</renderer-class>
+		</renderer>
+		<renderer>
+			<component-family>javax.faces.Command</component-family>
+			<renderer-type>org.esupportail.CommandButtonRenderer</renderer-type>
+			<renderer-class>
+				org.esupportail.commons.web.renderers.CommandButtonRenderer
+			</renderer-class>
+		</renderer>
+	</render-kit>
+	
+
+</faces-config>
