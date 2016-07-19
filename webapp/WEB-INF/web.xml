@@ -358,10 +358,10 @@
 		<url-pattern>/version</url-pattern>
 	</servlet-mapping>
 
-<!--BEGIN-SERVLET-ONLY-->
+<!--BEGIN-SERVLET-ONLY
     <session-config>
     	<session-timeout>${sessionTimeout}</session-timeout>
     </session-config>
-<!--END-SERVLET-ONLY-->
+END-SERVLET-ONLY-->
 
 </web-app>
