@@ -10,7 +10,7 @@
 
 	<h:panelGroup rendered="#{not ticketController.userCanViewTicket}" >
 		<h:panelGroup rendered="#{ticketController.currentUser == null}" >
-			<%@include file="_auth.jsp"%>
+			<%-- <%@include file="_auth.jsp"%> --%>
 		</h:panelGroup>
 		<h:panelGroup rendered="#{ticketController.currentUser != null}" >
 			<e:messages/>
