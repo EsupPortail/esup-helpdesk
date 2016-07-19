@@ -5,6 +5,7 @@ package org.esupportail.helpdesk.dao;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.esupportail.helpdesk.domain.beans.Action;
@@ -730,6 +731,15 @@ public interface DaoService extends Serializable {
 	 */
 	void deleteAllTickets();
 
+//	/**
+//	 * Delete all the tickets older than x days.
+//	 */
+//	void deleteArchivedTickets(final Integer days);
+
+	/**
+	 * Retreive all the arcvided tickets older than a date.
+	 */
+	 List<ArchivedTicket> getArchivedTicketsOlderThan(final Date date);
 	//////////////////////////////////////////////////////////////
 	// Action
 	//////////////////////////////////////////////////////////////
@@ -824,6 +834,12 @@ public interface DaoService extends Serializable {
 	 * @param deleteContent
 	 */
 	void deleteFileInfo(FileInfo fileInfo, boolean deleteContent);
+	/**
+	 * Delete a archivedFileInfo.
+	 * @param archivedFileInfo
+	 * @param deleteContent
+	 */
+	void deleteArchivedFileInfo(ArchivedFileInfo archivedFileInfo, boolean deleteContent);
 
 	//////////////////////////////////////////////////////////////
 	// ArchivedTicket

@@ -5,7 +5,10 @@ package org.esupportail.helpdesk.domain;
 
 import java.net.InetAddress;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -22,6 +25,7 @@ import org.esupportail.commons.services.logging.Logger;
 import org.esupportail.commons.services.logging.LoggerImpl;
 import org.esupportail.commons.utils.Assert;
 import org.esupportail.commons.utils.FileUtils;
+import org.esupportail.helpdesk.batch.Batch;
 import org.esupportail.helpdesk.dao.DaoService;
 import org.esupportail.helpdesk.domain.assignment.AssignmentAlgorithm;
 import org.esupportail.helpdesk.domain.assignment.AssignmentAlgorithmStore;
@@ -2970,6 +2974,42 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		daoService.deleteAllTickets();
 	}
 
+	@Override
+	public void deleteTicketById(final long ticketNumber) {
+		Ticket ticket = daoService.getTicket(ticketNumber);
+		if(ticket != null){
+			daoService.deleteTicket(ticket, true);
+		} else {
+			logger.info("no ticket found. Ticket number : " + ticketNumber);
+		}
+	}
+	
+	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#deleteArchivedTickets()
+	 */
+	@Override
+	public void deleteArchivedTickets(final Integer days) {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar dateToDelete = Calendar.getInstance();
+		dateToDelete.setTime(new Date()); // Now use today date.
+		dateToDelete.add(Calendar.DATE, -days); // substract x days
+		Integer compteur = 0;
+		Integer compteurTotal = 0;
+		
+		logger.info("delete archiving ticket before : " +  dateToDelete.getTime());
+		List<ArchivedTicket> archivedTickets = daoService.getArchivedTicketsOlderThan(dateToDelete.getTime());
+		logger.info("number of archiving ticket to be delete : " + archivedTickets.size());
+		for (ArchivedTicket archivedTicket : archivedTickets) {
+			daoService.deleteArchivedTicket(archivedTicket);
+			compteur++;
+			if(compteur >= 1000){
+				compteurTotal+= compteur;
+				compteur = 0;
+				logger.info("nb messages traités : " + compteurTotal);
+			}
+		}
+	}
 	/** Eclipse outline delimiter. */
 	@SuppressWarnings("unused")
 	private void _______________ACTION() {

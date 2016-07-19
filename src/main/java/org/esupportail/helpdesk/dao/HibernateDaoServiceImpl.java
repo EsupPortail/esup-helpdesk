@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.esupportail.commons.aop.cache.RequestCache;
@@ -147,6 +149,12 @@ implements DaoService {
 	 */
 	private static final String CATEGORY_ATTRIBUTE = "category";
 
+	/**
+	 * The name of the 'category' attribute.
+	 */
+	private static final String CREATION_DATE_ATTRIBUTE = "creationDate";
+
+	
 	/**
 	 * The name of the 'realCategory' attribute.
 	 */
@@ -2117,6 +2125,19 @@ implements DaoService {
 		}
 	}
 
+	/**
+	 * @see org.esupportail.helpdesk.dao.DaoService#deleteArchivedFileInfo(
+	 * org.esupportail.helpdesk.domain.beans.FileInfo, boolean)
+	 */
+	@Override
+	public void deleteArchivedFileInfo(
+			final ArchivedFileInfo archivedFileInfo,
+			final boolean deleteContent) {
+		deleteObject(archivedFileInfo);
+		if (deleteContent) {
+			fileManager.deleteArchivedFileInfoContent(archivedFileInfo);
+		}				
+	}
 	/** Eclipse outline delimiter. */
 	@SuppressWarnings("unused")
 	private void _______________ARCHIVED_TICKET() {
@@ -2179,25 +2200,29 @@ implements DaoService {
 		}
 		for (ArchivedFileInfo archivedFileInfo : getArchivedFileInfos(archivedTicket)) {
 			deleteArchivedFileInfo(archivedFileInfo);
+			this.fileManager.deleteArchivedFileInfoContent(archivedFileInfo);
 		}
 		for (ArchivedInvitation archivedInvitation : getArchivedInvitations(archivedTicket)) {
 			deleteArchivedInvitation(archivedInvitation);
 		}
-		executeUpdate(HqlUtils.updateWhere(
-				Ticket.class.getSimpleName() + " t",
-				"t.archivedConnectionTicket = NULL",
-				HqlUtils.equals("t.archivedConnectionTicket.id", archivedTicket.getId())));
-		executeUpdate(HqlUtils.updateWhere(
-				ArchivedTicket.class.getSimpleName() + " t",
-				"t.archivedConnectionTicket = NULL",
-				HqlUtils.equals("t.archivedConnectionTicket.id", archivedTicket.getId())));
 		executeUpdate(HqlUtils.deleteWhere(
 				Bookmark.class.getSimpleName() + " b",
 				HqlUtils.equals("b.archivedTicket.id", archivedTicket.getId())));
 		executeUpdate(HqlUtils.deleteWhere(
 				HistoryItem.class.getSimpleName() + " hi",
 				HqlUtils.equals("hi.archivedTicket.id", archivedTicket.getId())));
-		deleteObject(archivedTicket);
+		executeUpdate(HqlUtils.updateWhere(
+                Ticket.class.getSimpleName() + " t",
+                "t.connectionArchivedTicket = NULL",
+                HqlUtils.equals("t.connectionArchivedTicket.id", archivedTicket.getId())));
+		executeUpdate(HqlUtils.updateWhere(
+				ArchivedTicket.class.getSimpleName() + " t",
+				"t.connectionArchivedTicket = NULL",
+				HqlUtils.equals("t.connectionArchivedTicket.id", archivedTicket.getId())));
+
+		executeUpdate(HqlUtils.deleteWhere(
+				ArchivedTicket.class.getSimpleName() + " a",
+				HqlUtils.equals("a.id", archivedTicket.getId())));
 	}
 
 	/**
@@ -2324,6 +2349,20 @@ implements DaoService {
 	@Override
 	public void deleteArchivedAction(final ArchivedAction archivedAction) {
 		deleteObject(archivedAction);
+	}
+	/**
+	 * @see org.esupportail.helpdesk.dao.DaoService#getArchivedTicketsOlderThan(Date)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public  List<ArchivedTicket> getArchivedTicketsOlderThan(
+			final Date date) {
+
+		DetachedCriteria criteria = DetachedCriteria.forClass(ArchivedTicket.class);
+		criteria.add(Restrictions.lt(CREATION_DATE_ATTRIBUTE, date));
+		criteria.addOrder(Order.asc(ID_ATTRIBUTE));
+		return getHibernateTemplate().findByCriteria(criteria);
+		
 	}
 
 	/**

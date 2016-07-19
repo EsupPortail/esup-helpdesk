@@ -1559,6 +1559,10 @@ public interface DomainService extends Serializable {
 	 */
 	void deleteAllTickets();
 
+	/**
+	 * Delete a ticket.
+	 */
+	void deleteTicketById(long ticketNumber);
 	//////////////////////////////////////////////////////////////
 	// Action
 	//////////////////////////////////////////////////////////////
@@ -1644,6 +1648,11 @@ public interface DomainService extends Serializable {
 	 */
 	ArchivedTicket getArchivedTicket(long id) throws ArchivedTicketNotFoundException;
 
+	/**
+	 * Delete all the tickets older than x days.
+	 */
+	void deleteArchivedTickets(final Integer days);
+	
 	/**
 	 * @param lastUpdate
 	 * @param maxResults

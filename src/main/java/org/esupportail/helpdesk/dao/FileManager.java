@@ -30,6 +30,13 @@ public interface FileManager extends Serializable {
 	void deleteFileInfoContent(FileInfo fileInfo) throws FileException;
 
 	/**
+	 * Delete the data of a archivedFileInfo.
+	 * @param archivedFileInfo
+	 * @throws FileException
+	 */
+	void deleteArchivedFileInfoContent(ArchivedFileInfo archivedFileInfo) throws FileException;
+
+	/**
 	 * @return the content that corresponds to a FileInfo.
 	 * @param fileInfo
 	 * @throws FileException

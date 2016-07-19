@@ -97,6 +97,8 @@ public class Batch {
 				+ "\n- send-faq-reports: send FAQ reports"
 				+ "\n- feed: feed the database"
 				+ "\n- delete-all-tickets: delete all the tickets"
+				+ "\n- delete-archive-ticket-by-days: delete archive tickets older than x days -- param : -Ddays="
+				+ "\n- delete-ticket: delete ticket by number -- param : -DticketNumber="
 				);
 	}
 
@@ -487,6 +489,44 @@ public class Batch {
 	}
 
 	/**
+	 * Delete all the tickets after x-param days.
+	 */
+	private static void deleteArchivedTickets(final String days) {
+		LOG.info("------------ Starting deleteArchivedTickets ------------");
+		try {
+			DatabaseUtils.open();
+			DatabaseUtils.begin();
+			VersionningUtils.checkVersion(true, false);
+			getDomainService().deleteArchivedTickets(Integer.parseInt(days));
+			LOG.info("------------ End deleteArchivedTickets ------------");
+			DatabaseUtils.commit();
+			DatabaseUtils.close();
+		} catch (Throwable t) {
+			DatabaseUtils.rollback();
+			DatabaseUtils.close();
+			throw new BatchException(t);
+		}
+	}
+
+	/**
+	 * Delete a ticket.
+	 */
+	private static void deleteTicket(final String ticketNumber) {
+		try {
+			DatabaseUtils.open();
+			DatabaseUtils.begin();
+			VersionningUtils.checkVersion(true, false);
+			getDomainService().deleteTicketById(Long.parseLong(ticketNumber));
+			DatabaseUtils.commit();
+			DatabaseUtils.close();
+		} catch (Throwable t) {
+			DatabaseUtils.rollback();
+			DatabaseUtils.close();
+			throw new BatchException(t);
+		}
+	}
+
+	/**
 	 * Dispatch depending on the arguments.
 	 * @param args
 	 */
@@ -539,7 +579,19 @@ public class Batch {
 				syntax();
 			}
 			break;
+		case 2:
+			if ("delete-archive-ticket-by-days".equals(args[0])) {
+				deleteArchivedTickets(args[1]);
+			}
+			 else if ("delete-ticket".equals(args[0])) {
+				 LOG.info( "delete Ticket number : " + args[1]);
+					deleteTicket(args[1]);
+			} else {
+				syntax();
+			}
+			break;
 		default:
+			LOG.info("dispatch : default");
 			syntax();
 			break;
 		}

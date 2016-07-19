@@ -320,6 +320,22 @@
 			<arg value="delete-all-tickets"/>
 	    </java>
 	</target>	
+	<target name="delete-archive-ticket-by-days" depends="compile-batch,commons-check-batch-config" description="Param 1 : nb days before delete"> 
+		<java fork="true" dir="${build.dir}" classname="${batch-class}">
+			<classpath refid="batch.classpath" />
+			<sysproperty key="log4j.configuration" value="file:${log4j.batch-config}" />
+			<arg value="delete-archive-ticket-by-days"/>
+		    <arg line="${days}"/>
+	    </java>
+	</target>	
+	<target name="delete-ticket" depends="compile-batch,commons-check-batch-config" description="Param 1 : ticket number"> 
+	<java fork="true" dir="${build.dir}" classname="${batch-class}">
+		<classpath refid="batch.classpath" />
+		<sysproperty key="log4j.configuration" value="file:${log4j.batch-config}" />
+		<arg value="delete-ticket"/>
+	    <arg line="${ticketNumber}"/>
+    </java>
+</target>		
 </project>
 
 

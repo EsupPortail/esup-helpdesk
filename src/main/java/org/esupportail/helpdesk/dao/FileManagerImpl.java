@@ -259,6 +259,16 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	}
 
 	/**
+	 * @see org.esupportail.helpdesk.dao.FileManager#deleteArchivedFileInfoContent(
+	 * org.esupportail.helpdesk.domain.beans.FileInfo)
+	 */
+	@Override
+	public void deleteArchivedFileInfoContent(final ArchivedFileInfo archivedFileInfo) {
+		checkPath(false);
+		deleteContent(getFilename(archivedFileInfo));
+	}
+
+	/**
 	 * @param archivedFileInfo
 	 * @return the name of the filesystem entry for a ArchivedFileInfo.
 	 */
