@@ -221,7 +221,7 @@ public class HelpdeskImpl extends AbstractIpProtectedWebService implements Helpd
 		user.setControlPanelUserDepartmentFilter(null);
 		
 		List<Department> visibleDepartments = getDomainService().getManagedOrTicketViewVisibleDepartments(user, getClient());
-		String queryString = getTicketExtractor().getControlPanelQueryString(user, user, visibleDepartments);
+		String queryString = getTicketExtractor().getControlPanelQueryString(user, user, visibleDepartments, false);
 		Query query = getDaoService().getQuery(queryString);
 		query.setMaxResults(simpleTicketViewsNumber);
 		@SuppressWarnings("unchecked")
@@ -295,7 +295,8 @@ public class HelpdeskImpl extends AbstractIpProtectedWebService implements Helpd
 			ControlPanel.MANAGER_INVOLVEMENT_FILTER_ANY,
 			ControlPanel.MANAGER_INVOLVEMENT_FILTER_FREE,
 			ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED,
-			ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_FREE
+			ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_FREE,
+			ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED
 		};
 		return Arrays.asList(filters);
 	}

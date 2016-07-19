@@ -165,6 +165,28 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 
 	/**
 	 * @param user
+	 * @return the condition regarding invitations.
+	 */
+	public String getAllTicketsUserInvited(
+			final User user) {
+		
+		String condition = HqlUtils.selectFromWhere(
+				"invitation",
+				Invitation.class.getSimpleName()
+				+ HqlUtils.AS_KEYWORD
+				+ "invitation",
+				HqlUtils.equals(
+						"invitation.user.id",
+						HqlUtils.quote(user.getId()))
+				);
+		if (logger.isDebugEnabled()) {
+			logger.debug("allTicketsUserInvited = " + condition);
+		}
+		return condition;
+	}
+
+	/**
+	 * @param user
 	 * @return the condition regarding the managed departments.
 	 */
 	protected String getManagedDepartmentCondition(
@@ -173,7 +195,8 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		for (Department department : getDomainService().getManagedDepartments(user)) {
 			departmentsIds.add(new Long(department.getId()));
 		}
-		String condition = HqlUtils.longIn("ticket.department.id", departmentsIds);
+		String condition;
+		condition = HqlUtils.longIn("ticket.department.id", departmentsIds);
 		if (logger.isDebugEnabled()) {
 			logger.debug("managedDepartmentCondition = " + condition);
 		}
@@ -238,7 +261,7 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	protected String getManagerInvolvementCondition(
 			final User user,
 			final User selectedManager) {
-		String condition;
+		String condition = null;
 		String involvementFilter = user.getControlPanelManagerInvolvementFilter();
 		if (ControlPanel.MANAGER_INVOLVEMENT_FILTER_FREE.equals(involvementFilter)) {
 			if (selectedManager != null) {
@@ -247,6 +270,12 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 				condition = getFreeCondition();
 			}
 		} else if (ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED.equals(involvementFilter)) {
+			if (selectedManager != null && !selectedManager.equals(user)) {
+				condition = HqlUtils.alwaysFalse();
+			} else {
+				condition = getManagedCondition(user);
+			}
+		} else if (ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED.equals(involvementFilter)) {
 			if (selectedManager != null && !selectedManager.equals(user)) {
 				condition = HqlUtils.alwaysFalse();
 			} else {
@@ -401,14 +430,25 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	 */
 	protected String getManagerControlPanelQueryString(
 			final User user,
-			final User selectedManager) {
+			final User selectedManager,
+			Boolean isInvitation) {
+		
+		String managerCondition = null;
 		if (user == null) {
 			return null;
 		}
-		String managerCondition = HqlUtils.and(
+		if(!isInvitation){
+			managerCondition = HqlUtils.and(
 				getStatusCondition(user),
 				getManagerInvolvementCondition(user, selectedManager),
 				getManagerVisibleTicketCondition(user));
+		} else {
+			managerCondition = HqlUtils.and(HqlUtils.and(
+					getStatusCondition(user),
+					getManagerVisibleTicketCondition(user)),
+					getInvitedCondition(user));
+			
+		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("managerCondition = " + managerCondition);
 		}
@@ -545,7 +585,8 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	public String getControlPanelQueryString(
 			final User user,
 			final User selectedManager,
-			final List<Department> visibleDepartments) {
+			final List<Department> visibleDepartments,
+			Boolean isInvitation) {
 		String queryString;
 		if (user == null) {
 			queryString = null;
@@ -562,7 +603,7 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 					theSelectedManager = null;
 				}
 			}
-			queryString = getManagerControlPanelQueryString(user, theSelectedManager);
+			queryString = getManagerControlPanelQueryString(user, theSelectedManager, isInvitation);
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("queryString = " + queryString);

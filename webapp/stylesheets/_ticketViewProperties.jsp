@@ -273,6 +273,17 @@
 			value="#{msgs['TICKET_VIEW.BUTTON.MOVE']}"
 			action="#{ticketController.move}" 
 			rendered="#{ticketController.userCanMove}" />
+		<h:panelGroup rendered="#{ticketController.userCanMoveBack}" 
+			style="cursor: pointer" 
+			onclick="simulateLinkClick('viewTicketForm:giveInformationMoveBackButton');" >
+			<t:graphicImage value="/media/images/move-back.png" 
+				alt="#{msgs['TICKET_VIEW.BUTTON.MOVE.BACK']}"
+				title="#{msgs['TICKET_VIEW.BUTTON.MOVE.BACK']}" />
+	</h:panelGroup>
+		<e:commandButton id="giveInformationMoveBackButton" style="display: none"
+			value="#{msgs['TICKET_VIEW.BUTTON.MOVE']}"
+			action="#{ticketController.giveInformationMoveBack}" 
+			rendered="#{ticketController.userCanMoveBack}" />
 	</h:panelGroup>
 	<e:text value="#{msgs['TICKET_VIEW.PROPERTIES.SCOPE']}" />
 	<h:panelGroup>

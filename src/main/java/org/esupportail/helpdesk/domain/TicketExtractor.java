@@ -23,7 +23,11 @@ public interface TicketExtractor extends Serializable {
 	String getControlPanelQueryString(
 			User user, 
 			User selectedManager,
-			List<Department> visibleDepartments);
+			List<Department> visibleDepartments,
+			Boolean isInvitation);
+	
+	String getAllTicketsUserInvited(
+			User user);
 
 }
 

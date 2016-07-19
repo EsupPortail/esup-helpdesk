@@ -1580,6 +1580,13 @@ public interface DomainService extends Serializable {
 	Action getLastAction(Ticket ticket);
 
 	/**
+	 * @param ticket
+	 * @param action type
+	 * @return the last action of the ticket.
+	 */
+	Action getLastActionByActionType(Ticket ticket, String actionType);
+
+	/**
 	 * @param startIndex the index of the action ticket to retrieve
 	 * @param maxResults the maximum number of actions to retrieve
 	 * @return the actions within a given range.
@@ -2546,6 +2553,12 @@ public interface DomainService extends Serializable {
 	 * @return true if the current user can move the ticket.
 	 */
 	boolean userCanMove(User user, Ticket ticket);
+	/**
+	 * @param user
+	 * @param ticket
+	 * @return true if the current user can move the ticket to the before categorie.
+	 */
+	boolean userCanMoveBack(User user, Ticket ticket);
 
 	/**
 	 * @param user

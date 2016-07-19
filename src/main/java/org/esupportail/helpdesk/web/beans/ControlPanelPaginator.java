@@ -11,9 +11,11 @@ import org.esupportail.commons.dao.AbstractHibernatePaginator;
 import org.esupportail.commons.services.logging.Logger;
 import org.esupportail.commons.services.logging.LoggerImpl;
 import org.esupportail.commons.utils.Assert;
+import org.esupportail.helpdesk.domain.ControlPanel;
 import org.esupportail.helpdesk.domain.DomainService;
 import org.esupportail.helpdesk.domain.TicketExtractor;
 import org.esupportail.helpdesk.domain.beans.Department;
+import org.esupportail.helpdesk.domain.beans.Invitation;
 import org.esupportail.helpdesk.domain.beans.Ticket;
 import org.esupportail.helpdesk.domain.beans.User;
 import org.esupportail.helpdesk.web.controllers.SessionController;
@@ -88,7 +90,7 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 		List<Department> visibleDepartments = 
 			getDomainService().getTicketViewDepartments(getCurrentUser(), getClient());
 		String queryString = ticketExtractor.getControlPanelQueryString(
-				getCurrentUser(), selectedManager, visibleDepartments);
+				getCurrentUser(), selectedManager, visibleDepartments, false);
 		if (queryString == null) {
 			setVisibleItems(controlPanelEntries);
 			setCurrentPageInternal(0);
@@ -106,9 +108,18 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 		if (logger.isDebugEnabled()) {
 			logger.debug("executing " + query.getQueryString() + "...");
 		}
+		Query queryInvitations = null;
 		query.setFirstResult(getCurrentPage() * getPageSize());
 		query.setMaxResults(getPageSize());
 		List<Ticket> tickets = query.list();
+		//récupération des tickets invité
+		if(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)){
+			String queryStringInvitations = ticketExtractor.getControlPanelQueryString(
+					getCurrentUser(), selectedManager, visibleDepartments, true);
+			queryInvitations = getDaoService().getQuery(queryStringInvitations);
+			List<Ticket>  ticketsInvitation = (List<Ticket> ) queryInvitations.list();
+			tickets.addAll(ticketsInvitation);
+		}
 		for (Ticket ticket : tickets) {
 			controlPanelEntries.add(new ControlPanelEntry(
 					ticket, 

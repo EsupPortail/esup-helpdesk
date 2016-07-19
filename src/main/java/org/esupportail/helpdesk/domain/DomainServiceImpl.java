@@ -3046,6 +3046,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateAction(
+	 */
+	@Override
+	public Action getLastActionByActionType(
+			final Ticket ticket,
+			final String actionType) {
+		return daoService.getLastActionByActionType(ticket, actionType);
+	}
+
+	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#updateAction(
 	 * org.esupportail.helpdesk.domain.beans.Action)
 	 */
 	@Override
@@ -5032,6 +5042,27 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			return true;
 		}
 		if (user.equals(ticket.getManager())) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#userCanTake(
+	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 */
+	@Override
+	@RequestCache
+	public boolean userCanMoveBack(final User user, final Ticket ticket) {
+		
+		Action lastAction = getLastActionByActionType(ticket, ActionType.CHANGE_CATEGORY);			
+		if (user == null) {
+			return false;
+		}
+		if (ticket.isOpened() && isDepartmentManager(ticket.getDepartment(), user) && lastAction != null && lastAction.getCategoryBefore() != null) {
+			return true;
+		}
+		if (user.equals(ticket.getManager()) && lastAction != null && lastAction.getCategoryBefore() != null) {
 			return true;
 		}
 		return false;

@@ -171,6 +171,12 @@ implements DaoService {
 	private static final String ARCHIVED_TICKET_ATTRIBUTE = "archivedTicket";
 
 	/**
+	 * The name of the 'actionType' attribute.
+	 */
+	private static final String ACTION_TYPE_ATTRIBUTE = "actionType";
+
+
+	/**
 	 * The name of the 'action' attribute.
 	 */
 	private static final String ACTION_ATTRIBUTE = "action";
@@ -1962,6 +1968,23 @@ implements DaoService {
 	}
 
 	/**
+	 * @see org.esupportail.helpdesk.dao.DaoService#getActions(
+	 * org.esupportail.helpdesk.domain.beans.Ticket, boolean)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Action> getActionsByActionType(final Ticket ticket, final String actionType, final boolean dateAsc) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Action.class);
+		criteria.add(Restrictions.eq(TICKET_ATTRIBUTE, ticket));
+		criteria.add(Restrictions.eq(ACTION_TYPE_ATTRIBUTE, actionType));
+		if (dateAsc) {
+			criteria.addOrder(Order.asc(ID_ATTRIBUTE));
+		} else {
+			criteria.addOrder(Order.desc(ID_ATTRIBUTE));
+		}
+		return getHibernateTemplate().findByCriteria(criteria);
+	}
+	/**
 	 * @see org.esupportail.helpdesk.dao.DaoService#getActionsNumber(
 	 * org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
@@ -1982,6 +2005,20 @@ implements DaoService {
 	@RequestCache
 	public Action getLastAction(final Ticket ticket) {
 		List<Action> actions = getActions(ticket, false);
+		if (actions.isEmpty()) {
+			return null;
+		}
+		return actions.get(0);
+	}
+
+	/**
+	 * @see org.esupportail.helpdesk.dao.DaoService#getLastActionByActionType(
+	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 */
+	@Override
+	@RequestCache
+	public Action getLastActionByActionType(final Ticket ticket, final String actionType) {
+		List<Action> actions = getActionsByActionType(ticket, actionType, false);
 		if (actions.isEmpty()) {
 			return null;
 		}

@@ -28,6 +28,7 @@ import org.esupportail.commons.web.beans.Paginator;
 import org.esupportail.commons.web.beans.TreeModelBase;
 import org.esupportail.commons.web.controllers.LdapSearchCaller;
 import org.esupportail.helpdesk.domain.ActionScope;
+import org.esupportail.helpdesk.domain.ActionType;
 import org.esupportail.helpdesk.domain.DomainService;
 import org.esupportail.helpdesk.domain.TicketScope;
 import org.esupportail.helpdesk.domain.beans.Action;
@@ -1670,6 +1671,73 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		looseTicketManagementInvite = false;
 		freeTicket = null;
 		return "move";
+	}
+	
+	/**
+	 * JSF callback.
+	 * @return a String.
+	 */
+	public String giveInformationMoveBack() {
+		boolean updated = updateTicket();
+		if (!isUserCanGiveInformation()) {
+			addUnauthorizedActionMessage();
+			if (isPageAuthorized()) {
+				return "view";
+			}
+			return back();
+		}
+		if (updated) {
+			return null;
+		}
+		return "giveInformationMoveBack";
+	}
+	
+	/**
+	 * JSF callback.
+	 * @return a String.
+	 */
+	public String doMoveBack() {
+		boolean updated = updateTicket();
+		if (!isUserCanMove()) {
+			addUnauthorizedActionMessage();
+			if (isPageAuthorized()) {
+				return "view";
+			}
+			return back();
+		}
+		if (updated) {
+			return null;
+		}
+		limitActionScope();
+		if (!checkActionMessageLength()) {
+			return null;
+		}
+		if (!handleTempUploadedFiles(null)) {
+			return null;
+		}
+		Action lastAction = getDomainService().getLastActionByActionType(getTicket(), ActionType.CHANGE_CATEGORY);
+		if(lastAction != null && lastAction.getCategoryBefore() != null) {
+			
+			//ajout de l'action de changement de catégorie
+			getDomainService().moveTicket(
+				getCurrentUser(), getTicket(), lastAction.getCategoryBefore(),
+				actionMessage, actionScope, !noAlert,
+				freeTicket, looseTicketManagementMonitor, looseTicketManagementInvite);
+		
+			//réassignation du ticket
+			getDomainService().assignTicket(getCurrentUser(), getTicket(), lastAction.getUser(), null, ActionScope.DEFAULT);
+
+		} else {
+			return "view";
+		}
+		
+		resetActionForm();
+		refreshTicket();
+		if (!getDomainService().userCanViewTicket(
+				getCurrentUser(), getSessionController().getClient(), getTicket())) {
+			return back();
+		}
+		return "moved";
 	}
 
 	/**

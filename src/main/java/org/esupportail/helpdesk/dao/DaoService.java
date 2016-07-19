@@ -753,6 +753,15 @@ public interface DaoService extends Serializable {
 
 	/**
 	 * @param ticket
+	 * @param action type
+	 * @param dateAsc true to get the date order, false to inverse
+	 * @return the actions of the ticket.
+	 */
+	List<Action> getActionsByActionType(Ticket ticket, String actionType, boolean dateAsc);
+
+
+	/**
+	 * @param ticket
 	 * @return the number of actions of the ticket.
 	 */
 	int getActionsNumber(Ticket ticket);
@@ -763,6 +772,12 @@ public interface DaoService extends Serializable {
 	 */
 	Action getLastAction(Ticket ticket);
 
+	/**
+	 * @param ticket
+	 * @param action type
+	 * @return the last action of a ticket.
+	 */
+	Action getLastActionByActionType(Ticket ticket, String actionType);
 	/**
 	 * Add an action.
 	 * @param action

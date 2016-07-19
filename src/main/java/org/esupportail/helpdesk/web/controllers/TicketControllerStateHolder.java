@@ -692,6 +692,16 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 	}
 
 	/**
+	 * @return the userCanMoveBackCategorie
+	 */
+	@RequestCache
+	public boolean isUserCanMoveBack() {
+		if (ticket == null) {
+			return false;
+		}
+		return getDomainService().userCanMoveBack(getCurrentUser(), ticket);
+	}
+	/**
 	 * @return the userCanTake
 	 */
 	@RequestCache

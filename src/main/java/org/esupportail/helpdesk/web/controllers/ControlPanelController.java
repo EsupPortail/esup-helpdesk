@@ -339,6 +339,9 @@ public class ControlPanelController extends AbstractContextAwareController {
 		managerInvolvementItems.add(new SelectItem(
 				ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_FREE,
 				getString("CONTROL_PANEL.INVOLVEMENT_FILTER.MANAGER.MANAGED_OR_FREE")));
+		managerInvolvementItems.add(new SelectItem(
+				ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED,
+				getString("CONTROL_PANEL.INVOLVEMENT_FILTER.MANAGER.MANAGED_OR_INVITED")));
 		return managerInvolvementItems;
 	}
 

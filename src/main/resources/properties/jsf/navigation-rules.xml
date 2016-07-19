@@ -448,6 +448,21 @@
 	</navigation-rule>
 
 	<navigation-rule>
+		<from-view-id>
+			/stylesheets/giveInformationMoveBack.jsp
+		</from-view-id>
+		<navigation-case>
+			<from-outcome>view</from-outcome>
+			<to-view-id>/stylesheets/ticketView.jsp</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>moved</from-outcome>
+			<to-view-id>/stylesheets/ticketView.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+
+	<navigation-rule>
 		<from-view-id>/stylesheets/ticketView.jsp</from-view-id>
 		<navigation-case>
 			<from-outcome>back</from-outcome>
@@ -484,6 +499,10 @@
 		<navigation-case>
 			<from-outcome>move</from-outcome>
 			<to-view-id>/stylesheets/ticketMove.jsp</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>giveInformationMoveBack</from-outcome>
+			<to-view-id>/stylesheets/giveInformationMoveBack.jsp</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<from-outcome>giveInformation</from-outcome>
