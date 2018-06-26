@@ -1273,7 +1273,11 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		if (!checkActionMessageLength()) {
 			return null;
 		}
-		if (!doChangeTicketSpentTimeIfNeeded(
+		if(getCurrentUser().equals(getTicket().getOwner())) {
+			doChangeTicketSpentTimeIfNeeded(
+					false,false);
+		}
+		else if (!doChangeTicketSpentTimeIfNeeded(
 				getTicket().getDepartment().isSpentTimeNeeded()
 				&& getDomainService().isDepartmentManager(
 						getTicket().getDepartment(), getCurrentUser()),
