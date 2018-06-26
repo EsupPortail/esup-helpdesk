@@ -32,15 +32,21 @@ function addInvitation(select) {
                             showSubmitPopupText="#{sessionController.showSubmitPopupText}"
                             showSubmitPopupImage="#{sessionController.showSubmitPopupImage}"
                             id="ticketActionForm" enctype="multipart/form-data" >
-
-							<h:panelGroup>
-								   <e:section value="#{msgs['TICKET_ACTION.TITLE.MOVE']}"/>
-							</h:panelGroup>
-					
-							<e:messages />
+                            <t:htmlTag value="div" styleClass="message">
+                                <e:messages/>
+                            </t:htmlTag>
+							
+							<t:htmlTag value="div" styleClass="form-block form-header">
+                               <t:htmlTag value="h1">
+                                   <t:htmlTag value="span" styleClass="title">
+                                         <h:outputText value="#{msgs['TICKET_ACTION.TITLE.MOVE']}" escape="false" />
+                                   </t:htmlTag>
+                                   <t:htmlTag value="span" styleClass="subtitle">
+                                       <h:outputText value=" #{ticketController.ticket.id}" escape="false" />
+                                   </t:htmlTag>
+                               </t:htmlTag>
+                            </t:htmlTag>
 					        <t:htmlTag value="div" styleClass="category-filter"  rendered="#{ticketController.moveTargetCategory == null}">
-
-					
 					                <t:htmlTag value="div" styleClass="block form-block">
 					                    <t:htmlTag value="div" styleClass="form-item">
 					                        <e:outputLabel for="filtreTree" value="#{msgs['TICKET_ACTION.SEARCH.CATEGORY']}" />
