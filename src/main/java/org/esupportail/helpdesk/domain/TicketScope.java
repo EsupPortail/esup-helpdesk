@@ -18,6 +18,8 @@ public abstract class TicketScope {
 	/** ticket scope. */
 	public static final String SUBJECT_ONLY = "SUBJECT_ONLY";
 	/** ticket scope. */
+	public static final String CAS = "CAS";
+	/** ticket scope. */
 	public static final String UNDEF = "?";
 
 	/**

@@ -46,7 +46,7 @@ public abstract class AbstractSearchResult implements SearchResult {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.SearchResult#getScore()
 	 */
-	@Override
+@Override
 	public int getScore() {
 		return score;
 	}
@@ -54,7 +54,7 @@ public abstract class AbstractSearchResult implements SearchResult {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.SearchResult#isTicketSearchResult()
 	 */
-	@Override
+@Override
 	public boolean isTicketSearchResult() {
 		return false;
 	}
@@ -62,7 +62,7 @@ public abstract class AbstractSearchResult implements SearchResult {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.SearchResult#getTicket()
 	 */
-	@Override
+@Override
 	public Ticket getTicket() {
 		throw new UnsupportedOperationException();
 	}
@@ -70,7 +70,7 @@ public abstract class AbstractSearchResult implements SearchResult {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.SearchResult#isFaqSearchResult()
 	 */
-	@Override
+@Override
 	public boolean isFaqSearchResult() {
 		return false;
 	}
@@ -78,7 +78,7 @@ public abstract class AbstractSearchResult implements SearchResult {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.SearchResult#getFaq()
 	 */
-	@Override
+@Override
 	public Faq getFaq() {
 		throw new UnsupportedOperationException();
 	}
@@ -86,7 +86,7 @@ public abstract class AbstractSearchResult implements SearchResult {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.SearchResult#isArchivedTicketSearchResult()
 	 */
-	@Override
+@Override
 	public boolean isArchivedTicketSearchResult() {
 		return false;
 	}
@@ -94,7 +94,7 @@ public abstract class AbstractSearchResult implements SearchResult {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.SearchResult#getArchivedTicket()
 	 */
-	@Override
+@Override
 	public ArchivedTicket getArchivedTicket() {
 		throw new UnsupportedOperationException();
 	}

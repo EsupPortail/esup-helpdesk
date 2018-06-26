@@ -198,6 +198,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	private String departmentDefaultTicketScope = TicketScope.PUBLIC;
 
 	/**
+	 * The default value for comment modification authorization.
+	 */
+	private boolean ticketCommentModification = false;
+
+	/**
 	 * The default scope for FAQs.
 	 */
 	private String departmentDefaultFaqScope = FaqScope.ALL;
@@ -278,6 +283,17 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	private FaqReporter faqReporter;
 
 	/**
+	 * True if convert mail to cas enable.
+	 */
+	private boolean tryConvertMaillToCasUser;
+
+	/**
+	 * pattern of mail to convert to cas user.
+	 */
+	private String mailToConvertPattern;
+
+
+	/**
 	 * Bean constructor.
 	 */
 	public DomainServiceImpl() {
@@ -291,34 +307,23 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	public void afterPropertiesSet() {
 		Assert.notNull(this.daoService,
 				"property daoService of class " + this.getClass().getName() + " can not be null");
-		Assert.notNull(this.userStore,
-				"property userStore of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(this.userStore, "property userStore of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(this.i18nService,
 				"property i18nService of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(this.applicationService,
-				"property applicationService of class " + this.getClass().getName()
-				+ " can not be null");
+				"property applicationService of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(indexIdProvider,
-				"property indexIdProvider of class " + this.getClass().getName()
-				+ " can not be null");
+				"property indexIdProvider of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(departmentConfigurator,
-				"property departmentConfigurator of class " + this.getClass().getName()
-				+ " can not be null");
+				"property departmentConfigurator of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(departmentManagerConfigurator,
-				"property departmentManagerConfigurator of class " + this.getClass().getName()
-				+ " can not be null");
+				"property departmentManagerConfigurator of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(categoryConfigurator,
-				"property categoryConfigurator of class " + this.getClass().getName()
-				+ " can not be null");
+				"property categoryConfigurator of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(departmentSelector,
-				"property departmentSelector of class " + this.getClass().getName()
-				+ " can not be null");
+				"property departmentSelector of class " + this.getClass().getName() + " can not be null");
 		Assert.contains(
-				new String [] {
-						TicketScope.PUBLIC,
-						TicketScope.PRIVATE,
-						TicketScope.SUBJECT_ONLY,
-				},
+				new String[] { TicketScope.PUBLIC, TicketScope.PRIVATE, TicketScope.SUBJECT_ONLY, TicketScope.CAS, },
 				"departmentDefaultTicketScope", departmentDefaultTicketScope);
 		Assert.isTrue(maxPriority > minPriority, "maxPriority <= minPriority");
 		Assert.isTrue(minPriority > 0, "minPriority <= 0");
@@ -326,73 +331,49 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		for (int i = minPriority; i <= maxPriority; i++) {
 			priorities.add(new Integer(i));
 		}
-		Assert.contains(
-				priorities,
-				"departmentDefaultTicketPriorityLevel",
+		Assert.contains(priorities, "departmentDefaultTicketPriorityLevel",
 				new Integer(departmentDefaultTicketPriorityLevel));
-		Assert.notEmpty(origins,
-				"property origins of class " + this.getClass().getName()
-				+ " can not be empty");
-		Assert.contains(
-				origins,
-				"webOrigin",
-				webOrigin);
-		Assert.contains(
-				origins,
-				"emailOrigin",
-				emailOrigin);
-		Assert.contains(
-				new String [] {
-						FaqScope.ALL,
-						FaqScope.AUTHENTICATED,
-						FaqScope.DEPARTMENT,
-						FaqScope.MANAGER,
-				},
+		Assert.notEmpty(origins, "property origins of class " + this.getClass().getName() + " can not be empty");
+		Assert.contains(origins, "webOrigin", webOrigin);
+		Assert.contains(origins, "emailOrigin", emailOrigin);
+		Assert.contains(new String[] { FaqScope.ALL, FaqScope.AUTHENTICATED, FaqScope.DEPARTMENT, FaqScope.MANAGER, },
 				"departmentDefaultFaqScope", departmentDefaultFaqScope);
 		Assert.notNull(this.assignmentAlgorithmStore,
-				"property assignmentAlgorithmStore of class "
-				+ this.getClass().getName() + " can not be null");
+				"property assignmentAlgorithmStore of class " + this.getClass().getName() + " can not be null");
 		Assert.notEmpty(this.assignmentAlgorithmStore.getAlgorithmNames(),
-				"property assignmentAlgorithmStore of class "
-				+ this.getClass().getName() + " can not be empty");
-		Assert.contains(
-				assignmentAlgorithmStore.getAlgorithmNames(),
-				"defaultAssignmentAlgorithName", defaultAssignmentAlgorithmName);
+				"property assignmentAlgorithmStore of class " + this.getClass().getName() + " can not be empty");
+		Assert.contains(assignmentAlgorithmStore.getAlgorithmNames(), "defaultAssignmentAlgorithName",
+				defaultAssignmentAlgorithmName);
 		Assert.notNull(this.computerUrlBuilderStore,
-				"property computerUrlBuilderStore of class "
-				+ this.getClass().getName() + " can not be null");
+				"property computerUrlBuilderStore of class " + this.getClass().getName() + " can not be null");
 		Assert.notEmpty(this.computerUrlBuilderStore.getComputerUrlBuilderNames(),
-				"property computerUrlBuilderStore of class "
-				+ this.getClass().getName() + " can not be empty");
-		Assert.contains(
-				computerUrlBuilderStore.getComputerUrlBuilderNames(),
-				"defaultComputerUrlBuilderName", defaultComputerUrlBuilderName);
-        Assert.notNull(fckEditorCodeCleaner,
-                "property fckEditorCodeCleaner of class "
-                + this.getClass().getName() + " must be set");
-        if (userInfoProvider != null) {
-        	userInfoProvider.setDomainService(this);
-        }
+				"property computerUrlBuilderStore of class " + this.getClass().getName() + " can not be empty");
+		Assert.contains(computerUrlBuilderStore.getComputerUrlBuilderNames(), "defaultComputerUrlBuilderName",
+				defaultComputerUrlBuilderName);
+		Assert.notNull(fckEditorCodeCleaner,
+				"property fckEditorCodeCleaner of class " + this.getClass().getName() + " must be set");
+		if (userInfoProvider != null) {
+			userInfoProvider.setDomainService(this);
+		}
 		Assert.notNull(this.ticketPrinter,
-				"property ticketPrinter of class " + this.getClass().getName()
-				+ " can not be null");
+				"property ticketPrinter of class " + this.getClass().getName() + " can not be null");
 		ticketPrinter.setDomainService(this);
 		Assert.notNull(this.invitationSender,
-				"property invitationSender of class " + this.getClass().getName()
-				+ " can not be null");
+				"property invitationSender of class " + this.getClass().getName() + " can not be null");
 		invitationSender.setDomainService(this);
 		Assert.notNull(this.monitoringSender,
-				"property monitoringSender of class " + this.getClass().getName()
-				+ " can not be null");
+				"property monitoringSender of class " + this.getClass().getName() + " can not be null");
 		monitoringSender.setDomainService(this);
 		Assert.notNull(this.ticketReporter,
-				"property ticketReporter of class " + this.getClass().getName()
-				+ " can not be null");
+				"property ticketReporter of class " + this.getClass().getName() + " can not be null");
 		ticketReporter.setDomainService(this);
 		Assert.notNull(this.faqReporter,
-				"property faqReporter of class " + this.getClass().getName()
-				+ " can not be null");
+				"property faqReporter of class " + this.getClass().getName() + " can not be null");
 		faqReporter.setDomainService(this);
+		Assert.notNull(this.tryConvertMaillToCasUser,
+				"property tryConvertMaillToCasUser of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(this.mailToConvertPattern,
+				"property mailToConvertPattern of class " + this.getClass().getName() + " can not be null");
 	}
 
 	/** Eclipse outline delimiter. */
@@ -410,7 +391,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param departmentDefaultTicketScope the departmentDefaultTicketScope to set
+	 * @param departmentDefaultTicketScope
+	 *            the departmentDefaultTicketScope to set
 	 */
 	public void setDepartmentDefaultTicketScope(final String departmentDefaultTicketScope) {
 		this.departmentDefaultTicketScope = departmentDefaultTicketScope;
@@ -426,6 +408,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Set the departmentDefaultTicketPriorityLevel.
+	 * 
 	 * @param departmentDefaultTicketPriorityLevel
 	 */
 	public void setDepartmentDefaultTicketPriorityLevel(final int departmentDefaultTicketPriorityLevel) {
@@ -441,7 +424,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param departmentDefaultFaqScope the departmentDefaultFaqScope to set
+	 * @param departmentDefaultFaqScope
+	 *            the departmentDefaultFaqScope to set
 	 */
 	public void setDepartmentDefaultFaqScope(final String departmentDefaultFaqScope) {
 		this.departmentDefaultFaqScope = departmentDefaultFaqScope;
@@ -459,7 +443,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param minPriority the minPriority to set
+	 * @param minPriority
+	 *            the minPriority to set
 	 */
 	public void setMinPriority(final int minPriority) {
 		this.minPriority = minPriority;
@@ -473,14 +458,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param maxPriority the maxPriority to set
+	 * @param maxPriority
+	 *            the maxPriority to set
 	 */
 	public void setMaxPriority(final int maxPriority) {
 		this.maxPriority = maxPriority;
 	}
 
 	/**
-	 * @param priorities the priorities to set
+	 * @param priorities
+	 *            the priorities to set
 	 */
 	protected void setPriorities(final List<Integer> priorities) {
 		this.priorities = priorities;
@@ -500,6 +487,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Set the origins.
+	 * 
 	 * @param originKeys
 	 */
 	public void setOriginKeys(final String originKeys) {
@@ -526,7 +514,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param webOrigin the webOrigin to set
+	 * @param webOrigin
+	 *            the webOrigin to set
 	 */
 	public void setWebOrigin(final String webOrigin) {
 		this.webOrigin = webOrigin;
@@ -540,7 +529,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param emailOrigin the emailOrigin to set
+	 * @param emailOrigin
+	 *            the emailOrigin to set
 	 */
 	public void setEmailOrigin(final String emailOrigin) {
 		this.emailOrigin = emailOrigin;
@@ -560,12 +550,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getAssignmentAlgorithmDescription(
-	 * java.lang.String, java.util.Locale)
+	 *      java.lang.String, java.util.Locale)
 	 */
 	@Override
-	public String getAssignmentAlgorithmDescription(
-			final String name,
-			final Locale locale) {
+	public String getAssignmentAlgorithmDescription(final String name, final Locale locale) {
 		AssignmentAlgorithm algorithm = assignmentAlgorithmStore.getAlgorithm(name);
 		if (algorithm == null) {
 			return null;
@@ -595,9 +583,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @return the description of a computer url builder.
 	 */
 	@Override
-	public String getComputerUrlBuilderDescription(
-			final String name,
-			final Locale locale) {
+	public String getComputerUrlBuilderDescription(final String name, final Locale locale) {
 		ComputerUrlBuilder computerUrlBuilder = computerUrlBuilderStore.getComputerUrlBuilder(name);
 		if (computerUrlBuilder == null) {
 			return null;
@@ -637,6 +623,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Update the department selection context time for a user.
+	 * 
 	 * @param user
 	 */
 	protected void updateUserDepartmentSelectionContextTime(final User user) {
@@ -709,8 +696,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @see org.esupportail.helpdesk.domain.DomainService#addAdmin(org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public void addAdmin(
-			final User user) {
+	public void addAdmin(final User user) {
 		user.setAdmin(true);
 		user.updateDepartmentSelectionContextTime();
 		updateUser(user);
@@ -720,8 +706,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteAdmin(org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public void deleteAdmin(
-			final User user) {
+	public void deleteAdmin(final User user) {
 		user.setAdmin(false);
 		user.updateDepartmentSelectionContextTime();
 		updateUser(user);
@@ -739,7 +724,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getUserInfo(
-	 * org.esupportail.helpdesk.domain.beans.User, java.util.Locale)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.util.Locale)
 	 */
 	@Override
 	@RequestCache
@@ -754,14 +739,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param email
 	 * @return true if the given email is valid.
 	 */
-	protected boolean isEmail(
-			final String email) {
+	protected boolean isEmail(final String email) {
 		return email != null && email.contains("@");
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#transformEntitiesCreatedWithEmail(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	public void transformEntitiesCreatedWithEmail(final User user) {
@@ -786,8 +770,9 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 					i++;
 				}
 				if (i != 0) {
-					logger.info("changed the owner of " + i + " ticket(s) from [application/"
-							+ applicationUser.getRealId() + "] to [" + user.getAuthType() + "/" + user.getRealId() + "]");
+					logger.info(
+							"changed the owner of " + i + " ticket(s) from [application/" + applicationUser.getRealId()
+									+ "] to [" + user.getAuthType() + "/" + user.getRealId() + "]");
 				}
 				i = 0;
 				for (Invitation invitation : daoService.getInvitations(applicationUser)) {
@@ -799,8 +784,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 					i++;
 				}
 				if (i != 0) {
-					logger.info("changed " + i + " invitations(s) from ["
-							+ applicationUser.getId() + "] to [" + user.getId() + "]");
+					logger.info("changed " + i + " invitations(s) from [" + applicationUser.getId() + "] to ["
+							+ user.getId() + "]");
 				}
 				// TODO totally remove the application user!
 			} catch (UserNotFoundException e) {
@@ -820,8 +805,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 */
 	@Override
 	@RequestCache
-	public Department getDepartment(final long id)
-	throws DepartmentNotFoundException {
+	public Department getDepartment(final long id) throws DepartmentNotFoundException {
 		Department department = this.daoService.getDepartment(id);
 		if (department == null) {
 			throw new DepartmentNotFoundException("no department found with id [" + id + "]");
@@ -863,11 +847,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addDepartment(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
-	public void addDepartment(
-			final Department department) {
+	public void addDepartment(final Department department) {
 		department.computeEffectiveDefaultTicketScope(getDepartmentDefaultTicketScope());
 		department.computeEffectiveDefaultFaqScope(getDepartmentDefaultFaqScope());
 		departmentConfigurator.configure(department);
@@ -878,15 +861,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateDepartment(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
-	public void updateDepartment(
-			final Department department) {
-		boolean effectiveDefaultTicketScopeChanged = department.computeEffectiveDefaultTicketScope(
-				getDepartmentDefaultTicketScope());
-		boolean effectiveDefaultFaqScopeChanged = department.computeEffectiveDefaultFaqScope(
-				getDepartmentDefaultFaqScope());
+	public void updateDepartment(final Department department) {
+		boolean effectiveDefaultTicketScopeChanged = department
+				.computeEffectiveDefaultTicketScope(getDepartmentDefaultTicketScope());
+		boolean effectiveDefaultFaqScopeChanged = department
+				.computeEffectiveDefaultFaqScope(getDepartmentDefaultFaqScope());
 		this.daoService.updateDepartment(department);
 		if (effectiveDefaultTicketScopeChanged) {
 			for (Category category : getRootCategories(department)) {
@@ -912,12 +894,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteDepartment(
-	 * org.esupportail.helpdesk.domain.beans.Department, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
-	public void deleteDepartment(
-			final Department department,
-			final Department archivedTicketsNewDepartment) {
+	public void deleteDepartment(final Department department, final Department archivedTicketsNewDepartment) {
 		if (archivedTicketsNewDepartment == null) {
 			for (ArchivedTicket archivedTicket : daoService.getArchivedTickets(department)) {
 				daoService.addDeletedItem(new DeletedItem(indexIdProvider.getIndexId(archivedTicket)));
@@ -925,8 +906,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			}
 		} else {
 			for (ArchivedTicket archivedTicket : daoService.getArchivedTickets(department)) {
-				ArchivedAction archivedAction = ArchivedAction.changeDepartmentArchivedAction(
-						archivedTicket, archivedTicketsNewDepartment);
+				ArchivedAction archivedAction = ArchivedAction.changeDepartmentArchivedAction(archivedTicket,
+						archivedTicketsNewDepartment);
 				daoService.addArchivedAction(archivedAction);
 				archivedTicket.setDepartment(archivedTicketsNewDepartment);
 				daoService.updateArchivedTicket(archivedTicket);
@@ -946,7 +927,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveDepartmentUp(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public void moveDepartmentUp(final Department department) {
@@ -961,7 +942,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveDepartmentDown(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public void moveDepartmentDown(final Department department) {
@@ -976,7 +957,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveDepartmentFirst(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public void moveDepartmentFirst(final Department departmentToMove) {
@@ -992,7 +973,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveDepartmentLast(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public void moveDepartmentLast(final Department departmentToMove) {
@@ -1011,8 +992,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @see org.esupportail.helpdesk.domain.DomainService#reorderDepartments(java.util.List)
 	 */
 	@Override
-	public void reorderDepartments(
-			final List<Department> departments) {
+	public void reorderDepartments(final List<Department> departments) {
 		int i = 0;
 		for (Department department : departments) {
 			if (department.getOrder() != i) {
@@ -1026,7 +1006,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getVirtualDepartments(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public List<Department> getVirtualDepartments(final Department department) {
@@ -1034,8 +1014,24 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#getVirtualDepartments(
+	 *      org.esupportail.helpdesk.domain.beans.Department)
+	 */
+	@Override
+	public List<Category> getVirtualCategories(final Department department) {
+
+		List<Category> virtualCategories = new ArrayList<Category>();
+		List<Category> categories = getCategories(department);
+
+		for (Category category : categories) {
+			virtualCategories.addAll(getVirtualCategories(category));
+		}
+		return virtualCategories;
+	}
+
+	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasVirtualDepartments(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public boolean hasVirtualDepartments(final Department department) {
@@ -1044,34 +1040,28 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketCreationDepartments(
-	 * org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
 	 */
 	@Override
-	public List<Department> getTicketCreationDepartments(
-			final User user,
-			final InetAddress client) {
+	public List<Department> getTicketCreationDepartments(final User user, final InetAddress client) {
 		return departmentSelector.getTicketCreationDepartments(this, user, client);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketViewDepartments(
-	 * org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
 	 */
 	@Override
-	public List<Department> getTicketViewDepartments(
-			final User user,
-			final InetAddress client) {
+	public List<Department> getTicketViewDepartments(final User user, final InetAddress client) {
 		return departmentSelector.getTicketViewDepartments(this, user, client);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqViewDepartments(
-	 * org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
 	 */
 	@Override
-	public List<Department> getFaqViewDepartments(
-			final User user,
-			final InetAddress client) {
+	public List<Department> getFaqViewDepartments(final User user, final InetAddress client) {
 		return departmentSelector.getFaqViewDepartments(this, user, client);
 	}
 
@@ -1085,55 +1075,50 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isDepartmentVisibleForTicketCreation(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department,
-	 * java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      java.net.InetAddress)
 	 */
 	@Override
 	@RequestCache
-	public boolean isDepartmentVisibleForTicketCreation(
-			final User user,
-			final Department department,
+	public boolean isDepartmentVisibleForTicketCreation(final User user, final Department department,
 			final InetAddress client) {
 		return getTicketCreationDepartments(user, client).contains(department);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isDepartmentVisibleForTicketView(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department,
-	 * java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      java.net.InetAddress)
 	 */
 	@Override
 	@RequestCache
-	public boolean isDepartmentVisibleForTicketView(
-			final User user,
-			final Department department,
+	public boolean isDepartmentVisibleForTicketView(final User user, final Department department,
 			final InetAddress client) {
 		return getTicketViewDepartments(user, client).contains(department);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isDepartmentVisibleForFaqView(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department,
-	 * java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      java.net.InetAddress)
 	 */
 	@Override
 	@RequestCache
-	public boolean isDepartmentVisibleForFaqView(
-			final User user,
-			final Department department,
+	public boolean isDepartmentVisibleForFaqView(final User user, final Department department,
 			final InetAddress client) {
 		return getFaqViewDepartments(user, client).contains(department);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getManagedOrTicketViewVisibleDepartments(
-	 * org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
 	 */
 	@Override
 	@RequestCache
-	public List<Department> getManagedOrTicketViewVisibleDepartments(
-			final User user,
-			final InetAddress client) {
+	public List<Department> getManagedOrTicketViewVisibleDepartments(final User user, final InetAddress client) {
 		List<Department> result = getManagedDepartments(user);
 		for (Department department : getTicketViewDepartments(user, client)) {
 			if (!result.contains(department)) {
@@ -1145,13 +1130,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getSearchVisibleDepartments(
-	 * org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
 	 */
 	@Override
 	@RequestCache
-	public List<Department> getSearchVisibleDepartments(
-			final User user,
-			final InetAddress client) {
+	public List<Department> getSearchVisibleDepartments(final User user, final InetAddress client) {
 		List<Department> result = getManagedDepartments(user);
 		for (Department department : getTicketViewDepartments(user, client)) {
 			if (!result.contains(department)) {
@@ -1168,14 +1151,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isDepartmentVisibleForSearch(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department,
-	 * java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      java.net.InetAddress)
 	 */
 	@Override
 	@RequestCache
-	public boolean isDepartmentVisibleForSearch(
-			final User user,
-			final Department department,
+	public boolean isDepartmentVisibleForSearch(final User user, final Department department,
 			final InetAddress client) {
 		return getSearchVisibleDepartments(user, client).contains(department);
 	}
@@ -1184,8 +1166,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @see org.esupportail.helpdesk.domain.DomainService#getDepartmentsByFilter(java.lang.String)
 	 */
 	@Override
-	public List<Department> getDepartmentsByFilter(
-			final String filter) {
+	public List<Department> getDepartmentsByFilter(final String filter) {
 		return daoService.getDepartmentsByFilter(filter);
 	}
 
@@ -1193,19 +1174,17 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @see org.esupportail.helpdesk.domain.DomainService#getDepartmentByLabel(java.lang.String)
 	 */
 	@Override
-	public Department getDepartmentByLabel(
-			final String label) {
+	public Department getDepartmentByLabel(final String label) {
 		return daoService.getDepartmentByLabel(label);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getDepartmentEffectiveAssignmentAlgorithmName(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public String getDepartmentEffectiveAssignmentAlgorithmName(
-			final Department department) {
+	public String getDepartmentEffectiveAssignmentAlgorithmName(final Department department) {
 		if (department.getAssignmentAlgorithmName() != null) {
 			return department.getAssignmentAlgorithmName();
 		}
@@ -1220,31 +1199,29 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getDepartmentManager(
-	 * org.esupportail.helpdesk.domain.beans.Department, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
-	public DepartmentManager getDepartmentManager(
-			final Department department,
-			final User user)
-	throws DepartmentManagerNotFoundException {
+	public DepartmentManager getDepartmentManager(final Department department, final User user)
+			throws DepartmentManagerNotFoundException {
 		DepartmentManager manager = daoService.getDepartmentManager(department, user);
 		if (manager == null) {
-			throw new DepartmentManagerNotFoundException("user [" + user.getRealId()
-					+ "] is not a manager of department [" + department.getLabel() + "]");
+			throw new DepartmentManagerNotFoundException(
+					"user [" + user.getRealId() + "] is not a manager of department [" + department.getLabel() + "]");
 		}
 		return manager;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isDepartmentManager(
-	 * org.esupportail.helpdesk.domain.beans.Department, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
-	public boolean isDepartmentManager(
-			final Department department,
-			final User user) {
+	public boolean isDepartmentManager(final Department department, final User user) {
 		if (user == null) {
 			return false;
 		}
@@ -1258,21 +1235,19 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getDepartmentManagers(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
-	public List<DepartmentManager> getDepartmentManagers(
-			final Department department) {
+	public List<DepartmentManager> getDepartmentManagers(final Department department) {
 		return this.daoService.getDepartmentManagers(department);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getDepartmentManagers(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public List<DepartmentManager> getDepartmentManagers(
-			final User user) {
+	public List<DepartmentManager> getDepartmentManagers(final User user) {
 		return this.daoService.getDepartmentManagers(user);
 	}
 
@@ -1293,22 +1268,20 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getAvailableDepartmentManagers(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
-	public List<DepartmentManager> getAvailableDepartmentManagers(
-			final Department department) {
+	public List<DepartmentManager> getAvailableDepartmentManagers(final Department department) {
 		return this.daoService.getAvailableDepartmentManagers(department);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addDepartmentManager(
-	 * org.esupportail.helpdesk.domain.beans.Department, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public DepartmentManager addDepartmentManager(
-			final Department department,
-			final User user) {
+	public DepartmentManager addDepartmentManager(final Department department, final User user) {
 		DepartmentManager departmentManager = new DepartmentManager();
 		departmentManager.setDepartment(department);
 		departmentManager.setUser(user);
@@ -1322,24 +1295,19 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteDepartmentManager(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.DepartmentManager,
-	 * boolean, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager, boolean,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public void deleteDepartmentManager(
-				final User author,
-				final DepartmentManager departmentManager,
-				final boolean useAssignmentAlgorithm,
-				final User newManager) {
+	public void deleteDepartmentManager(final User author, final DepartmentManager departmentManager,
+			final boolean useAssignmentAlgorithm, final User newManager) {
 		User oldManager = departmentManager.getUser();
-		for (Ticket ticket : getOpenManagedTickets(
-				departmentManager.getDepartment(), oldManager)) {
+		for (Ticket ticket : getOpenManagedTickets(departmentManager.getDepartment(), oldManager)) {
 			if (useAssignmentAlgorithm) {
 				callAssignmentAlgorithm(ticket, oldManager, true, true);
 			} else if (newManager != null) {
-				assignTicket(
-						author, ticket, newManager,
-						null, ActionScope.DEFAULT);
+				assignTicket(author, ticket, newManager, null, ActionScope.DEFAULT);
 			} else {
 				freeTicket(author, ticket, null, ActionScope.DEFAULT);
 			}
@@ -1353,28 +1321,30 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			oldManager.setControlPanelUserInterface(false);
 			updateUser(oldManager);
 		}
-		reorderDepartmentManagers(getDepartmentManagers(departmentManager.getDepartment()));
+
+		List<DepartmentManager> departmentManagers = getDepartmentManagers(departmentManager.getDepartment());
+		departmentManagers.remove(departmentManager);
+		reorderDepartmentManagers(departmentManagers);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateDepartmentManager(
-	 * org.esupportail.helpdesk.domain.beans.DepartmentManager)
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager)
 	 */
 	@Override
-	public void updateDepartmentManager(
-			final DepartmentManager departmentManager) {
+	public void updateDepartmentManager(final DepartmentManager departmentManager) {
 		departmentManager.checkTicketMonitoringValues();
 		this.daoService.updateDepartmentManager(departmentManager);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveDepartmentManagerUp(
-	 * org.esupportail.helpdesk.domain.beans.DepartmentManager)
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager)
 	 */
 	@Override
 	public void moveDepartmentManagerUp(final DepartmentManager departmentManager) {
-		DepartmentManager previousDepartmentManager = daoService.getDepartmentManagerByOrder(
-				departmentManager.getDepartment(), departmentManager.getOrder() - 1);
+		DepartmentManager previousDepartmentManager = daoService
+				.getDepartmentManagerByOrder(departmentManager.getDepartment(), departmentManager.getOrder() - 1);
 		if (previousDepartmentManager != null) {
 			departmentManager.setOrder(departmentManager.getOrder() - 1);
 			updateDepartmentManager(departmentManager);
@@ -1385,12 +1355,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveDepartmentManagerDown(
-	 * org.esupportail.helpdesk.domain.beans.DepartmentManager)
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager)
 	 */
 	@Override
 	public void moveDepartmentManagerDown(final DepartmentManager departmentManager) {
-		DepartmentManager nextDepartmentManager = daoService.getDepartmentManagerByOrder(
-				departmentManager.getDepartment(), departmentManager.getOrder() + 1);
+		DepartmentManager nextDepartmentManager = daoService
+				.getDepartmentManagerByOrder(departmentManager.getDepartment(), departmentManager.getOrder() + 1);
 		if (nextDepartmentManager != null) {
 			departmentManager.setOrder(departmentManager.getOrder() + 1);
 			updateDepartmentManager(departmentManager);
@@ -1401,12 +1371,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveDepartmentManagerFirst(
-	 * org.esupportail.helpdesk.domain.beans.DepartmentManager)
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager)
 	 */
 	@Override
 	public void moveDepartmentManagerFirst(final DepartmentManager departmentManagerToMove) {
-		for (DepartmentManager departmentManager : getDepartmentManagers(
-				departmentManagerToMove.getDepartment())) {
+		for (DepartmentManager departmentManager : getDepartmentManagers(departmentManagerToMove.getDepartment())) {
 			if (departmentManager.getOrder() < departmentManagerToMove.getOrder()) {
 				departmentManager.setOrder(departmentManager.getOrder() + 1);
 				updateDepartmentManager(departmentManager);
@@ -1418,12 +1387,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveDepartmentManagerLast(
-	 * org.esupportail.helpdesk.domain.beans.DepartmentManager)
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager)
 	 */
 	@Override
 	public void moveDepartmentManagerLast(final DepartmentManager departmentManagerToMove) {
-		List<DepartmentManager> departmentManagers = getDepartmentManagers(
-				departmentManagerToMove.getDepartment());
+		List<DepartmentManager> departmentManagers = getDepartmentManagers(departmentManagerToMove.getDepartment());
 		for (DepartmentManager departmentManager : departmentManagers) {
 			if (departmentManager.getOrder() > departmentManagerToMove.getOrder()) {
 				departmentManager.setOrder(departmentManager.getOrder() - 1);
@@ -1449,7 +1417,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getManagedDepartments(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -1462,7 +1430,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getManagedDepartmentsOrAllIfAdmin(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -1478,7 +1446,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isDepartmentManager(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -1491,8 +1459,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @see org.esupportail.helpdesk.domain.DomainService#reorderDepartmentManagers(java.util.List)
 	 */
 	@Override
-	public void reorderDepartmentManagers(
-			final List<DepartmentManager> managers) {
+	public void reorderDepartmentManagers(final List<DepartmentManager> managers) {
 		int i = 0;
 		for (DepartmentManager departmentManager : managers) {
 			if (departmentManager.getOrder() != i) {
@@ -1524,7 +1491,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getCategories(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public List<Category> getCategories(final Department department) {
@@ -1583,7 +1550,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addCategory(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public void addCategory(final Category category) {
@@ -1599,6 +1566,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Update the scope of the children of a category if needed.
+	 * 
 	 * @param category
 	 */
 	protected void updateCategoryChildrenScope(final Category category) {
@@ -1613,7 +1581,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateCategory(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public void updateCategory(final Category category) {
@@ -1626,7 +1594,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteCategory(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public void deleteCategory(final Category category) {
@@ -1638,9 +1606,28 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		}
 	}
 
+	@Override
+	public boolean isMembersOfThirstParentCategory(Category category, User user) {
+
+		// si la categorie hérite d'une categorie parente, on remonte sur la
+		// categorie parente
+		if (category.getInheritMembers() == true && category.getParent() != null) {
+			return isMembersOfThirstParentCategory(category.getParent(), user);
+
+			// cas ou l'on hérite du service
+		} else if (category.getInheritMembers() == true && category.getParent() == null) {
+			if (getDepartmentManager(category.getDepartment(), user) != null) {
+				return true;
+			}
+		} else {
+			return isCategoryMember(category, user);
+		}
+		return false;
+	}
+
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getRootCategories(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public List<Category> getRootCategories(final Department department) {
@@ -1649,7 +1636,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasRootCategories(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public boolean hasRootCategories(final Department department) {
@@ -1658,7 +1645,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getSubCategories(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public List<Category> getSubCategories(final Category category) {
@@ -1667,7 +1654,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasSubCategories(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public boolean hasSubCategories(final Category category) {
@@ -1676,12 +1663,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveCategoryUp(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public void moveCategoryUp(final Category category) {
-		Category previousCategory = daoService.getCategoryByOrder(
-				category.getDepartment(), category.getParent(), category.getOrder() - 1);
+		Category previousCategory = daoService.getCategoryByOrder(category.getDepartment(), category.getParent(),
+				category.getOrder() - 1);
 		if (previousCategory != null) {
 			category.setOrder(category.getOrder() - 1);
 			updateCategory(category);
@@ -1692,12 +1679,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveCategoryDown(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public void moveCategoryDown(final Category category) {
-		Category nextCategory = daoService.getCategoryByOrder(
-				category.getDepartment(), category.getParent(), category.getOrder() + 1);
+		Category nextCategory = daoService.getCategoryByOrder(category.getDepartment(), category.getParent(),
+				category.getOrder() + 1);
 		if (nextCategory != null) {
 			category.setOrder(category.getOrder() + 1);
 			updateCategory(category);
@@ -1708,7 +1695,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveCategoryFirst(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public void moveCategoryFirst(final Category categoryToMove) {
@@ -1730,7 +1717,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveCategoryLast(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public void moveCategoryLast(final Category categoryToMove) {
@@ -1752,6 +1739,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Reorder a list of categories.
+	 * 
 	 * @param categories
 	 */
 	@Override
@@ -1768,10 +1756,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Change the department of the tickets of a category.
+	 * 
 	 * @param category
 	 */
-	protected void changeTicketsDepartment(
-			final Category category) {
+	protected void changeTicketsDepartment(final Category category) {
 		for (Ticket ticket : getTickets(category)) {
 			moveTicket(ticket, category);
 		}
@@ -1780,10 +1768,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	/**
 	 * Remove the members of a category that are not managers of the department
 	 * (used when moving a category from one deparment to another one).
+	 * 
 	 * @param category
 	 */
-	protected void removeNonManagerMembers(
-			final Category category) {
+	protected void removeNonManagerMembers(final Category category) {
 		for (CategoryMember categoryMember : getCategoryMembers(category)) {
 			if (!isDepartmentManager(category.getDepartment(), categoryMember.getUser())) {
 				deleteCategoryMember(categoryMember);
@@ -1794,12 +1782,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Change the department of a category.
+	 * 
 	 * @param category
 	 * @param targetDepartment
 	 */
-	protected void changeDepartmentRec(
-			final Category category,
-			final Department targetDepartment) {
+	protected void changeDepartmentRec(final Category category, final Department targetDepartment) {
 		category.setDepartment(targetDepartment);
 		updateCategory(category);
 		removeNonManagerMembers(category);
@@ -1811,13 +1798,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveCategory(
-	 * org.esupportail.helpdesk.domain.beans.Category,
-	 * org.esupportail.helpdesk.domain.beans.Department, org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category,
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
-	public void moveCategory(
-			final Category categoryToUpdate,
-			final Department targetDepartment,
+	public void moveCategory(final Category categoryToUpdate, final Department targetDepartment,
 			final Category targetCategory) {
 		Department oldDepartment = categoryToUpdate.getDepartment();
 		Category oldParent = categoryToUpdate.getParent();
@@ -1864,7 +1850,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getVirtualCategories(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public List<Category> getVirtualCategories(final Category category) {
@@ -1873,7 +1859,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasVirtualCategories(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public boolean hasVirtualCategories(final Category category) {
@@ -1882,12 +1868,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getCategoryEffectiveAssignmentAlgorithmName(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	@RequestCache
-	public String getCategoryEffectiveAssignmentAlgorithmName(
-			final Category category) {
+	public String getCategoryEffectiveAssignmentAlgorithmName(final Category category) {
 		if (category.getAssignmentAlgorithmName() != null) {
 			return category.getAssignmentAlgorithmName();
 		}
@@ -1896,30 +1881,25 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getCategoryDefaultAssignmentAlgorithmName(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	@RequestCache
-	public String getCategoryDefaultAssignmentAlgorithmName(
-			final Category category) {
+	public String getCategoryDefaultAssignmentAlgorithmName(final Category category) {
 		if (category.getParent() == null) {
-			return getDepartmentEffectiveAssignmentAlgorithmName(
-					category.getDepartment());
+			return getDepartmentEffectiveAssignmentAlgorithmName(category.getDepartment());
 		}
-		return getCategoryEffectiveAssignmentAlgorithmName(
-				category.getParent());
+		return getCategoryEffectiveAssignmentAlgorithmName(category.getParent());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#detectRedirectionLoop(
-	 * org.esupportail.helpdesk.domain.beans.Category, org.esupportail.helpdesk.domain.beans.Category,
-	 * java.util.Map)
+	 *      org.esupportail.helpdesk.domain.beans.Category,
+	 *      org.esupportail.helpdesk.domain.beans.Category, java.util.Map)
 	 */
 	@Override
 	@RequestCache
-	public boolean detectRedirectionLoop(
-			final Category category,
-			final Category targetCategory,
+	public boolean detectRedirectionLoop(final Category category, final Category targetCategory,
 			final Map<Category, Boolean> map) {
 		Map<Category, Boolean> theMap = map;
 		if (theMap == null) {
@@ -1932,7 +1912,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (category.equals(targetCategory)) {
 			loop = true;
 		} else if (targetCategory.isVirtual()) {
-				loop = detectRedirectionLoop(category, targetCategory.getRealCategory(), theMap);
+			loop = detectRedirectionLoop(category, targetCategory.getRealCategory(), theMap);
 		} else {
 			for (Category subCategory : getSubCategories(targetCategory)) {
 				if (detectRedirectionLoop(category, subCategory, theMap)) {
@@ -1971,7 +1951,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTargetCategories(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	public List<Category> getTargetCategories(final User author) {
@@ -1986,31 +1966,29 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getCategoryMember(
-	 * org.esupportail.helpdesk.domain.beans.Category, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Category,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
-	public CategoryMember getCategoryMember(
-			final Category category,
-			final User user)
-	throws CategoryMemberNotFoundException {
+	public CategoryMember getCategoryMember(final Category category, final User user)
+			throws CategoryMemberNotFoundException {
 		CategoryMember member = daoService.getCategoryMember(category, user);
 		if (member == null) {
-			throw new CategoryMemberNotFoundException("user [" + user.getRealId()
-					+ "] is not a member of category [" + category.getLabel() + "]");
+			throw new CategoryMemberNotFoundException(
+					"user [" + user.getRealId() + "] is not a member of category [" + category.getLabel() + "]");
 		}
 		return member;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isCategoryMember(
-	 * org.esupportail.helpdesk.domain.beans.Category, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Category,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
-	public boolean isCategoryMember(
-			final Category category,
-			final User user) {
+	public boolean isCategoryMember(final Category category, final User user) {
 		try {
 			getCategoryMember(category, user);
 			return true;
@@ -2021,11 +1999,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getCategoryMembers(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
-	public List<CategoryMember> getCategoryMembers(
-			final Category category) {
+	public List<CategoryMember> getCategoryMembers(final Category category) {
 		return this.daoService.getCategoryMembers(category);
 	}
 
@@ -2050,12 +2027,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addCategoryMember(
-	 * org.esupportail.helpdesk.domain.beans.Category, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Category,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public CategoryMember addCategoryMember(
-			final Category category,
-			final User user) {
+	public CategoryMember addCategoryMember(final Category category, final User user) {
 		CategoryMember categoryMember = new CategoryMember();
 		categoryMember.setCategory(category);
 		categoryMember.setUser(user);
@@ -2066,26 +2042,25 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Reassign the opened tickets managed by a category member to be deleted.
+	 * 
 	 * @param author
 	 * @param category
 	 * @param user
-	 * @param useAssignmentAlgorithm true to use the assignment algorithm, ignored if reassignTickets is false
-	 * @param newManager the new manager for the tickets (null to free the tickets, ignored
-	 * if reassignTicket is false or useAssignmentAlgorithm is true
+	 * @param useAssignmentAlgorithm
+	 *            true to use the assignment algorithm, ignored if
+	 *            reassignTickets is false
+	 * @param newManager
+	 *            the new manager for the tickets (null to free the tickets,
+	 *            ignored if reassignTicket is false or useAssignmentAlgorithm
+	 *            is true
 	 */
-	protected void reassignTickets(
-			final User author,
-			final Category category,
-			final User user,
-			final boolean useAssignmentAlgorithm,
-			final User newManager) {
+	protected void reassignTickets(final User author, final Category category, final User user,
+			final boolean useAssignmentAlgorithm, final User newManager) {
 		for (Ticket ticket : getOpenManagedTickets(category, user)) {
 			if (useAssignmentAlgorithm) {
 				callAssignmentAlgorithm(ticket, ticket.getManager(), true, true);
 			} else if (newManager != null) {
-				assignTicket(
-						author, ticket, newManager,
-						null, ActionScope.DEFAULT);
+				assignTicket(author, ticket, newManager, null, ActionScope.DEFAULT);
 			} else {
 				freeTicket(author, ticket, null, ActionScope.DEFAULT);
 			}
@@ -2099,22 +2074,25 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Delete a category member and reassign the opened tickets managed.
+	 * 
 	 * @param categoryMember
-	 * @param reassignTickets true to ressign the opened tickets managed by the user,
-	 * false to let the user manage them aven if (s)he is not a member of the category anymore)
-	 * @param useAssignmentAlgorithm true to use the assignment algorithm, ignored if reassignTickets is false
-	 * @param newManager the new manager for the tickets (null to free the tickets, ignored
-	 * if reassignTicket is false or useAssignmentAlgorithm is true
+	 * @param reassignTickets
+	 *            true to ressign the opened tickets managed by the user, false
+	 *            to let the user manage them aven if (s)he is not a member of
+	 *            the category anymore)
+	 * @param useAssignmentAlgorithm
+	 *            true to use the assignment algorithm, ignored if
+	 *            reassignTickets is false
+	 * @param newManager
+	 *            the new manager for the tickets (null to free the tickets,
+	 *            ignored if reassignTicket is false or useAssignmentAlgorithm
+	 *            is true
 	 */
-	protected void deleteCategoryMember(
-			final CategoryMember categoryMember,
-			final boolean reassignTickets,
-			final boolean useAssignmentAlgorithm,
-			final User newManager) {
+	protected void deleteCategoryMember(final CategoryMember categoryMember, final boolean reassignTickets,
+			final boolean useAssignmentAlgorithm, final User newManager) {
 		if (reassignTickets) {
-			reassignTickets(
-					null, categoryMember.getCategory(), categoryMember.getUser(),
-					useAssignmentAlgorithm, newManager);
+			reassignTickets(null, categoryMember.getCategory(), categoryMember.getUser(), useAssignmentAlgorithm,
+					newManager);
 		}
 		daoService.deleteCategoryMember(categoryMember);
 		reorderCategoryMembers(daoService.getCategoryMembers(categoryMember.getCategory()));
@@ -2122,44 +2100,41 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteCategoryMember(
-	 * org.esupportail.helpdesk.domain.beans.CategoryMember, boolean, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.CategoryMember, boolean,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public void deleteCategoryMember(
-			final CategoryMember categoryMember,
-			final boolean useAssignmentAlgorithm,
+	public void deleteCategoryMember(final CategoryMember categoryMember, final boolean useAssignmentAlgorithm,
 			final User newManager) {
 		deleteCategoryMember(categoryMember, true, useAssignmentAlgorithm, newManager);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteCategoryMember(
-	 * org.esupportail.helpdesk.domain.beans.CategoryMember)
+	 *      org.esupportail.helpdesk.domain.beans.CategoryMember)
 	 */
 	@Override
-	public void deleteCategoryMember(
-			final CategoryMember categoryMember) {
+	public void deleteCategoryMember(final CategoryMember categoryMember) {
 		deleteCategoryMember(categoryMember, false, false, null);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateCategoryMember(
-	 * org.esupportail.helpdesk.domain.beans.CategoryMember)
+	 *      org.esupportail.helpdesk.domain.beans.CategoryMember)
 	 */
 	@Override
-	public void updateCategoryMember(
-			final CategoryMember categoryMember) {
+	public void updateCategoryMember(final CategoryMember categoryMember) {
 		daoService.updateCategoryMember(categoryMember);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveCategoryMemberUp(
-	 * org.esupportail.helpdesk.domain.beans.CategoryMember)
+	 *      org.esupportail.helpdesk.domain.beans.CategoryMember)
 	 */
 	@Override
 	public void moveCategoryMemberUp(final CategoryMember categoryMember) {
-		CategoryMember previousCategoryMember = daoService.getCategoryMemberByOrder(
-				categoryMember.getCategory(), categoryMember.getOrder() - 1);
+		CategoryMember previousCategoryMember = daoService.getCategoryMemberByOrder(categoryMember.getCategory(),
+				categoryMember.getOrder() - 1);
 		if (previousCategoryMember != null) {
 			categoryMember.setOrder(categoryMember.getOrder() - 1);
 			updateCategoryMember(categoryMember);
@@ -2170,12 +2145,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveCategoryMemberDown(
-	 * org.esupportail.helpdesk.domain.beans.CategoryMember)
+	 *      org.esupportail.helpdesk.domain.beans.CategoryMember)
 	 */
 	@Override
 	public void moveCategoryMemberDown(final CategoryMember categoryMember) {
-		CategoryMember nextCategoryMember = daoService.getCategoryMemberByOrder(
-				categoryMember.getCategory(), categoryMember.getOrder() + 1);
+		CategoryMember nextCategoryMember = daoService.getCategoryMemberByOrder(categoryMember.getCategory(),
+				categoryMember.getOrder() + 1);
 		if (nextCategoryMember != null) {
 			categoryMember.setOrder(categoryMember.getOrder() + 1);
 			updateCategoryMember(categoryMember);
@@ -2186,7 +2161,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveCategoryMemberFirst(
-	 * org.esupportail.helpdesk.domain.beans.CategoryMember)
+	 *      org.esupportail.helpdesk.domain.beans.CategoryMember)
 	 */
 	@Override
 	public void moveCategoryMemberFirst(final CategoryMember categoryMemberToMove) {
@@ -2203,7 +2178,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveCategoryMemberLast(
-	 * org.esupportail.helpdesk.domain.beans.CategoryMember)
+	 *      org.esupportail.helpdesk.domain.beans.CategoryMember)
 	 */
 	@Override
 	public void moveCategoryMemberLast(final CategoryMember categoryMemberToMove) {
@@ -2248,7 +2223,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getInheritedDepartmentManagers(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	@RequestCache
@@ -2265,7 +2240,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getEffectiveDepartmentManagers(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	@RequestCache
@@ -2278,7 +2253,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getEffectiveAvailableDepartmentManagers(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	@RequestCache
@@ -2294,15 +2269,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * search a category if member (and recurse).
+	 * 
 	 * @param user
 	 * @param category
 	 * @param memberIfInherit
 	 * @param result
 	 */
-	protected void searchMemberCategories(
-			final User user,
-			final Category category,
-			final boolean memberIfInherit,
+	protected void searchMemberCategories(final User user, final Category category, final boolean memberIfInherit,
 			final List<Category> result) {
 		boolean member = false;
 		if (category.getInheritMembers()) {
@@ -2320,13 +2293,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getMemberCategories(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public List<Category> getMemberCategories(
-			final User user,
-			final Department department) {
+	public List<Category> getMemberCategories(final User user, final Department department) {
 		List<Category> result = new ArrayList<Category>();
 		for (Category category : getRootCategories(department)) {
 			searchMemberCategories(user, category, true, result);
@@ -2354,7 +2326,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addFaq(
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	public void addFaq(final Faq faq) {
@@ -2370,6 +2342,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Update the scope of the children of a FAQ if needed.
+	 * 
 	 * @param faq
 	 */
 	protected void updateFaqChildrenScope(final Faq faq) {
@@ -2383,7 +2356,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateFaq(
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	public void updateFaq(final Faq faq) {
@@ -2397,7 +2370,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteFaq(
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	public void deleteFaq(final Faq faq) {
@@ -2412,6 +2385,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Reorder a list of FAQs.
+	 * 
 	 * @param faqs
 	 */
 	protected void reorderFaqs(final List<Faq> faqs) {
@@ -2427,7 +2401,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getRootFaqs(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public List<Faq> getRootFaqs(final Department department) {
@@ -2436,7 +2410,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getRootFaqsNumber(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public int getRootFaqsNumber(final Department department) {
@@ -2445,7 +2419,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasRootFaqs(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public boolean hasRootFaqs(final Department department) {
@@ -2462,7 +2436,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getSubFaqs(
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	public List<Faq> getSubFaqs(final Faq faq) {
@@ -2471,12 +2445,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveFaqUp(
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	public void moveFaqUp(final Faq faq) {
-		Faq previousFaq = daoService.getFaqByOrder(
-				faq.getDepartment(), faq.getParent(), faq.getOrder() - 1);
+		Faq previousFaq = daoService.getFaqByOrder(faq.getDepartment(), faq.getParent(), faq.getOrder() - 1);
 		if (previousFaq != null) {
 			faq.setOrder(faq.getOrder() - 1);
 			updateFaq(faq);
@@ -2487,12 +2460,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveFaqDown(
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	public void moveFaqDown(final Faq faq) {
-		Faq previousFaq = daoService.getFaqByOrder(
-				faq.getDepartment(), faq.getParent(), faq.getOrder() + 1);
+		Faq previousFaq = daoService.getFaqByOrder(faq.getDepartment(), faq.getParent(), faq.getOrder() + 1);
 		if (previousFaq != null) {
 			faq.setOrder(faq.getOrder() + 1);
 			updateFaq(faq);
@@ -2503,7 +2475,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveFaqFirst(
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	public void moveFaqFirst(final Faq faqToMove) {
@@ -2525,7 +2497,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveFaqLast(
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	public void moveFaqLast(final Faq faqToMove) {
@@ -2547,12 +2519,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Change the department of FAQs.
+	 * 
 	 * @param faq
 	 * @param targetDepartment
 	 */
-	protected void changeDepartmentRec(
-			final Faq faq,
-			final Department targetDepartment) {
+	protected void changeDepartmentRec(final Faq faq, final Department targetDepartment) {
 		for (Faq subFaq : getSubFaqs(faq)) {
 			subFaq.setDepartment(targetDepartment);
 			updateFaq(subFaq);
@@ -2562,14 +2533,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveFaq(
-	 * org.esupportail.helpdesk.domain.beans.Faq, org.esupportail.helpdesk.domain.beans.Department,
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq,
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
-	public void moveFaq(
-			final Faq faqToUpdate,
-			final Department targetDepartment,
-			final Faq targetFaq) {
+	public void moveFaq(final Faq faqToUpdate, final Department targetDepartment, final Faq targetFaq) {
 		Department oldDepartment = faqToUpdate.getDepartment();
 		Faq oldParent = faqToUpdate.getParent();
 		boolean departmentChanged;
@@ -2616,7 +2585,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasSubFaqs(
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	public boolean hasSubFaqs(final Faq faq) {
@@ -2625,12 +2594,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqsChangedAfter(
-	 * java.sql.Timestamp, int)
+	 *      java.sql.Timestamp, int)
 	 */
 	@Override
-	public List<Faq> getFaqsChangedAfter(
-			final Timestamp lastUpdate,
-			final int maxResults) {
+	public List<Faq> getFaqsChangedAfter(final Timestamp lastUpdate, final int maxResults) {
 		return daoService.getFaqsChangedAfter(lastUpdate, maxResults);
 	}
 
@@ -2642,7 +2609,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addFaqEvent(
-	 * org.esupportail.helpdesk.domain.beans.FaqEvent)
+	 *      org.esupportail.helpdesk.domain.beans.FaqEvent)
 	 */
 	@Override
 	public void addFaqEvent(final FaqEvent faqEvent) {
@@ -2659,7 +2626,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteFaqEvent(
-	 * org.esupportail.helpdesk.domain.beans.FaqEvent)
+	 *      org.esupportail.helpdesk.domain.beans.FaqEvent)
 	 */
 	@Override
 	public void deleteFaqEvent(final FaqEvent faqEvent) {
@@ -2687,7 +2654,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTickets(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public List<Ticket> getTickets(final Category category) {
@@ -2696,7 +2663,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasTickets(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public boolean hasTickets(final Category category) {
@@ -2705,7 +2672,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTickets(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public List<Ticket> getTickets(final Department department) {
@@ -2714,7 +2681,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getOpenedTicketsByLastActionDate(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
@@ -2724,7 +2691,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketsNumber(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public int getTicketsNumber(final Department department) {
@@ -2733,7 +2700,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateTicket(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	public void updateTicket(final Ticket ticket) {
@@ -2743,7 +2710,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#reloadTicket(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	public Ticket reloadTicket(final Ticket ticket) {
@@ -2752,19 +2719,35 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteTicket(
-	 * org.esupportail.helpdesk.domain.beans.Ticket, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, boolean)
 	 */
 	@Override
-	public void deleteTicket(
-			final Ticket ticket,
-			final boolean deleteFiles) {
+	public void deleteTicket(final Ticket ticket, final boolean deleteFiles) {
 		this.daoService.deleteTicket(ticket, deleteFiles);
 		this.daoService.addDeletedItem(new DeletedItem(indexIdProvider.getIndexId(ticket)));
 	}
 
 	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#deleteTicket(
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, boolean)
+	 */
+	@Override
+	public void deleteFileInfo(final User author, final Ticket ticket, final String message, final String actionScope,
+			final boolean alerts, final FileInfo file, final boolean deleteContent) {
+
+		Action newAction = deleteFileInfo(author, ticket, message, actionScope);
+
+		newAction.setFilename(file.getFilename());
+		this.daoService.deleteFileInfo(file, deleteContent);
+		if (alerts) {
+			monitoringSender.ticketMonitoringSendAlerts(author, newAction, false);
+		}
+
+	}
+
+	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#setCreator(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	public void setCreator(final Ticket ticket) {
@@ -2801,9 +2784,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTickets(long, int)
 	 */
 	@Override
-	public List<Ticket> getTickets(
-			final long startIndex,
-			final int num) {
+	public List<Ticket> getTickets(final long startIndex, final int num) {
 		return daoService.getTickets(startIndex, num);
 	}
 
@@ -2812,9 +2793,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param user
 	 * @return The opended tickets of the category managed by the user.
 	 */
-	protected List<Ticket> getOpenManagedTickets(
-			final Category category,
-			final User user) {
+	protected List<Ticket> getOpenManagedTickets(final Category category, final User user) {
 		return daoService.getOpenManagedTickets(category, user);
 	}
 
@@ -2823,43 +2802,37 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param user
 	 * @return The opended tickets of the department managed by the user.
 	 */
-	protected List<Ticket> getOpenManagedTickets(
-			final Department department,
-			final User user) {
+	protected List<Ticket> getOpenManagedTickets(final Department department, final User user) {
 		return daoService.getOpenManagedTickets(department, user);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getOpenManagedTicketsNumber(
-	 * org.esupportail.helpdesk.domain.beans.DepartmentManager)
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager)
 	 */
 	@Override
-	public int getOpenManagedTicketsNumber(
-			final DepartmentManager departmentManager) {
-		return daoService.getOpenManagedTicketsNumber(
-				departmentManager.getDepartment(), departmentManager.getUser());
+	public int getOpenManagedTicketsNumber(final DepartmentManager departmentManager) {
+		return daoService.getOpenManagedTicketsNumber(departmentManager.getDepartment(), departmentManager.getUser());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasOpenManagedTickets(
-	 * org.esupportail.helpdesk.domain.beans.Category, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Category,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public boolean hasOpenManagedTickets(
-			final Category category,
-			final User user) {
+	public boolean hasOpenManagedTickets(final Category category, final User user) {
 		return daoService.getOpenManagedTicketsNumber(category, user) > 0;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasOpenManagedTickets(
-	 * org.esupportail.helpdesk.domain.beans.DepartmentManager)
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager)
 	 */
 	@Override
-	public boolean hasOpenManagedTickets(
-			final DepartmentManager departmentManager) {
-		return daoService.getOpenManagedTicketsNumber(
-				departmentManager.getDepartment(), departmentManager.getUser()) > 0;
+	public boolean hasOpenManagedTickets(final DepartmentManager departmentManager) {
+		return daoService.getOpenManagedTicketsNumber(departmentManager.getDepartment(),
+				departmentManager.getUser()) > 0;
 	}
 
 	/**
@@ -2872,7 +2845,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#archiveTicket(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	public void archiveTicket(final Ticket ticket) {
@@ -2904,7 +2877,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @see org.esupportail.helpdesk.domain.DomainService#getClosedTicketsBefore(java.sql.Timestamp, int)
+	 * @see org.esupportail.helpdesk.domain.DomainService#getClosedTicketsBefore(java.sql.Timestamp,
+	 *      int)
 	 */
 	@Override
 	public List<Ticket> getClosedTicketsBefore(final Timestamp timestamp, final int maxResults) {
@@ -2912,29 +2886,26 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @see org.esupportail.helpdesk.domain.DomainService#getNonApprovedTicketsClosedBefore(java.sql.Timestamp, int)
+	 * @see org.esupportail.helpdesk.domain.DomainService#getNonApprovedTicketsClosedBefore(java.sql.Timestamp,
+	 *      int)
 	 */
 	@Override
-	public List<Ticket> getNonApprovedTicketsClosedBefore(
-			final Timestamp timestamp,
-			final int maxResults) {
+	public List<Ticket> getNonApprovedTicketsClosedBefore(final Timestamp timestamp, final int maxResults) {
 		return daoService.getNonApprovedTicketsClosedBefore(timestamp, maxResults);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketsChangedAfter(
-	 * java.sql.Timestamp, int)
+	 *      java.sql.Timestamp, int)
 	 */
 	@Override
-	public List<Ticket> getTicketsChangedAfter(
-			final Timestamp lastUpdate,
-			final int maxResults) {
+	public List<Ticket> getTicketsChangedAfter(final Timestamp lastUpdate, final int maxResults) {
 		return daoService.getTicketsChangedAfter(lastUpdate, maxResults);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketComputerUrl(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -2950,8 +2921,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (computerUrlBuilderName == null) {
 			computerUrlBuilderName = getDefaultComputerUrlBuilderName();
 		}
-		ComputerUrlBuilder computerUrlBuilder =
-			computerUrlBuilderStore.getComputerUrlBuilder(computerUrlBuilderName);
+		ComputerUrlBuilder computerUrlBuilder = computerUrlBuilderStore.getComputerUrlBuilder(computerUrlBuilderName);
 		if (computerUrlBuilder == null) {
 			return null;
 		}
@@ -2977,39 +2947,40 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	@Override
 	public void deleteTicketById(final long ticketNumber) {
 		Ticket ticket = daoService.getTicket(ticketNumber);
-		if(ticket != null){
+		if (ticket != null) {
 			daoService.deleteTicket(ticket, true);
 		} else {
 			logger.info("no ticket found. Ticket number : " + ticketNumber);
 		}
 	}
-	
+
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteArchivedTickets()
 	 */
 	@Override
 	public void deleteArchivedTickets(final Integer days) {
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar dateToDelete = Calendar.getInstance();
 		dateToDelete.setTime(new Date()); // Now use today date.
 		dateToDelete.add(Calendar.DATE, -days); // substract x days
 		Integer compteur = 0;
 		Integer compteurTotal = 0;
-		
-		logger.info("delete archiving ticket before : " +  dateToDelete.getTime());
+
+		logger.info("delete archiving ticket before : " + dateToDelete.getTime());
 		List<ArchivedTicket> archivedTickets = daoService.getArchivedTicketsOlderThan(dateToDelete.getTime());
 		logger.info("number of archiving ticket to be delete : " + archivedTickets.size());
 		for (ArchivedTicket archivedTicket : archivedTickets) {
 			daoService.deleteArchivedTicket(archivedTicket);
 			compteur++;
-			if(compteur >= 1000){
-				compteurTotal+= compteur;
+			if (compteur >= 1000) {
+				compteurTotal += compteur;
 				compteur = 0;
 				logger.info("nb messages traités : " + compteurTotal);
 			}
 		}
 	}
+
 	/** Eclipse outline delimiter. */
 	@SuppressWarnings("unused")
 	private void _______________ACTION() {
@@ -3018,7 +2989,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getActions(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	public List<Action> getActions(final Ticket ticket) {
@@ -3027,7 +2998,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getLastAction(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	public Action getLastAction(final Ticket ticket) {
@@ -3035,28 +3006,33 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#getLastAction(
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
+	 */
+	@Override
+	public Action getLastActionWithoutUpload(final Ticket ticket) {
+		return daoService.getLastActionWithoutUpload(ticket);
+	}
+
+	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getActions(long, int)
 	 */
 	@Override
-	public List<Action> getActions(
-			final long startIndex,
-			final int num) {
+	public List<Action> getActions(final long startIndex, final int num) {
 		return daoService.getActions(startIndex, num);
 	}
 
 	/**
-	 * @see org.esupportail.helpdesk.domain.DomainService#updateAction(
+	 * @see org.esupportail.helpdesk.domain.DomainService#getActions(long, int)
 	 */
 	@Override
-	public Action getLastActionByActionType(
-			final Ticket ticket,
-			final String actionType) {
+	public Action getLastActionByActionType(final Ticket ticket, final String actionType) {
 		return daoService.getLastActionByActionType(ticket, actionType);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateAction(
-	 * org.esupportail.helpdesk.domain.beans.Action)
+	 *      org.esupportail.helpdesk.domain.beans.Action)
 	 */
 	@Override
 	public void updateAction(final Action action) {
@@ -3066,7 +3042,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addAction(
-	 * org.esupportail.helpdesk.domain.beans.Action)
+	 *      org.esupportail.helpdesk.domain.beans.Action)
 	 */
 	@Override
 	public void addAction(final Action action) {
@@ -3084,7 +3060,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getActionStyleClass(
-	 * org.esupportail.helpdesk.domain.beans.Action)
+	 *      org.esupportail.helpdesk.domain.beans.Action)
 	 */
 	@Override
 	@RequestCache
@@ -3114,7 +3090,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getFileInfos(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	public List<FileInfo> getFileInfos(final Ticket ticket) {
@@ -3123,7 +3099,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addFileInfo(
-	 * org.esupportail.helpdesk.domain.beans.FileInfo)
+	 *      org.esupportail.helpdesk.domain.beans.FileInfo)
 	 */
 	@Override
 	public void addFileInfo(final FileInfo fileInfo) {
@@ -3133,7 +3109,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateFileInfo(
-	 * org.esupportail.helpdesk.domain.beans.FileInfo)
+	 *      org.esupportail.helpdesk.domain.beans.FileInfo)
 	 */
 	@Override
 	public void updateFileInfo(final FileInfo fileInfo) {
@@ -3142,7 +3118,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getFileInfoContent(
-	 * org.esupportail.helpdesk.domain.beans.FileInfo)
+	 *      org.esupportail.helpdesk.domain.beans.FileInfo)
 	 */
 	@Override
 	public byte[] getFileInfoContent(final FileInfo fileInfo) {
@@ -3163,20 +3139,17 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	public ArchivedTicket getArchivedTicket(final long id) throws ArchivedTicketNotFoundException {
 		ArchivedTicket archivedTicket = this.daoService.getArchivedTicket(id);
 		if (archivedTicket == null) {
-			throw new ArchivedTicketNotFoundException(
-					"no archived ticket found with id [" + id + "]");
+			throw new ArchivedTicketNotFoundException("no archived ticket found with id [" + id + "]");
 		}
 		return archivedTicket;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketsArchivedAfter(
-	 * java.sql.Timestamp, int)
+	 *      java.sql.Timestamp, int)
 	 */
 	@Override
-	public List<ArchivedTicket> getTicketsArchivedAfter(
-			final Timestamp lastUpdate,
-			final int maxResults) {
+	public List<ArchivedTicket> getTicketsArchivedAfter(final Timestamp lastUpdate, final int maxResults) {
 		return daoService.getTicketsArchivedAfter(lastUpdate, maxResults);
 	}
 
@@ -3185,13 +3158,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 */
 	@Override
 	@RequestCache
-	public ArchivedTicket getArchivedTicketByOriginalId(
-			final long id)
-	throws ArchivedTicketNotFoundException {
+	public ArchivedTicket getArchivedTicketByOriginalId(final long id) throws ArchivedTicketNotFoundException {
 		ArchivedTicket archivedTicket = daoService.getArchivedTicketByOriginalId(id);
 		if (archivedTicket == null) {
-			throw new ArchivedTicketNotFoundException(
-					"no archived ticket found with oringinal id [" + id + "]");
+			throw new ArchivedTicketNotFoundException("no archived ticket found with oringinal id [" + id + "]");
 		}
 		return archivedTicket;
 	}
@@ -3206,7 +3176,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedTicketsNumber(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public int getArchivedTicketsNumber(final Department department) {
@@ -3214,12 +3184,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedTickets(long, int)
+	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedTickets(long,
+	 *      int)
 	 */
 	@Override
-	public List<ArchivedTicket> getArchivedTickets(
-			final long startIndex,
-			final int num) {
+	public List<ArchivedTicket> getArchivedTickets(final long startIndex, final int num) {
 		return daoService.getArchivedTickets(startIndex, num);
 	}
 
@@ -3229,7 +3198,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateArchivedAction(
-	 * org.esupportail.helpdesk.domain.beans.ArchivedAction)
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedAction)
 	 */
 	@Override
 	public void updateArchivedAction(final ArchivedAction archivedAction) {
@@ -3239,27 +3208,25 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedActions(
-	 * org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
-	public List<ArchivedAction> getArchivedActions(
-			final ArchivedTicket archivedTicket) {
+	public List<ArchivedAction> getArchivedActions(final ArchivedTicket archivedTicket) {
 		return daoService.getArchivedActions(archivedTicket, false);
 	}
 
 	/**
-	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedActions(long, int)
+	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedActions(long,
+	 *      int)
 	 */
 	@Override
-	public List<ArchivedAction> getArchivedActions(
-			final long startIndex,
-			final int num) {
+	public List<ArchivedAction> getArchivedActions(final long startIndex, final int num) {
 		return daoService.getArchivedActions(startIndex, num);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedActionStyleClass(
-	 * org.esupportail.helpdesk.domain.beans.ArchivedAction)
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedAction)
 	 */
 	@Override
 	@RequestCache
@@ -3287,17 +3254,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedFileInfos(
-	 * org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
-	public List<ArchivedFileInfo> getArchivedFileInfos(
-			final ArchivedTicket archivedTicket) {
+	public List<ArchivedFileInfo> getArchivedFileInfos(final ArchivedTicket archivedTicket) {
 		return daoService.getArchivedFileInfos(archivedTicket);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedFileInfoContent(
-	 * org.esupportail.helpdesk.domain.beans.ArchivedFileInfo)
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedFileInfo)
 	 */
 	@Override
 	public byte[] getArchivedFileInfoContent(final ArchivedFileInfo archivedFileInfo) {
@@ -3312,13 +3278,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketLastView(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
-	public Timestamp getTicketLastView(
-			final User user,
-			final Ticket ticket) {
+	public Timestamp getTicketLastView(final User user, final Ticket ticket) {
 		TicketView ticketView = daoService.getTicketView(user, ticket);
 		if (ticketView == null) {
 			return null;
@@ -3328,14 +3293,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#setTicketLastView(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.sql.Timestamp)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.sql.Timestamp)
 	 */
 	@Override
-	public void setTicketLastView(
-			final User user,
-			final Ticket ticket,
-			final Timestamp ts) {
+	public void setTicketLastView(final User user, final Ticket ticket, final Timestamp ts) {
 		TicketView ticketView = daoService.getTicketView(user, ticket);
 		if (ts != null) {
 			if (ticketView == null) {
@@ -3353,13 +3315,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasTicketChangedSince(
-	 * org.esupportail.helpdesk.domain.beans.Ticket, java.sql.Timestamp)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.sql.Timestamp)
 	 */
 	@Override
 	@RequestCache
-	public boolean hasTicketChangedSince(
-			final Ticket ticket,
-			final Timestamp date) {
+	public boolean hasTicketChangedSince(final Ticket ticket, final Timestamp date) {
 		if (date == null) {
 			return true;
 		}
@@ -3368,13 +3328,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasTicketChangedSinceLastView(
-	 * org.esupportail.helpdesk.domain.beans.Ticket, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
-	public boolean hasTicketChangedSinceLastView(
-			final Ticket ticket,
-			final User user) {
+	public boolean hasTicketChangedSinceLastView(final Ticket ticket, final User user) {
 		Timestamp lastView = getTicketLastView(user, ticket);
 		if (lastView == null) {
 			return true;
@@ -3392,30 +3351,27 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketMonitorings(org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public List<TicketMonitoring> getTicketMonitorings(
-			final Ticket ticket) {
+	public List<TicketMonitoring> getTicketMonitorings(final Ticket ticket) {
 		return daoService.getTicketMonitorings(ticket);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userMonitorsTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public boolean userMonitorsTicket(
-			final User user,
-			final Ticket ticket) {
+	public boolean userMonitorsTicket(final User user, final Ticket ticket) {
 		return daoService.getTicketMonitoring(user, ticket) != null;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#setTicketMonitoring(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public void setTicketMonitoring(
-			final User user,
-			final Ticket ticket) {
+	public void setTicketMonitoring(final User user, final Ticket ticket) {
 		if (!userMonitorsTicket(user, ticket)) {
 			daoService.addTicketMonitoring(new TicketMonitoring(user, ticket));
 		}
@@ -3423,12 +3379,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#unsetTicketMonitoring(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public void unsetTicketMonitoring(
-			final User user,
-			final Ticket ticket) {
+	public void unsetTicketMonitoring(final User user, final Ticket ticket) {
 		TicketMonitoring ticketMonitoring = daoService.getTicketMonitoring(user, ticket);
 		if (ticketMonitoring != null) {
 			daoService.deleteTicketMonitoring(ticketMonitoring);
@@ -3437,20 +3392,19 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#ticketMonitoringSendAlerts(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket, java.util.List, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.util.List,
+	 *      boolean)
 	 */
 	@Override
-	public void ticketMonitoringSendAlerts(
-			final User author,
-			final Ticket ticket,
-			final List<User> excludedUsers,
+	public void ticketMonitoringSendAlerts(final User author, final Ticket ticket, final List<User> excludedUsers,
 			final boolean expiration) {
 		monitoringSender.ticketMonitoringSendAlerts(author, ticket, excludedUsers, expiration);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getMonitoringUsers(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -3466,33 +3420,29 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getAlerts(
-	 * org.esupportail.helpdesk.domain.beans.Action)
+	 *      org.esupportail.helpdesk.domain.beans.Action)
 	 */
 	@Override
 	public List<Alert> getAlerts(final Action action) {
 		return daoService.getAlerts(action);
 	}
 
-
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addAlert(
-	 * org.esupportail.helpdesk.domain.beans.Action, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Action,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public void addAlert(
-			final Action action,
-			final User user) {
+	public void addAlert(final Action action, final User user) {
 		daoService.addAlert(new Alert(action, user));
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addAlert(
-	 * org.esupportail.helpdesk.domain.beans.Action, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.Action, java.lang.String)
 	 */
 	@Override
-	public void addAlert(
-			final Action action,
-			final String email) {
+	public void addAlert(final Action action, final String email) {
 		daoService.addAlert(new Alert(action, email));
 	}
 
@@ -3504,101 +3454,92 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isInvited(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public boolean isInvited(
-			final User user,
-			final Ticket ticket) {
+	public boolean isInvited(final User user, final Ticket ticket) {
 		return daoService.getInvitation(user, ticket) != null;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getInvitations(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public List<Invitation> getInvitations(
-			final Ticket ticket) {
+	public List<Invitation> getInvitations(final Ticket ticket) {
 		return daoService.getInvitations(ticket);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isInvited(
-	 * org.esupportail.helpdesk.domain.beans.User,
-	 * org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
-	public boolean isInvited(
-			final User user,
-			final ArchivedTicket archivedTicket) {
+	public boolean isInvited(final User user, final ArchivedTicket archivedTicket) {
 		return daoService.getArchivedInvitation(user, archivedTicket) != null;
 	}
 
 	/**
 	 * Remove an invitation.
+	 * 
 	 * @param archivedInvitation
 	 */
-	protected void removeInvitation(
-			final ArchivedInvitation archivedInvitation) {
+	protected void removeInvitation(final ArchivedInvitation archivedInvitation) {
 		daoService.deleteArchivedInvitation(archivedInvitation);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getArchivedInvitations(
-	 * org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
-	public List<ArchivedInvitation> getArchivedInvitations(
-			final ArchivedTicket archivedTicket) {
+	public List<ArchivedInvitation> getArchivedInvitations(final ArchivedTicket archivedTicket) {
 		return daoService.getArchivedInvitations(archivedTicket);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getDepartmentInvitations(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
-	public List<DepartmentInvitation> getDepartmentInvitations(
-			final Department department) {
+	public List<DepartmentInvitation> getDepartmentInvitations(final Department department) {
 		return daoService.getDepartmentInvitations(department);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isDepartmentInvited(
-	 * org.esupportail.helpdesk.domain.beans.Department, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public boolean isDepartmentInvited(
-			final Department department,
-			final User user) {
+	public boolean isDepartmentInvited(final Department department, final User user) {
 		return daoService.getDepartmentInvitation(user, department) != null;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addDepartmentInvitation(
-	 * org.esupportail.helpdesk.domain.beans.Department, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public void addDepartmentInvitation(
-			final Department department,
-			final User user) {
+	public void addDepartmentInvitation(final Department department, final User user) {
 		daoService.addDepartmentInvitation(new DepartmentInvitation(user, department));
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteDepartmentInvitation(
-	 * org.esupportail.helpdesk.domain.beans.DepartmentInvitation)
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentInvitation)
 	 */
 	@Override
-	public void deleteDepartmentInvitation(
-			final DepartmentInvitation departmentInvitation) {
+	public void deleteDepartmentInvitation(final DepartmentInvitation departmentInvitation) {
 		daoService.deleteDepartmentInvitation(departmentInvitation);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getInvitedUsers(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -3622,7 +3563,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteDeletedItem(
-	 * org.esupportail.helpdesk.domain.beans.DeletedItem)
+	 *      org.esupportail.helpdesk.domain.beans.DeletedItem)
 	 */
 	@Override
 	public void deleteDeletedItem(final DeletedItem deletedItem) {
@@ -3645,7 +3586,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getBookmarks(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	public List<Bookmark> getBookmarks(final User user) {
@@ -3654,7 +3595,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getBookmarks(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	public List<Bookmark> getBookmarks(final Ticket ticket) {
@@ -3663,29 +3604,27 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getBookmark(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public Bookmark getBookmark(
-			final User user,
-			final Ticket ticket) {
+	public Bookmark getBookmark(final User user, final Ticket ticket) {
 		return daoService.getBookmark(user, ticket);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getBookmark(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
-	public Bookmark getBookmark(
-			final User user,
-			final ArchivedTicket archivedTicket) {
+	public Bookmark getBookmark(final User user, final ArchivedTicket archivedTicket) {
 		return daoService.getBookmark(user, archivedTicket);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteBookmark(
-	 * org.esupportail.helpdesk.domain.beans.Bookmark)
+	 *      org.esupportail.helpdesk.domain.beans.Bookmark)
 	 */
 	@Override
 	public void deleteBookmark(final Bookmark bookmark) {
@@ -3694,6 +3633,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Add a bookmark.
+	 * 
 	 * @param bookmark
 	 */
 	protected void addBookmark(final Bookmark bookmark) {
@@ -3702,12 +3642,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addBookmark(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public void addBookmark(
-			final User user,
-			final Ticket ticket) {
+	public void addBookmark(final User user, final Ticket ticket) {
 		if (getBookmark(user, ticket) == null) {
 			addBookmark(new Bookmark(user, ticket));
 		}
@@ -3715,12 +3654,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addBookmark(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
-	public void addBookmark(
-			final User user,
-			final ArchivedTicket archivedTicket) {
+	public void addBookmark(final User user, final ArchivedTicket archivedTicket) {
 		if (getBookmark(user, archivedTicket) == null) {
 			addBookmark(new Bookmark(user, archivedTicket));
 		}
@@ -3734,22 +3672,20 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getHistoryItems(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public List<HistoryItem> getHistoryItems(
-			final User user) {
+	public List<HistoryItem> getHistoryItems(final User user) {
 		return daoService.getHistoryItems(user);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addHistoryItem(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public void addHistoryItem(
-			final User user,
-			final Ticket ticket) {
+	public void addHistoryItem(final User user, final Ticket ticket) {
 		List<HistoryItem> historyItems = getHistoryItems(user);
 		int index = 0;
 		for (HistoryItem hi : historyItems) {
@@ -3764,12 +3700,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addHistoryItem(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
-	public void addHistoryItem(
-			final User user,
-			final ArchivedTicket archivedTicket) {
+	public void addHistoryItem(final User user, final ArchivedTicket archivedTicket) {
 		List<HistoryItem> historyItems = getHistoryItems(user);
 		int index = 0;
 		for (HistoryItem hi : historyItems) {
@@ -3784,11 +3719,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#clearHistoryItems(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public void clearHistoryItems(
-			final User user) {
+	public void clearHistoryItems(final User user) {
 		daoService.clearHistoryItems(user);
 	}
 
@@ -3808,31 +3742,31 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Add a response.
+	 * 
 	 * @param response
 	 */
 	@Override
-	public void addResponse(
-			final Response response) {
+	public void addResponse(final Response response) {
 		daoService.addResponse(response);
 	}
 
 	/**
 	 * Update a response.
+	 * 
 	 * @param response
 	 */
 	@Override
-	public void updateResponse(
-			final Response response) {
+	public void updateResponse(final Response response) {
 		daoService.updateResponse(response);
 	}
 
 	/**
 	 * Delete a response.
+	 * 
 	 * @param response
 	 */
 	@Override
-	public void deleteResponse(
-			final Response response) {
+	public void deleteResponse(final Response response) {
 		daoService.deleteResponse(response);
 	}
 
@@ -3841,8 +3775,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @return the responses of a user.
 	 */
 	@Override
-	public List<Response> getUserResponses(
-			final User user) {
+	public List<Response> getUserResponses(final User user) {
 		return daoService.getUserResponses(user);
 	}
 
@@ -3851,8 +3784,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @return the responses of a department.
 	 */
 	@Override
-	public List<Response> getDepartmentResponses(
-			final Department department) {
+	public List<Response> getDepartmentResponses(final Department department) {
 		return daoService.getDepartmentResponses(department);
 	}
 
@@ -3897,13 +3829,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param path
 	 * @return an Icon
 	 */
-	protected Icon createIconFromLocalFile(
-			final String iconName,
-			final String contentType,
-			final String path) {
-		Icon icon = new Icon(
-				iconName, contentType,
-				FileUtils.getFileContent(path));
+	protected Icon createIconFromLocalFile(final String iconName, final String contentType, final String path) {
+		Icon icon = new Icon(iconName, contentType, FileUtils.getFileContent(path));
 		daoService.addIcon(icon);
 		return icon;
 	}
@@ -3913,25 +3840,21 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param fileBasename
 	 * @return an Icon
 	 */
-	protected Icon createIconFromLocalPngFile(
-			final String iconName,
-			final String fileBasename) {
+	protected Icon createIconFromLocalPngFile(final String iconName, final String fileBasename) {
 		String theIconName = iconName;
 		int i = 2;
 		while (getIconByName(theIconName) != null) {
 			theIconName = iconName + i;
 			i++;
 		}
-		return createIconFromLocalFile(
-				theIconName, "image/png", "/properties/web/icons/" + fileBasename + ".png");
+		return createIconFromLocalFile(theIconName, "image/png", "/properties/web/icons/" + fileBasename + ".png");
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addIcon(java.lang.String)
 	 */
 	@Override
-	public Icon addIcon(
-			final String name) {
+	public Icon addIcon(final String name) {
 		return createIconFromLocalPngFile(name, "new");
 	}
 
@@ -3945,7 +3868,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteIcon(
-	 * org.esupportail.helpdesk.domain.beans.Icon)
+	 *      org.esupportail.helpdesk.domain.beans.Icon)
 	 */
 	@Override
 	public void deleteIcon(final Icon icon) {
@@ -3954,7 +3877,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateIcon(
-	 * org.esupportail.helpdesk.domain.beans.Icon)
+	 *      org.esupportail.helpdesk.domain.beans.Icon)
 	 */
 	@Override
 	public void updateIcon(final Icon icon) {
@@ -4005,7 +3928,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#setDatabaseVersion(
-	 * org.esupportail.commons.services.application.Version)
+	 *      org.esupportail.commons.services.application.Version)
 	 */
 	@Override
 	public void setDatabaseVersion(final Version version) {
@@ -4044,7 +3967,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#setTicketsLastIndexTime(
-	 * java.sql.Timestamp)
+	 *      java.sql.Timestamp)
 	 */
 	@Override
 	public void setTicketsLastIndexTime(final Timestamp lastIndexTime) {
@@ -4063,7 +3986,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#setFaqsLastIndexTime(
-	 * java.sql.Timestamp)
+	 *      java.sql.Timestamp)
 	 */
 	@Override
 	public void setFaqsLastIndexTime(final Timestamp lastIndexTime) {
@@ -4082,7 +4005,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#setArchivedTicketsLastIndexTime(
-	 * java.sql.Timestamp)
+	 *      java.sql.Timestamp)
 	 */
 	@Override
 	public void setArchivedTicketsLastIndexTime(final Timestamp lastIndexTime) {
@@ -4111,7 +4034,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#setDefaultDepartmentIcon(
-	 * org.esupportail.helpdesk.domain.beans.Icon)
+	 *      org.esupportail.helpdesk.domain.beans.Icon)
 	 */
 	@Override
 	public void setDefaultDepartmentIcon(final Icon icon) {
@@ -4122,7 +4045,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#setDefaultCategoryIcon(
-	 * org.esupportail.helpdesk.domain.beans.Icon)
+	 *      org.esupportail.helpdesk.domain.beans.Icon)
 	 */
 	@Override
 	public void setDefaultCategoryIcon(final Icon icon) {
@@ -4156,7 +4079,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * Set the department selection context time (the last time that the context of the department selection has changed).
+	 * Set the department selection context time (the last time that the context
+	 * of the department selection has changed).
 	 */
 	protected void updateDepartmentSelectionContextTime() {
 		Config config = daoService.getConfig();
@@ -4186,18 +4110,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		return daoService.getLatestDepartmentSelectionConfig();
 	}
 
-    /**
-     * @see org.esupportail.helpdesk.domain.DomainService#setDepartmentSelectionConfig(
-     * org.esupportail.helpdesk.domain.beans.User, java.lang.String)
-     */
-    @Override
-	public void setDepartmentSelectionConfig(
-    		final User author,
-    		final String data) {
-    	DepartmentSelectionConfig config = new DepartmentSelectionConfig(
-    			author, data, new Timestamp(System.currentTimeMillis()));
-    	daoService.addDepartmentSelectionConfig(config);
-    }
+	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#setDepartmentSelectionConfig(
+	 *      org.esupportail.helpdesk.domain.beans.User, java.lang.String)
+	 */
+	@Override
+	public void setDepartmentSelectionConfig(final User author, final String data) {
+		DepartmentSelectionConfig config = new DepartmentSelectionConfig(author, data,
+				new Timestamp(System.currentTimeMillis()));
+		daoService.addDepartmentSelectionConfig(config);
+	}
 
 	/** Eclipse outline delimiter. */
 	@SuppressWarnings("unused")
@@ -4207,7 +4129,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqLinks(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	public List<FaqLink> getFaqLinks(final Department department) {
@@ -4216,7 +4138,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqLinks(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public List<FaqLink> getFaqLinks(final Category category) {
@@ -4225,7 +4147,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addFaqLink(
-	 * org.esupportail.helpdesk.domain.beans.FaqLink)
+	 *      org.esupportail.helpdesk.domain.beans.FaqLink)
 	 */
 	@Override
 	public void addFaqLink(final FaqLink faqLink) {
@@ -4239,7 +4161,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateFaqLink(
-	 * org.esupportail.helpdesk.domain.beans.FaqLink)
+	 *      org.esupportail.helpdesk.domain.beans.FaqLink)
 	 */
 	@Override
 	public void updateFaqLink(final FaqLink faqLink) {
@@ -4248,6 +4170,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Reorder a list of faq links.
+	 * 
 	 * @param faqLinks
 	 */
 	protected void reorderFaqLinks(final List<FaqLink> faqLinks) {
@@ -4263,7 +4186,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteFaqLink(
-	 * org.esupportail.helpdesk.domain.beans.FaqLink)
+	 *      org.esupportail.helpdesk.domain.beans.FaqLink)
 	 */
 	@Override
 	public void deleteFaqLink(final FaqLink faqLink) {
@@ -4277,12 +4200,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveFaqLinkUp(
-	 * org.esupportail.helpdesk.domain.beans.FaqLink)
+	 *      org.esupportail.helpdesk.domain.beans.FaqLink)
 	 */
 	@Override
 	public void moveFaqLinkUp(final FaqLink faqLink) {
-		FaqLink previousFaqLink = daoService.getFaqLinkByOrder(
-				faqLink.getDepartment(), faqLink.getCategory(), faqLink.getOrder() - 1);
+		FaqLink previousFaqLink = daoService.getFaqLinkByOrder(faqLink.getDepartment(), faqLink.getCategory(),
+				faqLink.getOrder() - 1);
 		if (previousFaqLink != null) {
 			faqLink.setOrder(faqLink.getOrder() - 1);
 			updateFaqLink(faqLink);
@@ -4293,12 +4216,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveFaqLinkDown(
-	 * org.esupportail.helpdesk.domain.beans.FaqLink)
+	 *      org.esupportail.helpdesk.domain.beans.FaqLink)
 	 */
 	@Override
 	public void moveFaqLinkDown(final FaqLink faqLink) {
-		FaqLink nextFaqLink = daoService.getFaqLinkByOrder(
-				faqLink.getDepartment(), faqLink.getCategory(), faqLink.getOrder() + 1);
+		FaqLink nextFaqLink = daoService.getFaqLinkByOrder(faqLink.getDepartment(), faqLink.getCategory(),
+				faqLink.getOrder() + 1);
 		if (nextFaqLink != null) {
 			faqLink.setOrder(faqLink.getOrder() + 1);
 			updateFaqLink(faqLink);
@@ -4309,7 +4232,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveFaqLinkFirst(
-	 * org.esupportail.helpdesk.domain.beans.FaqLink)
+	 *      org.esupportail.helpdesk.domain.beans.FaqLink)
 	 */
 	@Override
 	public void moveFaqLinkFirst(final FaqLink faqLinkToMove) {
@@ -4331,7 +4254,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveFaqLinkLast(
-	 * org.esupportail.helpdesk.domain.beans.FaqLink)
+	 *      org.esupportail.helpdesk.domain.beans.FaqLink)
 	 */
 	@Override
 	public void moveFaqLinkLast(final FaqLink faqLinkToMove) {
@@ -4353,12 +4276,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getInheritedFaqLinks(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	@RequestCache
-	public List<FaqLink> getInheritedFaqLinks(
-			final Category category) {
+	public List<FaqLink> getInheritedFaqLinks(final Category category) {
 		if (category.getParent() != null) {
 			return getEffectiveFaqLinks(category.getParent());
 		}
@@ -4367,19 +4289,18 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getEffectiveFaqLinks(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	@RequestCache
-	public List<FaqLink> getEffectiveFaqLinks(
-			final Category category) {
+	public List<FaqLink> getEffectiveFaqLinks(final Category category) {
 		if (!category.getInheritFaqLinks()) {
 			return getFaqLinks(category);
 		}
 		return getInheritedFaqLinks(category);
 	}
 
-    /** Eclipse outline delimiter. */
+	/** Eclipse outline delimiter. */
 	@SuppressWarnings("unused")
 	private void _______________AUTHORIZATIONS() {
 		//
@@ -4387,7 +4308,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewAdmins(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -4403,7 +4324,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanAddAdmin(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -4416,7 +4337,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanDeleteAdmin(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -4432,7 +4354,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewDepartments(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -4448,7 +4370,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanManageDepartments(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -4461,13 +4383,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewDepartment(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanViewDepartment(
-			final User user,
-			final Department department) {
+	public boolean userCanViewDepartment(final User user, final Department department) {
 		if (user == null) {
 			return false;
 		}
@@ -4479,28 +4400,24 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanDeleteDepartment(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanDeleteDepartment(
-			final User user,
-			final Department department) {
-		return userCanManageDepartments(user)
-		&& !hasVirtualDepartments(department)
-		&& !hasRootCategories(department)
-		&& !hasRootFaqs(department);
+	public boolean userCanDeleteDepartment(final User user, final Department department) {
+		return userCanManageDepartments(user) && !hasVirtualDepartments(department) && !hasRootCategories(department)
+				&& !hasRootFaqs(department);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanEditDepartmentProperties(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanEditDepartmentProperties(
-			final User user,
-			final Department department) {
+	public boolean userCanEditDepartmentProperties(final User user, final Department department) {
 		if (user == null) {
 			return false;
 		}
@@ -4517,13 +4434,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanEditDepartmentManagers(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanEditDepartmentManagers(
-			final User user,
-			final Department department) {
+	public boolean userCanEditDepartmentManagers(final User user, final Department department) {
 		if (user == null) {
 			return false;
 		}
@@ -4540,13 +4456,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanEditDepartmentCategories(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanEditDepartmentCategories(
-			final User user,
-			final Department department) {
+	public boolean userCanEditDepartmentCategories(final User user, final Department department) {
 		if (user == null) {
 			return false;
 		}
@@ -4560,13 +4475,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanSetAvailability(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.DepartmentManager)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanSetAvailability(
-			final User user,
-			final DepartmentManager departmentManager) {
+	public boolean userCanSetAvailability(final User user, final DepartmentManager departmentManager) {
 		if (user == null) {
 			return false;
 		}
@@ -4574,8 +4488,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			return false;
 		}
 		try {
-			DepartmentManager manager = getDepartmentManager(
-					departmentManager.getDepartment(), user);
+			DepartmentManager manager = getDepartmentManager(departmentManager.getDepartment(), user);
 			if (manager.getManageManagers()) {
 				return true;
 			}
@@ -4590,31 +4503,29 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress,
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanViewTicket(
-			final User user,
-			final InetAddress client,
-			final Ticket ticket) {
+	public boolean userCanViewTicket(final User user, final InetAddress client, final Ticket ticket) {
 		return userCanViewTicket(user, ticket, getTicketViewDepartments(user, client));
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewTicket(
-	 * org.esupportail.helpdesk.domain.beans.User,
-	 * org.esupportail.helpdesk.domain.beans.Ticket, java.util.List)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.util.List)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanViewTicket(
-			final User user,
-			final Ticket ticket,
-			final List<Department> visibleDepartments) {
+	public boolean userCanViewTicket(final User user, final Ticket ticket, final List<Department> visibleDepartments) {
+
 		if (user == null || ticket == null) {
 			return false;
+		}
+		if (user.getAdmin()) {
+			return true;
 		}
 		if (isDepartmentManager(ticket.getDepartment(), user)) {
 			return true;
@@ -4625,12 +4536,29 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (isInvited(user, ticket)) {
 			return true;
 		}
-		if (!TicketScope.PUBLIC.equals(ticket.getEffectiveScope())) {
+		// on vérifie si le ticket appartient à un service dont la visibilité
+		// inter service serait définie au sein d'un de ses services ou il est
+		// manager
+		if (ticket.getDepartment().getVisibilityInterSrv() != null
+				&& ticket.getDepartment().getVisibilityInterSrv() != "") {
+			for (Department department : getManagedDepartments(user)) {
+				if (department.getVisibilityInterSrv() != null) {
+					if (department.getVisibilityInterSrv().equals(ticket.getDepartment().getVisibilityInterSrv())) {
+						return true;
+					}
+				}
+			}
+		}
+		// si le scope du ticket n'est pas PUBLIC et que l'utilisateur n'est pas
+		// de type cas => false
+		if (!TicketScope.PUBLIC.equals(ticket.getEffectiveScope())
+				&& !(TicketScope.CAS.equals(ticket.getEffectiveScope()) && getUserStore().isCasUser(user))) {
 			return false;
 		}
 		if (visibleDepartments.contains(ticket.getDepartment())) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -4639,87 +4567,156 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param ticket
 	 * @param invited
 	 * @param objectScope
-	 * @param objectUser 
+	 * @param objectUser
 	 * @return true if the user can see an Action of a FileInfo.
 	 */
-	protected boolean userCanViewActionOrFileInfo(
-			final User user,
-			final Ticket ticket,
-			final boolean invited,
-			final String objectScope,
-			final User objectUser) {
+	protected boolean userCanViewActionOrFileInfo(final User user, final Ticket ticket, final boolean invited,
+			final String objectScope, final User objectUser) {
+
 		if (user == null) {
 			return false;
 		}
-		if (isDepartmentManager(ticket.getDepartment(), user)) {
+		// visible si admin
+		if (user.getAdmin()) {
+			return true;
+		}
+		// visible le user est le créateur de l'action
+		if (user.equals(objectUser)) {
 			return true;
 		}
 		if (ActionScope.MANAGER.equals(objectScope)) {
-			return user.equals(objectUser);
-		}
-		if (user.equals(ticket.getOwner())) {
-			return true;
+			// visible si user est gestionnaire du service ou si visibilité
+			// inter service
+			if (!isDepartmentManager(ticket.getDepartment(), user)) {
+				// on vérifie si le ticket appartient à un service dont la
+				// visibilité inter service serait définie au sein d'un de ses
+				// services ou il est manager
+				if (ticket.getDepartment().getVisibilityInterSrv() != null
+						&& ticket.getDepartment().getVisibilityInterSrv() != "") {
+					for (Department department : getManagedDepartments(user)) {
+						if (department.getVisibilityInterSrv() != null) {
+							if (department.getVisibilityInterSrv()
+									.equals(ticket.getDepartment().getVisibilityInterSrv())) {
+								return true;
+							}
+						}
+					}
+				}
+			} else {
+				return true;
+			}
 		}
 		if (ActionScope.OWNER.equals(objectScope)) {
+			// visible si user est gestionnaire du service
+			if (isDepartmentManager(ticket.getDepartment(), user)) {
+				return true;
+			}
+			// visible si user est propriétaire du ticket
+			if (user.equals(ticket.getOwner())) {
+				return true;
+			}
 			return false;
 		}
-		if (invited) {
-			return true;
+		if (ActionScope.INVITED_MANAGER.equals(objectScope)) {
+			// visible si user est gestionnaire du service
+			if (isDepartmentManager(ticket.getDepartment(), user)) {
+				return true;
+			}
+			// visible si user est invité
+			if (invited) {
+				return true;
+			}
+			return false;
 		}
 		if (ActionScope.INVITED.equals(objectScope)) {
+			// visible si user est gestionnaire du service
+			if (isDepartmentManager(ticket.getDepartment(), user)) {
+				return true;
+			}
+			// visible si user est invité
+			if (invited) {
+				return true;
+			}
+			// visible si user est propriétaire du ticket
+			if (user.equals(ticket.getOwner())) {
+				return true;
+			}
 			return false;
+		}
+		if (ActionScope.DEFAULT.equals(objectScope)) {
+
+			// visible si user est gestionnaire du service ou si visibilité
+			// inter service
+			if (!isDepartmentManager(ticket.getDepartment(), user)) {
+				// on vérifie si le ticket appartient à un service dont la
+				// visibilité inter service serait définie au sein d'un de ses
+				// services ou il est manager
+				if (ticket.getDepartment().getVisibilityInterSrv() != null
+						&& ticket.getDepartment().getVisibilityInterSrv() != "") {
+					for (Department department : getManagedDepartments(user)) {
+						if (department.getVisibilityInterSrv() != null) {
+							if (department.getVisibilityInterSrv().equals(ticket.getDepartment().getVisibilityInterSrv())) {
+								return true;
+							}
+						}
+					}
+				}
+			} 
+			else { 
+				return true;
+			}
+			// visible si user est invité
+			if (invited) {
+				return true;
+			}
+			// visible si user est propriétaire du ticket
+			if (user.equals(ticket.getOwner())) {
+				return true;
+			}
 		}
 		return TicketScope.PUBLIC.equals(ticket.getEffectiveScope());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewActionMessage(
-	 * org.esupportail.helpdesk.domain.beans.User, boolean, org.esupportail.helpdesk.domain.beans.Action)
+	 *      org.esupportail.helpdesk.domain.beans.User, boolean,
+	 *      org.esupportail.helpdesk.domain.beans.Action)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanViewActionMessage(
-			final User user,
-			final boolean invited,
-			final Action action) {
+	public boolean userCanViewActionMessage(final User user, final boolean invited, final Action action) {
 		return userCanViewActionOrFileInfo(user, action.getTicket(), invited, action.getScope(), action.getUser());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanDownload(
-	 * org.esupportail.helpdesk.domain.beans.User, boolean, org.esupportail.helpdesk.domain.beans.FileInfo)
+	 *      org.esupportail.helpdesk.domain.beans.User, boolean,
+	 *      org.esupportail.helpdesk.domain.beans.FileInfo)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanDownload(
-			final User user,
-			final boolean invited,
-			final FileInfo fileInfo) {
-		return userCanViewActionOrFileInfo(user, fileInfo.getTicket(), invited, fileInfo.getScope(), fileInfo.getUser());
+	public boolean userCanDownload(final User user, final boolean invited, final FileInfo fileInfo) {
+		return userCanViewActionOrFileInfo(user, fileInfo.getTicket(), invited, fileInfo.getScope(),
+				fileInfo.getUser());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#actionMonitorable(
-	 * org.esupportail.helpdesk.domain.beans.User, boolean, org.esupportail.helpdesk.domain.beans.Action)
+	 *      org.esupportail.helpdesk.domain.beans.User, boolean,
+	 *      org.esupportail.helpdesk.domain.beans.Action)
 	 */
 	@Override
 	@RequestCache
-	public boolean actionMonitorable(
-			final User user,
-			final boolean invited,
-			final Action action) {
+	public boolean actionMonitorable(final User user, final boolean invited, final Action action) {
 		if (ActionType.APPROVE_CLOSURE.equals(action.getActionType())
 				|| ActionType.APPROVE_CLOSURE.equals(action.getActionType())
-				|| ActionType.ASSIGN.equals(action.getActionType())
-				|| ActionType.CANCEL.equals(action.getActionType())
+				|| ActionType.ASSIGN.equals(action.getActionType()) || ActionType.CANCEL.equals(action.getActionType())
 				|| ActionType.CANCEL_POSTPONEMENT.equals(action.getActionType())
 				|| ActionType.CHANGE_OWNER.equals(action.getActionType())
 				|| ActionType.CLOSE.equals(action.getActionType())
 				|| ActionType.CLOSE_APPROVE.equals(action.getActionType())
-				|| ActionType.CREATE.equals(action.getActionType())
-				|| ActionType.EXPIRE.equals(action.getActionType())
-				|| ActionType.FREE.equals(action.getActionType())
-				|| ActionType.POSTPONE.equals(action.getActionType())
+				|| ActionType.CREATE.equals(action.getActionType()) || ActionType.EXPIRE.equals(action.getActionType())
+				|| ActionType.FREE.equals(action.getActionType()) || ActionType.POSTPONE.equals(action.getActionType())
 				|| ActionType.REFUSE.equals(action.getActionType())
 				|| ActionType.REFUSE_CLOSURE.equals(action.getActionType())
 				|| ActionType.REOPEN.equals(action.getActionType())
@@ -4738,32 +4735,31 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewArchivedTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress,
-	 * org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress,
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanViewArchivedTicket(
-			final User user,
-			final InetAddress client,
+	public boolean userCanViewArchivedTicket(final User user, final InetAddress client,
 			final ArchivedTicket archivedTicket) {
-		return userCanViewArchivedTicket(
-				user, archivedTicket, getTicketViewDepartments(user, client));
+		return userCanViewArchivedTicket(user, archivedTicket, getTicketViewDepartments(user, client));
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewArchivedTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.ArchivedTicket,
-	 * java.util.List)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket,
+	 *      java.util.List)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanViewArchivedTicket(
-			final User user,
-			final ArchivedTicket archivedTicket,
+	public boolean userCanViewArchivedTicket(final User user, final ArchivedTicket archivedTicket,
 			final List<Department> visibleDepartments) {
 		if (user == null || archivedTicket == null) {
 			return false;
+		}
+		if (user.getAdmin()) {
+			return true;
 		}
 		if (isDepartmentManager(archivedTicket.getDepartment(), user)) {
 			return true;
@@ -4791,13 +4787,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @return true if the user can see the archived Action or FileInfo
 	 */
 	@RequestCache
-	protected boolean userCanViewArchivedActionOrFileInfo(
-			final User user,
-			final ArchivedTicket archivedTicket,
-			final boolean invited,
-			final String objectScope) {
+	protected boolean userCanViewArchivedActionOrFileInfo(final User user, final ArchivedTicket archivedTicket,
+			final boolean invited, final String objectScope) {
 		if (user == null) {
 			return false;
+		}
+		if (user.getAdmin()) {
+			return true;
 		}
 		if (isDepartmentManager(archivedTicket.getDepartment(), user)) {
 			return true;
@@ -4822,39 +4818,33 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewArchivedAction(
-	 * org.esupportail.helpdesk.domain.beans.User, boolean,
-	 * org.esupportail.helpdesk.domain.beans.ArchivedAction)
+	 *      org.esupportail.helpdesk.domain.beans.User, boolean,
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedAction)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanViewArchivedAction(
-			final User user,
-			final boolean invited,
+	public boolean userCanViewArchivedAction(final User user, final boolean invited,
 			final ArchivedAction archivedAction) {
-		return userCanViewArchivedActionOrFileInfo(
-				user, archivedAction.getArchivedTicket(),
-				invited, archivedAction.getEffectiveScope());
+		return userCanViewArchivedActionOrFileInfo(user, archivedAction.getArchivedTicket(), invited,
+				archivedAction.getEffectiveScope());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanDownload(
-	 * org.esupportail.helpdesk.domain.beans.User, boolean,
-	 * org.esupportail.helpdesk.domain.beans.ArchivedFileInfo)
+	 *      org.esupportail.helpdesk.domain.beans.User, boolean,
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedFileInfo)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanDownload(
-			final User user,
-			final boolean invited,
-			final ArchivedFileInfo archivedFileInfo) {
-		return userCanViewArchivedActionOrFileInfo(
-				user, archivedFileInfo.getArchivedTicket(),
-				invited, archivedFileInfo.getEffectiveScope());
+	public boolean userCanDownload(final User user, final boolean invited, final ArchivedFileInfo archivedFileInfo) {
+		return userCanViewArchivedActionOrFileInfo(user, archivedFileInfo.getArchivedTicket(), invited,
+				archivedFileInfo.getEffectiveScope());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanApproveClosure(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -4867,7 +4857,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanRefuseClosure(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -4877,13 +4868,17 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanGiveInformation(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
 	public boolean userCanGiveInformation(final User user, final Ticket ticket) {
 		if (user == null) {
 			return false;
+		}
+		if (user.getAdmin()) {
+			return true;
 		}
 		if (isDepartmentManager(ticket.getDepartment(), user)) {
 			return true;
@@ -4902,7 +4897,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanCancel(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -4915,7 +4911,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanRequestInformation(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -4928,7 +4925,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanClose(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -4936,13 +4934,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (user == null) {
 			return false;
 		}
-		return ticket.isOpened()
-		&& (user.equals(ticket.getOwner()) || user.equals(ticket.getManager()));
+//		return ticket.isOpened() && (user.equals(ticket.getOwner()) || user.equals(ticket.getManager()));
+		return ticket.isOpened() && user.equals(ticket.getManager());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanRefuse(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -4963,7 +4962,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanConnect(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -4976,7 +4976,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanPostpone(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -4989,7 +4990,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanCancelPostponement(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5002,7 +5004,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanReopen(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5030,7 +5033,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanMove(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5048,18 +5052,37 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @see org.esupportail.helpdesk.domain.DomainService#userCanTake(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 * @see org.esupportail.helpdesk.domain.DomainService#userCanMoveBackCategorie(
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
 	public boolean userCanMoveBack(final User user, final Ticket ticket) {
-		
-		Action lastAction = getLastActionByActionType(ticket, ActionType.CHANGE_CATEGORY);			
+
+		Action lastAction = null;
+		Action lastActionCategory = getLastActionByActionType(ticket, ActionType.CHANGE_CATEGORY);
+		Action lastActionDepartment = getLastActionByActionType(ticket, ActionType.CHANGE_DEPARTMENT);
+		// on prend l'action la plus récente s'il y en a
+		if (lastActionCategory != null && lastActionDepartment != null) {
+			if (lastActionCategory.getDate().after(lastActionDepartment.getDate())) {
+				lastAction = lastActionCategory;
+			} else {
+				lastAction = lastActionDepartment;
+			}
+		} else {
+			if (lastActionCategory != null) {
+				lastAction = lastActionCategory;
+			} else {
+				lastAction = lastActionDepartment;
+			}
+		}
+
 		if (user == null) {
 			return false;
 		}
-		if (ticket.isOpened() && isDepartmentManager(ticket.getDepartment(), user) && lastAction != null && lastAction.getCategoryBefore() != null) {
+		if (ticket.isOpened() && isDepartmentManager(ticket.getDepartment(), user) && lastAction != null
+				&& lastAction.getCategoryBefore() != null) {
 			return true;
 		}
 		if (user.equals(ticket.getManager()) && lastAction != null && lastAction.getCategoryBefore() != null) {
@@ -5070,7 +5093,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanTake(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5095,7 +5119,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanTakeAndClose(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5105,7 +5130,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanTakeAndRequestInformation(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5115,7 +5141,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanFree(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5124,12 +5151,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			return false;
 		}
 		return user.equals(ticket.getManager())
-		&& (ticket.isIncomplete() || ticket.isInProgress() || ticket.isPostponed());
+				&& (ticket.isIncomplete() || ticket.isInProgress() || ticket.isPostponed());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanAssign(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5160,19 +5188,19 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanSetOwner(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanSetOwner(
-			final User user,
-			final Department department) {
+	public boolean userCanSetOwner(final User user, final Department department) {
 		return isDepartmentManager(department, user);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanChangeOwner(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5185,7 +5213,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanChangeLabel(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5193,12 +5222,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (user == null) {
 			return false;
 		}
-		return user.equals(ticket.getManager());
+		if(user.equals(ticket.getManager()) || user.equals(ticket.getManager())) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanChangeScope(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5211,13 +5244,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanSetOrigin(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanSetOrigin(
-			final User user,
-			final Department department) {
+	public boolean userCanSetOrigin(final User user, final Department department) {
 		if (user == null) {
 			return false;
 		}
@@ -5226,13 +5258,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanChangeOrigin(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanChangeOrigin(
-			final User user,
-			final Ticket ticket) {
+	public boolean userCanChangeOrigin(final User user, final Ticket ticket) {
 		if (user == null) {
 			return false;
 		}
@@ -5241,7 +5272,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanChangeComputer(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5254,7 +5286,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanChangePriority(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5267,7 +5300,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanChangeSpentTime(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5275,7 +5309,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (user == null) {
 			return false;
 		}
-	    return user.equals(ticket.getManager());
+		return user.equals(ticket.getManager());
 	}
 
 	/**
@@ -5286,83 +5320,82 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @return true if the user can change the scope of an Action or a FileInfo.
 	 */
 	@RequestCache
-	public boolean userCanChangeActionOrFileInfoScope(
-			final User user,
-			final Ticket ticket,
-			final String objectScope,
+	public boolean userCanChangeActionOrFileInfoScope(final User user, final Ticket ticket, final String objectScope,
 			final User objectOwner) {
 		if (user == null) {
+			logger.info("user null ");
 			return false;
 		}
 		if (user.equals(ticket.getManager())) {
+			logger.info("getManager ");
 			return true;
 		}
 		if (!ticket.isOpened()) {
+			logger.info("isOpened ");
 			return false;
 		}
 		if (ActionScope.MANAGER.equals(objectScope)) {
+			logger.info("MANAGER ");
 			return false;
 		}
 		if (user.equals(ticket.getOwner())) {
+			logger.info("getOwner ");
 			return true;
 		}
 		if (ActionScope.OWNER.equals(objectScope)) {
+			logger.info("OWNER ");
 			return false;
 		}
 		if (!isInvited(user, ticket)) {
+			logger.info("isInvited ");
 			return false;
 		}
+		logger.info("user.equals(objectOwner) " + user.equals(objectOwner));
 		return user.equals(objectOwner);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanChangeActionScope(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Action)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Action)
 	 */
 	@Override
 	@RequestCache
 	public boolean userCanChangeActionScope(final User user, final Action action) {
-		return userCanChangeActionOrFileInfoScope(
-				user, action.getTicket(), action.getScope(), action.getUser());
+		logger.info("userCanChangeActionScope : scope " + action.getScope());
+		return userCanChangeActionOrFileInfoScope(user, action.getTicket(), action.getScope(), action.getUser());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanChangeFileInfoScope(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.FileInfo)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.FileInfo)
 	 */
 	@Override
 	@RequestCache
 	public boolean userCanChangeFileInfoScope(final User user, final FileInfo fileInfo) {
-		return userCanChangeActionOrFileInfoScope(
-				user, fileInfo.getTicket(), fileInfo.getScope(), fileInfo.getUser());
+		return userCanChangeActionOrFileInfoScope(user, fileInfo.getTicket(), fileInfo.getScope(), fileInfo.getUser());
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewFaq(
-	 * org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress,
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress,
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanViewFaq(
-			final User user,
-			final InetAddress client,
-			final Faq faq) {
-		return userCanViewFaq(
-				user, faq, getFaqViewDepartments(user, client));
+	public boolean userCanViewFaq(final User user, final InetAddress client, final Faq faq) {
+		return userCanViewFaq(user, faq, getFaqViewDepartments(user, client));
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanViewFaq(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Faq,
-	 * java.util.List)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Faq, java.util.List)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanViewFaq(
-			final User user,
-			final Faq faq,
-			final List<Department> visibleDepartments) {
+	public boolean userCanViewFaq(final User user, final Faq faq, final List<Department> visibleDepartments) {
 		if (faq == null) {
 			return false;
 		}
@@ -5372,6 +5405,9 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		}
 		if (user == null) {
 			return false;
+		}
+		if (user.getAdmin()) {
+			return true;
 		}
 		if (FaqScope.AUTHENTICATED.equals(effectiveScope)) {
 			return true;
@@ -5391,7 +5427,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanEditFaqs(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -5410,13 +5446,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanEditDepartmentFaqs(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanEditDepartmentFaqs(
-			final User user,
-			final Department department) {
+	public boolean userCanEditDepartmentFaqs(final User user, final Department department) {
 		if (user == null) {
 			return false;
 		}
@@ -5433,7 +5468,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanEditFaq(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
 	@RequestCache
@@ -5443,7 +5479,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanEditRootFaqs(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -5453,19 +5489,39 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasVisibleFaq(
-	 * org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)
 	 */
 	@Override
 	@RequestCache
-	public boolean hasVisibleFaq(
-			final User user,
-			final InetAddress client) {
+	public boolean hasVisibleFaq(final User user, final InetAddress client) {
 		return daoService.hasVisibleFaq(user, getFaqViewDepartments(user, client));
 	}
 
 	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#userCanDeleteFileInfo(
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
+	 */
+	@Override
+	@RequestCache
+	public boolean userCanDeleteFileInfo(final User user, final Ticket ticket) {
+		Department department = ticket.getDepartment();
+		if (isDepartmentManager(department, user)) {
+			return true;
+		}
+		if (ticket.getOwner().equals(user)) {
+			return true;
+		}
+		if (user.getAdmin()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanInvite(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5477,12 +5533,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (ticket.getOwner().equals(user)) {
 			return true;
 		}
+		if (user.getAdmin()) {
+			return true;
+		}
 		return false;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanInviteGroup(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5491,12 +5551,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (isDepartmentManager(department, user)) {
 			return true;
 		}
+		if (user.getAdmin()) {
+			return true;
+		}
 		return false;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanRemoveInvitations(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
@@ -5507,12 +5571,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (isDepartmentManager(ticket.getDepartment(), user)) {
 			return true;
 		}
+		if (user.getAdmin()) {
+			return true;
+		}
+
 		return false;
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanEditDepartmentSelection(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	public boolean userCanEditDepartmentSelection(final User user) {
@@ -5524,23 +5592,21 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanUseResponses(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanUseResponses(
-			final User user,
-			final Ticket ticket) {
+	public boolean userCanUseResponses(final User user, final Ticket ticket) {
 		return isDepartmentManager(ticket.getDepartment(), user);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanManageGlobalResponses(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
-	public boolean userCanManageGlobalResponses(
-			final User user) {
+	public boolean userCanManageGlobalResponses(final User user) {
 		if (user == null) {
 			return false;
 		}
@@ -5549,13 +5615,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanManageDepartmentResponses(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@RequestCache
-	public boolean userCanManageDepartmentResponses(
-			final User user,
-			final Department department) {
+	public boolean userCanManageDepartmentResponses(final User user, final Department department) {
 		if (user == null) {
 			return false;
 		}
@@ -5572,7 +5637,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userCanManageIcons(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	public boolean userCanManageIcons(final User user) {
@@ -5590,7 +5655,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#userShowsTicketAfterClosure(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@RequestCache
@@ -5606,12 +5671,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Add an action to a ticket.
+	 * 
 	 * @param ticket
 	 * @param action
 	 */
-	protected void addActionToTicket(
-			final Ticket ticket,
-			final Action action) {
+	protected void addActionToTicket(final Ticket ticket, final Action action) {
 
 		ticket.setLastActionDate(action.getDate());
 		ticket.setStatus(action.getStatusAfter());
@@ -5623,43 +5687,38 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Set the spentTime after/before according its value.
-     * @param action The action to updates
+	 * 
+	 * @param action
+	 *            The action to updates
 	 * @param ticket
-     * @param spentTime The spentTime to set.
-     */
+	 * @param spentTime
+	 *            The spentTime to set.
+	 */
 	protected void addSpentTime(final Action action, final Ticket ticket, final long spentTime) {
-	    action.setSpentTimeBefore(ticket.getSpentTime());
-	    action.setSpentTimeAfter(spentTime);
-    }
+		action.setSpentTimeBefore(ticket.getSpentTime());
+		action.setSpentTimeAfter(spentTime);
+	}
 
 	/**
 	 * Add an action.
+	 * 
 	 * @param actionOwner
 	 * @param ticket
 	 * @param actionMessage
 	 * @param actionScope
 	 * @return the action created
 	 */
-	protected Action giveInformation(
-			final User actionOwner,
-			final Ticket ticket,
-			final String actionMessage,
+	protected Action giveInformation(final User actionOwner, final Ticket ticket, final String actionMessage,
 			final String actionScope) {
 		String statusAfter = ticket.getStatus();
 		if (ticket.isIncomplete() && actionOwner != null) {
 			if (actionOwner.equals(ticket.getOwner())) {
 				statusAfter = TicketStatus.INPROGRESS;
-			} else if (ticket.getManager() != null
-					&& actionOwner.equals(ticket.getManager())) {
+			} else if (ticket.getManager() != null && actionOwner.equals(ticket.getManager())) {
 				statusAfter = TicketStatus.INPROGRESS;
 			}
 		}
-		Action newAction = new Action(
-				actionOwner,
-				ticket,
-				ActionType.GIVE_INFORMATION,
-				statusAfter,
-				actionScope,
+		Action newAction = new Action(actionOwner, ticket, ActionType.GIVE_INFORMATION, statusAfter, actionScope,
 				actionMessage);
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
@@ -5668,15 +5727,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#giveInformation(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String, boolean)
 	 */
 	@Override
-	public void giveInformation(
-			final User author,
-			final Ticket ticket,
-			final String message,
-			final String actionScope,
+	public void giveInformation(final User author, final Ticket ticket, final String message, final String actionScope,
 			final boolean alerts) {
 		Action newAction = giveInformation(author, ticket, message, actionScope);
 		if (alerts) {
@@ -5686,34 +5742,28 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Add an action.
+	 * 
 	 * @param ticket
 	 * @return the action created
 	 */
-	protected Action userInfo(
-			final Ticket ticket) {
+	protected Action userInfo(final Ticket ticket) {
 		String userInfo = getUserInfo(ticket.getOwner(), i18nService.getDefaultLocale());
 		if (userInfo == null) {
 			return null;
 		}
-		return giveInformation(
-				null /* not a user */,
-				ticket,
-				userInfo,
-				ActionScope.MANAGER);
+		return giveInformation(null /* not a user */, ticket, userInfo, ActionScope.MANAGER);
 	}
 
 	/**
 	 * Call the assignment algorithm of the category.
+	 * 
 	 * @param ticket
 	 * @param excludedUser
 	 * @param freeAllowed
 	 * @param alerts
 	 * @return the action created
 	 */
-	protected Action callAssignmentAlgorithm(
-			final Ticket ticket,
-			final User excludedUser,
-			final boolean freeAllowed,
+	protected Action callAssignmentAlgorithm(final Ticket ticket, final User excludedUser, final boolean freeAllowed,
 			final boolean alerts) {
 		Category category = ticket.getCategory();
 		String algorithmName = category.getEffectiveAssignmentAlgorithmName();
@@ -5723,31 +5773,28 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (algorithmName != null) {
 			AssignmentAlgorithm algorithm = assignmentAlgorithmStore.getAlgorithm(algorithmName);
 			if (algorithm != null) {
-				AssignmentResult result = algorithm.getAssignmentResult(
-						this, ticket, excludedUser);
+				AssignmentResult result = algorithm.getAssignmentResult(this, ticket, excludedUser);
 				if (result != null) {
 					user = result.getUser();
 					if (user != null) {
 						if (user.equals(excludedUser)) {
 							assignmentMessage = "<em>Assignment algorithm ("
-								+ algorithm.getDescription(Locale.getDefault())
-								+ ") returned [" + user.getRealId() + "] (rejected)</em>";
+									+ algorithm.getDescription(Locale.getDefault()) + ") returned [" + user.getRealId()
+									+ "] (rejected)</em>";
 							user = null;
 						} else {
 							assignmentMessage = "<em>Assignment algorithm ("
-								+ algorithm.getDescription(Locale.getDefault())
-								+ ") returned [" + user.getRealId() + "]</em>";
+									+ algorithm.getDescription(Locale.getDefault()) + ") returned [" + user.getRealId()
+									+ "]</em>";
 						}
 					}
 					nextAlgorithmState = result.getNextAlgorithmState();
 				} else {
 					assignmentMessage = "<br /><em>Assignment algorithm ("
-						+ algorithm.getDescription(Locale.getDefault())
-						+ ") returned no assignment</em>";
+							+ algorithm.getDescription(Locale.getDefault()) + ") returned no assignment</em>";
 				}
 			} else {
-				assignmentMessage = "<em>Assignment algorithm name: "
-					+ algorithmName + " (not found)</em>";
+				assignmentMessage = "<em>Assignment algorithm name: " + algorithmName + " (not found)</em>";
 			}
 		}
 		Action action = null;
@@ -5768,22 +5815,15 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Add an action.
+	 * 
 	 * @param ticket
 	 * @param actionScope
 	 * @param actionMessage
 	 * @return the action created
 	 */
-	protected Action create(
-			final Ticket ticket,
-			final String actionScope,
-			final String actionMessage) {
+	protected Action create(final Ticket ticket, final String actionScope, final String actionMessage) {
 		String statusAfter = TicketStatus.FREE;
-		Action newAction = new Action(
-				ticket.getOwner(),
-				ticket,
-				ActionType.CREATE,
-				statusAfter,
-				actionScope,
+		Action newAction = new Action(ticket.getOwner(), ticket, ActionType.CREATE, statusAfter, actionScope,
 				actionMessage);
 		addAction(newAction);
 		newAction.setCategoryAfter(ticket.getCategory());
@@ -5796,12 +5836,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Add the permanently invited user to a ticket.
+	 * 
 	 * @param creationDepartment
 	 * @param ticket
 	 */
-	protected void addDepartmentInvitedUsers(
-			final Department creationDepartment,
-			final Ticket ticket) {
+	protected void addDepartmentInvitedUsers(final Department creationDepartment, final Ticket ticket) {
 		for (DepartmentInvitation departmentInvitation : getDepartmentInvitations(creationDepartment)) {
 			invite(null, ticket, departmentInvitation.getUser(), null, ActionScope.DEFAULT, false);
 		}
@@ -5809,36 +5848,30 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addWebTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.User,
-	 * org.esupportail.helpdesk.domain.beans.Department, org.esupportail.helpdesk.domain.beans.Category,
-	 * java.lang.String, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.Category, java.lang.String,
+	 *      java.lang.String, int, java.lang.String, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public Ticket addWebTicket(
-			final User author,
-			final User owner,
-			final Department creationDepartment,
-			final Category category,
-			final String label,
-			final String computer,
-			final int priorityLevel,
-			final String message,
-			final String ticketScope,
-			final String ticketOrigin) {
+	public Ticket addWebTicket(final User author, final User owner, final Department creationDepartment,
+			final Category category, final String label, final String computer, final int priorityLevel,
+			final String message, final String ticketScope, final String ticketOrigin) {
 		String origin = ticketOrigin;
 		if (origin == null) {
 			origin = getWebOrigin();
 		}
-		Ticket ticket = new Ticket(
-				author, origin, creationDepartment, category,
-				label, computer, priorityLevel, ticketScope);
+		Ticket ticket = new Ticket(author, origin, category.getDepartment(), category, label, computer, priorityLevel,
+				ticketScope);
 		ticket.computeEffectiveDefaultTicketScope();
 		daoService.addTicket(ticket);
 		create(ticket, ActionScope.DEFAULT, message);
 		if (owner != null && !author.equals(owner)) {
 			changeTicketOwnerInternal(author, ticket, owner, null, ActionScope.DEFAULT);
 		}
-		userInfo(ticket);
+//		userInfo(ticket);
 		callAssignmentAlgorithm(ticket, null, false, false);
 		addDepartmentInvitedUsers(creationDepartment, ticket);
 		addDepartmentInvitedUsers(ticket.getDepartment(), ticket);
@@ -5847,31 +5880,21 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addEmailTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, java.lang.String,
-	 * org.esupportail.helpdesk.domain.beans.Department, org.esupportail.helpdesk.domain.beans.Category,
-	 * java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User, java.lang.String,
+	 *      org.esupportail.helpdesk.domain.beans.Department,
+	 *      org.esupportail.helpdesk.domain.beans.Category, java.lang.String)
 	 */
 	@Override
-	public Ticket addEmailTicket(
-			final User sender,
-			final String address,
-			final Department creationDepartment,
-			final Category category,
-			final String label) {
-		Ticket ticket = new Ticket(
-				sender, emailOrigin, creationDepartment, category,
-				label, null, category.getEffectiveDefaultTicketPriority(),
-				TicketScope.PRIVATE);
+	public Ticket addEmailTicket(final User sender, final String address, final Department creationDepartment,
+			final Category category, final String label) {
+		Ticket ticket = new Ticket(sender, emailOrigin, category.getDepartment(), category, label, null,
+				category.getEffectiveDefaultTicketPriority(), TicketScope.PRIVATE);
 		ticket.computeEffectiveDefaultTicketScope();
 		daoService.addTicket(ticket);
-		create(
-				ticket, ActionScope.DEFAULT,
-				i18nService.getString("TICKET_ACTION.EMAIL_FEED.CREATE", address));
+		create(ticket, ActionScope.DEFAULT, i18nService.getString("TICKET_ACTION.EMAIL_FEED.CREATE", address));
 		userInfo(ticket);
 		if (category.isVirtual()) {
-			changeCategory(
-					null, ticket, null,
-					category.getRealCategory(), ActionScope.DEFAULT);
+			changeCategory(null, ticket, null, category.getRealCategory(), ActionScope.DEFAULT);
 		}
 		callAssignmentAlgorithm(ticket, null, false, false);
 		addDepartmentInvitedUsers(creationDepartment, ticket);
@@ -5881,16 +5904,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Add an action.
+	 * 
 	 * @param actionOwner
 	 * @param ticket
 	 * @param actionMessage
 	 * @param actionScope
 	 * @return the action created
 	 */
-	protected Action takeTicketInternal(
-			final User actionOwner,
-			final Ticket ticket,
-			final String actionMessage,
+	protected Action takeTicketInternal(final User actionOwner, final Ticket ticket, final String actionMessage,
 			final String actionScope) {
 		String statusAfter;
 		if (ticket.isFree()) {
@@ -5898,13 +5919,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		} else {
 			statusAfter = ticket.getStatus();
 		}
-		Action newAction = new Action(
-				actionOwner,
-				ticket,
-				ActionType.TAKE,
-				statusAfter,
-				actionScope,
-				actionMessage);
+		Action newAction = new Action(actionOwner, ticket, ActionType.TAKE, statusAfter, actionScope, actionMessage);
 		newAction.setManagerBefore(ticket.getManager());
 		newAction.setManagerAfter(actionOwner);
 		addAction(newAction);
@@ -5915,15 +5930,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#takeTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void takeTicket(
-			final User author,
-			final Ticket ticket,
-			final String message,
-			final String actionScope) {
+	public void takeTicket(final User author, final Ticket ticket, final String message, final String actionScope) {
 		Action action = takeTicketInternal(author, ticket, message, actionScope);
 		monitoringSender.ticketMonitoringSendAlerts(author, action, false);
 	}
@@ -5936,25 +5948,15 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param actionScope
 	 * @return the action created
 	 */
-	protected Action assignTicketInternal(
-			final User author,
-			final Ticket ticket,
-			final User manager,
-			final String message,
-			final String actionScope) {
+	protected Action assignTicketInternal(final User author, final Ticket ticket, final User manager,
+			final String message, final String actionScope) {
 		String statusAfter;
 		if (ticket.isFree()) {
 			statusAfter = TicketStatus.INPROGRESS;
 		} else {
 			statusAfter = ticket.getStatus();
 		}
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.ASSIGN,
-				statusAfter,
-				actionScope,
-				message);
+		Action newAction = new Action(author, ticket, ActionType.ASSIGN, statusAfter, actionScope, message);
 		newAction.setManagerBefore(ticket.getManager());
 		newAction.setManagerAfter(manager);
 		addAction(newAction);
@@ -5965,15 +5967,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#assignTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * org.esupportail.helpdesk.domain.beans.User, java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket,
+	 *      org.esupportail.helpdesk.domain.beans.User, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void assignTicket(
-			final User author,
-			final Ticket ticket,
-			final User manager,
-			final String message,
+	public void assignTicket(final User author, final Ticket ticket, final User manager, final String message,
 			final String actionScope) {
 		Action action = assignTicketInternal(author, ticket, manager, message, actionScope);
 		monitoringSender.ticketMonitoringSendAlerts(author, action, false);
@@ -5981,21 +5981,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#changeTicketLabel(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      boolean)
 	 */
 	@Override
-	public void changeTicketLabel(
-			final User author,
-			final Ticket ticket,
-			final String label,
-			final boolean alerts) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.CHANGE_LABEL,
-				ticket.getStatus(),
-				ActionScope.DEFAULT,
+	public void changeTicketLabel(final User author, final Ticket ticket, final String label, final boolean alerts) {
+		Action newAction = new Action(author, ticket, ActionType.CHANGE_LABEL, ticket.getStatus(), ActionScope.DEFAULT,
 				null);
 
 		newAction.setLabelBefore(ticket.getLabel());
@@ -6010,6 +6002,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Change the owner of a ticket.
+	 * 
 	 * @param author
 	 * @param ticket
 	 * @param owner
@@ -6017,18 +6010,9 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param actionScope
 	 * @return the action created.
 	 */
-	protected Action changeTicketOwnerInternal(
-			final User author,
-			final Ticket ticket,
-			final User owner,
-			final String message,
-			final String actionScope) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.CHANGE_OWNER,
-				ticket.getStatus(),
-				actionScope,
+	protected Action changeTicketOwnerInternal(final User author, final Ticket ticket, final User owner,
+			final String message, final String actionScope) {
+		Action newAction = new Action(author, ticket, ActionType.CHANGE_OWNER, ticket.getStatus(), actionScope,
 				message);
 		newAction.setTicketOwnerBefore(ticket.getOwner());
 		newAction.setTicketOwnerAfter(owner);
@@ -6040,42 +6024,32 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#changeTicketOwner(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * org.esupportail.helpdesk.domain.beans.User, java.lang.String, java.lang.String, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket,
+	 *      org.esupportail.helpdesk.domain.beans.User, java.lang.String,
+	 *      java.lang.String, boolean)
 	 */
 	@Override
-	public void changeTicketOwner(
-			final User author,
-			final Ticket ticket,
-			final User owner,
-			final String message,
-			final String actionScope,
-			final boolean alerts) {
+	public void changeTicketOwner(final User author, final Ticket ticket, final User owner, final String message,
+			final String actionScope, final boolean alerts) {
 		Action action1 = changeTicketOwnerInternal(author, ticket, owner, message, actionScope);
-		Action action2 = userInfo(ticket);
+//		Action action2 = userInfo(ticket);
 		if (alerts) {
-			monitoringSender.ticketMonitoringSendAlerts(author, action1, action2, false);
+//			monitoringSender.ticketMonitoringSendAlerts(author, action1, action2, false);
+			monitoringSender.ticketMonitoringSendAlerts(author, action1, false);
 		}
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#changeTicketPriority(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * int, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, int, boolean)
 	 */
 	@Override
-	public void changeTicketPriority(
-			final User author,
-			final Ticket ticket,
-			final int ticketPriority,
+	public void changeTicketPriority(final User author, final Ticket ticket, final int ticketPriority,
 			final boolean alerts) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.CHANGE_PRIORITY,
-				ticket.getStatus(),
-				ActionScope.DEFAULT,
-				null);
+		Action newAction = new Action(author, ticket, ActionType.CHANGE_PRIORITY, ticket.getStatus(),
+				ActionScope.DEFAULT, null);
 		newAction.setPriorityLevelBefore(ticket.getPriorityLevel());
 		newAction.setPriorityLevelAfter(ticketPriority);
 		addAction(newAction);
@@ -6088,21 +6062,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#changeTicketScope(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      boolean)
 	 */
 	@Override
-	public void changeTicketScope(
-			final User author,
-			final Ticket ticket,
-			final String ticketScope,
+	public void changeTicketScope(final User author, final Ticket ticket, final String ticketScope,
 			final boolean alerts) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.CHANGE_SCOPE,
-				ticket.getStatus(),
-				ActionScope.DEFAULT,
+		Action newAction = new Action(author, ticket, ActionType.CHANGE_SCOPE, ticket.getStatus(), ActionScope.DEFAULT,
 				null);
 		newAction.setScopeBefore(ticket.getScope());
 		newAction.setScopeAfter(ticketScope);
@@ -6116,21 +6083,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#changeTicketOrigin(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      boolean)
 	 */
 	@Override
-	public void changeTicketOrigin(
-			final User author,
-			final Ticket ticket,
-			final String ticketOrigin,
+	public void changeTicketOrigin(final User author, final Ticket ticket, final String ticketOrigin,
 			final boolean alerts) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.CHANGE_ORIGIN,
-				ticket.getStatus(),
-				ActionScope.DEFAULT,
+		Action newAction = new Action(author, ticket, ActionType.CHANGE_ORIGIN, ticket.getStatus(), ActionScope.DEFAULT,
 				null);
 		newAction.setOriginBefore(ticket.getOrigin());
 		newAction.setOriginAfter(ticketOrigin);
@@ -6144,22 +6104,15 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#changeTicketComputer(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      boolean)
 	 */
 	@Override
-	public void changeTicketComputer(
-			final User author,
-			final Ticket ticket,
-			final String ticketComputer,
+	public void changeTicketComputer(final User author, final Ticket ticket, final String ticketComputer,
 			final boolean alerts) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.CHANGE_COMPUTER,
-				ticket.getStatus(),
-				ActionScope.DEFAULT,
-				null);
+		Action newAction = new Action(author, ticket, ActionType.CHANGE_COMPUTER, ticket.getStatus(),
+				ActionScope.DEFAULT, null);
 		newAction.setComputerBefore(ticket.getComputer());
 		newAction.setComputerAfter(ticketComputer);
 		addAction(newAction);
@@ -6172,22 +6125,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#changeTicketSpentTime(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * long, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, long, boolean)
 	 */
 	@Override
-	public void changeTicketSpentTime(
-			final User author,
-			final Ticket ticket,
-			final long ticketSpentTime,
+	public void changeTicketSpentTime(final User author, final Ticket ticket, final long ticketSpentTime,
 			final boolean alerts) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.CHANGE_SPENT_TIME,
-				ticket.getStatus(),
-				ActionScope.DEFAULT,
-				null);
+		Action newAction = new Action(author, ticket, ActionType.CHANGE_SPENT_TIME, ticket.getStatus(),
+				ActionScope.DEFAULT, null);
 		addSpentTime(newAction, ticket, ticketSpentTime);
 		addAction(newAction);
 		ticket.setSpentTime(ticketSpentTime);
@@ -6204,22 +6149,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param actionScope
 	 * @return the action created.
 	 */
-	protected Action freeTicketInternal(
-			final User author,
-			final Ticket ticket,
-			final String message,
+	protected Action freeTicketInternal(final User author, final Ticket ticket, final String message,
 			final String actionScope) {
 		String statusAfter = ticket.getStatus();
 		if (ticket.isInProgress()) {
 			statusAfter = TicketStatus.FREE;
 		}
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.FREE,
-				statusAfter,
-				actionScope,
-				message);
+		Action newAction = new Action(author, ticket, ActionType.FREE, statusAfter, actionScope, message);
 		newAction.setManagerBefore(ticket.getManager());
 		newAction.setManagerAfter(null);
 		addAction(newAction);
@@ -6230,37 +6166,25 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#freeTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void freeTicket(
-			final User author,
-			final Ticket ticket,
-			final String message,
-			final String actionScope) {
+	public void freeTicket(final User author, final Ticket ticket, final String message, final String actionScope) {
 		Action newAction = freeTicketInternal(author, ticket, message, actionScope);
 		monitoringSender.ticketMonitoringSendAlerts(author, newAction, false);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#cancelTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void cancelTicket(
-			final User author,
-			final Ticket ticket,
-			final String message,
-			final String actionScope) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.CANCEL,
-				TicketStatus.CANCELLED,
-				actionScope,
-				message);
+	public void cancelTicket(final User author, final Ticket ticket, final String message, final String actionScope) {
+		Action newAction = new Action(author, ticket, ActionType.CANCEL, TicketStatus.CANCELLED, actionScope, message);
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
 		monitoringSender.ticketMonitoringSendAlerts(author, newAction, false);
@@ -6268,24 +6192,17 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Request information for a ticket.
+	 * 
 	 * @param author
 	 * @param ticket
 	 * @param message
 	 * @param actionScope
 	 * @return the newly created action
 	 */
-	protected Action requestTicketInformationInternal(
-			final User author,
-			final Ticket ticket,
-			final String message,
+	protected Action requestTicketInformationInternal(final User author, final Ticket ticket, final String message,
 			final String actionScope) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.REQUEST_INFORMATION,
-				TicketStatus.INCOMPLETE,
-				actionScope,
-				message);
+		Action newAction = new Action(author, ticket, ActionType.REQUEST_INFORMATION, TicketStatus.INCOMPLETE,
+				actionScope, message);
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
 		return newAction;
@@ -6293,14 +6210,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#requestTicketInformation(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void requestTicketInformation(
-			final User author,
-			final Ticket ticket,
-			final String message,
+	public void requestTicketInformation(final User author, final Ticket ticket, final String message,
 			final String actionScope) {
 		Action newAction = requestTicketInformationInternal(author, ticket, message, actionScope);
 		monitoringSender.ticketMonitoringSendAlerts(author, newAction, false);
@@ -6308,14 +6223,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#takeAndRequestTicketInformation(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void takeAndRequestTicketInformation(
-			final User author,
-			final Ticket ticket,
-			final String message,
+	public void takeAndRequestTicketInformation(final User author, final Ticket ticket, final String message,
 			final String actionScope) {
 		Action action1 = takeTicketInternal(author, ticket, null, actionScope);
 		Action action2 = requestTicketInformationInternal(author, ticket, message, actionScope);
@@ -6324,22 +6237,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#postponeTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String, java.sql.Timestamp)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String, java.sql.Timestamp)
 	 */
 	@Override
-	public void postponeTicket(
-			final User author,
-			final Ticket ticket,
-			final String message,
-			final String actionScope,
+	public void postponeTicket(final User author, final Ticket ticket, final String message, final String actionScope,
 			final Timestamp recallDate) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.POSTPONE,
-				TicketStatus.POSTPONED,
-				actionScope,
+		Action newAction = new Action(author, ticket, ActionType.POSTPONE, TicketStatus.POSTPONED, actionScope,
 				message);
 		newAction.setRecallDate(recallDate);
 		addAction(newAction);
@@ -6350,22 +6255,15 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#cancelTicketPostponement(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void cancelTicketPostponement(
-			final User author,
-			final Ticket ticket,
-			final String message,
+	public void cancelTicketPostponement(final User author, final Ticket ticket, final String message,
 			final String actionScope) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.CANCEL_POSTPONEMENT,
-				TicketStatus.INPROGRESS,
-				actionScope,
-				message);
+		Action newAction = new Action(author, ticket, ActionType.CANCEL_POSTPONEMENT, TicketStatus.INPROGRESS,
+				actionScope, message);
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
 		monitoringSender.ticketMonitoringSendAlerts(author, newAction, false);
@@ -6378,10 +6276,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param actionScope
 	 * @return the action created
 	 */
-	protected Action closeTicketInternal(
-			final User actionOwner,
-			final Ticket ticket,
-			final String actionMessage,
+	protected Action closeTicketInternal(final User actionOwner, final Ticket ticket, final String actionMessage,
 			final String actionScope) {
 		String newTicketStatus;
 		String actionType;
@@ -6392,13 +6287,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			newTicketStatus = TicketStatus.CLOSED;
 			actionType = ActionType.CLOSE;
 		}
-		Action newAction = new Action(
-				actionOwner,
-				ticket,
-				actionType,
-				newTicketStatus,
-				actionScope,
-				actionMessage);
+		Action newAction = new Action(actionOwner, ticket, actionType, newTicketStatus, actionScope, actionMessage);
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
 		return newAction;
@@ -6406,15 +6295,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#closeTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String, boolean)
 	 */
 	@Override
-	public void closeTicket(
-			final User author,
-			final Ticket ticket,
-			final String message,
-			final String actionScope,
+	public void closeTicket(final User author, final Ticket ticket, final String message, final String actionScope,
 			final boolean freeTicketAfterClosure) {
 		Action action1 = closeTicketInternal(author, ticket, message, actionScope);
 		Action action2 = null;
@@ -6426,16 +6312,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#takeAndCloseTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String, boolean)
 	 */
 	@Override
-	public void takeAndCloseTicket(
-			final User author,
-			final Ticket ticket,
-			final String message,
-			final String actionScope,
-			final boolean freeTicketAfterClosure) {
+	public void takeAndCloseTicket(final User author, final Ticket ticket, final String message,
+			final String actionScope, final boolean freeTicketAfterClosure) {
 		Action action1 = takeTicketInternal(author, ticket, null, actionScope);
 		Action action2 = closeTicketInternal(author, ticket, message, actionScope);
 		Action action3 = null;
@@ -6447,21 +6330,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#refuseTicketClosure(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void refuseTicketClosure(
-			final User author,
-			final Ticket ticket,
-			final String message,
+	public void refuseTicketClosure(final User author, final Ticket ticket, final String message,
 			final String actionScope) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.REFUSE_CLOSURE,
-				TicketStatus.INPROGRESS,
-				actionScope,
+		Action newAction = new Action(author, ticket, ActionType.REFUSE_CLOSURE, TicketStatus.INPROGRESS, actionScope,
 				message);
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
@@ -6470,21 +6346,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#approveTicketClosure(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void approveTicketClosure(
-			final User author,
-			final Ticket ticket,
-			final String message,
+	public void approveTicketClosure(final User author, final Ticket ticket, final String message,
 			final String actionScope) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.APPROVE_CLOSURE,
-				TicketStatus.APPROVED,
-				actionScope,
+		Action newAction = new Action(author, ticket, ActionType.APPROVE_CLOSURE, TicketStatus.APPROVED, actionScope,
 				message);
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
@@ -6493,19 +6362,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#expireTicket(
-	 * org.esupportail.helpdesk.domain.beans.Ticket, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, boolean)
 	 */
 	@Override
-	public void expireTicket(
-			final Ticket ticket,
-			final boolean alerts) {
-		Action newAction = new Action(
-				null,
-				ticket,
-				ActionType.EXPIRE,
-				TicketStatus.EXPIRED,
-				ActionScope.DEFAULT,
-				"");
+	public void expireTicket(final Ticket ticket, final boolean alerts) {
+		Action newAction = new Action(null, ticket, ActionType.EXPIRE, TicketStatus.EXPIRED, ActionScope.DEFAULT, "");
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
 		if (alerts) {
@@ -6515,13 +6376,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#connectTicketToTicket(
-	 * org.esupportail.helpdesk.domain.beans.Ticket,
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public void connectTicketToTicket(
-			final Ticket ticket,
-			final Ticket targetTicket) {
+	public void connectTicketToTicket(final Ticket ticket, final Ticket targetTicket) {
 		ticket.setConnectionArchivedTicket(null);
 		ticket.setConnectionTicket(targetTicket);
 		updateTicket(ticket);
@@ -6529,13 +6388,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#connectTicketToArchivedTicket(
-	 * org.esupportail.helpdesk.domain.beans.Ticket,
-	 * org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket,
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
-	public void connectTicketToArchivedTicket(
-			final Ticket ticket,
-			final ArchivedTicket targetArchivedTicket) {
+	public void connectTicketToArchivedTicket(final Ticket ticket, final ArchivedTicket targetArchivedTicket) {
 		ticket.setConnectionTicket(null);
 		ticket.setConnectionArchivedTicket(targetArchivedTicket);
 		updateTicket(ticket);
@@ -6543,35 +6400,24 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#connectTicketToFaq(
-	 * org.esupportail.helpdesk.domain.beans.Ticket,
-	 * org.esupportail.helpdesk.domain.beans.Faq)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket,
+	 *      org.esupportail.helpdesk.domain.beans.Faq)
 	 */
 	@Override
-	public void connectTicketToFaq(
-			final Ticket ticket,
-			final Faq targetFaq) {
+	public void connectTicketToFaq(final Ticket ticket, final Faq targetFaq) {
 		ticket.setConnectionFaq(targetFaq);
 		updateTicket(ticket);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#refuseTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void refuseTicket(
-			final User author,
-			final Ticket ticket,
-			final String message,
-			final String actionScope) {
-		Action newAction = new Action(
-				author,
-				ticket,
-				ActionType.REFUSE,
-				TicketStatus.REFUSED,
-				actionScope,
-				message);
+	public void refuseTicket(final User author, final Ticket ticket, final String message, final String actionScope) {
+		Action newAction = new Action(author, ticket, ActionType.REFUSE, TicketStatus.REFUSED, actionScope, message);
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
 		monitoringSender.ticketMonitoringSendAlerts(author, newAction, false);
@@ -6579,15 +6425,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#reopenTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      java.lang.String)
 	 */
 	@Override
-	public void reopenTicket(
-			final User author,
-			final Ticket ticket,
-			final String message,
-			final String actionScope) {
+	public void reopenTicket(final User author, final Ticket ticket, final String message, final String actionScope) {
 		Action freeAction = null;
 		if (ticket.getManager() != null) {
 			try {
@@ -6604,13 +6447,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		} else {
 			status = TicketStatus.INPROGRESS;
 		}
-		Action reopenAction = new Action(
-				author,
-				ticket,
-				ActionType.REOPEN,
-				status,
-				actionScope,
-				message);
+		Action reopenAction = new Action(author, ticket, ActionType.REOPEN, status, actionScope, message);
 		addAction(reopenAction);
 		addActionToTicket(ticket, reopenAction);
 		monitoringSender.ticketMonitoringSendAlerts(author, reopenAction, false);
@@ -6618,28 +6455,29 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#invite(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * org.esupportail.helpdesk.domain.beans.User, java.lang.String, java.lang.String, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket,
+	 *      org.esupportail.helpdesk.domain.beans.User, java.lang.String,
+	 *      java.lang.String, boolean)
 	 */
 	@Override
-	public boolean invite(
-    		final User actionOwner,
-            final Ticket ticket,
-            final User invitedUser,
-            final String actionMessage,
-            final String actionScope,
-            final boolean alert) {
+	public boolean invite(final User actionOwner, final Ticket ticket, User invitedUser, final String actionMessage,
+			final String actionScope, final boolean alert) {
 		if (isInvited(invitedUser, ticket)) {
 			return true;
 		}
-    	Action newAction = new Action(
-    			actionOwner,
-    			ticket,
-    			ActionType.INVITE,
-    			ticket.getStatus(),
-    			actionScope,
-    			actionMessage);
-        newAction.setInvitedUser(invitedUser);
+		Action newAction = new Action(actionOwner, ticket, ActionType.INVITE, ticket.getStatus(), actionScope,
+				actionMessage);
+		// on force le user cas si l'invité est de type @univ-amu.fr
+		
+    	if(tryConvertMaillToCasUser) {
+    		if(mailToConvertPattern.length() != 0) {
+    			if (invitedUser.getDisplayName().contains(mailToConvertPattern)) {
+    				invitedUser = userStore.getUserWithEmail(invitedUser.getDisplayName());
+    			}
+    		}
+		}
+		newAction.setInvitedUser(invitedUser);
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
 		daoService.addInvitation(new Invitation(invitedUser, ticket));
@@ -6647,58 +6485,42 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			return invitationSender.sendInvitationEmail(actionOwner, invitedUser, ticket);
 		}
 		return false;
-    }
+	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#removeInvitation(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Invitation, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Invitation, boolean)
 	 */
 	@Override
-	public void removeInvitation(
-    		final User actionOwner,
-            final Invitation invitation,
-            final boolean alert) {
+	public void removeInvitation(final User actionOwner, final Invitation invitation, final boolean alert) {
 		Ticket ticket = invitation.getTicket();
 		if (!isInvited(invitation.getUser(), ticket)) {
 			return;
 		}
 		daoService.deleteInvitation(invitation);
-    	Action newAction = new Action(
-    			actionOwner,
-    			ticket,
-    			ActionType.REMOVE_INVITATION,
-    			ticket.getStatus(),
-    			ActionScope.DEFAULT,
-    			null);
-        newAction.setInvitedUser(invitation.getUser());
+		Action newAction = new Action(actionOwner, ticket, ActionType.REMOVE_INVITATION, ticket.getStatus(),
+				ActionScope.DEFAULT, null);
+		newAction.setInvitedUser(invitation.getUser());
 		addAction(newAction);
 		addActionToTicket(ticket, newAction);
 		if (alert) {
 			ticketMonitoringSendAlerts(actionOwner, ticket, null, false);
 		}
-    }
+	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#uploadFile(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * java.lang.String, byte[], java.lang.String)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket, java.lang.String,
+	 *      byte[], java.lang.String)
 	 */
 	@Override
-	public void uploadFile(
-			final User author,
-			final Ticket ticket,
-			final String filename,
-			final byte[] content,
+	public void uploadFile(final User author, final Ticket ticket, final String filename, final byte[] content,
 			final String actionScope) {
 		FileInfo fileInfo = new FileInfo(filename, content, ticket, author, actionScope);
 		addFileInfo(fileInfo);
-		Action action = new Action(
-				author,
-				ticket,
-				ActionType.UPLOAD,
-				ticket.getStatus(),
-				actionScope,
-				null);
+		Action action = new Action(author, ticket, ActionType.UPLOAD, ticket.getStatus(), actionScope, null);
 		action.setFilename(fileInfo.getFilename());
 		addAction(action);
 		addActionToTicket(ticket, action);
@@ -6712,18 +6534,9 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param actionScope
 	 * @return the action created
 	 */
-	protected Action changeCategory(
-			final User actionOwner,
-			final Ticket ticket,
-			final String actionMessage,
-			final Category newCategory,
-			final String actionScope) {
-		Action newAction = new Action(
-				actionOwner,
-				ticket,
-				ActionType.CHANGE_CATEGORY,
-				ticket.getStatus(),
-				actionScope,
+	protected Action changeCategory(final User actionOwner, final Ticket ticket, final String actionMessage,
+			final Category newCategory, final String actionScope) {
+		Action newAction = new Action(actionOwner, ticket, ActionType.CHANGE_CATEGORY, ticket.getStatus(), actionScope,
 				actionMessage);
 		newAction.setCategoryBefore(ticket.getCategory());
 		newAction.setCategoryAfter(newCategory);
@@ -6742,20 +6555,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param newCategory
 	 * @return the action created
 	 */
-	protected Action changeDepartment(
-			final User actionOwner,
-			final Ticket ticket,
-			final String actionMessage,
-			final Department newDepartment,
-			final String actionScope,
-			final Category newCategory) {
-		Action newAction = new Action(
-				actionOwner,
-				ticket,
-				ActionType.CHANGE_DEPARTMENT,
-				ticket.getStatus(),
-				actionScope,
-				actionMessage);
+	protected Action changeDepartment(final User actionOwner, final Ticket ticket, final String actionMessage,
+			final Department newDepartment, final String actionScope, final Category newCategory) {
+		Action newAction = new Action(actionOwner, ticket, ActionType.CHANGE_DEPARTMENT, ticket.getStatus(),
+				actionScope, actionMessage);
 		newAction.setDepartmentBefore(ticket.getDepartment());
 		newAction.setDepartmentAfter(newDepartment);
 		newAction.setCategoryBefore(ticket.getCategory());
@@ -6768,39 +6571,46 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
+	 * @param actionOwner
+	 * @param ticket
+	 * @param actionMessage
+	 * @param newDepartment
+	 * @param actionScope
+	 * @param newCategory
+	 * @return the action created
+	 */
+	protected Action deleteFileInfo(final User actionOwner, final Ticket ticket, final String actionMessage,
+			final String actionScope) {
+		Action newAction = new Action(actionOwner, ticket, ActionType.DELETE_FILE_INFO, ticket.getStatus(), actionScope,
+				actionMessage);
+		addAction(newAction);
+		addActionToTicket(ticket, newAction);
+		return newAction;
+	}
+
+	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveTicket(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket,
-	 * org.esupportail.helpdesk.domain.beans.Category, java.lang.String, java.lang.String, boolean,
-	 * boolean, boolean, boolean)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket,
+	 *      org.esupportail.helpdesk.domain.beans.Category, java.lang.String,
+	 *      java.lang.String, boolean, boolean, boolean, boolean)
 	 */
 	@Override
-	public void moveTicket(
-			final User author,
-			final Ticket ticket,
-			final Category targetCategory,
-			final String message,
-			final String actionScope,
-			final boolean alerts,
-			final boolean free,
-			final boolean monitor,
+	public void moveTicket(final User author, final Ticket ticket, final Category targetCategory, final String message,
+			final String actionScope, final boolean alerts, final boolean free, final boolean monitor,
 			final boolean invite) {
 		Department targetDepartment = targetCategory.getDepartment();
-		if (!isDepartmentManager(targetDepartment, author)) {
-			if (monitor) {
-				setTicketMonitoring(author, ticket);
-			}
-			if (invite) {
-				invite(author, ticket, author, null, ActionScope.DEFAULT, alerts);
-			}
+		if (monitor) {
+			setTicketMonitoring(author, ticket);
+		}
+		if (invite) {
+			invite(author, ticket, author, null, ActionScope.DEFAULT, alerts);
 		}
 		Action action1 = null;
 		if (ticket.getDepartment().equals(targetDepartment)) {
-			action1 = changeCategory(
-					author, ticket, message, targetCategory, actionScope);
+			action1 = changeCategory(author, ticket, message, targetCategory, actionScope);
 		} else {
-			action1 = changeDepartment(
-					author, ticket, message, targetDepartment, actionScope,
-					targetCategory);
+			action1 = changeDepartment(author, ticket, message, targetDepartment, actionScope, targetCategory);
 		}
 		User oldManager = ticket.getManager();
 		Action action2 = null;
@@ -6821,15 +6631,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#moveTicket(
-	 * org.esupportail.helpdesk.domain.beans.Ticket, org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket,
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
-	public void moveTicket(
-			final Ticket ticket,
-			final Category targetCategory) {
-		moveTicket(
-				null, ticket, targetCategory, null,
-				ActionScope.DEFAULT, false, false, false, false);
+	public void moveTicket(final Ticket ticket, final Category targetCategory) {
+		moveTicket(null, ticket, targetCategory, null, ActionScope.DEFAULT, false, false, false, false);
 	}
 
 	/**
@@ -6865,11 +6672,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#sendTicketReport(
-	 * org.esupportail.helpdesk.domain.beans.DepartmentManager)
+	 *      org.esupportail.helpdesk.domain.beans.DepartmentManager)
 	 */
 	@Override
-	public void sendTicketReport(
-			final DepartmentManager manager) {
+	public void sendTicketReport(final DepartmentManager manager) {
 		ticketReporter.sendTicketReport(manager);
 	}
 
@@ -6889,13 +6695,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketPrintContent(
-	 * org.esupportail.helpdesk.domain.beans.User, org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.User,
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@RequestCache
-	public String getTicketPrintContent(
-			final User user,
-			final Ticket ticket) {
+	public String getTicketPrintContent(final User user, final Ticket ticket) {
 		return ticketPrinter.getTicketPrintContent(user, ticket);
 	}
 
@@ -6917,7 +6722,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getOldTicketTemplates(
-	 * org.esupportail.helpdesk.domain.beans.Category)
+	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -6928,7 +6733,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteOldTicketTemplate(
-	 * org.esupportail.helpdesk.domain.beans.OldTicketTemplate)
+	 *      org.esupportail.helpdesk.domain.beans.OldTicketTemplate)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -6939,7 +6744,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getOldFaqParts(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -6950,7 +6755,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteOldFaqPart(
-	 * org.esupportail.helpdesk.domain.beans.OldFaqPart)
+	 *      org.esupportail.helpdesk.domain.beans.OldFaqPart)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -6961,7 +6766,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getOldFaqEntries(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -6972,7 +6777,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getOldFaqEntries(
-	 * org.esupportail.helpdesk.domain.beans.OldFaqPart)
+	 *      org.esupportail.helpdesk.domain.beans.OldFaqPart)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -6983,7 +6788,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteOldFaqEntry(
-	 * org.esupportail.helpdesk.domain.beans.OldFaqEntry)
+	 *      org.esupportail.helpdesk.domain.beans.OldFaqEntry)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -6994,7 +6799,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketsConnectedToOldFaqPart(
-	 * org.esupportail.helpdesk.domain.beans.OldFaqPart)
+	 *      org.esupportail.helpdesk.domain.beans.OldFaqPart)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7005,7 +6810,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getTicketsConnectedToOldFaqEntry(
-	 * org.esupportail.helpdesk.domain.beans.OldFaqEntry)
+	 *      org.esupportail.helpdesk.domain.beans.OldFaqEntry)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7016,7 +6821,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getOrphenTickets(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7027,7 +6832,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#hasOrphenTickets(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7038,7 +6843,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getActionsConnectedToOldFaqEntry(
-	 * org.esupportail.helpdesk.domain.beans.OldFaqEntry)
+	 *      org.esupportail.helpdesk.domain.beans.OldFaqEntry)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7049,7 +6854,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getActionsConnectedToOldFaqPart(
-	 * org.esupportail.helpdesk.domain.beans.OldFaqPart)
+	 *      org.esupportail.helpdesk.domain.beans.OldFaqPart)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7059,14 +6864,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @see org.esupportail.helpdesk.domain.DomainService#getV2ActionsToUpgradeToV3(long, int)
+	 * @see org.esupportail.helpdesk.domain.DomainService#getV2ActionsToUpgradeToV3(long,
+	 *      int)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
 	@Deprecated
-	public List<Action> getV2ActionsToUpgradeToV3(
-			final long startIndex,
-			final int num) {
+	public List<Action> getV2ActionsToUpgradeToV3(final long startIndex, final int num) {
 		return daoService.getV2ActionsToUpgradeToV3(startIndex, num);
 	}
 
@@ -7082,16 +6886,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#migrateV2Invitation(
-	 * org.esupportail.helpdesk.domain.beans.Action)
+	 *      org.esupportail.helpdesk.domain.beans.Action)
 	 */
 	@Override
 	@Deprecated
-	public void migrateV2Invitation(
-            final Action action) {
+	public void migrateV2Invitation(final Action action) {
 		Ticket ticket = action.getTicket();
 		User owner = ticket.getOwner();
-		if (owner.equals(action.getUser())
-				|| isDepartmentManager(ticket.getDepartment(), action.getUser())) {
+		if (owner.equals(action.getUser()) || isDepartmentManager(ticket.getDepartment(), action.getUser())) {
 			User invitedUser = action.getInvitedUser();
 			if (!isInvited(invitedUser, ticket)) {
 				daoService.addInvitation(new Invitation(invitedUser, ticket));
@@ -7103,11 +6905,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		} else {
 			daoService.deleteAction(action);
 		}
-    }
+	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getOldFileInfoContent(
-	 * org.esupportail.helpdesk.domain.beans.OldFileInfo)
+	 *      org.esupportail.helpdesk.domain.beans.OldFileInfo)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7118,7 +6920,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteOldFileInfo(
-	 * org.esupportail.helpdesk.domain.beans.OldFileInfo)
+	 *      org.esupportail.helpdesk.domain.beans.OldFileInfo)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7149,12 +6951,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#migrateV2ArchivedInvitation(
-	 * org.esupportail.helpdesk.domain.beans.ArchivedAction)
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedAction)
 	 */
 	@Override
 	@Deprecated
-	public void migrateV2ArchivedInvitation(
-            final ArchivedAction archivedAction) {
+	public void migrateV2ArchivedInvitation(final ArchivedAction archivedAction) {
 		ArchivedTicket archivedTicket = archivedAction.getArchivedTicket();
 		User owner = archivedTicket.getOwner();
 		if (owner.equals(archivedAction.getUser())
@@ -7170,16 +6971,15 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		} else {
 			daoService.deleteArchivedAction(archivedAction);
 		}
-    }
+	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#upgradeTicketTo3d4d0(
-	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 *      org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
 	@Deprecated
-	public void upgradeTicketTo3d4d0(
-			final Ticket ticket) {
+	public void upgradeTicketTo3d4d0(final Ticket ticket) {
 		ticket.setChargeTime(null);
 		ticket.setClosureTime(null);
 		List<Action> actions = daoService.getActions(ticket, true);
@@ -7214,12 +7014,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#upgradeArchivedTicketTo3d4d0(
-	 * org.esupportail.helpdesk.domain.beans.ArchivedTicket)
+	 *      org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
 	@Override
 	@Deprecated
-	public void upgradeArchivedTicketTo3d4d0(
-			final ArchivedTicket archivedTicket) {
+	public void upgradeArchivedTicketTo3d4d0(final ArchivedTicket archivedTicket) {
 		archivedTicket.setChargeTime(null);
 		archivedTicket.setClosureTime(null);
 		List<ArchivedAction> archivedActions = daoService.getArchivedActions(archivedTicket, true);
@@ -7290,14 +7089,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @see org.esupportail.helpdesk.domain.DomainService#updateBeanSequence(String, String)
+	 * @see org.esupportail.helpdesk.domain.DomainService#updateBeanSequence(String,
+	 *      String)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
 	@Deprecated
-	public void updateBeanSequence(
-			final String beanName,
-			final String sequenceName) {
+	public void updateBeanSequence(final String beanName, final String sequenceName) {
 		daoService.updateBeanSequence(beanName, sequenceName);
 	}
 
@@ -7313,7 +7111,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addUser(
-	 * org.esupportail.helpdesk.domain.beans.User)
+	 *      org.esupportail.helpdesk.domain.beans.User)
 	 */
 	@Override
 	@Deprecated
@@ -7322,14 +7120,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @see org.esupportail.helpdesk.domain.DomainService#upgradeUserKeys(String, java.lang.String)
+	 * @see org.esupportail.helpdesk.domain.DomainService#upgradeUserKeys(String,
+	 *      java.lang.String)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
 	@Deprecated
-	public void upgradeUserKeys(
-			final String classname,
-			final String field) {
+	public void upgradeUserKeys(final String classname, final String field) {
 		daoService.upgradeUserKeys(classname, field);
 	}
 
@@ -7355,7 +7152,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addFaqContainer(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7363,16 +7160,17 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	public void addFaqContainer(final DeprecatedFaqContainer faqContainer) {
 		fckEditorCodeCleaner.removeMaliciousTags(faqContainer);
 		faqContainer.computeEffectiveScope(true);
-//		if (faqContainer.getParent() == null) {
-//			faqContainer.setOrder(daoService.getRootFaqContainersNumber(faqContainer.getDepartment()));
-//		} else {
-//			faqContainer.setOrder(daoService.getSubFaqContainersNumber(faqContainer.getParent()));
-//		}
+		// if (faqContainer.getParent() == null) {
+		// faqContainer.setOrder(daoService.getRootFaqContainersNumber(faqContainer.getDepartment()));
+		// } else {
+		// faqContainer.setOrder(daoService.getSubFaqContainersNumber(faqContainer.getParent()));
+		// }
 		daoService.addFaqContainer(faqContainer);
 	}
 
 	/**
 	 * Update the scope of the children of a FAQ container if needed.
+	 * 
 	 * @param faqContainer
 	 */
 	@SuppressWarnings("deprecation")
@@ -7389,7 +7187,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	/**
 	 * @param faqContainer
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateFaqContainer(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7406,40 +7204,42 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	/**
 	 * @param faqContainer
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteFaqContainer(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
 	@Deprecated
 	public void deleteFaqContainer(final DeprecatedFaqContainer faqContainer) {
 		daoService.deleteFaqContainer(faqContainer);
-//		this.daoService.addDeletedItem(new DeletedItem(indexIdProvider.getIndexId(faqContainer)));
-//		if (faqContainer.getParent() == null) {
-//			reorderFaqContainers(daoService.getRootFaqContainers(faqContainer.getDepartment()));
-//		} else {
-//			reorderFaqContainers(daoService.getSubFaqContainers(faqContainer.getParent()));
-//		}
+		// this.daoService.addDeletedItem(new
+		// DeletedItem(indexIdProvider.getIndexId(faqContainer)));
+		// if (faqContainer.getParent() == null) {
+		// reorderFaqContainers(daoService.getRootFaqContainers(faqContainer.getDepartment()));
+		// } else {
+		// reorderFaqContainers(daoService.getSubFaqContainers(faqContainer.getParent()));
+		// }
 	}
 
-//	/**
-//	 * Reorder a list of FAQ containers.
-//	 * @param faqContainers
-//	 */
-//	@SuppressWarnings("deprecation")
-//	protected void reorderFaqContainers(final List<DeprecatedFaqContainer> faqContainers) {
-//		int i = 0;
-//		for (DeprecatedFaqContainer faqContainer : faqContainers) {
-//			if (faqContainer.getOrder() != i) {
-//				faqContainer.setOrder(i);
-//				daoService.updateFaqContainer(faqContainer);
-//			}
-//			i++;
-//		}
-//	}
+	// /**
+	// * Reorder a list of FAQ containers.
+	// * @param faqContainers
+	// */
+	// @SuppressWarnings("deprecation")
+	// protected void reorderFaqContainers(final List<DeprecatedFaqContainer>
+	// faqContainers) {
+	// int i = 0;
+	// for (DeprecatedFaqContainer faqContainer : faqContainers) {
+	// if (faqContainer.getOrder() != i) {
+	// faqContainer.setOrder(i);
+	// daoService.updateFaqContainer(faqContainer);
+	// }
+	// i++;
+	// }
+	// }
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getRootFaqContainers(
-	 * org.esupportail.helpdesk.domain.beans.Department)
+	 *      org.esupportail.helpdesk.domain.beans.Department)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7460,7 +7260,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getSubFaqContainers(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7482,7 +7282,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqEntries(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqContainer)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7493,20 +7293,20 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addFaqEntry(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqEntry)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqEntry)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
 	@Deprecated
 	public void addFaqEntry(final DeprecatedFaqEntry faqEntry) {
 		faqEntry.computeEffectiveScope();
-//		faqEntry.setOrder(daoService.getFaqEntriesNumber(faqEntry.getParent()));
+		// faqEntry.setOrder(daoService.getFaqEntriesNumber(faqEntry.getParent()));
 		this.daoService.addFaqEntry(faqEntry);
 	}
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#updateFaqEntry(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqEntry)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqEntry)
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
@@ -7516,31 +7316,33 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		this.daoService.updateFaqEntry(faqEntry);
 	}
 
-//	/**
-//	 * Reorder a list of FAQ entries.
-//	 * @param faqContainer
-//	 */
-//	protected void reorderFaqEntries(final DeprecatedFaqContainer faqContainer) {
-//		int i = 0;
-//		for (DeprecatedFaqEntry faqEntry : getFaqEntries(faqContainer)) {
-//			if (faqEntry.getOrder() != i) {
-//				faqEntry.setOrder(i);
-//				daoService.updateFaqEntry(faqEntry);
-//			}
-//			i++;
-//		}
-//	}
+	// /**
+	// * Reorder a list of FAQ entries.
+	// * @param faqContainer
+	// */
+	// protected void reorderFaqEntries(final DeprecatedFaqContainer
+	// faqContainer) {
+	// int i = 0;
+	// for (DeprecatedFaqEntry faqEntry : getFaqEntries(faqContainer)) {
+	// if (faqEntry.getOrder() != i) {
+	// faqEntry.setOrder(i);
+	// daoService.updateFaqEntry(faqEntry);
+	// }
+	// i++;
+	// }
+	// }
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#deleteFaqEntry(
-	 * org.esupportail.helpdesk.domain.beans.DeprecatedFaqEntry)
+	 *      org.esupportail.helpdesk.domain.beans.DeprecatedFaqEntry)
 	 */
 	@Override
 	@Deprecated
 	public void deleteFaqEntry(final DeprecatedFaqEntry faqEntry) {
 		this.daoService.deleteFaqEntry(faqEntry);
-//		this.daoService.addDeletedItem(new DeletedItem(indexIdProvider.getIndexId(faqEntry)));
-//		reorderFaqEntries(faqEntry.getParent());
+		// this.daoService.addDeletedItem(new
+		// DeletedItem(indexIdProvider.getIndexId(faqEntry)));
+		// reorderFaqEntries(faqEntry.getParent());
 	}
 
 	/**
@@ -7585,15 +7387,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * Migrate a list of FAQ containers.
+	 * 
 	 * @param faqContainers
 	 * @param parent
 	 * @deprecated
 	 */
 	@SuppressWarnings("deprecation")
 	@Deprecated
-	protected void migrateFaqContainers(
-			final List<DeprecatedFaqContainer> faqContainers,
-			final Faq parent) {
+	protected void migrateFaqContainers(final List<DeprecatedFaqContainer> faqContainers, final Faq parent) {
 		for (DeprecatedFaqContainer faqContainer : faqContainers) {
 			Faq faq = new Faq(faqContainer, parent);
 			addFaq(faq);
@@ -7602,7 +7403,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			for (DeprecatedFaqEntry faqEntry : getFaqEntries(faqContainer)) {
 				Faq faq2 = new Faq(faqEntry, faq);
 				addFaq(faq2);
-				daoService.migrateFaqEntryRefs(faqEntry,  faq2);
+				daoService.migrateFaqEntryRefs(faqEntry, faq2);
 				deleteFaqEntry(faqEntry);
 			}
 			deleteFaqContainer(faqContainer);
@@ -7629,14 +7430,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param daoService the daoService to set
+	 * @param daoService
+	 *            the daoService to set
 	 */
 	public void setDaoService(final DaoService daoService) {
 		this.daoService = daoService;
 	}
 
 	/**
-	 * @param service the i18nService to set
+	 * @param service
+	 *            the i18nService to set
 	 */
 	public void setI18nService(final I18nService service) {
 		i18nService = service;
@@ -7650,7 +7453,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param applicationService the applicationService to set
+	 * @param applicationService
+	 *            the applicationService to set
 	 */
 	public void setApplicationService(final ApplicationService applicationService) {
 		this.applicationService = applicationService;
@@ -7678,10 +7482,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param departmentManagerConfigurator the departmentManagerConfigurator to set
+	 * @param departmentManagerConfigurator
+	 *            the departmentManagerConfigurator to set
 	 */
-	public void setDepartmentManagerConfigurator(
-			final DepartmentManagerConfigurator departmentManagerConfigurator) {
+	public void setDepartmentManagerConfigurator(final DepartmentManagerConfigurator departmentManagerConfigurator) {
 		this.departmentManagerConfigurator = departmentManagerConfigurator;
 	}
 
@@ -7693,10 +7497,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param departmentConfigurator the departmentConfigurator to set
+	 * @param departmentConfigurator
+	 *            the departmentConfigurator to set
 	 */
-	public void setDepartmentConfigurator(
-			final DepartmentConfigurator departmentConfigurator) {
+	public void setDepartmentConfigurator(final DepartmentConfigurator departmentConfigurator) {
 		this.departmentConfigurator = departmentConfigurator;
 	}
 
@@ -7708,14 +7512,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param indexIdProvider the indexIdProvider to set
+	 * @param indexIdProvider
+	 *            the indexIdProvider to set
 	 */
 	public void setIndexIdProvider(final IndexIdProvider indexIdProvider) {
 		this.indexIdProvider = indexIdProvider;
 	}
 
 	/**
-	 * @param userInfoProvider the userInfoProvider to set
+	 * @param userInfoProvider
+	 *            the userInfoProvider to set
 	 */
 	public void setUserInfoProvider(final UserInfoProvider userInfoProvider) {
 		this.userInfoProvider = userInfoProvider;
@@ -7736,7 +7542,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param departmentSelector the departmentSelector to set
+	 * @param departmentSelector
+	 *            the departmentSelector to set
 	 */
 	public void setDepartmentSelector(final DepartmentSelector departmentSelector) {
 		this.departmentSelector = departmentSelector;
@@ -7750,18 +7557,18 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param assignmentAlgorithmStore the assignmentAlgorithmStore to set
+	 * @param assignmentAlgorithmStore
+	 *            the assignmentAlgorithmStore to set
 	 */
-	public void setAssignmentAlgorithmStore(
-			final AssignmentAlgorithmStore assignmentAlgorithmStore) {
+	public void setAssignmentAlgorithmStore(final AssignmentAlgorithmStore assignmentAlgorithmStore) {
 		this.assignmentAlgorithmStore = assignmentAlgorithmStore;
 	}
 
 	/**
-	 * @param defaultAssignmentAlgorithmName the defaultAssignmentAlgorithmName to set
+	 * @param defaultAssignmentAlgorithmName
+	 *            the defaultAssignmentAlgorithmName to set
 	 */
-	public void setDefaultAssignmentAlgorithmName(
-			final String defaultAssignmentAlgorithmName) {
+	public void setDefaultAssignmentAlgorithmName(final String defaultAssignmentAlgorithmName) {
 		this.defaultAssignmentAlgorithmName = defaultAssignmentAlgorithmName;
 	}
 
@@ -7773,18 +7580,18 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param computerUrlBuilderStore the computerUrlBuilderStore to set
+	 * @param computerUrlBuilderStore
+	 *            the computerUrlBuilderStore to set
 	 */
-	public void setComputerUrlBuilderStore(
-			final ComputerUrlBuilderStore computerUrlBuilderStore) {
+	public void setComputerUrlBuilderStore(final ComputerUrlBuilderStore computerUrlBuilderStore) {
 		this.computerUrlBuilderStore = computerUrlBuilderStore;
 	}
 
 	/**
-	 * @param defaultComputerUrlBuilderName the defaultComputerUrlBuilderName to set
+	 * @param defaultComputerUrlBuilderName
+	 *            the defaultComputerUrlBuilderName to set
 	 */
-	public void setDefaultComputerUrlBuilderName(
-			final String defaultComputerUrlBuilderName) {
+	public void setDefaultComputerUrlBuilderName(final String defaultComputerUrlBuilderName) {
 		this.defaultComputerUrlBuilderName = defaultComputerUrlBuilderName;
 	}
 
@@ -7796,10 +7603,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param defaultControlPanelRefreshDelay the defaultControlPanelRefreshDelay to set
+	 * @param defaultControlPanelRefreshDelay
+	 *            the defaultControlPanelRefreshDelay to set
 	 */
-	public void setDefaultControlPanelRefreshDelay(
-			final Integer defaultControlPanelRefreshDelay) {
+	public void setDefaultControlPanelRefreshDelay(final Integer defaultControlPanelRefreshDelay) {
 		this.defaultControlPanelRefreshDelay = defaultControlPanelRefreshDelay;
 	}
 
@@ -7811,7 +7618,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param categoryConfigurator the categoryConfigurator to set
+	 * @param categoryConfigurator
+	 *            the categoryConfigurator to set
 	 */
 	public void setCategoryConfigurator(final CategoryConfigurator categoryConfigurator) {
 		this.categoryConfigurator = categoryConfigurator;
@@ -7825,7 +7633,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param historyMaxLength the historyMaxLength to set
+	 * @param historyMaxLength
+	 *            the historyMaxLength to set
 	 */
 	public void setHistoryMaxLength(final int historyMaxLength) {
 		this.historyMaxLength = historyMaxLength;
@@ -7839,14 +7648,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param fckEditorCodeCleaner the fckEditorCodeCleaner to set
+	 * @param fckEditorCodeCleaner
+	 *            the fckEditorCodeCleaner to set
 	 */
 	public void setFckEditorCodeCleaner(final FckEditorCodeCleaner fckEditorCodeCleaner) {
 		this.fckEditorCodeCleaner = fckEditorCodeCleaner;
 	}
 
 	/**
-	 * @param userStore the userStore to set
+	 * @param userStore
+	 *            the userStore to set
 	 */
 	public void setUserStore(final UserStore userStore) {
 		this.userStore = userStore;
@@ -7860,7 +7671,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param ticketPrinter the ticketPrinter to set
+	 * @param ticketPrinter
+	 *            the ticketPrinter to set
 	 */
 	public void setTicketPrinter(final TicketPrinter ticketPrinter) {
 		this.ticketPrinter = ticketPrinter;
@@ -7874,7 +7686,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param invitationSender the invitationSender to set
+	 * @param invitationSender
+	 *            the invitationSender to set
 	 */
 	public void setInvitationSender(final InvitationSender invitationSender) {
 		this.invitationSender = invitationSender;
@@ -7888,7 +7701,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param monitoringSender the monitoringSender to set
+	 * @param monitoringSender
+	 *            the monitoringSender to set
 	 */
 	public void setMonitoringSender(final MonitoringSender monitoringSender) {
 		this.monitoringSender = monitoringSender;
@@ -7902,7 +7716,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param ticketReporter the ticketReporter to set
+	 * @param ticketReporter
+	 *            the ticketReporter to set
 	 */
 	public void setTicketReporter(final TicketReporter ticketReporter) {
 		this.ticketReporter = ticketReporter;
@@ -7916,10 +7731,44 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	}
 
 	/**
-	 * @param faqReporter the faqReporter to set
+	 * @param faqReporter
+	 *            the faqReporter to set
 	 */
 	public void setFaqReporter(final FaqReporter faqReporter) {
 		this.faqReporter = faqReporter;
+	}
+
+	/**
+	 * @return the ticketCommentModification
+	 */
+	@Override
+	public boolean isTicketCommentModification() {
+		return ticketCommentModification;
+	}
+
+	/**
+	 * @param ticketCommentModification
+	 *            the ticketCommentModification to set
+	 */
+	public void setTicketCommentModification(boolean ticketCommentModification) {
+		this.ticketCommentModification = ticketCommentModification;
+	}
+	
+
+	public boolean isTryConvertMaillToCasUser() {
+		return tryConvertMaillToCasUser;
+	}
+
+	public void setTryConvertMaillToCasUser(boolean tryConvertMaillToCasUser) {
+		this.tryConvertMaillToCasUser = tryConvertMaillToCasUser;
+	}
+
+	public String getMailToConvertPattern() {
+		return mailToConvertPattern;
+	}
+
+	public void setMailToConvertPattern(String mailToConvertPattern) {
+		this.mailToConvertPattern = mailToConvertPattern;
 	}
 
 }

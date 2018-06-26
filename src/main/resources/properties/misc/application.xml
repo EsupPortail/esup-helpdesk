@@ -30,22 +30,22 @@
 	    		The name of the application.
 	    	</description>
     	</property>
-    	<property name="versionMajorNumber" value="3" >
+    	<property name="versionMajorNumber" value="4" >
 	    	<description>
 	    		The major number of the application (1 for version 1.2.3).
 	    	</description>
     	</property>
-    	<property name="versionMinorNumber" value="29" >
+    	<property name="versionMinorNumber" value="1" >
 	    	<description>
 	    		The minor number of the application (2 for version 1.2.3).
 	    	</description>
     	</property>
-    	<property name="versionUpdate" value="11" >
+    	<property name="versionUpdate" value="0" >
 	    	<description>
 	    		The update of the application (3 for version 1.2.3).
 	    	</description>
     	</property>
-    	<property name="copyright" value="Copyright (c) 2004-2011 ESUP-Portail consortium" >
+    	<property name="copyright" value="Copyright  2004-2011 ESUP-Portail consortium" >
 	    	<description>
 	    		The copyright.
 	    	</description>
@@ -60,11 +60,11 @@
 	    		The base URL where the latest version number should be found.
 	    	</description>
     	</property>
-    	<property name="quickStart" value="${quick-start}" />
-    	<property name="deployType" value="${deploy.type}" />
-    	<property name="databaseDriver" value="${hibernate.connection.driver_class}" />
-    	<property name="databaseDialect" value="${hibernate.dialect}" />
-    	<property name="databaseUseJndi" value="${hibernate.useJndi}" />
+    	<property name="quickStart" value="false" />
+    	<property name="deployType" value="servlet" />
+    	<property name="databaseDriver" value="com.mysql.jdbc.Driver" />
+    	<property name="databaseDialect" value="org.hibernate.dialect.MySQLInnoDBDialect" />
+    	<property name="databaseUseJndi" value="true" />
     </bean>
 
 </beans>

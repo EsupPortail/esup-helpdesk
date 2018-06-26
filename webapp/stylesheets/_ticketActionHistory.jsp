@@ -1,36 +1,24 @@
 <%@include file="_include.jsp"%>
 
-<t:htmlTag value="hr" />
-<e:subSection value="#{msgs['TICKET_ACTION.HISTORY.HEADER']} " >
-	<f:param value="#{ticketController.ticket.label}"/>
-</e:subSection>
-<h:panelGroup >
-	<e:italic value="#{msgs['TICKET_ACTION.HISTORY.QUOTE_HELP.1']} " />
-	<t:graphicImage value="/media/images/quote.png" />
-	<e:italic value="#{msgs['TICKET_ACTION.HISTORY.QUOTE_HELP.2']} " />
-</h:panelGroup>
-<e:dataTable columnClasses="colCenter,colLeft" id="actionData" width="100%" 
+<e:dataTable id="actionData" styleClass="history-container" width="100%"
 	value="#{ticketController.historyEntries}" rowIndexVar="variable" 
 	var="he" border="0" cellspacing="0" cellpadding="0">
-	<t:column>
-		<t:graphicImage value="/media/images/public.png" rendered="#{he.action.scope == 'DEFAULT'}" />
-		<t:graphicImage value="/media/images/protected.png" rendered="#{he.action.scope == 'OWNER'}" />
-		<t:graphicImage value="/media/images/private.png" rendered="#{he.action.scope == 'MANAGER'}" />
-		<h:panelGroup rendered="#{he.quotedMessage != null}">
-			<t:htmlTag value="br" />
-			<t:graphicImage value="/media/images/quote.png" style="cursor: pointer" onclick="javascript:{quoteAction#{he.action.id}();}" />
-		</h:panelGroup>
+
+
+	<t:column styleClass="col-main view--full">
+        <t:htmlTag styleClass="action--header" value="div">
+            		<h:outputText value="#{actionI18nTitleProvider[he.action]}" />
+        </t:htmlTag>
+        <t:htmlTag rendered="#{he.action.message != null && he.canView}" styleClass="action--content #{he.action.user == null and he.canView ? 'hideme' : ''}" value="div">
+            <t:htmlTag styleClass="action-message" value="div">
+                <h:outputText escape="false"  value="#{he.action.message}"/>
+            </t:htmlTag>
+            <h:panelGroup onclick="javascript:{quoteAction#{he.action.id}();}" rendered="#{he.quotedMessage != null}" styleClass="action--quote">
+                 <t:htmlTag style="cursor:pointer" value="i" styleClass="far fa-copy fa-2x"/>
+            </h:panelGroup>
+        </t:htmlTag>
 	</t:column>
-	<t:column>
-		<e:bold value="#{actionI18nTitleProvider[he.action]}" />
-		<h:panelGroup rendered="#{he.action.message != null}" >
-			<t:htmlTag value="br" />
-			<e:text 
-				escape="false"
-				rendered="#{he.canView}"
-				value="#{he.action.message}" />
-		</h:panelGroup>
-	</t:column>
+
 </e:dataTable>				
 
 <h:outputText value="<script type=&quot;text/javascript&quot;>" escape="false" />

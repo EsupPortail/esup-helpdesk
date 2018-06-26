@@ -12,6 +12,6 @@ public interface DomainServiceSettable {
 	 * Set the domain service, should be called before any other method.
 	 * @param domainService the domainService to set.
 	 */
-	void setDomainService(DomainService domainService);
+	void setDomainService(final DomainService domainService);
 
 }

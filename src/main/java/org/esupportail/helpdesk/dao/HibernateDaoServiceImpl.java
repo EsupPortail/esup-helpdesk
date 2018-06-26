@@ -667,12 +667,14 @@ implements DaoService {
 		if (department == null) {
 			return new ArrayList<DepartmentManager>();
 		}
-		DetachedCriteria criteria = DetachedCriteria.forClass(DepartmentManager.class);
-		criteria.addOrder(Order.asc(ORDER_ATTRIBUTE));
+		DetachedCriteria criteria = DetachedCriteria.forClass(DepartmentManager.class, "dm");
+		criteria.createAlias("dm.user", "use");
+		criteria.addOrder(Order.asc("use.displayName"));
+		
 		criteria.add(Restrictions.eq(DEPARTMENT_ATTRIBUTE, department));
 		return getHibernateTemplate().findByCriteria(criteria);
 	}
-
+	
 	/**
 	 * @see org.esupportail.helpdesk.dao.DaoService#getAvailableDepartmentManagers(
 	 * org.esupportail.helpdesk.domain.beans.Department)
@@ -1943,7 +1945,7 @@ implements DaoService {
 		logger.info("deleting uploaded data...");
 		this.fileManager.deleteAllContents();
 	}
-
+	
 	/** Eclipse outline delimiter. */
 	@SuppressWarnings("unused")
 	private void _______________ACTION() {
@@ -1973,6 +1975,24 @@ implements DaoService {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<Action> getActionsWithoutUpload(final Ticket ticket, final boolean dateAsc) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Action.class);
+		criteria.add(Restrictions.eq(TICKET_ATTRIBUTE, ticket));
+		criteria.add(Restrictions.ne(ACTION_TYPE_ATTRIBUTE, ActionType.UPLOAD));
+		if (dateAsc) {
+			criteria.addOrder(Order.asc(ID_ATTRIBUTE));
+		} else {
+			criteria.addOrder(Order.desc(ID_ATTRIBUTE));
+		}
+		return getHibernateTemplate().findByCriteria(criteria);
+	}
+
+	/**
+	 * @see org.esupportail.helpdesk.dao.DaoService#getActions(
+	 * org.esupportail.helpdesk.domain.beans.Ticket, boolean)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<Action> getActionsByActionType(final Ticket ticket, final String actionType, final boolean dateAsc) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(Action.class);
 		criteria.add(Restrictions.eq(TICKET_ATTRIBUTE, ticket));
@@ -1984,6 +2004,8 @@ implements DaoService {
 		}
 		return getHibernateTemplate().findByCriteria(criteria);
 	}
+
+
 	/**
 	 * @see org.esupportail.helpdesk.dao.DaoService#getActionsNumber(
 	 * org.esupportail.helpdesk.domain.beans.Ticket)
@@ -2011,6 +2033,21 @@ implements DaoService {
 		return actions.get(0);
 	}
 
+	/**
+	 * @see org.esupportail.helpdesk.dao.DaoService#getLastAction(
+	 * org.esupportail.helpdesk.domain.beans.Ticket)
+	 */
+	@Override
+	@RequestCache
+	public Action getLastActionWithoutUpload(final Ticket ticket) {
+		List<Action> actions = getActionsWithoutUpload(ticket, false);
+		if (actions.isEmpty()) {
+			return null;
+		}
+		return actions.get(0);
+	}
+
+	
 	/**
 	 * @see org.esupportail.helpdesk.dao.DaoService#getLastActionByActionType(
 	 * org.esupportail.helpdesk.domain.beans.Ticket)
@@ -2236,6 +2273,7 @@ implements DaoService {
 			deleteArchivedAction(archivedAction);
 		}
 		for (ArchivedFileInfo archivedFileInfo : getArchivedFileInfos(archivedTicket)) {
+			
 			deleteArchivedFileInfo(archivedFileInfo);
 			this.fileManager.deleteArchivedFileInfoContent(archivedFileInfo);
 		}
@@ -2248,6 +2286,7 @@ implements DaoService {
 		executeUpdate(HqlUtils.deleteWhere(
 				HistoryItem.class.getSimpleName() + " hi",
 				HqlUtils.equals("hi.archivedTicket.id", archivedTicket.getId())));
+        
 		executeUpdate(HqlUtils.updateWhere(
                 Ticket.class.getSimpleName() + " t",
                 "t.connectionArchivedTicket = NULL",
@@ -2260,6 +2299,8 @@ implements DaoService {
 		executeUpdate(HqlUtils.deleteWhere(
 				ArchivedTicket.class.getSimpleName() + " a",
 				HqlUtils.equals("a.id", archivedTicket.getId())));
+
+		
 	}
 
 	/**
@@ -2387,6 +2428,7 @@ implements DaoService {
 	public void deleteArchivedAction(final ArchivedAction archivedAction) {
 		deleteObject(archivedAction);
 	}
+
 	/**
 	 * @see org.esupportail.helpdesk.dao.DaoService#getArchivedTicketsOlderThan(Date)
 	 */
@@ -2401,6 +2443,7 @@ implements DaoService {
 		return getHibernateTemplate().findByCriteria(criteria);
 		
 	}
+
 
 	/**
 	 * @see org.esupportail.helpdesk.dao.DaoService#getArchivedActions(long, int)

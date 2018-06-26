@@ -123,6 +123,7 @@ function selectTicket(index) {
 					</h:panelGroup>
 				</f:facet>
 				<t:graphicImage value="/media/images/public.png" rendered="#{action.ticket.effectiveScope == 'PUBLIC'}" />
+				<t:graphicImage value="/media/images/public.png" rendered="#{action.ticket.effectiveScope == 'CAS'}" />
 				<t:graphicImage value="/media/images/protected.png" rendered="#{action.ticket.effectiveScope == 'SUBJECT_ONLY'}" />
 				<t:graphicImage value="/media/images/private.png" rendered="#{action.ticket.effectiveScope == 'PRIVATE'}" />
 				<e:text value=" #{msgs['JOURNAL.TEXT.TICKET']}" >
@@ -143,6 +144,7 @@ function selectTicket(index) {
 				</f:facet>
 				<t:graphicImage value="/media/images/public.png" rendered="#{action.scope == 'DEFAULT'}" />
 				<t:graphicImage value="/media/images/invited.png" rendered="#{action.scope == 'INVITED'}" />
+				<t:graphicImage value="/media/images/invited.png" rendered="#{action.scope == 'INVITED_MANAGER'}" />
 				<t:graphicImage value="/media/images/protected.png" rendered="#{action.scope == 'OWNER'}" />
 				<t:graphicImage value="/media/images/private.png" rendered="#{action.scope == 'MANAGER'}" />
 				<e:bold value=" #{actionI18nTitleProvider[action]}" />

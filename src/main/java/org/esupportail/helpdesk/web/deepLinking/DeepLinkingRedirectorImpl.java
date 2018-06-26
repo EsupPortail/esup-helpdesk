@@ -378,6 +378,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 					addErrorMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND",
 							departmentId.toString());
 				}
+				//evolution : on passe le département pour filtrer le nodetree sur ce dernier
+				ticketController.setFilteredTree(ticketController.addTreeFiltered(department));
 			}
 		}
 		Category category = null;
@@ -411,6 +413,9 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 				ticketController.setAddTargetCategory(category);
 				ticketController.setAddTargetDepartment(category.getDepartment());
 				ticketController.addChooseCategory();
+			} 
+			if (params.get(DEPARTMENT_ID_PARAM) != null) {
+				ticketController.setAddTargetDepartment(department);
 			}
 		}
 		return "/stylesheets/ticketAdd.jsp";

@@ -44,7 +44,7 @@ public class ControlPanelColumnOrderer extends HashMap<Integer, String> {
 	 */
 	private static final String [] DEFAULT_COLUMNS = {
 		"ID",
-		"CREATION_DATE_TIME",
+		"CHANGE_DATE",
 		"DEPARTMENT",
 		"CATEGORY",
 		"LABEL",

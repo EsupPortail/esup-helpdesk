@@ -11,8 +11,8 @@
 				var="subFaq" rowIndexVar="index" rowCountVar="total"
 				rendered="#{not empty faqsController.subFaqs}" >
 				<t:column>
-					<h:panelGroup style="cursor: pointer; white-space: nowrap" onclick="simulateLinkClick('faqsForm:subFaqData:#{index}:selectFaq');">
-						<t:graphicImage value="/media/images/faq#{faqHasChildrenHelper[subFaq]?'-container':''}.png" />
+					<h:panelGroup style="display:none ; cursor: pointer; white-space: nowrap" onclick="simulateLinkClick('faqsForm:subFaqData:#{index}:selectFaq');">
+						<t:graphicImage  value="/media/images/faq#{faqHasChildrenHelper[subFaq]?'-container':''}.png" />
 						<e:text value=" #{subFaq.label}" />
 					</h:panelGroup>
 					<e:commandButton value="->" id="selectFaq" style="display: none" immediate="true" >

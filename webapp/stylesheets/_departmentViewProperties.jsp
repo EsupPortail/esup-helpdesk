@@ -66,14 +66,28 @@
 	<e:outputLabel for="redirection"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION']}" />
 	<h:panelGroup>
-		<e:text 
-			value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION_VALUE']}" 
-			rendered="#{departmentsController.department.virtual}" >
-			<f:param value="#{departmentsController.department.realDepartment.label}" />
+		<t:graphicImage value="/media/images/redirection.png" rendered="#{departmentsController.department.virtual}"/>
+		<e:text
+			value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION_VALUE']}"
+			rendered="#{departmentsController.department.virtual}">
+			<f:param
+				value="#{departmentsController.department.realDepartment.label}" />
 		</e:text>
-		<e:italic 
-			value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION_NONE']}" 
-			rendered="#{not departmentsController.department.virtual}" />
+		<h:panelGroup
+			rendered="#{not empty departmentsController.virtualDepartments}">
+			<t:dataList value="#{departmentsController.virtualDepartments}"
+				var="virtualDepartment" rowIndexVar="virtualDepartmentIndex">
+				<t:htmlTag value="br" />
+				<t:graphicImage value="/media/images/redirection-inverted.png" />
+				<e:text
+					value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION_VALUE_INVERTED']}">
+					<f:param value="#{virtualDepartment.label}" />
+				</e:text>
+			</t:dataList>
+		</h:panelGroup>
+		<e:italic
+			value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION_NONE']}"
+			rendered="#{not departmentsController.department.virtual and empty departmentsController.virtualDepartments}" />
 	</h:panelGroup>
 	<e:outputLabel for="defaultTicketScope"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.DEFAULT_TICKET_SCOPE']}" 
@@ -90,6 +104,12 @@
 			value=" #{msgs[ticketScopeI18nKeyProvider[departmentsController.department.defaultTicketScope]]}"
 			rendered="#{departmentsController.department.defaultTicketScope != 'DEFAULT'}" />
 	</h:panelGroup>
+	<e:outputLabel for="visibilityInterSrv"
+		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.VISIBILITE_INTER_SRV']}" />
+	<e:text value=" #{departmentsController.department.visibilityInterSrv}" id="visibilityInterSrv"/>	
+	<e:outputLabel for="srvAnonymous"
+		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS']}" />
+	<e:text value=" #{departmentsController.department.srvAnonymous ? msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_TRUE'] : msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_FALSE']}" id="srvAnonymous"/>	
 	<e:outputLabel for="defaultTicketLabel"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.DEFAULT_TICKET_LABEL']}" 
 		rendered="#{not departmentsController.department.virtual}" />

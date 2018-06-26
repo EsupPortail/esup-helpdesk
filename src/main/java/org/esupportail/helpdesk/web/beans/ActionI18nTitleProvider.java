@@ -57,7 +57,7 @@ extends HashMap<String, String> implements InitializingBean {
 	 */
 	@Override
 	public String get(final Object action) {
-		return actionI18nTitleFormatter.getActionTitle((Action) action, sessionController.getLocale());
+		return actionI18nTitleFormatter.getActionTitle((Action) action, sessionController.getLocale(), sessionController.getCurrentUser());
 	}
 
 	/**

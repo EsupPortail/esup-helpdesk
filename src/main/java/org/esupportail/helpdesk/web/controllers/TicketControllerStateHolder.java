@@ -14,11 +14,13 @@ import javax.faces.model.SelectItem;
 import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.utils.Assert;
 import org.esupportail.commons.utils.strings.StringUtils;
+import org.esupportail.helpdesk.domain.ActionType;
 import org.esupportail.helpdesk.domain.TicketExtractor;
 import org.esupportail.helpdesk.domain.TicketNavigation;
 import org.esupportail.helpdesk.domain.TicketNavigator;
 import org.esupportail.helpdesk.domain.beans.Action;
 import org.esupportail.helpdesk.domain.beans.Bookmark;
+import org.esupportail.helpdesk.domain.beans.Category;
 import org.esupportail.helpdesk.domain.beans.Department;
 import org.esupportail.helpdesk.domain.beans.DepartmentManager;
 import org.esupportail.helpdesk.domain.beans.FileInfo;
@@ -60,6 +62,7 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 	private static final Comparator<DepartmentManager> MANAGER_ORDER_COMPARATOR =
 		new DepartmentManagerOrderComparator();
 
+	private DepartmentsController departementController;
     /**
      * The current ticket.
      */
@@ -360,6 +363,7 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 		for (Action action : getDomainService().getActions(ticket)) {
 			historyEntries.add(new TicketHistoryEntry(
 					action,
+					isCanUpdateInformation(ticket, action),
 					getDomainService().userCanViewActionMessage(
 							getCurrentUser(), invited, action),
 					getDomainService().userCanChangeActionScope(
@@ -391,6 +395,36 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 		return fileInfoEntries;
 	}
 
+	
+	
+	public boolean isCanUpdateInformation(Ticket ticket, Action action){
+		//Récupération du paramètre en configuration qui propose ou non le service de modification des commentaires
+		if(getDomainService().isTicketCommentModification() == false){
+			return false;
+		}
+		//cas des admins : ils ont accès a tous les commentaires
+		if(getCurrentUser().getAdmin()){
+			if (action.getUser() != null){
+				return true;
+			}
+		//pour les getsionnaires de service : ils ont accès a tous les commentaires de leur service
+		}  else if (getDomainService().userCanEditDepartmentManagers(getCurrentUser(), ticket.getDepartment())){
+			if (action.getUser() != null){
+				return true;
+			}
+		//pour les autres : le commentaire de la dernière action est modification
+		}else {
+		
+			Action lastAction = getDomainService().getLastActionWithoutUpload(ticket);
+			if(lastAction.getId() == action.getId()) {
+				if(lastAction.getUser() != null && lastAction.getUser().getId().equals(getCurrentUser().getId()) && action.getUser() != null){
+					return true;
+				 }
+			 }
+		}
+		return false;
+	}
+
 	/**
 	 * @return the fileInfoEntriesNumber
 	 */
@@ -411,7 +445,7 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 		if (ticket == null) {
 			return null;
 		}
-		String signature = userFormattingService.format(getCurrentUser(), getLocale());
+		String signature = userFormattingService.format(getCurrentUser(), getTicket().getAnonymous(), getLocale(), getCurrentUser());
 		List<ResponseEntry> responseEntries = new ArrayList<ResponseEntry>();
 		for (Response response : getDomainService().getUserResponses(getCurrentUser())) {
 			responseEntries.add(new ResponseEntry(response, signature));
@@ -593,6 +627,17 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 	}
 
 	/**
+	 * @return the userCanDeleteFileInfo
+	 */
+	@RequestCache
+	public boolean isUserCanDeleteFileInfo() {
+		if (ticket == null) {
+			return false;
+		}
+		return getDomainService().userCanDeleteFileInfo(getCurrentUser(), ticket);
+	}
+
+	/**
 	 * @return the userCanCancel
 	 */
 	@RequestCache
@@ -691,6 +736,7 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 		return getDomainService().userCanMove(getCurrentUser(), ticket);
 	}
 
+
 	/**
 	 * @return the userCanMoveBackCategorie
 	 */
@@ -701,6 +747,7 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 		}
 		return getDomainService().userCanMoveBack(getCurrentUser(), ticket);
 	}
+
 	/**
 	 * @return the userCanTake
 	 */
@@ -1160,6 +1207,25 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 		}
 		return ownerInfo;
 	}
+
+	private String addLabelCategoryPatent(Category categorie, String labelCategories){
+		if(categorie.getParent() != null){
+			labelCategories = labelCategories.concat(" -> " + categorie.getParent().getLabel());
+			labelCategories = addLabelCategoryPatent(categorie.getParent(), labelCategories);
+		}
+		return labelCategories;
+		
+	}
+
+	/**
+	 * @return the ownerInfo
+	 */
+	@RequestCache
+	public String getLabelCategories() {
+		String labelCategories = "";
+		return addLabelCategoryPatent(getTicket().getCategory(), labelCategories);
+	}
+
 
 	/**
 	 * @return the managerInfo

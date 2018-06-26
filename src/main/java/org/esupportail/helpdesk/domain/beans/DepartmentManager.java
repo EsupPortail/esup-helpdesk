@@ -10,7 +10,7 @@ import org.esupportail.commons.utils.strings.StringUtils;
 
 /**
  * A class to store department managers. */
-public class DepartmentManager implements Serializable {
+public class DepartmentManager implements Serializable, Comparable<DepartmentManager> {
 
 	/**
 	 * a constant for ticket monitoring.
@@ -67,6 +67,28 @@ public class DepartmentManager implements Serializable {
 	 */
 	public static final String REPORT_MFCO = "MFCO";
 
+	/**
+	 * a constant for reports.
+	 */
+	public static final String REPORT_F = "F";
+	
+
+	/**
+	 * a constant for reports.
+	 */
+	public static final String REPORT_FM = "FM";
+	
+	/**
+	 * a constant for reports.
+	 */
+	public static final String REPORT_FMC = "FMC";
+	
+	/**
+	 * a constant for reports.
+	 */
+	public static final String REPORT_FMCO = "FMCO";
+	
+	
 	/**
 	 * The minimum rate.
 	 */
@@ -711,6 +733,12 @@ public class DepartmentManager implements Serializable {
 	 */
 	public void setReportWeekend(final Boolean reportWeekend) {
 		this.reportWeekend = reportWeekend;
+	}
+
+	@Override
+	public int compareTo(DepartmentManager departmentManager) {
+		// TODO Auto-generated method stub
+		return this.user.getDisplayName().compareTo(departmentManager.getUser().getDisplayName());
 	}
 
 }

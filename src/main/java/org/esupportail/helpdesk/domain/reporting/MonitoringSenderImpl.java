@@ -214,6 +214,7 @@ public class MonitoringSenderImpl extends AbstractAlertSender implements Monitor
 		boolean cancelAction = false;
 		boolean requestInformationAction = false;
 		boolean giveInformationAction = false;
+		boolean deleteFileInfo = false;
 		boolean closeAction = false;
 		boolean approveClosureAction = false;
 		boolean refuseClosureAction = false;
@@ -250,6 +251,8 @@ public class MonitoringSenderImpl extends AbstractAlertSender implements Monitor
 				closeAction = true;
 			} else if (ActionType.APPROVE_CLOSURE.equals(act.getActionType())) {
 				approveClosureAction = true;
+			} else if (ActionType.DELETE_FILE_INFO.equals(act.getActionType())) {
+				deleteFileInfo = true;
 			} else if (ActionType.REFUSE_CLOSURE.equals(act.getActionType())) {
 				refuseClosureAction = true;
 			} else if (ActionType.EXPIRE.equals(act.getActionType())) {
@@ -297,6 +300,8 @@ public class MonitoringSenderImpl extends AbstractAlertSender implements Monitor
 			subjectKey = "EMAIL.TICKET.MONITORING.SUBJECT.GIVE_INFORMATION";
 		} else if (inviteAction) {
 			subjectKey = "EMAIL.TICKET.MONITORING.SUBJECT.INVITE";
+		} else if (deleteFileInfo) {
+			subjectKey = "EMAIL.TICKET.MONITORING.SUBJECT.DELETE_FILE_INFO";
 		} else {
 			subjectKey = "EMAIL.TICKET.MONITORING.SUBJECT";
 		}

@@ -46,6 +46,10 @@ public abstract class AbstractTicketInfo implements Serializable {
 	 */
 	protected AbstractTicketInfo() {
 		this.date = new java.sql.Timestamp(new Date().getTime());
+		//suppression des millisecondes car entraine un bug 
+		//lorsque l'on regarde si l'heure de dernière action du ticket est = au ticket courant afin de vérifier qu'une autre action n'a pas été réalisée en //, 
+		//les secondes sont différentes car il y a un arrondi fait pour les données stockées en base
+		this.date.setNanos(0);
 	}
 	
 	/**

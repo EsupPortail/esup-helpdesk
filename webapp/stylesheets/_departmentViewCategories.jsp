@@ -37,10 +37,16 @@
 			</h:panelGroup>
 			<h:panelGroup rendered="#{not empty node.virtualCategories}" >
 				<e:italic value=" " />
-				<t:graphicImage value="/media/images/redirection-inverted.png" />
-				<e:italic value=" #{msgs['DEPARTMENT_VIEW.CATEGORIES.VIRTUAL_CATEGORIES_NUMBER']}" >
-					<f:param value="#{node.virtualCategoriesNumber}" />
-				</e:italic>
+				<t:dataList value="#{node.virtualCategories}" var="virtualCategory" 
+					rowIndexVar="virtualCategoryIndex">
+					<t:htmlTag value="br" rendered="#{virtualCategoryIndex != 0}" />
+					<t:graphicImage value="/media/images/category-trans.png" />
+					<t:graphicImage value="/media/images/redirection-inverted.png" />
+					<e:italic value=" #{msgs['CATEGORIES.TEXT.VIRTUAL_CATEGORY']}" >
+						<f:param value="#{virtualCategory.department.label}" />
+						<f:param value="#{virtualCategory.label}" />
+					</e:italic>
+				</t:dataList>
 			</h:panelGroup>
 		</h:panelGroup>
 	</f:facet>

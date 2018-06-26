@@ -483,7 +483,7 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.Indexer#unlockIndex()
 	 */
-	@Override
+@Override
 	public void unlockIndex() {
 		logger.info("unlocking the index...");
 		if (!isIndexLocked()) {
@@ -960,7 +960,7 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 	 * java.lang.String, java.lang.String, java.lang.String, int, boolean,
 	 * java.sql.Timestamp, java.sql.Timestamp)
 	 */
-	@Override
+@Override
 	public SearchResults search(
 			final User user,
 			final InetAddress client,
@@ -1006,7 +1006,7 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.Indexer#getDocumentsNumber()
 	 */
-	@Override
+@Override
 	public int getDocumentsNumber() {
 		int result = -1;
 		try {
@@ -1078,7 +1078,7 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.Indexer#getTicketsNumber()
 	 */
-	@Override
+@Override
 	public int getTicketsNumber() {
 		return getDocTypeHitsNumber(TICKET_INDEX_DOCTYPE);
 	}
@@ -1086,7 +1086,7 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.Indexer#getArchivedTicketsNumber()
 	 */
-	@Override
+@Override
 	public int getArchivedTicketsNumber() {
 		return getDocTypeHitsNumber(ARCHIVED_TICKET_INDEX_DOCTYPE);
 	}
@@ -1094,7 +1094,7 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.Indexer#getFaqsNumber()
 	 */
-	@Override
+@Override
 	public int getFaqsNumber() {
 		return getDocTypeHitsNumber(FAQ_INDEX_DOCTYPE);
 	}

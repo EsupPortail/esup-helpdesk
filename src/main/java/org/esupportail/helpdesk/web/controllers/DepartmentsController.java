@@ -245,6 +245,11 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	private List<DepartmentManager> inheritedMembers;
 
 	/**
+	 * The inherited category members.
+	 */
+	private List<DepartmentManager> departmentManagers;
+
+	/**
 	 * The user to add as a category member.
 	 */
 	private User memberToAdd;
@@ -389,6 +394,7 @@ public class DepartmentsController extends AbstractContextAwareController implem
 		members = null;
 		notMembers = null;
 		inheritedMembers = null;
+		departmentManagers = null;
 		memberToAdd = null;
 		memberToDelete = null;
 		memberToMove = null;
@@ -494,6 +500,7 @@ public class DepartmentsController extends AbstractContextAwareController implem
 		addScopeItem(scopeItems, TicketScope.PUBLIC);
 		addScopeItem(scopeItems, TicketScope.PRIVATE);
 		addScopeItem(scopeItems, TicketScope.SUBJECT_ONLY);
+		addScopeItem(scopeItems, TicketScope.CAS);
 		return scopeItems;
 	}
 
@@ -656,6 +663,23 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	}
 
 	/**
+	 * @return list of virtual links Departments
+	 */
+	@RequestCache
+	public List<Department> getVirtualDepartments() {
+		return getDomainService().getVirtualDepartments(department);
+	}
+
+	/**
+	 * @return list of virtual links Caterories
+	 */
+	
+	@RequestCache
+	public List<Category> getVirtualCategories() {
+		return getDomainService().getVirtualCategories(department);
+	}
+
+	/**
 	 * @return true if the current user can manage departments
 	 */
 	@RequestCache
@@ -717,6 +741,13 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	@RequestCache
 	public boolean isCurrentUserCanSetAvailability() {
 		return getDomainService().userCanSetAvailability(getCurrentUser(), departmentManagerToUpdate);
+	}
+	/**
+	 * @return true if the current user is a department manager
+	 */
+	@RequestCache
+	public boolean isCurrentUserIsManager() {
+		return getDomainService().isDepartmentManager(getCurrentUser());
 	}
 
 	/**
@@ -972,6 +1003,13 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	 * @return the members of the current department.
 	 */
 	public List<DepartmentManager> getManagers() {
+		return getDomainService().getDepartmentManagers(department);
+	}
+	
+	/**
+	 * @return the members of the current department.
+	 */
+	public List<DepartmentManager> getDepartmentManagers() {
 		return getDomainService().getDepartmentManagers(department);
 	}
 

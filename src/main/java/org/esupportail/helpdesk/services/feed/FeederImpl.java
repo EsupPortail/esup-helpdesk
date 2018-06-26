@@ -33,7 +33,6 @@ public class FeederImpl implements InitializingBean, Feeder {
 	/**
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
-	@Override
 	public void afterPropertiesSet() {
 		//
 	}
@@ -42,7 +41,6 @@ public class FeederImpl implements InitializingBean, Feeder {
 	 * @see org.esupportail.helpdesk.services.feed.Feeder#feed(
 	 * org.esupportail.helpdesk.services.feed.ErrorHolder)
 	 */
-	@Override
 	public boolean feed(final ErrorHolder errorHolder) {
 		if (mailReaders == null || mailReaders.isEmpty()) {
 			errorHolder.addError("no reader set, exiting");

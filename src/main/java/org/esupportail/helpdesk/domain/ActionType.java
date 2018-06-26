@@ -26,6 +26,8 @@ public abstract class ActionType {
 	/** Action type value. */
     public static final String GIVE_INFORMATION = "GIVE_INFORMATION";
 	/** Action type value. */
+    public static final String DELETE_FILE_INFO = "DELETE_FILE_INFO";
+	/** Action type value. */
     public static final String CLOSE = "CLOSE";
 	/** Action type value. */
     public static final String APPROVE_CLOSURE = "APPROVE";

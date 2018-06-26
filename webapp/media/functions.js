@@ -139,6 +139,43 @@ function showHideElement(id){
       alert("element [" + id + "] not found");
 }
 
+
+/*
+ * Show an element.
+ */
+function showHideMultipleElements(idList){
+    alert(idList);
+
+    //var ids = idList.split(",") + '';
+
+    idList.forEach(function(element) {
+
+        var element = document.getElementById(element);
+        if (element != null) {
+            if (element.style.display == "none") {
+                element.style.display = "block";
+            } else {
+                element.style.display = "none";
+            }
+        } else if (debug)
+            alert("element [" + id + "] not found");
+    });
+}
+
+/*
+ * Show an element.
+ */
+function showHideElementDisplay(id, display){
+	var element = document.getElementById(id);
+	if (element != null) {
+	  if (element.style.display == "none") {
+  	    element.style.display = display;
+  	  } else {
+  	    element.style.display = "none";
+  	  }
+	} else if (debug) 
+      alert("element [" + id + "] not found");
+}
 /*
  * Hide elements in a table.
  */

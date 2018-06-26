@@ -1,9 +1,9 @@
 <%@include file="_include.jsp"%>
 <%@ taglib prefix="fck" uri="http://www.fck-faces.org/fck-faces"%>
-<h:panelGroup rendered="#{faqsController.faq != null}" >
-	<e:subSection value="#{faqsController.faq.label}" />
+<h:panelGroup styleClass="faq" rendered="#{faqsController.faq != null}" >
+	<e:subSection styleClass="faq-header" value="#{faqsController.faq.label}" />
 	<e:text escape="false" value="#{faqsController.faq.content}" rendered="#{not (faqsController.userCanEdit and faqsController.editInterface)}" />
-	<h:panelGroup rendered="#{faqsController.userCanEdit and faqsController.editInterface}" >
+	<h:panelGroup styleClass="faq-content" rendered="#{faqsController.userCanEdit and faqsController.editInterface}" >
 		<e:outputLabel for="faqTitle" value="#{msgs['FAQS.TEXT.FAQ_LABEL_PROMPT']} " />
 		<e:inputText id="faqTitle" size="80" value="#{faqsController.faqToUpdate.label}" />
 		<fck:editor

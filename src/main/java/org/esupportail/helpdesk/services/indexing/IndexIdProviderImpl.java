@@ -43,7 +43,7 @@ public class IndexIdProviderImpl implements IndexIdProvider {
 	 * @see org.esupportail.helpdesk.services.indexing.IndexIdProvider#getIndexId(
 	 * org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
-	@Override
+@Override
 	public String getIndexId(final Ticket ticket) {
 		return TICKET_INDEX_PREFIX + ticket.getId();
 	}
@@ -52,7 +52,7 @@ public class IndexIdProviderImpl implements IndexIdProvider {
 	 * @see org.esupportail.helpdesk.services.indexing.IndexIdProvider#getIndexId(
 	 * org.esupportail.helpdesk.domain.beans.Faq)
 	 */
-	@Override
+@Override
 	public String getIndexId(final Faq faq) {
 		return FAQ_INDEX_PREFIX + faq.getId();
 	}
@@ -61,7 +61,7 @@ public class IndexIdProviderImpl implements IndexIdProvider {
 	 * @see org.esupportail.helpdesk.services.indexing.IndexIdProvider#getIndexId(
 	 * org.esupportail.helpdesk.domain.beans.ArchivedTicket)
 	 */
-	@Override
+@Override
 	public String getIndexId(final ArchivedTicket archivedTicket) {
 		return ARCHIVED_TICKET_INDEX_PREFIX + archivedTicket.getId();
 	}
@@ -83,7 +83,7 @@ public class IndexIdProviderImpl implements IndexIdProvider {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.IndexIdProvider#isTicketIndexId(java.lang.String)
 	 */
-	@Override
+@Override
 	public boolean isTicketIndexId(final String indexId) {
 		return isObjectIndexId(indexId, TICKET_INDEX_PREFIX);
 	}
@@ -91,7 +91,7 @@ public class IndexIdProviderImpl implements IndexIdProvider {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.IndexIdProvider#isFaqIndexId(java.lang.String)
 	 */
-	@Override
+@Override
 	public boolean isFaqIndexId(final String indexId) {
 		return isObjectIndexId(indexId, FAQ_INDEX_PREFIX);
 	}
@@ -99,7 +99,7 @@ public class IndexIdProviderImpl implements IndexIdProvider {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.IndexIdProvider#isArchivedTicketIndexId(java.lang.String)
 	 */
-	@Override
+@Override
 	public boolean isArchivedTicketIndexId(final String indexId) {
 		return isObjectIndexId(indexId, ARCHIVED_TICKET_INDEX_PREFIX);
 	}
@@ -120,7 +120,7 @@ public class IndexIdProviderImpl implements IndexIdProvider {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.IndexIdProvider#getTicketIndexId(java.lang.String)
 	 */
-	@Override
+@Override
 	public long getTicketIndexId(final String indexId) {
 		return getObjectIndexId(indexId);
 	}
@@ -128,7 +128,7 @@ public class IndexIdProviderImpl implements IndexIdProvider {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.IndexIdProvider#getFaqIndexId(java.lang.String)
 	 */
-	@Override
+@Override
 	public long getFaqIndexId(final String indexId) {
 		return getObjectIndexId(indexId);
 	}
@@ -136,7 +136,6 @@ public class IndexIdProviderImpl implements IndexIdProvider {
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.IndexIdProvider#getArchivedTicketIndexId(java.lang.String)
 	 */
-	@Override
 	public long getArchivedTicketIndexId(final String indexId) {
 		return getObjectIndexId(indexId);
 	}

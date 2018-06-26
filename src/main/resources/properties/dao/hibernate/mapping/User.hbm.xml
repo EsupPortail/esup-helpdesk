@@ -19,6 +19,7 @@
 		<property name="language" column="lang" />
         <many-to-one name="controlPanelUserDepartmentFilter" column="cont_pane_depa_filt" fetch="join"/> <!-- JOIN-->
         <many-to-one name="controlPanelManagerDepartmentFilter" column="cont_pane_mana_depa_filt" fetch="join"/> <!-- JOIN-->
+        <property name="controlPanelManagerManagerFilter" column="cont_pane_mana_mana_filt" />
         <property name="controlPanelUserStatusFilter" column="cont_pane_stat_filt2" />
         <property name="controlPanelManagerStatusFilter" column="cont_pane_mana_stat_filt" />
 		<property name="controlPanelUserInvolvementFilter" column="cont_pane_invo_filt2" />

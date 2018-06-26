@@ -290,7 +290,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 			imageName = "private";
 		} else if (scope.equals(TicketScope.SUBJECT_ONLY)) {
 			imageName = "protected";
-		} else { // PUBLIC
+		} else { // PUBLIC et CAS
 			imageName = "public";
 		}
 		return urlGenerator.getImageUrl("images/" + imageName + ".png");
@@ -318,7 +318,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 		for (Action action : getDomainService().getActions(ticket)) {
 			String trClass = alternateColor ? "odd" : "even";
 			String actionTitle = StringUtils.escapeHtml(
-					actionI18nTitleFormatter.getActionTitle(action, locale));
+					actionI18nTitleFormatter.getActionTitle(action, locale, null));
 			String message = "";
 			if (org.springframework.util.StringUtils.hasText(action.getMessage())) {
 				if (action.getUser() == null) {
@@ -351,14 +351,14 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 		Locale locale = getDomainService().getUserStore().getUserLocale(user);
 		String owner = "<strong>" + getI18nService().getString(
 				"TICKET_VIEW.PROPERTIES.USER", locale,
-				StringUtils.escapeHtml(userFormattingService.format(ticket.getOwner(), locale)))
+				StringUtils.escapeHtml(userFormattingService.format(ticket.getOwner(), false,locale, null)))
 				+ "</strong>";
 		String manager;
 		if (ticket.getManager() != null) {
 			manager = "<strong>" + getI18nService().getString(
 					"TICKET_VIEW.PROPERTIES.USER", locale,
 					StringUtils.escapeHtml(
-							userFormattingService.format(ticket.getManager(), locale)))
+							userFormattingService.format(ticket.getManager(), false, locale, null)))
 					+ "</strong>";
 		} else {
 			manager = "<em>" + getI18nService().getString(
@@ -484,7 +484,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 				if (fileInfo.getUser() != null) {
 					userString = getI18nService().getString(
 							"TICKET_VIEW.FILES.USER", locale,
-							userFormattingService.format(fileInfo.getUser(), locale));
+							userFormattingService.format(fileInfo.getUser(), false, locale, null));
 				} else {
 					userString = getI18nService().getString(
 							"TICKET_VIEW.FILES.APPLICATION", locale);
@@ -535,7 +535,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 				}
 				String userString = getI18nService().getString(
 							"TICKET_VIEW.INVITATIONS.INVITED_USER", locale,
-							userFormattingService.format(invitation.getUser(), locale));
+							userFormattingService.format(invitation.getUser(), false, locale, null));
 				result += getI18nService().getString(
 						"EMAIL.TICKET.COMMON.INVITATIONS.ENTRY", locale,
 						trClass, userString);
@@ -576,7 +576,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 				}
 				String userString = getI18nService().getString(
 							"TICKET_VIEW.MONITORING.USER", locale,
-							userFormattingService.format(monitoringUser, locale));
+							userFormattingService.format(monitoringUser, false, locale, null));
 				result += getI18nService().getString(
 						"EMAIL.TICKET.COMMON.MONITORING.ENTRY", locale,
 						trClass, userString);

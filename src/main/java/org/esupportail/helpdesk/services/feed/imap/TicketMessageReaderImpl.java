@@ -75,7 +75,6 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	/**
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
-	@Override
 	public void afterPropertiesSet() {
 		Assert.notNull(domainService,
 				"property domainService of class " + this.getClass().getName() + " can not be null");
@@ -911,7 +910,6 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	 * org.esupportail.helpdesk.domain.beans.Category, org.esupportail.helpdesk.services.feed.imap.spam.SpamFilter,
 	 * boolean, org.esupportail.helpdesk.domain.beans.Category, org.esupportail.helpdesk.services.feed.ErrorHolder)
 	 */
-	@Override
 	public Ticket read(
 			final Message message,
 			final String address,
@@ -1010,6 +1008,11 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	 */
 	public void setI18nService(final I18nService service) {
 		i18nService = service;
+	}
+
+	public User readMessage(Message message, Ticket ticket, ErrorHolder errorHolder) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

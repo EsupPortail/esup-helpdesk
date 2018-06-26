@@ -25,7 +25,9 @@ public abstract class ControlPanel {
 	public static final String MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_FREE = "MANAGED_OR_FREE";
 	/** A constant for the involvement filter. */
 	public static final String MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED = "MANAGED_OR_INVITED";
-
+	/** A constant for the involvement filter. */
+	public static final String MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE = "MANAGED_INVITED_OR_FREE";
+	
 	/** A constant for the involvement filter. */
 	public static final String USER_INVOLVEMENT_FILTER_ANY = "ANY";
 	/** A constant for the involvement filter. */

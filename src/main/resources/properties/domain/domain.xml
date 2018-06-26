@@ -24,6 +24,7 @@
 		<property name="categoryConfigurator" ref="categoryConfigurator" />
 		<property name="departmentConfigurator" ref="departmentConfigurator" />
 		<property name="departmentManagerConfigurator" ref="departmentManagerConfigurator" />
+		<property name="ticketCommentModification" value="${ticketCommentModification}" />
 		<property name="departmentDefaultTicketScope" value="${defaultTicketScope}" />
 		<property name="departmentDefaultTicketPriorityLevel" value="${defaultTicketPriorityLevel}" />
 		<property name="departmentDefaultFaqScope" value="${defaultFaqScope}" />
@@ -41,6 +42,8 @@
 		<property name="monitoringSender" ref="monitoringSender" />
 		<property name="ticketReporter" ref="ticketReporter" />
 		<property name="faqReporter" ref="faqReporter" />
+		<property name="tryConvertMaillToCasUser" value="${auth.tryConvertMaillToCasUser}" />
+		<property name="mailToConvertPattern" value="${auth.mailToConvertPattern}" />
 	</bean>
 
 	<bean id="ticketExtractor"
@@ -75,6 +78,7 @@
 		lazy-init="true"
     	> 
 		<description>A bean used to format users.</description>
+		<property name="daoService" ref="daoService" />
 		<property name="i18nService" ref="i18nService" />
 		<property name="printId" value="${userFormat.printId}" />
 		<property name="displayNameMaxLength" value="${userFormat.displayNameMaxLength}" />

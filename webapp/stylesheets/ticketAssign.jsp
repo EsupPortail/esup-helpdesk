@@ -3,163 +3,201 @@
 <e:page stringsVar="msgs" menuItem=""
 	locale="#{sessionController.locale}"
 	authorized="#{ticketController.userCanAssign}">
-	<%@include file="_navigation.jsp"%>
+<t:htmlTag id="ticketAssign" value="div" styleClass="page-wrapper ticketAssign">
+           <t:htmlTag id="header" value="header" styleClass="header">
+                <%@include file="_header.jsp"%>
+            </t:htmlTag>
+            <t:htmlTag value="div" styleClass="columns">
+                <t:htmlTag value="aside" styleClass="navigation">
+                    <%@include file="_navigation.jsp"%>
+                </t:htmlTag>
 
-	<e:form 
-		freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}" 
-		showSubmitPopupText="#{sessionController.showSubmitPopupText}" 
-		showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
-		id="ticketActionForm">
-		<e:panelGrid columns="2" width="100%" columnClasses="colLeft,colRight">
-			<e:section value="#{msgs['TICKET_ACTION.TITLE.ASSIGN']}" >
-				<f:param value="#{ticketController.ticket.id}" />
-			</e:section>
-			<%@include file="_ticketActionCancel.jsp"%>
-		</e:panelGrid>
-		<e:messages />
-		<e:paragraph
-			value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.NO_AVAILABLE_MANAGER']}" 
-			rendered="#{empty ticketController.targetCategoryMembers and empty ticketController.targetNonCategoryMembers}" />
-		<h:panelGroup rendered="#{not empty ticketController.targetCategoryMembers or not empty ticketController.targetNonCategoryMembers}" >
-			<h:panelGroup rendered="#{ticketController.targetManager == null}" >
-				<e:paragraph value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.1']}" />
-				<e:dataTable
-					id="targetCategoryMembersData"
-					value="#{ticketController.targetCategoryMembers}" var="departmentManager"
-					rendered="#{not empty ticketController.targetCategoryMembers}" 
-					border="0" cellspacing="0" cellpadding="0" rowIndexVar="index" >
-					<t:column>
-						<f:facet name="header">
-							<h:panelGroup>
-								<e:panelGrid rendered="#{ticketController.targetCategoryMembersNumber gt 1}" >
-									<e:selectOneMenu onchange="javascript:{simulateLinkClick('ticketActionForm:targetCategoryMembersData:sortTargetCategoryMembersButton');}"
-										value="#{ticketController.targetCategoryMembersPresentOrder}">
-										<f:selectItem 
-											itemLabel="#{msgs['TICKET_ACTION.TEXT.ASSIGN.SORT_TARGET_CATEGORY_MEMBERS.ORDER']}"
-											itemValue="order" />
-										<f:selectItem 
-											itemLabel="#{msgs['TICKET_ACTION.TEXT.ASSIGN.SORT_TARGET_CATEGORY_MEMBERS.DISPLAY_NAME']}"
-											itemValue="displayName" />
-										<f:selectItem 
-											itemLabel="#{msgs['TICKET_ACTION.TEXT.ASSIGN.SORT_TARGET_CATEGORY_MEMBERS.ID']}"
-											itemValue="id" />
-									</e:selectOneMenu>
-									<e:commandButton value="#{msgs['TICKET_ACTION.BUTTON.SORT_TARGET_CATEGORY_MEMBERS']}" 
-										id="sortTargetCategoryMembersButton" style="display: none"
-										action="#{ticketController.refreshTicket}" />
-								</e:panelGrid>
-								<t:htmlTag value="hr" />
-								<e:bold value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.CATEGORY_MEMBERS']}" />
-							</h:panelGroup>
-						</f:facet>
-						<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ticketActionForm:targetCategoryMembersData:#{index}:chooseManagerButton');" >
-							<t:graphicImage value="/media/images/assign.png" />
-							<e:bold value=" #{msgs['TICKET_ACTION.TEXT.ASSIGN.USER']}" >
-								<f:param value="#{userFormatter[departmentManager.user]}" />
-							</e:bold>
-						</h:panelGroup>
-					</t:column>
-					<t:column>
-						<e:commandButton style="display: none" id="chooseManagerButton" 
-							value="->" immediate="true" >
-							<t:updateActionListener value="#{departmentManager.user}" property="#{ticketController.targetManager}" />
-						</e:commandButton>
-					</t:column>
-				</e:dataTable>
-				<e:dataTable
-					id="targetNonCategoryMembersData"
-					value="#{ticketController.targetNonCategoryMembers}" var="departmentManager"
-					rendered="#{not empty ticketController.targetNonCategoryMembers}" 
-					border="0" cellspacing="0" cellpadding="0" rowIndexVar="index" >
-					<t:column>
-						<f:facet name="header">
-							<h:panelGroup>
-								<e:panelGrid rendered="#{ticketController.targetNonCategoryMembersNumber gt 1}" >
-									<e:selectOneMenu onchange="javascript:{simulateLinkClick('ticketActionForm:targetNonCategoryMembersData:sortTargetNonCategoryMembersButton');}"
-										value="#{ticketController.targetNonCategoryMembersPresentOrder}">
-										<f:selectItem 
-											itemLabel="#{msgs['TICKET_ACTION.TEXT.ASSIGN.SORT_TARGET_NON_CATEGORY_MEMBERS.ORDER']}"
-											itemValue="order" />
-										<f:selectItem 
-											itemLabel="#{msgs['TICKET_ACTION.TEXT.ASSIGN.SORT_TARGET_NON_CATEGORY_MEMBERS.DISPLAY_NAME']}"
-											itemValue="displayName" />
-										<f:selectItem 
-											itemLabel="#{msgs['TICKET_ACTION.TEXT.ASSIGN.SORT_TARGET_NON_CATEGORY_MEMBERS.ID']}"
-											itemValue="id" />
-									</e:selectOneMenu>
-									<e:commandButton value="#{msgs['TICKET_ACTION.BUTTON.SORT_TARGET_NON_CATEGORY_MEMBERS']}" 
-										id="sortTargetNonCategoryMembersButton" style="display: none"
-										action="#{ticketController.refreshTicket}" />
-								</e:panelGrid>
-								<t:htmlTag value="hr" />
-								<e:bold value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.NON_CATEGORY_MEMBERS']}" />
-							</h:panelGroup>
-						</f:facet>
-						<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ticketActionForm:targetNonCategoryMembersData:#{index}:chooseManagerButton');" >
-							<t:graphicImage value="/media/images/assign.png" />
-							<e:bold value=" #{msgs['TICKET_ACTION.TEXT.ASSIGN.USER']}" >
-								<f:param value="#{userFormatter[departmentManager.user]}" />
-							</e:bold>
-						</h:panelGroup>
-					</t:column>
-					<t:column>
-						<e:commandButton style="display: none" id="chooseManagerButton" 
-							value="->" immediate="true" >
-							<t:updateActionListener value="#{departmentManager.user}" property="#{ticketController.targetManager}" />
-						</e:commandButton>
-					</t:column>
-				</e:dataTable>
-			</h:panelGroup>
-			<h:panelGroup rendered="#{ticketController.targetManager != null}" >
-				<e:text value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.MANAGER_PROMPT']} " />
-				<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ticketActionForm:chooseAnotherManagerButton');" >
-					<t:graphicImage value="/media/images/manager.png" />
-					<e:bold value=" #{msgs['TICKET_ACTION.TEXT.ASSIGN.MANAGER_VALUE']}" >
-						<f:param value="#{userFormatter[ticketController.targetManager]}" />
-					</e:bold>
-				</h:panelGroup>
-				<e:italic value=" #{msgs['TICKET_ACTION.TEXT.ASSIGN.MANAGER_HELP']}" />
-				<e:commandButton 
-					id="chooseAnotherManagerButton" style="display: none"
-					value="#{msgs['TICKET_ACTION.BUTTON.ASSIGN_TO_ANOTHER']}">
-					<t:updateActionListener value="#{null}" property="#{ticketController.targetManager}" />
-				</e:commandButton>
-				<e:panelGrid columns="2" width="100%" columnClasses="colLeftMax,colRightNowrap">
-					<e:paragraph value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.2']}" />
-					<%@include file="_ticketActionResponses.jsp"%>
-				</e:panelGrid>
-				<fck:editor  
-					id="actionMessage" 
-					value="#{ticketController.actionMessage}" 
-					toolbarSet="actionMessage" />
-				<e:panelGrid columns="2" columnClasses="colLeftNowrap,colRightMaxNowrap" width="100%" >
-					<h:panelGroup id="mainButtonGroup" style="position: absolute; white-space: nowrap;" >
-						<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ticketActionForm:actionButton');" >
-							<e:bold value="#{msgs['TICKET_ACTION.BUTTON.ASSIGN']} " >
-								<f:param value="#{userFormatter[ticketController.targetManager]}" />
-							</e:bold>
-							<t:graphicImage value="/media/images/assign.png" />
-						</h:panelGroup>
-						<e:commandButton 
-							id="actionButton" style="display: none"
-							value="#{msgs['TICKET_ACTION.BUTTON.ASSIGN']}"
-							action="#{ticketController.doAssign}" >
-							<f:param value="#{userFormatter[ticketController.targetManager]}" />
-						</e:commandButton>
-					</h:panelGroup>
-					<h:panelGroup>
-						<%@include file="_ticketActionScope.jsp"%>
-						<%@include file="_ticketActionPreviewButton.jsp"%>
-					</h:panelGroup>
-				</e:panelGrid>
-				<%@include file="_ticketActionPreview.jsp"%>
-				<%@include file="_ticketActionHistory.jsp"%>
-			</h:panelGroup>
-		</h:panelGroup>
-	</e:form>
-	<t:aliasBean alias="#{controller}" value="#{null}" >
-		<%@include file="_signature.jsp"%>
-	</t:aliasBean>
-	<%@include file="_ticketActionJavascript.jsp"%>
+                <t:htmlTag value="main" styleClass="content">
+                    <t:htmlTag value="div" styleClass="content-inner">
+
+                    <e:form
+                        freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"
+                        showSubmitPopupText="#{sessionController.showSubmitPopupText}"
+                        showSubmitPopupImage="#{sessionController.showSubmitPopupImage}"
+                        id="ticketActionForm">
+                                <t:htmlTag value="div" styleClass="message">
+                                    <e:messages/>
+                                </t:htmlTag>
+                                <t:htmlTag value="div" styleClass="ticket-form">
+                                    <t:htmlTag value="div" styleClass="form-block form-header">
+                                        <t:htmlTag value="h1">
+                                            <t:htmlTag value="span" styleClass="title">
+                                                  <h:outputText value="#{msgs['TICKET_ACTION.TITLE.ASSIGN']}" escape="false" />
+                                            </t:htmlTag>
+                                            <t:htmlTag value="span" styleClass="subtitle">
+                                                <h:outputText value=" #{ticketController.ticket.id}" escape="false" />
+                                            </t:htmlTag>
+                                        </t:htmlTag>
+                                    </t:htmlTag>
+                                </t:htmlTag>
+
+                                <t:htmlTag styleClass="region" value="div" rendered="#{ticketController.targetManager == null}">
+                                    <t:htmlTag styleClass="tabs without-state" value="ul">
+                                        <t:htmlTag id="categoryMembers" styleClass="#{not empty ticketController.targetCategoryMembers?'tab-link without-state current':'tab-link without-state'} ;" value="li" rendered="#{not empty ticketController.targetCategoryMembers}">
+                                            <h:outputText value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.CATEGORY_MEMBERS']} " />
+                                        </t:htmlTag>
+                                        <t:htmlTag id="nonCategoryMembers" styleClass="#{empty ticketController.targetCategoryMembers?'tab-link without-state current':'tab-link without-state'} ;" value="li" rendered="#{not empty ticketController.targetNonCategoryMembers}">
+                                            <t:htmlTag value="span"><h:outputText value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.NON_CATEGORY_MEMBERS']}" /></t:htmlTag>
+                                        </t:htmlTag>
+                                    </t:htmlTag>
+                                </t:htmlTag>
+
+                                <t:htmlTag styleClass="region" value="div" rendered="#{ticketController.targetManager == null}">
+                                    <t:htmlTag id="tab-categoryMembers" styleClass="#{not empty ticketController.targetCategoryMembers?'tab-content  without-state current':'tab-content without-state'} ;"  value="div" rendered="#{not empty ticketController.targetCategoryMembers}">
+                                        <t:htmlTag value="div"  rendered="#{empty ticketController.targetCategoryMembers">
+                                            <e:text value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.NO_AVAILABLE_MANAGER']}"/>
+                                        </t:htmlTag>
+                                        <t:htmlTag value="div" rendered="#{not empty ticketController.targetCategoryMembers}">
+                                                <e:dataTable
+                                                    id="targetCategoryMembersData"
+                                                    styleClass="members-list"
+                                                    value="#{ticketController.targetCategoryMembers}" var="departmentManager"
+                                                    border="0" cellspacing="0" cellpadding="0" rowIndexVar="index">
+                                                    <t:column>
+                                                         <t:htmlTag value="div" styleClass="formated-user-data">
+                                                            <t:htmlTag value="div" styleClass="user--display-name">
+                                                                                <e:text value=" #{msgs['TICKET_ACTION.TEXT.ASSIGN.USER']}" >
+                                                                                    <f:param value="#{userFormatter[departmentManager.user]}" />
+                                                                                </e:text>
+                                                            </t:htmlTag>
+                                                            <t:htmlTag value="div" styleClass="form-item">
+                                                                                  <e:commandButton  id="chooseManagerButton"
+                                                                                      value="#{msgs['LDAP_SEARCH.BUTTON.USER.SELECT']}" immediate="true" styleClass="user-select">
+                                                                                      <t:updateActionListener value="#{departmentManager.user}" property="#{ticketController.targetManager}" />
+                                                                                  </e:commandButton>
+                                                             </t:htmlTag>
+                                                         </t:htmlTag>
+                                                    </t:column>
+                                                <f:facet name="footer">
+                                                     <t:htmlTag value="div" styleClass="form-block">
+                                                         <t:htmlTag value="div" styleClass="form-item form-submit">
+                                                          <%@include file="_ticketActionCancel.jsp"%>
+                                                         </t:htmlTag>
+                                                     </t:htmlTag>
+                                                </f:facet>
+                                        </e:dataTable>
+                                        </t:htmlTag>
+                                    </t:htmlTag>
+
+                                    <t:htmlTag id="tab-nonCategoryMembers" styleClass="#{empty ticketController.targetCategoryMembers?'tab-content  without-state current':'tab-content without-state'} ;"  value="div">
+                                        <t:htmlTag value="div"  rendered="#{empty ticketController.targetNonCategoryMembers}">
+                                            <e:text  value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.NO_AVAILABLE_MANAGER']}"/>
+                                        </t:htmlTag>
+                                        <t:htmlTag value="div" rendered="#{not empty ticketController.targetNonCategoryMembers}">
+                                            <e:dataTable
+                                                 id="targetNonCategoryMembersData"
+                                                 styleClass="members-list"
+                                                 value="#{ticketController.targetNonCategoryMembers}" var="departmentManager"
+                                                 rendered="#{not empty ticketController.targetNonCategoryMembers}"
+                                                 border="0" cellspacing="0" cellpadding="0" rowIndexVar="index">
+                                                 <t:column>
+                                                         <t:htmlTag value="div" styleClass="formated-user-data">
+                                                            <t:htmlTag value="div" styleClass="user--display-name">
+                                                                                <e:text value=" #{msgs['TICKET_ACTION.TEXT.ASSIGN.USER']}" >
+                                                                                    <f:param value="#{userFormatter[departmentManager.user]}" />
+                                                                                </e:text>
+                                                            </t:htmlTag>
+                                                            <t:htmlTag value="div" styleClass="form-item">
+                                                                                  <e:commandButton  id="chooseManagerButton"
+                                                                                      value="#{msgs['LDAP_SEARCH.BUTTON.USER.SELECT']}" immediate="true" styleClass="user-select">
+                                                                                      <t:updateActionListener value="#{departmentManager.user}" property="#{ticketController.targetManager}" />
+                                                                                  </e:commandButton>
+                                                             </t:htmlTag>
+                                                         </t:htmlTag>
+                                                 </t:column>
+                                                <f:facet name="footer">
+                                                     <t:htmlTag value="div" styleClass="form-block">
+                                                         <t:htmlTag value="div" styleClass="form-item form-submit">
+                                                          <%@include file="_ticketActionCancel.jsp"%>
+                                                         </t:htmlTag>
+                                                     </t:htmlTag>
+                                                </f:facet>
+                                            </e:dataTable>
+                                        </t:htmlTag>
+                                    </t:htmlTag>
+                                </t:htmlTag>
+
+                                <t:htmlTag styleClass="region" value="div" rendered="#{ticketController.targetManager != null}">
+                                    <t:htmlTag value="div" styleClass="ticket-form">
+                                        <t:htmlTag value="div" styleClass="form-block form-body">
+                                            <t:htmlTag value="div" styleClass="form-item">
+                                               <t:htmlTag value="label">
+                                                    <h:outputText value="#{msgs['TICKET_ACTION.TEXT.ASSIGN.MANAGER_PROMPT']} " />
+                                               </t:htmlTag>
+                                               <t:htmlTag value="span" styleClass="selected-manager">
+                                                    <h:outputText value="#{userFormatter[ticketController.targetManager]}" />
+                                               </t:htmlTag>
+                                            </t:htmlTag>
+
+                                            <t:htmlTag value="div" styleClass="form-item">
+                                                <e:outputLabel for="actionMessage" value=" #{msgs['TICKET_ACTION.TEXT.ASSIGN.2']}"/>
+                                                <fck:editor
+                                                    id="actionMessage"
+                                                    value="#{ticketController.actionMessage}"
+                                                    toolbarSet="actionMessage" />
+                                            </t:htmlTag>
+                                        </t:htmlTag>
+                                        <t:htmlTag value="div" styleClass="form-block">
+                                            <t:htmlTag value="div" styleClass="form-item display-flex" >
+                                                <e:commandButton id="actionButton"
+                                                        styleClass="button--primary"
+                                                        value="#{msgs['TICKET_ACTION.BUTTON.ASSIGN']}"
+                                                        action="#{ticketController.doAssign}" />
+                                                <%@include file="_ticketActionCancel.jsp"%>
+                                           </t:htmlTag>
+                                        </t:htmlTag>
+                                    </t:htmlTag>
+                                    <t:htmlTag styleClass="region extended-properties" value="div">
+                                                <t:htmlTag styleClass="tabs" value="ul">
+                                                    <t:htmlTag id="properties" styleClass="tab-link current" value="li">
+                                                        <h:outputText value="#{msgs['TICKET_ACTION.TAB.GIVE_INFO.PROPERTIES.TEXT']} " />
+                                                    </t:htmlTag>
+                                                    <t:htmlTag id="history" styleClass="tab-link " value="li">
+                                                        <h:outputText value="#{msgs['TICKET_ACTION.TAB.HISTORY.TEXT']} " />
+                                                    </t:htmlTag>
+                                                    <t:htmlTag id="files" styleClass="tab-link" value="li">
+                                                        <h:outputText value="#{msgs['TICKET_ACTION.TAB.FILES.TEXT']} " />
+                                                    </t:htmlTag>
+                                                    <t:htmlTag id="cannedResponses" styleClass="tab-link " value="li" rendered="#{ticketController.userCanUseCannedResponses and not empty ticketController.responseItems}">
+                                                        <h:outputText value="#{msgs['TICKET_ACTION.TAB.RESPONSES.TEXT']} " />
+                                                    </t:htmlTag>
+                                                </t:htmlTag>
+                                    </t:htmlTag>
+                                    <t:htmlTag id="tab-properties" styleClass="tab-content current" value="div">
+                                            <t:htmlTag value="div" styleClass="form-block">
+                                                <%@include file="_ticketActionScope.jsp"%>
+                                                <t:htmlTag value="div" styleClass="form-item form-checkbox" rendered="#{ticketController.userCanSetNoAlert}" >
+                                                    <e:selectBooleanCheckbox id="noAlert"
+                                                        value="#{ticketController.noAlert}" />
+                                                    <e:outputLabel for="noAlert" value=" #{msgs['TICKET_ACTION.TEXT.NO_NOTIFICATION']}"/>
+                                                </t:htmlTag>
+                                            </t:htmlTag>
+                                    </t:htmlTag>
+                                    <t:htmlTag id="tab-history" styleClass="tab-content view-ticket_history" value="div">
+                                            <%@include file="_ticketActionHistory.jsp"%>
+                                    </t:htmlTag>
+                                    <t:htmlTag id="tab-files" styleClass="tab-content" value="div">
+                                            <%@include file="_ticketActionTabUpload.jsp"%>
+                                    </t:htmlTag>
+                                    <t:htmlTag id="tab-cannedResponses" styleClass="tab-content" value="div">
+                                            <%@include file="_ticketActionResponses.jsp"%>
+                                    </t:htmlTag>
+                               </t:htmlTag>
+                    </e:form>
+
+	                <%@include file="_ticketActionJavascript.jsp"%>
+                    </t:htmlTag>
+                </t:htmlTag>
+            </t:htmlTag>
+                <t:htmlTag value="footer" styleClass="footer">
+                        <%@include file="_footer.jsp"%>
+                </t:htmlTag>
+        </t:htmlTag>
+
 </e:page>
 

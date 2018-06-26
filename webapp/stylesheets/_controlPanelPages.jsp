@@ -1,38 +1,34 @@
 <%@include file="_include.jsp"%>
-<h:panelGroup
-	rendered="#{controlPanelController.paginator.lastPageNumber != 0}">
-	<h:panelGroup
-		rendered="#{not controlPanelController.paginator.firstPage}">
-		<t:graphicImage value="/media/images/page-first.png"
-			style="cursor: pointer"
-			onclick="simulateLinkClick('controlPanelForm:data:pageFirst');" />
-		<e:text value=" " />
-		<t:graphicImage value="/media/images/page-previous.png"
-			style="cursor: pointer"
-			onclick="simulateLinkClick('controlPanelForm:data:pagePrevious');" />
+<h:panelGroup rendered="#{controlPanelController.paginator.lastPageNumber != 0}">
+
+	<h:panelGroup rendered="#{not controlPanelController.paginator.firstPage}">
+        <h:panelGroup style="cursor: pointer" styleClass="page-first" onclick="buttonClick('controlPanelForm:data:pageFirst');">
+            <t:htmlTag value="i" styleClass="fas fa-angle-double-left"/>
+        </h:panelGroup>
+        <h:panelGroup style="cursor: pointer" styleClass="page-previous" onclick="buttonClick('controlPanelForm:data:pagePrevious');">
+            <t:htmlTag value="i" styleClass="fas fa-angle-left"/>
+        </h:panelGroup>
 	</h:panelGroup>
-	<e:text value=" #{msgs['PAGINATION.TEXT.PAGES']} " />
-	<t:dataList value="#{controlPanelController.paginator.nearPages}"
-		var="page">
-		<e:text value=" " />
-		<e:italic value="#{page + 1}"
-			rendered="#{page == controlPanelController.paginator.currentPage}" />
+
+	<t:dataList value="#{controlPanelController.paginator.nearPages}" var="page" >
+
+		<e:text value="#{page + 1}"
+			rendered="#{page == controlPanelController.paginator.currentPage}" styleClass="current-page"/>
 		<h:commandLink value="#{page + 1}"
 			rendered="#{page != controlPanelController.paginator.currentPage}" >
 			<t:updateActionListener value="#{page}"
 				property="#{controlPanelController.paginator.currentPage}" />
 		</h:commandLink>
-		<e:text value=" " />
+
 	</t:dataList>
-	<h:panelGroup
-		rendered="#{not controlPanelController.paginator.lastPage}">
-		<t:graphicImage value="/media/images/page-next.png"
-			style="cursor: pointer"
-			onclick="simulateLinkClick('controlPanelForm:data:pageNext');" />
-		<e:text value=" " />
-		<t:graphicImage value="/media/images/page-last.png"
-			style="cursor: pointer"
-			onclick="simulateLinkClick('controlPanelForm:data:pageLast');" />
+
+	<h:panelGroup rendered="#{not controlPanelController.paginator.lastPage}">
+        <h:panelGroup style="cursor: pointer" styleClass="page-next" onclick="buttonClick('controlPanelForm:data:pageNext');">
+            <t:htmlTag value="i" styleClass="fas fa-angle-right"/>
+        </h:panelGroup>
+        <h:panelGroup style="cursor: pointer" styleClass="page-last" onclick="buttonClick('controlPanelForm:data:pageLast');">
+             <t:htmlTag value="i" styleClass="fas fa-angle-double-right"/>
+        </h:panelGroup>
 	</h:panelGroup>
 </h:panelGroup>
 

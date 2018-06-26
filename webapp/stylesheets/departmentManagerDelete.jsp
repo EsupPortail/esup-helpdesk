@@ -11,7 +11,7 @@
 		id="departmentManagerDeleteForm" >
 		<e:panelGrid columns="2" columnClasses="colLeft,colRight" width="100%" >
 			<e:section value="#{msgs['DEPARTMENT_MANAGER_DELETE.TITLE']}">
-				<f:param value="#{userFormatter[departmentsController.departmentManagerToUpdate]}" />
+				<f:param value="#{userFormatter[departmentsController.departmentManagerToUpdate.user]}" />
 				<f:param value="#{departmentsController.department.label}" />
 			</e:section>
 			<h:panelGroup>
@@ -29,7 +29,7 @@
 		<e:messages />
 
 		<e:paragraph value="#{msgs['DEPARTMENT_MANAGER_DELETE.TEXT.TOP']}">
-			<f:param value="#{userFormatter[departmentsController.departmentManagerToUpdate]}" />
+			<f:param value="#{userFormatter[departmentsController.departmentManagerToUpdate.user]}" />
 			<f:param value="#{departmentsController.department.label}" />
 		</e:paragraph>
 

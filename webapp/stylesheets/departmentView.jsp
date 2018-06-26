@@ -70,6 +70,38 @@
 				<e:italic
 					rendered="#{departmentsController.currentUserCanManageDepartments and not departmentsController.currentUserCanDeleteDepartment}" 
 					value="#{msgs['DEPARTMENT_VIEW.TEXT.CAN_NOT_DELETE_DEPARTMENT']} " />
+
+				<t:dataList value="#{departmentsController.virtualDepartments}"
+					var="virtualDepartment" rowIndexVar="virtualDepartmentIndex" >
+					<t:htmlTag value="br" />
+					<t:htmlTag value="br" rendered="#{virtualDepartmentIndex == 0}" />
+					<e:text value=" #{msgs['DEPARTMENTS.TEXT.REDIRECTION.LISTE']}" rendered="#{virtualDepartmentIndex == 0}">
+						<f:param value="#{departmentsController.department.label}" />
+					</e:text>
+					<t:htmlTag value="br" rendered="#{virtualDepartmentIndex == 0}" />
+					<t:graphicImage value="/media/images/redirection-inverted.png" />
+					<e:text
+						value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION_VALUE_INVERTED']}">
+						<f:param value="#{virtualDepartment.label}" />
+					</e:text>
+				</t:dataList>
+				<t:dataList value="#{departmentsController.virtualCategories}"
+					var="virtualCategorie" rowIndexVar="virtualCategorieIndex">
+					<t:htmlTag value="br" />
+					<t:htmlTag value="br" rendered="#{virtualCategorieIndex == 0}" />
+					<e:text value=" #{msgs['CATEGORIES.TEXT.REDIRECTION.LISTE']}" rendered="#{virtualCategorieIndex == 0}">
+						<f:param value="#{departmentsController.department.label}" />
+					</e:text>
+					<t:htmlTag value="br" rendered="#{virtualCategorieIndex == 0}" />					
+ 					<t:graphicImage value="/media/images/redirection-inverted.png" />					
+					<e:text
+						value=" #{msgs['CATEGORIES.TEXT.VIRTUAL_CATEGORY']}">
+						<f:param value="#{virtualCategorie.department.label}" />
+						<f:param value="#{virtualCategorie.label}" />
+					</e:text>
+				</t:dataList>
+
+
 			</h:panelGroup>
 			<h:panelGroup/>
 		</e:panelGrid>

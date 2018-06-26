@@ -170,7 +170,12 @@ implements DepartmentManagerConfigurator, InitializingBean {
 				&& !DepartmentManager.REPORT_MCF.equals(reportType)
 				&& !DepartmentManager.REPORT_MFC.equals(reportType)
 				&& !DepartmentManager.REPORT_MCFO.equals(reportType)
-				&& !DepartmentManager.REPORT_MFCO.equals(reportType)) {
+				&& !DepartmentManager.REPORT_MFCO.equals(reportType)
+				&& !DepartmentManager.REPORT_F.equals(reportType)
+				&& !DepartmentManager.REPORT_FM.equals(reportType)
+				&& !DepartmentManager.REPORT_FMC.equals(reportType)
+				&& !DepartmentManager.REPORT_FMCO.equals(reportType)
+				) {
 			throw new ConfigException(
 					getClass() + ": invalid value for property reportType (" + reportType + ")");
 		}

@@ -36,4 +36,6 @@ public interface SpamFilter extends Serializable {
 			String contentType, 
 			byte[] data);
 
+	void afterPropertiesSet();
+
 }

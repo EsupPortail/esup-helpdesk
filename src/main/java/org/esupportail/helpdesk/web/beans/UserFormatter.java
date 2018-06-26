@@ -9,6 +9,7 @@ import org.esupportail.commons.utils.Assert;
 import org.esupportail.helpdesk.domain.beans.User;
 import org.esupportail.helpdesk.domain.userFormatting.UserFormattingService;
 import org.esupportail.helpdesk.web.controllers.SessionController;
+import org.esupportail.helpdesk.web.controllers.TicketController;
 import org.springframework.beans.factory.InitializingBean;
 
 /** 
@@ -32,7 +33,7 @@ implements InitializingBean {
 	 * The session controller.
 	 */
 	private SessionController sessionController;
-	
+
 	/**
 	 * Bean constructor.
 	 */
@@ -64,7 +65,7 @@ implements InitializingBean {
 		if (!(o instanceof User)) {
 			return null;
 		}
-		return userFormattingService.format((User) o, sessionController.getLocale());
+		return userFormattingService.format((User) o, false, sessionController.getLocale(), sessionController.getCurrentUser());
 	}
 
 	/**

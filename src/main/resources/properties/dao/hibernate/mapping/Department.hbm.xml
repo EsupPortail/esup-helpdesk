@@ -35,6 +35,8 @@
 		<property name="monitoringLocalEmails" column="moni_loca_emai" />
 		<property name="monitoringEmailAuthType" column="moni_emai_auth_type" />
 		<property name="monitoringLevel" column="moni_leve" />
+		<property name="visibilityInterSrv" column="visi_inte_depa" />
+		<property name="srvAnonymous" column="anon" />
 		<many-to-one name="icon" column="icon_id" fetch="join"/>
 	</class>
 

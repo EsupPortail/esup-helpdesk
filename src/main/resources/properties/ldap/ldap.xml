@@ -56,6 +56,15 @@
 		<property name="searchAttribute" value="${ldap.searchAttribute}">
 			<description>The LDAP attribute to search for.</description>
 		</property>
+		<property name="filterDate" value="${ldap.filterDate}">
+			<description>The LDAP attribute to search for.</description>
+		</property>
+		<property name="filterEdupersonaffiliation" value="${ldap.filterEdupersonaffiliation}">
+			<description>The LDAP attribute to search for.</description>
+		</property>
+		<property name="filterEdupersonaffiliationValues" value="${ldap.filterEdupersonaffiliationValues}">
+			<description>The LDAP attribute to search for.</description>
+		</property>
 		<property name="searchDisplayedAttributesAsString" value="${ldap.searchDisplayedAttributes}" >
 			<description>
 				The comma-separated list of the LDAP attributes to display when searching for users.
@@ -103,7 +112,14 @@
 			base ou=people,dc=esup-portail,dc=edu, with scope "sub". See
 			http://ldaptemplate.sourceforge.net.
 		</description>
-		<property name="url" value="${ldap.url}"/>
+      <property name="urls">
+         <description>The LDAP URL of the directory.</description>
+         <list>
+            <value>${ldap.url1}</value>
+            <value>${ldap.url2}</value>
+         </list>
+      </property>
+
 		<property name="userName" value="${ldap.userName}">
 			<description>
 				The dn used to bind to the LDAP directory.

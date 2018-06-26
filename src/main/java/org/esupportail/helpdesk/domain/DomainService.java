@@ -70,6 +70,10 @@ public interface DomainService extends Serializable {
 	String getDepartmentDefaultTicketScope();
 
 	/**
+	 * @return true for comment modification authorization.
+	 */
+	boolean isTicketCommentModification();
+	/**
 	 * @return the default priority level for the departments.
 	 */
 	int getDepartmentDefaultTicketPriorityLevel();
@@ -524,6 +528,12 @@ public interface DomainService extends Serializable {
 	 * @return the virtual departments of the department (pointed to itself).
 	 */
 	List<Department> getVirtualDepartments(Department department);
+	
+	/**
+	 * @param department
+	 * @return the virtual caterories of the department.
+	 */
+	List<Category> getVirtualCategories(Department department);
 
 	/**
 	 * @param department
@@ -586,6 +596,11 @@ public interface DomainService extends Serializable {
 	 * @return all the sub categories as a map.
 	 */
 	Map<Category, List<Category>> getSubCategoriesMap();
+
+	/**
+	 * @return the members parent of the inherit category.
+	 */
+	boolean isMembersOfThirstParentCategory(Category category, User user);
 
 	/**
 	 * Add a category.
@@ -1037,6 +1052,24 @@ public interface DomainService extends Serializable {
 	 */
 	void deleteTicket(Ticket ticket, boolean deleteFiles);
 
+	/**
+	 * Delete a File.
+	 * @param author
+	 * @param ticket
+	 * @param message
+	 * @param actionScope
+	 * @param alerts
+	 * @param File
+	 * @param deleteContent
+	 */
+	void deleteFileInfo(User author,
+						Ticket ticket,
+						String message,
+						String actionScope,
+						boolean alerts,
+						FileInfo file,
+						boolean deleteContent);
+	
 	/**
 	 * Move a ticket.
 	 * @param author
@@ -1563,6 +1596,7 @@ public interface DomainService extends Serializable {
 	 * Delete a ticket.
 	 */
 	void deleteTicketById(long ticketNumber);
+
 	//////////////////////////////////////////////////////////////
 	// Action
 	//////////////////////////////////////////////////////////////
@@ -1578,6 +1612,12 @@ public interface DomainService extends Serializable {
 	 * @return the last action of the ticket.
 	 */
 	Action getLastAction(Ticket ticket);
+
+	/**
+	 * @param ticket
+	 * @return the last action of the ticket without UPLOAD ACION_TYPE.
+	 */
+	 Action getLastActionWithoutUpload(Ticket ticket);
 
 	/**
 	 * @param ticket
@@ -2553,13 +2593,14 @@ public interface DomainService extends Serializable {
 	 * @return true if the current user can move the ticket.
 	 */
 	boolean userCanMove(User user, Ticket ticket);
+
 	/**
 	 * @param user
 	 * @param ticket
 	 * @return true if the current user can move the ticket to the before categorie.
 	 */
 	boolean userCanMoveBack(User user, Ticket ticket);
-
+	
 	/**
 	 * @param user
 	 * @param ticket
@@ -2736,6 +2777,13 @@ public interface DomainService extends Serializable {
 	 */
 	boolean userCanInvite(User user, Ticket ticket);
 
+	/**
+	 * @param user
+	 * @param ticket
+	 * @return true if the current user can delete file attached for the ticket.
+	 */
+	boolean userCanDeleteFileInfo(User user, Ticket ticket);
+	
 	/**
 	 * @param user
 	 * @param ticket

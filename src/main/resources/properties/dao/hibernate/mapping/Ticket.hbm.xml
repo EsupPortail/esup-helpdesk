@@ -44,6 +44,7 @@
 		<property name="creationDow" column="crea_dow" />
 		<property name="creationHour" column="crea_hour" />
 		<property name="managerDisplayName" column="mana_disp_name"/>
+		<property name="anonymous" column="anon"/>
 	</class>
 
 </hibernate-mapping>

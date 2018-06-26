@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.apache.commons.digester.Digester;
 import org.esupportail.helpdesk.domain.departmentSelection.actions.AddAllAction;
+import org.esupportail.helpdesk.domain.departmentSelection.actions.AddByCateAction;
 import org.esupportail.helpdesk.domain.departmentSelection.actions.AddByFilterAction;
 import org.esupportail.helpdesk.domain.departmentSelection.actions.AddByLabelAction;
 import org.esupportail.helpdesk.domain.departmentSelection.actions.DoNothingAction;
@@ -139,6 +140,9 @@ public class DigesterUtils {
 				dig.addObjectCreate("*/add-by-filter", AddByFilterAction.class);
 				dig.addSetProperties("*/add-by-filter");
 				dig.addSetNext("*/add-by-filter", ADD_ACTION_METHOD);
+				dig.addObjectCreate("*/add-by-cate", AddByCateAction.class);
+				dig.addSetProperties("*/add-by-cate");
+				dig.addSetNext("*/add-by-cate", ADD_ACTION_METHOD);				
 				dig.addObjectCreate("*/add-all", AddAllAction.class);
 				dig.addSetNext("*/add-all", ADD_ACTION_METHOD);
 				dig.addObjectCreate("*/stop", StopAction.class);

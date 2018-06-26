@@ -50,7 +50,12 @@ public class TicketHistoryEntry implements Serializable {
 	 * True if the scope of the action can be changed by the user.
 	 */
 	private boolean canChangeScope;
-	
+
+	/**
+	 * True if the scope of the action can be updated by the user.
+	 */
+	private boolean canUpdateInformation;
+
 	/**
 	 * The alerts of the action.
 	 */
@@ -68,6 +73,7 @@ public class TicketHistoryEntry implements Serializable {
 
 	/**
 	 * @param action
+	 * @param canChangeScope
 	 * @param canView
 	 * @param canChangeScope
 	 * @param alerts
@@ -75,12 +81,14 @@ public class TicketHistoryEntry implements Serializable {
 	 */
 	public TicketHistoryEntry(
 			final Action action, 
+			final boolean canUpdateInformation,
 			final boolean canView, 
 			final boolean canChangeScope, 
 			final List<Alert> alerts,
 			final String styleClass) {
 		super();
 		this.action = action;
+		this.canUpdateInformation = canUpdateInformation;
 		this.canView = canView;
 		this.canChangeScope = canChangeScope;
 		this.alerts = alerts;
@@ -185,6 +193,13 @@ public class TicketHistoryEntry implements Serializable {
 	public boolean isCanChangeScope() {
 		return canChangeScope;
 	}
+	
+	/**
+	 * @return the canChangeScope
+	 */
+	public boolean isCanUpdateInformation() {
+		return canUpdateInformation;
+	}
 
 	/**
 	 * @return the alerts
@@ -226,6 +241,10 @@ public class TicketHistoryEntry implements Serializable {
 	 */
 	protected void setStyleClass(final String styleClass) {
 		this.styleClass = styleClass;
+	}
+
+	public void setCanUpdateInformation(boolean canUpdateInformation) {
+		this.canUpdateInformation = canUpdateInformation;
 	}
 
 }

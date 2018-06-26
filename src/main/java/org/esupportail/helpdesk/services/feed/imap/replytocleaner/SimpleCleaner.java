@@ -29,7 +29,7 @@ public class SimpleCleaner implements ReplyToMessageCleaner {
      * @see org.esupportail.helpdesk.services.feed.imap.replytocleaner.ReplyToMessageCleaner#clean(java.lang.String) 
      */
     @Override
-	public String clean(final String content) {
+    public String clean(final String content) {
         return Pattern.compile(
                 fromEmail + ".*",
                 Pattern.CASE_INSENSITIVE + Pattern.DOTALL + Pattern.MULTILINE).

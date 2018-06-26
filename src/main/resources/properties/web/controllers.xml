@@ -216,6 +216,7 @@
     	> 
 		<description>A bean to manage the control panel.</description>
 		<property name="paginator" ref="controlPanelPaginator" />
+		<property name="panelPaginator" ref="controlPanelPaginator" />
 		<property name="ticketController" ref="ticketController" />
 		<property name="archivedTicketController" ref="archivedTicketController" />
 	</bean>

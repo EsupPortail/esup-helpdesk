@@ -58,7 +58,6 @@ implements InitializingBean {
 	/**
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
-	@Override
 	public void afterPropertiesSet() {
 		Assert.notNull(sessionController, 
 				"property sessionController of class " + this.getClass().getName() 

@@ -22,4 +22,6 @@ public interface Expirator extends Serializable {
 	 */
 	void unlock();
 
+	void afterPropertiesSet();
+
 }

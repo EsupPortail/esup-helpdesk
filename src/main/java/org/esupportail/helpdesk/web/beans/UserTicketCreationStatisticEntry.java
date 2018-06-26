@@ -53,7 +53,6 @@ public class UserTicketCreationStatisticEntry implements Serializable, Comparabl
 	 * @return an int.
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	@Override
 	public int compareTo(final UserTicketCreationStatisticEntry o) {
 		if (this.number != o.number) {
 			return this.number - o.number;

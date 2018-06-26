@@ -6,6 +6,7 @@ package org.esupportail.helpdesk.web.controllers;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.faces.model.SelectItem;
 
@@ -26,6 +27,7 @@ import org.esupportail.helpdesk.exceptions.ArchivedTicketNotFoundException;
 import org.esupportail.helpdesk.exceptions.TicketNotFoundException;
 import org.esupportail.helpdesk.web.beans.ControlPanelColumnOrderer;
 import org.esupportail.helpdesk.web.beans.ControlPanelEntry;
+import org.esupportail.helpdesk.web.beans.ControlPanelPaginator;
 
 /**
  * The control panel controller.
@@ -73,6 +75,11 @@ public class ControlPanelController extends AbstractContextAwareController {
     private ControlPanelColumnOrderer columnsOrderer;
 
     /**
+     * The paginator.
+     */    
+    private ControlPanelPaginator panelPaginator;
+    
+	/**
      * True for the column edit mode.
      */
     private boolean editColumns;
@@ -91,6 +98,7 @@ public class ControlPanelController extends AbstractContextAwareController {
      * The string of the searched ticket.
      */
     private String ticketNumberString;
+
 
 	/**
 	 * Bean constructor.
@@ -147,6 +155,13 @@ public class ControlPanelController extends AbstractContextAwareController {
 	}
 
 	/**
+	 * @return the userDepartmentItems
+	 */
+	public boolean isManager() {
+		return getDomainService().isDepartmentManager(getCurrentUser());
+	}
+
+	/**
 	 * JSF callback.
 	 * @return A String.
 	 */
@@ -168,7 +183,7 @@ public class ControlPanelController extends AbstractContextAwareController {
 			}
 		} else {
 			if (currentUser.getControlPanelManagerDepartmentFilter() != null) {
-				if (!getDomainService().isDepartmentManager(
+				 if (!getDomainService().isDepartmentManager(
 						currentUser.getControlPanelManagerDepartmentFilter(), currentUser)) {
 					currentUser.setControlPanelManagerDepartmentFilter(null);
 				}
@@ -342,6 +357,9 @@ public class ControlPanelController extends AbstractContextAwareController {
 		managerInvolvementItems.add(new SelectItem(
 				ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED,
 				getString("CONTROL_PANEL.INVOLVEMENT_FILTER.MANAGER.MANAGED_OR_INVITED")));
+		managerInvolvementItems.add(new SelectItem(
+				ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE,
+				getString("CONTROL_PANEL.INVOLVEMENT_FILTER.MANAGER.MANAGED_INVITED_OR_FREE")));
 		return managerInvolvementItems;
 	}
 
@@ -351,13 +369,44 @@ public class ControlPanelController extends AbstractContextAwareController {
 	@RequestCache
 	public List<SelectItem> getManagerManagerItems() {
 		List<SelectItem> managerInvolvementItems = new ArrayList<SelectItem>();
+		TreeSet<DepartmentManager> listeDepartmentManagerTriee = new TreeSet<>();
 		Department department = getCurrentUser().getControlPanelManagerDepartmentFilter();
 		if (department != null) {
-			managerInvolvementItems.add(
-					new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
+			//tickets libres : pas de choix sur le gestionnaire
+			if(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_FREE)) {
+				   managerInvolvementItems.add(
+						new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
+				   return managerInvolvementItems;
+			}
+			//pas de "tous managers" pour les ...,invité
+			if(!getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) && 
+			   !getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)){
+				   managerInvolvementItems.add(
+						new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
+			   
+			} 
 			for (DepartmentManager manager : getDomainService().getDepartmentManagers(department)) {
+				listeDepartmentManagerTriee.add(manager);
+				
+			}
+			for (DepartmentManager manager : listeDepartmentManagerTriee) {
 				managerInvolvementItems.add(
-						new SelectItem(manager.getUser(), manager.getUser().getDisplayName()));
+					new SelectItem(manager.getUser(), manager.getUser().getDisplayName()));
+			}
+		} else {
+			//cas ou le service = Tous : on alimente la liste des gestionnaires de tous les services ou l'on est gestionnaire 
+			List<DepartmentManager> departments = getDomainService().getDepartmentManagers(getCurrentUser());
+			if (departments != null) {
+				for (DepartmentManager depaManager : departments) {
+					for (DepartmentManager manager : getDomainService().getDepartmentManagers(depaManager.getDepartment())) {
+						listeDepartmentManagerTriee.add(manager);
+							
+					}
+				}
+				for (DepartmentManager manager : listeDepartmentManagerTriee) {
+					managerInvolvementItems.add(
+							new SelectItem(manager.getUser(), manager.getUser().getDisplayName()));
+				}
 			}
 		}
 		return managerInvolvementItems;
@@ -756,5 +805,12 @@ public class ControlPanelController extends AbstractContextAwareController {
 	public void setTicketToBookmark(final Ticket ticketToBookmark) {
 		this.ticketToBookmark = ticketToBookmark;
 	}
+    
+	public ControlPanelPaginator getPanelPaginator() {
+		return panelPaginator;
+	}
 
+	public void setPanelPaginator(ControlPanelPaginator panelPaginator) {
+		this.panelPaginator = panelPaginator;
+	}
 }

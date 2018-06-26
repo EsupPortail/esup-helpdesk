@@ -1,27 +1,27 @@
-body,a,p,h1,h2,td,th,li,address {
+body, a, p, h1, h2, td, th, li, address {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
-body,p,td,th,li {
+body, p, td, th, li {
 	font-size: 12px;
 	color: Black;
 }
 
 a {
-	text-decoration : none;
-	color : #192A89;
-	font-family : Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	color: #192A89;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 a:visited {
-	color : #192A89;
+	color: #192A89;
 }
 
 a:hover {
-	color : #FF6600;
+	color: #FF6600;
 	text-decoration: underline;
-}	
-	
+}
+
 h1 {
 	font-size: 16px;
 	color: #192A89;
@@ -50,8 +50,8 @@ th {
 	background-color: #b7ddb4;
 }
 
-th,td {
-	padding-left: 0.5em; 
+th, td {
+	padding-left: 0.5em;
 	padding-right: 0.5em;
 }
 
@@ -63,33 +63,45 @@ th,td {
 	background-color: #e8f2fe;
 }
 
+.table-yellow {
+	background-color: #FFD9C5;
+}
+
+.table-purple {
+	background-color: #D9B2D9;
+}
+
+.table-red {
+	background-color: #FF9999;
+}
+
 .table-selected {
 	background-color: #FFCCCC;
 }
 
 .actionApplication {
-	border-left-style:solid;
-	border-left-color:grey;
+	border-left-style: solid;
+	border-left-color: grey;
 }
 
 .actionManager {
-	border-left-style:solid;
-	border-left-color:red;
+	border-left-style: solid;
+	border-left-color: red;
 }
 
 .actionOwner {
-	border-left-style:solid;
-	border-left-color:orange;
+	border-left-style: solid;
+	border-left-color: orange;
 }
 
 .actionInvited {
-	border-left-style:solid;
-	border-left-color:blue;
+	border-left-style: solid;
+	border-left-color: blue;
 }
 
 .actionUser {
-	border-left-style:solid;
-	border-left-color:green;
+	border-left-style: solid;
+	border-left-color: green;
 }
 
 .priority1 {
@@ -111,5 +123,3 @@ th,td {
 .priority5 {
 	color: #ff0000;
 }
-
-

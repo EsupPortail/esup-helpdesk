@@ -19,7 +19,7 @@ public class NullCleaner implements ReplyToMessageCleaner {
      * @see org.esupportail.helpdesk.services.feed.imap.replytocleaner.ReplyToMessageCleaner#clean(java.lang.String)
      */
     @Override
-	public String clean(final String input) {
+    public String clean(final String input) {
         return input;
     }
 }

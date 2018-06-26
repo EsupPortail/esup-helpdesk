@@ -222,241 +222,308 @@
 	}
 </script>
 <e:page stringsVar="msgs" menuItem="preferences" locale="#{sessionController.locale}" >
-	<%@include file="_navigation.jsp"%>
+    <t:htmlTag id="managerPreferences" value="div" styleClass="page-wrapper preferences">
+               <t:htmlTag id="header" value="header" styleClass="header">
+                    <%@include file="_header.jsp"%>
+                </t:htmlTag>
+                <t:htmlTag value="div" styleClass="columns">
+                    <t:htmlTag value="aside" styleClass="navigation">
+                        <%@include file="_navigation.jsp"%>
+                    </t:htmlTag>
 
-	<h:panelGroup rendered="#{not preferencesController.pageAuthorized}" >
-		<%@include file="_auth.jsp"%>
-	</h:panelGroup>
- 	<e:form 
-		freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}" 
-		showSubmitPopupText="#{sessionController.showSubmitPopupText}" 
-		showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
-		id="preferencesForm" rendered="#{preferencesController.userManagerOrAdmin}" >
-		<e:panelGrid columns="2" columnClasses="colLeft,colRight" width="100%" >
-			<e:section value="#{msgs['MANAGER_PREFERENCES.TITLE']}" />
-			<h:panelGroup>
-				<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('preferencesForm:cancelButton');" >
-					<e:bold value="#{msgs['_.BUTTON.BACK']} " />
-					<t:graphicImage value="/media/images/back.png"
-						alt="#{msgs['_.BUTTON.BACK']}" 
-						title="#{msgs['_.BUTTON.BACK']}" />
-				</h:panelGroup>
-				<e:commandButton id="cancelButton" action="userPreferences" style="display: none"
-					value="#{msgs['_.BUTTON.BACK']}" immediate="true" />
-			</h:panelGroup>
-		</e:panelGrid>
-		<e:messages />
-		<e:paragraph value="#{msgs['MANAGER_PREFERENCES.TEXT.TOP']}" />
-		<e:outputLabel for="controlPanelRefreshDelay" value="#{msgs['MANAGER_PREFERENCES.TEXT.CONTROL_PANEL_REFRESH_DELAY']} " />
-		<e:selectOneMenu id="controlPanelRefreshDelay" onchange="javascript:{simulateLinkClick('preferencesForm:updateUserButton');}"
-			value="#{preferencesController.currentUser.controlPanelRefreshDelay}" >
-			<f:selectItems value="#{preferencesController.controlPanelRefreshDelayItems}" />
-		</e:selectOneMenu>
-		<e:commandButton style="display: none" value="#{msgs['_.BUTTON.CHANGE']}" 
-			id="updateUserButton" action="#{preferencesController.updateUser}" />
-		<t:htmlTag value="br" />
-        <e:commandButton id="toggleFaqReportsButton" action="#{preferencesController.toggleFaqReports}"
-            style="display: none"
-            value="#{msgs[preferencesController.currentUser.receiveFaqReports ? 'MANAGER_PREFERENCES.BUTTON.DISABLE_FAQ_REPORTS' : 'MANAGER_PREFERENCES.BUTTON.ENABLE_FAQ_REPORTS']}" >
-        </e:commandButton>
-        <h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('preferencesForm:toggleFaqReportsButton');" >
-            <t:graphicImage value="/media/images/enable-faq-reports.png"
-                alt="#{msgs['MANAGER_PREFERENCES.BUTTON.ENABLE_FAQ_REPORTS']}" 
-                title="#{msgs['MANAGER_PREFERENCES.BUTTON.ENABLE_FAQ_REPORTS']}" 
-                rendered="#{not preferencesController.currentUser.receiveFaqReports}" />
-            <t:graphicImage value="/media/images/disable-faq-reports.png"
-                alt="#{msgs['MANAGER_PREFERENCES.BUTTON.DISABLE_FAQ_REPORTS']}" 
-                title="#{msgs['MANAGER_PREFERENCES.BUTTON.DISABLE_FAQ_REPORTS']}" 
-                rendered="#{preferencesController.currentUser.receiveFaqReports}" />
-            <e:bold value=" #{msgs[preferencesController.currentUser.receiveFaqReports ? 'MANAGER_PREFERENCES.BUTTON.DISABLE_FAQ_REPORTS' : 'MANAGER_PREFERENCES.BUTTON.ENABLE_FAQ_REPORTS']}" />
-        </h:panelGroup>
-        <h:panelGroup rendered="#{preferencesController.userManager}">
-	        <t:htmlTag value="br" />
-	        <e:commandButton id="toggleMonitoringButton" action="#{preferencesController.toggleMonitoring}"
-	            style="display: none"
-	            value="#{msgs[preferencesController.currentUser.receiveManagerMonitoring ? 'MANAGER_PREFERENCES.BUTTON.DISABLE_MONITORING' : 'MANAGER_PREFERENCES.BUTTON.ENABLE_MONITORING']}" >
-	        </e:commandButton>
-	        <h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('preferencesForm:toggleMonitoringButton');" >
-	            <t:graphicImage value="/media/images/enable-monitoring.png"
-	                alt="#{msgs['MANAGER_PREFERENCES.BUTTON.ENABLE_MONITORING']}" 
-	                title="#{msgs['MANAGER_PREFERENCES.BUTTON.ENABLE_MONITORING']}" 
-	                rendered="#{not preferencesController.currentUser.receiveManagerMonitoring}" />
-	            <t:graphicImage value="/media/images/disable-monitoring.png"
-	                alt="#{msgs['MANAGER_PREFERENCES.BUTTON.DISABLE_MONITORING']}" 
-	                title="#{msgs['MANAGER_PREFERENCES.BUTTON.DISABLE_MONITORING']}" 
-	                rendered="#{preferencesController.currentUser.receiveManagerMonitoring}" />
-	            <e:bold value=" #{msgs[preferencesController.currentUser.receiveManagerMonitoring ? 'MANAGER_PREFERENCES.BUTTON.DISABLE_MONITORING' : 'MANAGER_PREFERENCES.BUTTON.ENABLE_MONITORING']}" />
-	        </h:panelGroup>
-	        <t:htmlTag value="br" />
-			<e:commandButton id="toggleTicketReportsButton" action="#{preferencesController.toggleTicketReports}"
-				style="display: none"
-				value="#{msgs[preferencesController.currentUser.receiveTicketReports ? 'MANAGER_PREFERENCES.BUTTON.DISABLE_TICKET_REPORTS' : 'MANAGER_PREFERENCES.BUTTON.ENABLE_TICKET_REPORTS']}" >
-			</e:commandButton>
-			<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('preferencesForm:toggleTicketReportsButton');" >
-				<t:graphicImage value="/media/images/enable-ticket-reports.png"
-					alt="#{msgs['MANAGER_PREFERENCES.BUTTON.ENABLE_TICKET_REPORTS']}" 
-					title="#{msgs['MANAGER_PREFERENCES.BUTTON.ENABLE_TICKET_REPORTS']}" 
-					rendered="#{not preferencesController.currentUser.receiveTicketReports}" />
-				<t:graphicImage value="/media/images/disable-ticket-reports.png"
-					alt="#{msgs['MANAGER_PREFERENCES.BUTTON.DISABLE_TICKET_REPORTS']}" 
-					title="#{msgs['MANAGER_PREFERENCES.BUTTON.DISABLE_TICKET_REPORTS']}" 
-					rendered="#{preferencesController.currentUser.receiveTicketReports}" />
-				<e:bold value=" #{msgs[preferencesController.currentUser.receiveTicketReports ? 'MANAGER_PREFERENCES.BUTTON.DISABLE_TICKET_REPORTS' : 'MANAGER_PREFERENCES.BUTTON.ENABLE_TICKET_REPORTS']}" />
-			</h:panelGroup>
-			<h:panelGroup rendered="#{preferencesController.currentUser.receiveTicketReports}" >
-				<t:htmlTag value="br" />
-				<e:selectBooleanCheckbox id="reportsAllInOne"
-					value="#{preferencesController.currentUser.receiveTicketReportsAllInOne}"
-					onchange="simulateLinkClick('preferencesForm:updateUserButton');" />
-				<e:outputLabel for="reportsAllInOne" value=" #{msgs['MANAGER_PREFERENCES.TEXT.GROUP_REPORTS']} " />
-				<t:graphicImage value="/media/images/group-reports.png" />
-			</h:panelGroup>
-			<h:panelGroup >
-				<t:htmlTag value="br" />
-				<e:selectBooleanCheckbox id="showTicketAfterClosure"
-					value="#{preferencesController.currentUser.showTicketAfterClosure}"
-					onchange="simulateLinkClick('preferencesForm:updateUserButton');" />
-				<e:outputLabel for="showTicketAfterClosure" value=" #{msgs['MANAGER_PREFERENCES.TEXT.SHOW_TICKET_AFTER_CLOSURE']} " />
-			</h:panelGroup>
-			<t:dataList id="data" value="#{preferencesController.departmentManagers}"
-				var="departmentManager" rowIndexVar="index"
-				rendered="#{preferencesController.currentUser.receiveManagerMonitoring or preferencesController.currentUser.receiveTicketReports}">
-				<t:htmlTag value="hr" />
-				<e:subSection value="#{msgs['MANAGER_PREFERENCES.DEPARTMENT_SUBTITLE']}" >
-					<f:param value="#{departmentManager.department.label}" />
-				</e:subSection>
-				<e:panelGrid columns="3" 
-					rendered="#{preferencesController.currentUser.receiveManagerMonitoring}" >
-					<e:text value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.HEADER']} " />
-					<e:selectOneMenu id="monitoringProfile" onchange="javascript:{monitoringProfileOnchange(#{index}); return false;}" >
-						<f:selectItem itemValue="none" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.NONE']}" />
-						<f:selectItem itemValue="minimal" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.MINIMAL']}" />
-						<f:selectItem itemValue="medium" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.MEDIUM']}" />
-						<f:selectItem itemValue="assiduous" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.ASSIDUOUS']}" />
-						<f:selectItem itemValue="complete" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.COMPLETE']}" />
-						<f:selectItem itemValue="" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.CUSTOM']}" />
-					</e:selectOneMenu>
-					<e:italic id="monitoringProfileHelp" value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.HELP']} " />
-				</e:panelGrid>
-				<e:panelGrid columns="2" id="monitoringCheckboxes" 
-					rendered="#{preferencesController.currentUser.receiveManagerMonitoring}" >
-					<e:text value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROMPT.ANY']}" />
-					<h:panelGroup> 
-						<e:selectBooleanCheckbox id="monitoring-any-2" onclick="javascript:{monitoringCheckboxOnclick(#{index},'any',2);}" />
-						<e:text id="text-any-2" value="#{msgs[ticketMonitoringI18nKeyProvider[2]]} " /> 
-						<e:selectBooleanCheckbox id="monitoring-any-1" onclick="javascript:{monitoringCheckboxOnclick(#{index},'any',1);}" />
-						<e:text id="text-any-1" value="#{msgs[ticketMonitoringI18nKeyProvider[1]]} " /> 
-						<e:selectBooleanCheckbox id="monitoring-any-0" onclick="javascript:{monitoringCheckboxOnclick(#{index},'any',0);}" />
-						<e:text id="text-any-0" value="#{msgs[ticketMonitoringI18nKeyProvider[0]]} " /> 
-						<e:selectOneMenu id="type-any" onclick="javascript:{monitoringTypeOnchange(#{index},'any');}" 
-							value="#{departmentManager.ticketMonitoringAny}" style="display: none" >
-							<f:selectItems value="#{preferencesController.ticketMonitoringItems}" />
-						</e:selectOneMenu>
-					</h:panelGroup>
-					<e:text value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROMPT.CATEGORY']}" />
-					<h:panelGroup>
-						<e:selectBooleanCheckbox id="monitoring-category-2" onclick="javascript:{monitoringCheckboxOnclick(#{index},'category',2);}" />
-						<e:text id="text-category-2" value="#{msgs[ticketMonitoringI18nKeyProvider[2]]} " /> 
-						<e:selectBooleanCheckbox id="monitoring-category-1" onclick="javascript:{monitoringCheckboxOnclick(#{index},'category',1);}" />
-						<e:text id="text-category-1" value="#{msgs[ticketMonitoringI18nKeyProvider[1]]} " /> 
-						<e:selectBooleanCheckbox id="monitoring-category-0" onclick="javascript:{monitoringCheckboxOnclick(#{index},'category',0);}" />
-						<e:text id="text-category-0" value="#{msgs[ticketMonitoringI18nKeyProvider[0]]} " /> 
-						<e:selectOneMenu id="type-category" onclick="javascript:{monitoringTypeOnchange(#{index},'category');}" 
-							value="#{departmentManager.ticketMonitoringCategory}" style="display: none" >
-							<f:selectItems value="#{preferencesController.ticketMonitoringItems}" />
-						</e:selectOneMenu>
-					</h:panelGroup>
-					<e:text value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROMPT.MANAGED']}" />
-					<h:panelGroup>
-						<e:selectBooleanCheckbox id="monitoring-managed-2" onclick="javascript:{monitoringCheckboxOnclick(#{index},'managed',2);}" />
-						<e:text id="text-managed-2" value="#{msgs[ticketMonitoringI18nKeyProvider[2]]} " /> 
-						<e:selectBooleanCheckbox id="monitoring-managed-1" onclick="javascript:{monitoringCheckboxOnclick(#{index},'managed',1);}" />
-						<e:text id="text-managed-1" value="#{msgs[ticketMonitoringI18nKeyProvider[1]]} " /> 
-						<e:selectBooleanCheckbox id="monitoring-managed-0" onclick="javascript:{monitoringCheckboxOnclick(#{index},'managed',0);}" />
-						<e:text id="text-managed-0" value="#{msgs[ticketMonitoringI18nKeyProvider[0]]} " /> 
-						<e:selectOneMenu id="type-managed" onclick="javascript:{monitoringTypeOnchange(#{index},'managed');}" 
-							value="#{departmentManager.ticketMonitoringManaged}" style="display: none" >
-							<f:selectItems value="#{preferencesController.ticketMonitoringItems}" />
-						</e:selectOneMenu>
-					</h:panelGroup>
-				</e:panelGrid>
-				<e:panelGrid columns="4" columnClasses="colLeftNowrap,colLeftNowrap,colLeftNowrap,colLeftNowrap" 
-					rendered="#{preferencesController.currentUser.receiveTicketReports}" >
-					<h:panelGroup id="reportProfilePanel" >
-						<e:text value=" #{msgs['MANAGER_PREFERENCES.REPORT.HEADER']} " />
-						<e:selectOneMenu id="reportProfile" value="#{departmentManager.reportType}" 
-							onchange="javascript:{updateReport(#{index}, #{preferencesController.currentUser.receiveTicketReports});return false;}" >
-							<f:selectItem itemValue="" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.NONE']}" />
-							<f:selectItem itemValue="M" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.M']}" />
-							<f:selectItem itemValue="MC" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MC']}" />
-							<f:selectItem itemValue="MF" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MF']}" />
-							<f:selectItem itemValue="MCF" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MCF']}" />
-							<f:selectItem itemValue="MFC" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MFC']}" />
-							<f:selectItem itemValue="MCFO" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MCFO']}" />
-							<f:selectItem itemValue="MFCO" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MFCO']}" />
-						</e:selectOneMenu>
-					</h:panelGroup>
-					<h:panelGroup id="reportTimePanel" >
-						<e:bold value=" #{msgs['MANAGER_PREFERENCES.REPORT.TIME']} " />
-						<e:selectOneMenu id="reportTime1" value="#{departmentManager.reportTime1}" 
-							onchange="javascript:{updateReport(#{index}, #{preferencesController.currentUser.receiveTicketReports});return false;}" >
-							<f:selectItems value="#{preferencesController.reportTimeItems}" />
-						</e:selectOneMenu>
-					</h:panelGroup>
-					<e:selectOneMenu id="reportTime2" value="#{departmentManager.reportTime2}" >
-						<f:selectItems value="#{preferencesController.reportTimeItems}" />
-					</e:selectOneMenu>
-					<h:panelGroup id="reportWeekendPanel" >
-						<e:selectBooleanCheckbox id="reportWeekend" value="#{departmentManager.reportWeekend}" />
-						<e:text value=" #{msgs['MANAGER_PREFERENCES.REPORT.WEEKEND']}" />
-						<e:commandButton id="testReportButton" action="#{preferencesController.updateManagerAndTestReport}"
-							style="display: none"
-							value="#{msgs['MANAGER_PREFERENCES.BUTTON.TEST_REPORT']}" >
-							<f:param value="#{departmentManager.department.label}" />
-							<t:updateActionListener value="#{departmentManager}" 
-								property="#{preferencesController.departmentManagerToUpdate}" />
-						</e:commandButton>
-						<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('preferencesForm:data:#{index}:testReportButton');" >
-							<e:bold value=" " />
-							<t:graphicImage value="/media/images/report.png" />
-							<e:bold value=" #{msgs['MANAGER_PREFERENCES.BUTTON.TEST_REPORT']} " />
-						</h:panelGroup>
-					</h:panelGroup>
-				</e:panelGrid>
-				<t:htmlTag value="br" /> 
-				<e:commandButton id="updateButton" action="#{preferencesController.updateManager}"
-					style="display: none"
-					value="#{msgs['MANAGER_PREFERENCES.BUTTON.UPDATE']}" >
-					<f:param value="#{departmentManager.department.label}" />
-					<t:updateActionListener value="#{departmentManager}" 
-						property="#{preferencesController.departmentManagerToUpdate}" />
-				</e:commandButton>
-				<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('preferencesForm:data:#{index}:updateButton');" >
-					<t:graphicImage value="/media/images/save.png"
-						alt="#{msgs['MANAGER_PREFERENCES.ALT.UPDATE']}" 
-						title="#{msgs['MANAGER_PREFERENCES.ALT.UPDATE']}" />
-					<e:bold value=" #{msgs['MANAGER_PREFERENCES.BUTTON.UPDATE']}" >
-						<f:param value="#{departmentManager.department.label}" />
-					</e:bold>
-				</h:panelGroup>
-			</t:dataList>
-		</h:panelGroup>
-	</e:form>
-	<t:aliasBean alias="#{controller}" value="#{preferencesController}" >
-		<%@include file="_signature.jsp"%>
-	</t:aliasBean>
-	<h:outputText value="<script type=&quot;text/javascript&quot;>" escape="false" />
-	<t:dataList 
-		id="initData" value="#{preferencesController.departmentManagers}"
-		var="departmentManager" rowIndexVar="index">
-		<h:outputText 
-			value="initMonitoring(#{index}, #{departmentManager.ticketMonitoringAny}, #{departmentManager.ticketMonitoringCategory}, #{departmentManager.ticketMonitoringManaged});" 
-			escape="false" 
-			rendered="#{preferencesController.currentUser.receiveManagerMonitoring}" />
-		<h:outputText 
-			value="updateReport(#{index}, #{preferencesController.currentUser.receiveTicketReports});" 
-			escape="false"  
-			rendered="#{preferencesController.currentUser.receiveTicketReports}" />
-	</t:dataList>
-	<h:outputText value="</script>" escape="false" />
+                    <t:htmlTag value="main" styleClass="content">
+                        <t:htmlTag value="div" styleClass="content-inner">
+                            <h:panelGroup rendered="#{not preferencesController.pageAuthorized}" >
+                                <%@include file="_auth.jsp"%>
+                            </h:panelGroup>
+                            <e:form
+                                freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"
+                                showSubmitPopupText="#{sessionController.showSubmitPopupText}"
+                                showSubmitPopupImage="#{sessionController.showSubmitPopupImage}"
+                                id="preferencesForm" rendered="#{preferencesController.userManagerOrAdmin}" >
+                                     <t:htmlTag value="div" styleClass="message">
+                                             <e:messages/>
+                                     </t:htmlTag>
+                                     <t:htmlTag value="div" styleClass="dashboard-header">
+                                        <t:htmlTag value="div" styleClass="controlPanel-title">
+                                            <t:htmlTag value="h1">
+                                                <t:htmlTag value="span">
+                                                    <h:outputText value="#{msgs['PREFERENCES.TITLE']}"/>
+                                                </t:htmlTag>
+                                                <h:panelGroup rendered="#{preferencesController.userManagerOrAdmin}">
+                                                     <t:htmlTag value="span">
+                                                        <h:outputText value="#{msgs['CONTROL_PANEL.TITLE.MANAGER']}"/>
+                                                     </t:htmlTag>
+                                                </h:panelGroup>
+                                            </t:htmlTag>
+
+                                            <t:htmlTag styleClass="dashboard-toggle" value="div">
+                                                <h:panelGroup
+                                                    rendered="#{preferencesController.userManagerOrAdmin}">
+                                                    <h:panelGroup style="cursor: pointer"
+                                                        onclick="simulateLinkClick('preferencesForm:userPreferencesButton');">
+                                                        <t:htmlTag value="i"
+                                                        styleClass="fas fa-toggle-on"/>
+                                                    </h:panelGroup>
+                                                    <e:commandButton style="display: none" id="userPreferencesButton" action="userPreferences"
+                                                        value="#{msgs['_.BUTTON.BACK']}" immediate="true" />
+                                                </h:panelGroup>
+                                            </t:htmlTag>
+                                        </t:htmlTag>
+                                     </t:htmlTag>
+                                     <t:htmlTag value="fieldset">
+                                          <t:htmlTag value="legend">
+                                              <t:htmlTag value="span" >
+                                                        <h:outputText value="#{msgs['MANAGER_PREFERENCES.TEXT.CONTROL_PANEL_REFRESH_DELAY']}"/>
+                                              </t:htmlTag>
+                                          </t:htmlTag>
+                                          <t:htmlTag value="div" styleClass="form-item">
+                                                <e:selectOneMenu styleClass="selectOneMenu" id="controlPanelRefreshDelay"
+                                                     value="#{preferencesController.currentUser.controlPanelRefreshDelay}" >
+                                                     <f:selectItems value="#{preferencesController.controlPanelRefreshDelayItems}" />
+                                                </e:selectOneMenu>
+                                          </t:htmlTag>
+                                           <t:htmlTag value="div" styleClass="form-item form-submit">
+                                                <e:commandButton value="#{msgs['_.BUTTON.UPDATE']}"
+                                                       id="updateRefreshDelay" action="#{preferencesController.updateUser}" />
+                                           </t:htmlTag>
+                                     </t:htmlTag>
+
+
+
+                                     <t:htmlTag value="fieldset" rendered="#{preferencesController.userManager}">
+                                          <t:htmlTag value="legend">
+                                              <t:htmlTag value="span" >
+                                                        <h:outputText value="#{msgs['MANAGER_PREFERENCES.MONITORING.TITLE']}"/>
+                                              </t:htmlTag>
+                                          </t:htmlTag>
+                                          <t:htmlTag value="div" styleClass="form-item form-submit">
+                                            <e:commandButton id="toggleMonitoringButton" action="#{preferencesController.toggleMonitoring}"
+                                                value="#{msgs[preferencesController.currentUser.receiveManagerMonitoring ? 'MANAGER_PREFERENCES.BUTTON.DISABLE_MONITORING' : 'MANAGER_PREFERENCES.BUTTON.ENABLE_MONITORING']}" />
+                                          </t:htmlTag>
+                                     </t:htmlTag>
+
+                                     <t:htmlTag value="fieldset" rendered="#{preferencesController.userManager}">
+                                          <t:htmlTag value="legend">
+                                              <t:htmlTag value="span" >
+                                                        <h:outputText value="#{msgs['MANAGER_PREFERENCES.TICKET_REPORTS.TITLE']}"/>
+                                              </t:htmlTag>
+                                          </t:htmlTag>
+                                          <t:htmlTag value="div" styleClass="form-item form-submit">
+                                            <e:commandButton id="toggleTicketReportsButton" action="#{preferencesController.toggleTicketReports}"
+                                                value="#{msgs[preferencesController.currentUser.receiveTicketReports ? 'MANAGER_PREFERENCES.BUTTON.DISABLE_TICKET_REPORTS' : 'MANAGER_PREFERENCES.BUTTON.ENABLE_TICKET_REPORTS']}" />
+                                          </t:htmlTag>
+                                     </t:htmlTag>
+
+                                     <t:htmlTag value="fieldset" rendered="#{preferencesController.userManager && preferencesController.currentUser.receiveTicketReports}">
+                                          <t:htmlTag value="legend">
+                                              <t:htmlTag value="span" >
+                                                        <h:outputText value="#{msgs['MANAGER_PREFERENCES.GROUP_REPORTS.TITLE']}"/>
+                                              </t:htmlTag>
+                                          </t:htmlTag>
+                                          <t:htmlTag value="div" styleClass="form-item form-checkbox">
+                                            <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="reportsAllInOne"
+                                                value="#{preferencesController.currentUser.receiveTicketReportsAllInOne}"/>
+                                            <e:outputLabel for="reportsAllInOne" value=" #{msgs['MANAGER_PREFERENCES.TEXT.GROUP_REPORTS']} " />
+                                          </t:htmlTag>
+                                          <t:htmlTag value="div" styleClass="form-item form-submit">
+                                                <e:commandButton value="#{msgs['_.BUTTON.UPDATE']}"
+                                                       id="updateReceiveTicketReportsAllInOne" action="#{preferencesController.updateUser}" />
+                                          </t:htmlTag>
+                                     </t:htmlTag>
+
+                                     <t:htmlTag value="fieldset" rendered="#{preferencesController.userManager}">
+                                          <t:htmlTag value="legend">
+                                              <t:htmlTag value="span" >
+                                                        <h:outputText value="#{msgs['MANAGER_PREFERENCES.SHOW_TICKET_AFTER_CLOSURE.TITLE']}"/>
+                                              </t:htmlTag>
+                                          </t:htmlTag>
+                                          <t:htmlTag value="div" styleClass="form-item form-checkbox">
+                                            <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="showTicketAfterClosure"
+                                                value="#{preferencesController.currentUser.showTicketAfterClosure}"/>
+                                            <e:outputLabel for="showTicketAfterClosure" value="#{msgs['MANAGER_PREFERENCES.TEXT.SHOW_TICKET_AFTER_CLOSURE']} " />
+                                          </t:htmlTag>
+                                          <t:htmlTag value="div" styleClass="form-item form-submit">
+                                                <e:commandButton value="#{msgs['_.BUTTON.UPDATE']}"
+                                                       id="updateShowTicketAfterClosure" action="#{preferencesController.updateUser}" />
+                                          </t:htmlTag>
+                                     </t:htmlTag>
+
+                                     <t:htmlTag value="fieldset">
+                                          <t:htmlTag value="legend">
+                                              <t:htmlTag value="span" >
+                                                        <h:outputText value="#{msgs['MANAGER_PREFERENCES.FAQ_REPORTS.TITLE']}"/>
+                                              </t:htmlTag>
+                                          </t:htmlTag>
+                                          <t:htmlTag value="div" styleClass="form-item form-submit">
+                                            <e:commandButton id="toggleFaqReportsButton" action="#{preferencesController.toggleFaqReports}"
+                                                value="#{msgs[preferencesController.currentUser.receiveFaqReports ? 'MANAGER_PREFERENCES.BUTTON.DISABLE_FAQ_REPORTS' : 'MANAGER_PREFERENCES.BUTTON.ENABLE_FAQ_REPORTS']}" />
+                                          </t:htmlTag>
+                                     </t:htmlTag>
+
+                                <t:htmlTag value="div" rendered="#{preferencesController.userManager}">
+
+                                    <t:dataList id="data" value="#{preferencesController.departmentManagers}"
+                                        var="departmentManager" rowIndexVar="index"
+                                        rendered="#{preferencesController.currentUser.receiveManagerMonitoring or preferencesController.currentUser.receiveTicketReports}">
+
+                                        <t:htmlTag value="fieldset" styleClass="collapsible collapsed service-preference" rendered="#{preferencesController.userManager}">
+                                          <t:htmlTag value="legend">
+                                              <t:htmlTag value="span" >
+                                                <e:text value="#{msgs['MANAGER_PREFERENCES.DEPARTMENT_SUBTITLE']}" >
+                                                    <f:param value="#{departmentManager.department.label}" />
+                                                </e:text>
+                                              </t:htmlTag>
+                                          </t:htmlTag>
+                                          <t:htmlTag value="div">
+
+
+                                          <t:htmlTag value="div" styleClass="form-block" rendered="#{preferencesController.currentUser.receiveManagerMonitoring}">
+                                            <t:htmlTag value="h2">
+                                                    <h:outputText value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.HEADER']} " />
+                                            </t:htmlTag>
+                                            <t:htmlTag value="div" styleClass="form-item form-checkbox">
+
+                                                <e:selectOneMenu styleClass="selectOneMenu" id="monitoringProfile" onchange="javascript:{monitoringProfileOnchange(#{index}); return false;}" >
+                                                    <f:selectItem itemValue="none" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.NONE']}" />
+                                                    <f:selectItem itemValue="minimal" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.MINIMAL']}" />
+                                                    <f:selectItem itemValue="medium" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.MEDIUM']}" />
+                                                    <f:selectItem itemValue="assiduous" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.ASSIDUOUS']}" />
+                                                    <f:selectItem itemValue="complete" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.COMPLETE']}" />
+                                                    <f:selectItem itemValue="" itemLabel="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROFILE.CUSTOM']}" />
+                                                </e:selectOneMenu>
+                                                <e:italic id="monitoringProfileHelp" value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.HELP']} " />
+                                            </t:htmlTag>
+                                          </t:htmlTag>
+
+                                          <t:htmlTag value="div" id="monitoringCheckboxes" styleClass="form-block monitoringCheckboxes" rendered="#{preferencesController.currentUser.receiveManagerMonitoring}">
+                                                <t:htmlTag value="div" styleClass="form-item form-checkbox">
+                                                    <e:text value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROMPT.ANY']}" />
+                                                    <h:panelGroup>
+                                                        <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="monitoring-any-2" onclick="javascript:{monitoringCheckboxOnclick(#{index},'any',2);}" />
+                                                        <e:text id="text-any-2" value="#{msgs[ticketMonitoringI18nKeyProvider[2]]} " />
+                                                        <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="monitoring-any-1" onclick="javascript:{monitoringCheckboxOnclick(#{index},'any',1);}" />
+                                                        <e:text id="text-any-1" value="#{msgs[ticketMonitoringI18nKeyProvider[1]]} " />
+                                                        <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="monitoring-any-0" onclick="javascript:{monitoringCheckboxOnclick(#{index},'any',0);}" />
+                                                        <e:text id="text-any-0" value="#{msgs[ticketMonitoringI18nKeyProvider[0]]} " />
+                                                        <e:selectOneMenu styleClass="selectOneMenu" id="type-any" onclick="javascript:{monitoringTypeOnchange(#{index},'any');}"
+                                                            value="#{departmentManager.ticketMonitoringAny}" style="display: none" >
+                                                            <f:selectItems value="#{preferencesController.ticketMonitoringItems}" />
+                                                        </e:selectOneMenu>
+                                                    </h:panelGroup>
+                                                </t:htmlTag>
+
+                                                <t:htmlTag value="div" styleClass="form-item form-checkbox">
+                                                    <e:text value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROMPT.CATEGORY']}" />
+                                                    <h:panelGroup>
+                                                        <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="monitoring-category-2" onclick="javascript:{monitoringCheckboxOnclick(#{index},'category',2);}" />
+                                                        <e:text id="text-category-2" value="#{msgs[ticketMonitoringI18nKeyProvider[2]]} " />
+                                                        <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="monitoring-category-1" onclick="javascript:{monitoringCheckboxOnclick(#{index},'category',1);}" />
+                                                        <e:text id="text-category-1" value="#{msgs[ticketMonitoringI18nKeyProvider[1]]} " />
+                                                        <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="monitoring-category-0" onclick="javascript:{monitoringCheckboxOnclick(#{index},'category',0);}" />
+                                                        <e:text id="text-category-0" value="#{msgs[ticketMonitoringI18nKeyProvider[0]]} " />
+                                                        <e:selectOneMenu styleClass="selectOneMenu" id="type-category" onclick="javascript:{monitoringTypeOnchange(#{index},'category');}"
+                                                            value="#{departmentManager.ticketMonitoringCategory}" style="display: none" >
+                                                            <f:selectItems value="#{preferencesController.ticketMonitoringItems}" />
+                                                        </e:selectOneMenu>
+                                                    </h:panelGroup>
+                                                </t:htmlTag>
+
+                                                 <t:htmlTag value="div" styleClass="form-item form-checkbox">
+                                                    <e:text value="#{msgs['MANAGER_PREFERENCES.TICKET_MONITORING.PROMPT.MANAGED']}" />
+                                                    <h:panelGroup>
+                                                        <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="monitoring-managed-2" onclick="javascript:{monitoringCheckboxOnclick(#{index},'managed',2);}" />
+                                                        <e:text id="text-managed-2" value="#{msgs[ticketMonitoringI18nKeyProvider[2]]} " />
+                                                        <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="monitoring-managed-1" onclick="javascript:{monitoringCheckboxOnclick(#{index},'managed',1);}" />
+                                                        <e:text id="text-managed-1" value="#{msgs[ticketMonitoringI18nKeyProvider[1]]} " />
+                                                        <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="monitoring-managed-0" onclick="javascript:{monitoringCheckboxOnclick(#{index},'managed',0);}" />
+                                                        <e:text id="text-managed-0" value="#{msgs[ticketMonitoringI18nKeyProvider[0]]} " />
+                                                        <e:selectOneMenu styleClass="selectOneMenu" id="type-managed" onclick="javascript:{monitoringTypeOnchange(#{index},'managed');}"
+                                                            value="#{departmentManager.ticketMonitoringManaged}" style="display: none" >
+                                                            <f:selectItems value="#{preferencesController.ticketMonitoringItems}" />
+                                                        </e:selectOneMenu>
+                                                    </h:panelGroup>
+                                                </t:htmlTag>
+
+                                          </t:htmlTag>
+
+                                          <t:htmlTag value="div" styleClass="form-block" rendered="#{preferencesController.currentUser.receiveTicketReports}">
+                                            <t:htmlTag value="h2">
+                                                    <h:outputText value="#{msgs['MANAGER_PREFERENCES.REPORT.HEADER']} " />
+                                            </t:htmlTag>
+                                             <t:htmlTag value="div" styleClass="form-item" id="reportProfilePanel">
+                                                     <e:selectOneMenu styleClass="selectOneMenu" id="reportProfile" value="#{departmentManager.reportType}"
+                                                         onchange="javascript:{updateReport(#{index}, #{preferencesController.currentUser.receiveTicketReports});return false;}" >
+                                                         <f:selectItem itemValue="" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.NONE']}" />
+                                                         <f:selectItem itemValue="M" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.M']}" />
+                                                         <f:selectItem itemValue="MC" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MC']}" />
+                                                         <f:selectItem itemValue="MF" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MF']}" />
+                                                         <f:selectItem itemValue="MCF" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MCF']}" />
+                                                         <f:selectItem itemValue="MFC" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MFC']}" />
+                                                         <f:selectItem itemValue="MCFO" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MCFO']}" />
+                                                         <f:selectItem itemValue="MFCO" itemLabel="#{msgs['MANAGER_PREFERENCES.REPORT.PROFILE.MFCO']}" />
+                                                     </e:selectOneMenu>
+                                             </t:htmlTag>
+                                             <t:htmlTag value="div" styleClass="form-item " id="reportTimePanel">
+                                                     <e:outputLabel for="reportTime1" value=" #{msgs['MANAGER_PREFERENCES.REPORT.TIME']} "/>
+                                                     <e:selectOneMenu styleClass="selectOneMenu" id="reportTime1" value="#{departmentManager.reportTime1}"
+                                                         onchange="javascript:{updateReport(#{index}, #{preferencesController.currentUser.receiveTicketReports});return false;}" >
+                                                         <f:selectItems value="#{preferencesController.reportTimeItems}" />
+                                                     </e:selectOneMenu>
+                                                      <e:selectOneMenu  styleClass="selectOneMenu" id="reportTime2" value="#{departmentManager.reportTime2}" >
+                                                          <f:selectItems value="#{preferencesController.reportTimeItems}" />
+                                                      </e:selectOneMenu>
+                                             </t:htmlTag>
+
+                                             <t:htmlTag value="div" styleClass="form-item" id="reportWeekendPanel">
+                                                    <e:selectBooleanCheckbox styleClass="selectBooleanCheckbox" id="reportWeekend" value="#{departmentManager.reportWeekend}" />
+                                                    <e:text value=" #{msgs['MANAGER_PREFERENCES.REPORT.WEEKEND']}" />
+                                                     <e:commandButton id="testReportButton" styleClass="button--tertiary" action="#{preferencesController.updateManagerAndTestReport}"
+                                                         value="#{msgs['MANAGER_PREFERENCES.BUTTON.TEST_REPORT']}" >
+                                                         <f:param value="#{departmentManager.department.label}" />
+                                                         <t:updateActionListener value="#{departmentManager}"
+                                                             property="#{preferencesController.departmentManagerToUpdate}" />
+                                                     </e:commandButton>
+                                              </t:htmlTag>
+                                          </t:htmlTag>
+                                             <t:htmlTag value="div" styleClass="form-block">
+                                                        <t:htmlTag value="div" styleClass="form-item form-submit" >
+                                                            <e:commandButton id="updateButton" action="#{preferencesController.updateManager}"
+                                                                value="#{msgs['MANAGER_PREFERENCES.BUTTON.UPDATE']}" >
+                                                                <f:param value="#{departmentManager.department.label}" />
+                                                                <t:updateActionListener value="#{departmentManager}"
+                                                                    property="#{preferencesController.departmentManagerToUpdate}" />
+                                                            </e:commandButton>
+                                                       </t:htmlTag>
+                                             </t:htmlTag>
+                                        </t:htmlTag>
+                                        </t:htmlTag>
+                                    </t:dataList>
+
+
+                                </t:htmlTag>
+                            </e:form>
+
+                            <h:outputText value="<script type=&quot;text/javascript&quot;>" escape="false" />
+                            <t:dataList
+                                id="initData" value="#{preferencesController.departmentManagers}"
+                                var="departmentManager" rowIndexVar="index">
+                                <h:outputText
+                                    value="initMonitoring(#{index}, #{departmentManager.ticketMonitoringAny}, #{departmentManager.ticketMonitoringCategory}, #{departmentManager.ticketMonitoringManaged});"
+                                    escape="false"
+                                    rendered="#{preferencesController.currentUser.receiveManagerMonitoring}" />
+                                <h:outputText
+                                    value="updateReport(#{index}, #{preferencesController.currentUser.receiveTicketReports});"
+                                    escape="false"
+                                    rendered="#{preferencesController.currentUser.receiveTicketReports}" />
+                            </t:dataList>
+                            <h:outputText value="</script>" escape="false" />
+                    </t:htmlTag>
+                </t:htmlTag>
+            </t:htmlTag>
+            <t:htmlTag value="footer" styleClass="footer">
+                        <%@include file="_footer.jsp"%>
+            </t:htmlTag>
+        </t:htmlTag>
+
 </e:page>

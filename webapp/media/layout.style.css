@@ -1,0 +1,928 @@
+/* ------------------------------------ *\
+  CONTENTS
+\* ------------------------------------ */
+/**
+ * CONTENTS............You’re reading it!
+ */
+
+.columns {
+  display: flex;
+  min-height: 600px;
+}
+
+.navigation {
+  flex-basis: 280px;
+  background-color: #f3f3f3;
+
+}
+
+.content {
+  flex-basis: 86%;
+}
+
+.content .content-inner {
+  padding-left: 20px;
+}
+
+.header .region {
+  background-color: #1093d3;
+  display: flex;
+  height: 68px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header,
+.header .region,
+.header .region > div {
+  margin: 0;
+  padding: 0;
+}
+
+.header .region .portlet-section-text {
+  color: #ffffff;
+  padding: 0 1em;
+}
+
+.header .region .ent-link a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 1.4em;
+  border: none;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  padding: 0 1em;
+}
+
+.header .region .ent-link:hover {
+  background-color: #1D8AC0;
+}
+
+.header .region div:nth-child(2) {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.header .region .ent-link {
+  border-left: solid 2px #0f81ba;
+}
+
+.header .region .current-user {
+  display: flex;
+  align-items: center;
+  padding: 0 1em;
+}
+
+.footer .region {
+  background-color: #e7e7e7;
+  min-height: 50px;
+}
+
+.footer .region-inner {
+  display: flex;
+  justify-content: space-between;;
+}
+
+.footer .region-inner > div {
+  padding: 10px;
+}
+
+.portlet-footer-menu {
+  display: none;
+}
+
+/* ------------------------------------ *\
+  ==Blocks
+\* ------------------------------------ */
+
+.block-inline {
+  display: inline-block;
+}
+
+.block, .display-block {
+  display: block;
+}
+
+.block--card {
+  background-color: #ededed;
+  padding: 20px;
+  border-radius: 2px;
+  margin: 20px;
+  text-align: center;
+}
+
+.block--card:hover {
+  background-color: #e1e1e1;
+}
+
+.block--card h1 {
+  text-align: center;
+  line-height: 1em;
+}
+
+.block--card .fas {
+  display: block;
+  font-size: 4em;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.block--card:hover .fas,
+.block--actif .fas {
+  color: #1093d3;
+}
+
+.block.accordion {
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
+.block.accordion h2 {
+  margin: 0;
+  background-color: #ebebeb;
+  font-weight: normal;
+  font-size: 1rem;
+  padding: 7px 7px 7px 10px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.block.accordion h2 >span{
+  font-size: 1.2rem;
+}
+
+.block.accordion h2 .fas {
+  font-size: 1.2rem;
+}
+
+.block.accordion .content {
+  min-height: 80px;
+  padding: 10px;
+}
+
+/* ------------------------------------ *\
+  ==Tabs
+\* ------------------------------------ */
+ul.tabs {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  margin-top: 20px;
+
+}
+
+ul.tabs li {
+  background: none;
+  display: inline-block;
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #1093d3;
+}
+
+ul.tabs li:hover {
+  color: #0f81ba;
+  cursor: pointer;
+}
+
+ul.tabs li.current {
+  background: #ededed;
+  color: #666666;
+}
+
+ul.tabs li.current:hover {
+  color: #666666;
+  cursor: default;
+}
+
+.tab-content {
+  display: none;
+  background: #ededed;
+  padding: 10px 15px 15px 15px;
+  min-height: 200px;
+  margin: 0px 0px 40px 0px;
+}
+
+.tab-content.current {
+  display: block;
+}
+
+/* ------------------------------------ *\
+  ==welcome.faces
+\* ------------------------------------ */
+
+.welcome .content .region:nth-child(1) .region-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.welcome .content .region:nth-child(1) .region-inner .block {
+  flex-basis: 20%;
+}
+
+.content .login-form {
+  justify-content: center;
+  display: flex;
+}
+
+.welcome .content .region .region-inner .login-form .block {
+  flex-basis: 33%;
+}
+
+.login-form--application .form-block {
+  margin: 10px 0;
+  padding: 0 20px;
+}
+
+.login-form--application .form-block:nth-of-type(2) {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* ------------------------------------ *\
+  ==ticketAdd.faces
+\* ------------------------------------ */
+
+.ticket-form .form-block {
+  margin-bottom: 20px;
+}
+
+.category-filter .form-block {
+  display: flex;
+  align-items: center;
+}
+
+.category-filter .form-block .form-item:nth-child(1) {
+  display: flex;
+}
+
+.category-filter .form-block label,
+.category-filter .form-block input {
+  margin-right: 15px;
+}
+
+.category_choice {
+  margin-top: 20px;
+}
+
+@media (min-width: 1200px) {
+  .ticket-form,
+  .category_choice {
+    max-width: 60%;
+  }
+}
+
+.ticket-form .form-files,
+.ticket-form .form-properties {
+  margin-bottom: 20px;
+}
+
+/* ------------------------------------ *\
+  ==bookmarks.faces
+\* ------------------------------------ */
+
+.bookmarks .tab-content table th {
+  background-color: transparent;
+  padding: 5px 5px 20px 5px;
+  text-align: left;
+  border-bottom: solid 1px #707070;
+
+}
+
+.bookmarks .tab-content table th .portlet-section-text {
+  color: #707070;
+  text-transform: uppercase;
+}
+
+.bookmarks .tab-content table tbody tr:hover {
+  background-color: #f7f7f9;
+}
+
+.bookmarks .tab-content table tbody td {
+  border-bottom: solid thin #c6c6c6;
+  padding: 12px 5px;
+}
+
+.bookmarks .tab-content table tbody td > span {
+  color: #707070;
+  font-size: 0.95rem;
+}
+
+.bookmarks .tab-link.history .fa-cog {
+  font-size: 1.2rem;
+  color: #0f93d3;
+  cursor: pointer;
+}
+
+.bookmarks .tab-link.history .actions-wrapper {
+  display: none;
+}
+
+.bookmarks .tab-link.history.current {
+  position: relative;
+}
+
+.bookmarks .tab-link.history.current .actions-wrapper {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.bookmarks .tab-link.history.current .actions-list-wrapper {
+  left: 110px;
+}
+
+/* ------------------------------------ *\
+  ==controlPanel.faces
+\* ------------------------------------ */
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0 10px 0;
+  background-color: #e1e1e1;
+}
+
+.dashboard-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.dashboard-filter .form-item {
+  margin-right: 20px;
+}
+
+/* ------------------------------------ *\
+  ==ticketView.faces
+\* ------------------------------------ */
+
+.view-ticket_header {
+  background-color: #e1e1e1;
+  margin-top: 15px;
+}
+
+.view-ticket_header.sticky.fixed {
+  z-index: 50;
+  margin-top: 0;
+  box-shadow: 0 6px 4px -2px rgba(152, 152, 152, 0.5);
+}
+
+.view-ticket_header.sticky.fixed .region-inner > div:nth-child(1) {
+  margin-left: 300px;
+}
+
+.view-ticket_header .region-inner {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.view-ticket_title {
+  background-color: #f3f3f3;
+  margin-top: 0;
+}
+
+.view-ticket_title h1 {
+  margin: 0;
+  padding: 10px;
+  font-size: 1.45rem;
+}
+
+.view-ticket_header .region-inner > div:nth-child(1) {
+  display: flex;
+  align-items: center;
+}
+
+.view-ticket_header .region-inner > div:nth-child(1) > div:last-of-type {
+  margin-left: 20px;
+}
+
+.ticket-property {
+  width: 100%;
+  border-bottom: solid 1px #BBBBBB;
+  min-height: 60px;
+}
+
+.ticket-property-inner {
+  display: flex;
+  padding: 15px 10px;
+  align-items: flex-start;
+}
+
+.ticket-property-inner > div:nth-child(1) {
+  flex-basis: 120px;
+  padding-top: 5px;
+}
+
+.ticket-property-inner > div:nth-child(2) {
+  flex-basis: 300px;
+  padding-top: 5px;
+}
+
+.ticket-property-inner > div:nth-child(3) {
+  flex-basis: 80px;
+  min-width: 110px;
+}
+
+.ticket-property-inner > div:nth-child(4) {
+  max-width: 50%;
+  padding: 0 0 5px 40px;
+}
+
+.ticket-property_lib {
+  font-weight: bold;
+}
+
+.view-ticket_history .form-block:first-of-type {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 5px;
+}
+
+.history-container .portlet-table-header {
+  background-color: inherit;
+  color: #666;
+  text-align: left;
+}
+
+.view-ticket_history th {
+  padding-bottom: 5px;
+}
+
+.view-ticket_history td {
+  border-top: solid thin #c6c6c6;
+  vertical-align: text-top;
+}
+
+.view-ticket_history .col-main.view--full {
+  width: 60%;
+}
+
+.view-ticket_history .action--header {
+  padding: 8px 5px;
+  display: flex;
+  color: #707070;
+  padding-top: 10px;
+  font-size: 0.95rem;
+}
+
+.view-ticket_history .action--date, .view-ticket_history .action--title {
+  display: inline-block;
+  width: 100%;
+}
+
+.view-ticket_history .action--date {
+  width: 150px;
+}
+
+.view-ticket_history .action--content {
+  padding: 10px 10px 10px 0;
+  width: 100%;
+}
+
+.view-ticket_history .action-message {
+  padding: 8px;
+  background-color: #ffffff;
+  min-height: 35px;
+  border-radius: 2px;
+  display: inline-block;
+  width: 100%;
+}
+
+.history-container .col-option {
+  padding-top: 8px;
+  background-color: #f9f9f9;
+}
+
+.history-container .action--edit {
+  min-width: 80px;
+  text-align: center;
+}
+
+.history-container .action--scope .form-item.form-action input,
+.history-container .action--scope .form-item.form-action .cancel {
+  margin: 5px 5px 5px 0;
+}
+
+.action-scope-edit {
+  display: inline-block;
+}
+
+.history-container .action--scope .action-inner {
+
+}
+
+.history-container .action--scope .action-inner > span {
+  padding: 5px 0px;
+}
+
+.history-container .action--alert {
+  min-width: 180px;
+  padding-left: 8px;
+  position: relative;
+}
+
+.history-container .action-alert-recipient {
+  background-color: rgb(243, 243, 243);
+  color: rgb(102, 102, 102);
+  background-color: white;
+  border-radius: 2px;
+  padding: 3px 5px;
+  font-size: 1em;
+  font-weight: normal;
+  box-shadow: 3px 3px 6px #aaa;
+  position: absolute;
+  z-index: 1;
+  top: 33px;
+  left: 5px;
+}
+
+/*-------------Tickets TAB files---------------------*/
+.view-ticket_files .files_array {
+  margin: 20px 0 20px 5px;
+  width: 100%;
+}
+
+.view-ticket_files .files_array .portlet-table-header {
+  background-color: inherit;
+  color: #666;
+  text-align: left;
+  border-bottom: solid thin #9a9a9a;
+  padding-bottom: 5px;
+}
+
+.view-ticket_files .files_array th {
+  padding: 0px 5px;
+}
+
+.view-ticket_files .files_array .column {
+  padding: 10px 5px;
+  border-bottom: solid thin #adadad;
+  vertical-align: text-top;
+  text-align: left;
+}
+
+.view-ticket_files .files_array .column.file-name {
+  font-size: 1.2rem;
+  width: 30%;
+}
+
+.view-ticket_files .files_array .column.file-name > div {
+  min-height: 35px;
+}
+
+.view-ticket_files .files_array .column.file-info {
+  font-size: 0.95rem;
+  width: 10%;
+}
+
+.view-ticket_files .files_array .column.file-info span span {
+  display: block;
+}
+
+.view-ticket_files .files_array .column.file-scope {
+  width: 25%;
+}
+
+.view-ticket_files .files_array .column.file-info--user {
+  width: 20%;
+}
+
+.view-ticket_files .files_array .column.file-delete {
+  width: 15%;
+}
+
+/*--------------ticket extendedproperties------------------*/
+.view-ticket_secondary_properties .form-block {
+  display: flex;
+  padding: 10px 0;
+  border-bottom: solid thin #c6c6c6;
+}
+
+.view-ticket_secondary_properties .form-block > div {
+  padding: 5px 0;
+}
+
+.view-ticket_secondary_properties .form-block > div:first-of-type {
+  width: 150px;
+}
+
+.view-ticket_secondary_properties .ticket-property_edit-inner {
+  display: flex;
+  align-items: baseline;
+}
+
+.view-ticket_secondary_properties .ticket-property_edit-inner .form-item:first-of-type {
+  display: flex;
+  flex-direction: column;
+}
+
+.view-ticket_secondary_properties .ticket-property_edit-inner .form-item {
+  margin: 0 5px;
+}
+
+/*--------------ticketInvite------------------*/
+
+.view-ticket_invitations .form-block:last-of-type .form-item {
+  padding: 20px 0;
+}
+
+.view-ticket_invitations .invite_array .column {
+  padding: 10px 5px;
+  border-bottom: solid thin #adadad;
+  vertical-align: text-top;
+  text-align: left;
+}
+
+.view-ticket_invitations .invite_array tbody tr:first-of-type .column {
+  border-top: solid thin #adadad;
+}
+
+.view-ticket_invitations .invite_array .column:last-of-type .form-item {
+  text-align: right;
+}
+
+.ticketInvite .form-content .form-block {
+  margin-bottom: 20px;
+}
+
+.ticketInvite .form-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.ticketInvite .form-menu {
+  display: flex;
+  margin-top: 0;
+}
+
+.ticketInvite .form-menu .form-item {
+  padding: 5px 11px;
+  color: #1093d3;
+  cursor: pointer;
+}
+
+.ticketInvite .form-uids .button--secondary {
+  margin: 0 0 0 10px;
+}
+
+.ticketInvite .form-content {
+  padding: 15px 0 10px 15px;
+  background-color: #ededed;
+  min-height: 250px;
+}
+
+.ticketInvite .form-menu .current {
+  background-color: #ededed;
+  color: #666666;
+  cursor: default;
+}
+
+.ticketInvite .form-body .form-item {
+  margin-bottom: 20px;
+}
+
+.ticketInvite .ldap-search-form {
+  display: flex;
+}
+
+.ticketInvite .ldap-search-form .fa-search {
+  margin-left: 15px;
+}
+
+.ldap-search .form-block .form-item > input {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+@media (min-width: 1200px) {
+  .ticketInvite .form-body {
+    max-width: 60%;
+  }
+}
+
+/*--------------ticketMove------------------*/
+
+.ticketMove .form-content .form-block {
+  margin-bottom: 20px;
+}
+
+.ticketMove .form-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.ticketMove .form-menu {
+  display: flex;
+  margin: 0;
+}
+
+.ticketMove .form-menu .form-item {
+  padding: 5px 11px;
+  color: #1093d3;
+  cursor: pointer;
+}
+
+.ticketMove .form-content {
+  padding: 15px 0 10px 15px;
+  background-color: #ededed;
+  min-height: 250px;
+}
+
+.ticketMove .form-menu .current {
+  background-color: #ededed;
+  color: #666666;
+  cursor: default;
+}
+
+.ticketMove .form-body .form-item {
+  margin-bottom: 20px;
+}
+
+/*----------------------LDAP Search result page------------------*/
+
+@media (min-width: 1200px) {
+  .ldap-search-form {
+    max-width: 70%;
+  }
+}
+
+.ldap-search-form .form-block:last-of-type {
+  margin-top: 20px;
+}
+
+.formated-user-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.search-result-data td {
+  border-bottom: solid 1px #BBBBBB;
+}
+
+.user--display-name {
+  font-size: 1.2rem;
+}
+
+/*------------------------------------------------*/
+.tab-content {
+  padding-top: 20px;
+}
+
+.tab-content .form-item {
+  margin-bottom: 10px;
+}
+
+.tab-content .form-item:last-of-type {
+  margin-bottom: 0px;
+}
+
+/* ------------------------------------ *\
+  ==view ticket history
+\* ------------------------------------ */
+.view-ticket_history .action--content,
+.view-ticket_history .action--content {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+.view-ticket_history .action--quote {
+  padding-right: 20px;
+}
+
+/* ------------------------------------ *\
+  ==manager preference
+\* ------------------------------------ */
+
+.form-block.preference {
+  border: solid 1px #dddddd;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.form-block.preference h2 {
+  margin: 0;
+}
+
+.monitoringCheckboxes .form-item span:first-of-type span {
+  display: inline-block;
+  min-width: 250px;
+}
+
+.service-preference .form-block h2 {
+  font-size: 1.3rem;
+  margin-top: 12px;
+}
+
+.service-preference .form-block:first-of-type h2 {
+  margin-top: 0px;
+}
+
+.preferences fieldset {
+  background-color: #dddddd14;
+}
+
+.preferences legend {
+  background-color: #ffffff;
+  padding: 0 3px;
+}
+
+/* ------------------------------------ *\
+  ==Ticket assign
+\* ------------------------------------ */
+
+.ticketAssign .members-list {
+  width: 80%;
+}
+
+@media (min-width: 1200px) {
+  .ticketAssign .members-list {
+    width: 40%;
+  }
+}
+
+.members-list td {
+  border-bottom: solid 1px #c0c0c0;
+}
+
+.members-list .portlet-table-footer {
+  border-bottom: none;
+}
+
+.members-list .portlet-table-footer .form-submit {
+  text-align: right;
+}
+
+.ticketAssign .selected-manager {
+  font-size: 1.15rem;
+  border: 1px solid #ccc;
+  padding: 4px;
+  background-color: #efefef;
+}
+
+/* ------------------------------------ *\
+  ==search
+\* ------------------------------------ */
+.search-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.search-filter .form-item {
+  margin-right: 20px;
+}
+
+.advancedSearch-filter .form-item {
+  margin-right: 30px
+}
+
+.search-filter .form-item input[type='text'],
+.advancedSearch-filter .form-item input[type='text'] {
+  margin-bottom: 6px;
+}
+
+.advancedSearch-filter {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.advancedSearch-filter input[type='submit'].button--secondary {
+  margin-top: 30px;
+}
+
+.search .search-result-score{
+  display: inline-block;
+  width: 40px;
+}
+
+/* ------------------------------------ *\
+  ==responses
+\* ------------------------------------ */
+.response-content{
+  display: block;
+  background-color: #f3f3f3;
+  padding: 8px;
+  margin:4px 0 12px 0;
+  min-height: 50px;
+}
+
+.response-list .response-item{
+  margin-bottom:10px;
+}
+
+.response-content.hideme{
+  display: none !important;
+}

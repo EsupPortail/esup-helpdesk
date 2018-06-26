@@ -1,9 +1,10 @@
 <%@include file="_include.jsp"%>
 
-<h:panelGroup rendered="#{faqsController.department != null}" >
+<h:panelGroup styleClass="hideme" rendered="#{faqsController.department != null}" >
 	<e:section value="#{msgs['FAQS.TEXT.DEPARTMENT_TITLE']}" >
 		<f:param value="#{faqsController.department.label}" />
 	</e:section>
+
 	<h:panelGroup
 		rendered="#{faqsController.userCanEdit and faqsController.editInterface}" >
 		<e:outputLabel for="departmentScope" value="#{msgs['FAQS.TEXT.SCOPE_PROMPT']} " />

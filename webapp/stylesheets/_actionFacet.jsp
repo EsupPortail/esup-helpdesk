@@ -33,6 +33,24 @@
 		</h:panelGroup>
 	</h:panelGroup>
 </f:facet>
+<f:facet name="addByCate">
+	<h:panelGroup>
+		<h:panelGroup rendered="#{node.evalResult == null or departmentSelectionController.advanced}">
+			<t:graphicImage value="/media/images/action-add.png" />
+			<%@include file="_actionFor.jsp"%>
+			<e:italic value=" #{msgs['DEPARTMENT_SELECTION.ACTION.ADD_BY_CATE_ID']}" >
+				<f:param value="#{node.action.cateIds}" />
+			</e:italic>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{node.evalResult != null and not departmentSelectionController.advanced}" >
+			<t:graphicImage value="/media/images/action-added.png" />
+			<%@include file="_actionFor.jsp"%>
+			<e:text value=" #{msgs['DEPARTMENT_SELECTION.ACTION.ADD_BY_FILTER']}" >
+			</e:text>
+			<%@include file="_actionResult.jsp"%>
+		</h:panelGroup>
+	</h:panelGroup>
+</f:facet>
 <f:facet name="addByLabel">
 	<h:panelGroup>
 		<h:panelGroup rendered="#{node.evalResult == null or departmentSelectionController.advanced}">

@@ -81,13 +81,13 @@
 					</execution>
 				</executions>
 			</plugin>
-<plugin>            
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-war-plugin</artifactId>
-  <configuration>
-    <webXml>WebContent\WEB-INF\web.xml</webXml>        
-  </configuration>
-</plugin>			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webXml>WebContent\WEB-INF\web.xml</webXml>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -357,6 +357,11 @@
 			<groupId>org.apache.myfaces.core</groupId>
 			<artifactId>myfaces-api</artifactId>
 			<version>1.1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.myfaces.orchestra</groupId>
+			<artifactId>myfaces-orchestra-core</artifactId>
+			<version>1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.myfaces.core</groupId>

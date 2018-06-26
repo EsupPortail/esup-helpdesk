@@ -33,7 +33,7 @@
 	</bean> 
 
 	<bean id="helpdeskXFire"
-		lazy-init="true"
+		lazy-init="false"
 		parent="abstractXFire" >
 		<property name="serviceBean" ref="helpdesk" />
 		<property name="serviceClass" value="org.esupportail.helpdesk.services.remote.Helpdesk" />
@@ -41,7 +41,7 @@
 
 	<bean 
 		id="helpdesk" 
-		lazy-init="true"
+		lazy-init="false"
 		class="org.esupportail.helpdesk.services.remote.HelpdeskImpl"
 		>
 		<property name="domainService" ref="domainService" />

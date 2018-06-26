@@ -75,7 +75,7 @@ public class ControlPanelOrder implements Serializable {
 			}
 		}
 		if (orderParts.size() == 0) {
-			orderParts.add(new ControlPanelOrderPart("-" + ID));
+			orderParts.add(new ControlPanelOrderPart("-" + LAST_ACTION_DATE));
 		}
 	}
 

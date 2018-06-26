@@ -9,7 +9,11 @@ import java.util.Locale;
 import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.services.i18n.I18nService;
 import org.esupportail.commons.utils.Assert;
+import org.esupportail.helpdesk.dao.DaoService;
+import org.esupportail.helpdesk.domain.beans.Action;
 import org.esupportail.helpdesk.domain.beans.User;
+import org.esupportail.helpdesk.web.controllers.SessionController;
+import org.esupportail.helpdesk.web.controllers.TicketController;
 import org.springframework.beans.factory.InitializingBean;
 
 /** 
@@ -42,6 +46,16 @@ implements Serializable, InitializingBean, UserFormattingService {
 	 * The i18n service.
 	 */
 	private I18nService i18nService;
+	
+	/**
+	 * The daoService service.
+	 */
+	private DaoService daoService;
+	
+	/**
+	 * The session controller.
+	 */
+	private SessionController sessionController;
 	
 	/**
 	 * Bean constructor.
@@ -113,9 +127,17 @@ implements Serializable, InitializingBean, UserFormattingService {
 	@RequestCache
 	public String format(
 			final User user, 
-			final Locale locale) {
+			final boolean anonymous,
+			final Locale locale,
+			final User currentUser) {
 		if (user == null) {
 			return null;
+		}
+		//si le ticket est anonyme et que le user n'est pas manager
+		if( currentUser != null && !currentUser.equals(user) && anonymous && daoService.getDepartmentManagers(currentUser).isEmpty()){
+			return i18nService.getString(
+					"USER.DISPLAY_NAME", locale, 
+					i18nService.getString("USER.ANONYMOUS"));
 		}
 		if (printId && !user.getRealId().equals(user.getDisplayName())) {
 			return i18nService.getString(
@@ -126,6 +148,7 @@ implements Serializable, InitializingBean, UserFormattingService {
 		return i18nService.getString(
 				"USER.DISPLAY_NAME", locale, 
 				truncateDisplayName(user, locale));
+			
 	}
 
 	/**
@@ -183,6 +206,34 @@ implements Serializable, InitializingBean, UserFormattingService {
 	public void setIdMaxLength(final int idMaxLength) {
 		this.idMaxLength = idMaxLength;
 	}
-	
+
+	/**
+	 * @return the daoService
+	 */
+	protected DaoService getDaoService() {
+		return daoService;
+	}
+
+	/**
+	 * @param daoService the daoService to set
+	 */
+	public void setDaoService(final DaoService daoService) {
+		this.daoService = daoService;
+	}
+
+	/**
+	 * @param sessionController the sessionController to set
+	 */
+	public void setSessionController(final SessionController sessionController) {
+		this.sessionController = sessionController;
+	}
+
+	/**
+	 * @return the current user.
+	 */
+	public User getCurrentUser() {
+		return sessionController.getCurrentUser();
+	}
+
 }
 

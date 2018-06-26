@@ -21,6 +21,8 @@
 		<property name="casUserManager" ref="casUserManager" />
 		<property name="shibbolethUserManager" ref="shibbolethUserManager" />
 		<property name="specificUserManager" ref="specificUserManager" />
+		<property name="tryConvertMaillToCasUser" value="${auth.tryConvertMaillToCasUser}" />
+		<property name="mailToConvertPattern" value="${auth.mailToConvertPattern}" />
 	</bean>
 
 	<bean 

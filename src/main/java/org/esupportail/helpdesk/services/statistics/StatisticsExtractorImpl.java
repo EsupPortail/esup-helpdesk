@@ -231,8 +231,7 @@ public class StatisticsExtractorImpl implements StatisticsExtractor, Initializin
      * @see org.esupportail.helpdesk.services.statistics.StatisticsExtractor#getTicketCreationsByDay(
      * java.sql.Timestamp, java.sql.Timestamp, java.util.List, java.util.List)
      */
-    @Override
-	public Map<Timestamp, Integer> getTicketCreationsByDay(
+    public Map<Timestamp, Integer> getTicketCreationsByDay(
     		final Timestamp start, 
     		final Timestamp end,
     		final List<Department> departments,
@@ -275,8 +274,7 @@ public class StatisticsExtractorImpl implements StatisticsExtractor, Initializin
      * @see org.esupportail.helpdesk.services.statistics.StatisticsExtractor#getTicketCreationsByDayOfWeek(
      * java.sql.Timestamp, java.sql.Timestamp, java.util.List, java.util.List)
      */
-    @Override
-	public Map<Integer, Integer> getTicketCreationsByDayOfWeek(
+    public Map<Integer, Integer> getTicketCreationsByDayOfWeek(
     		final Timestamp start, 
     		final Timestamp end,
     		final List<Department> departments,
@@ -296,8 +294,7 @@ public class StatisticsExtractorImpl implements StatisticsExtractor, Initializin
      * @see org.esupportail.helpdesk.services.statistics.StatisticsExtractor#getTicketCreationsByHourOfDay(
      * java.sql.Timestamp, java.sql.Timestamp, java.util.List, java.util.List)
      */
-    @Override
-	public Map<Integer, Integer> getTicketCreationsByHourOfDay(
+    public Map<Integer, Integer> getTicketCreationsByHourOfDay(
     		final Timestamp start, 
     		final Timestamp end,
     		final List<Department> departments,
@@ -494,8 +491,7 @@ public class StatisticsExtractorImpl implements StatisticsExtractor, Initializin
      * @see org.esupportail.helpdesk.services.statistics.StatisticsExtractor#getTicketCreationsByDayOfWeekPerDepartment(
      * java.sql.Timestamp, java.sql.Timestamp, java.util.List, java.util.List)
      */
-    @Override
-	public Map<Integer, Map<Department, Integer>> getTicketCreationsByDayOfWeekPerDepartment(
+    public Map<Integer, Map<Department, Integer>> getTicketCreationsByDayOfWeekPerDepartment(
     		final Timestamp start, 
     		final Timestamp end,
     		final List<Department> departments,
@@ -523,8 +519,7 @@ public class StatisticsExtractorImpl implements StatisticsExtractor, Initializin
      * @see org.esupportail.helpdesk.services.statistics.StatisticsExtractor#getTicketCreationsByHourOfDayPerDepartment(
      * java.sql.Timestamp, java.sql.Timestamp, java.util.List, java.util.List)
      */
-    @Override
-	public Map<Integer, Map<Department, Integer>> getTicketCreationsByHourOfDayPerDepartment(
+    public Map<Integer, Map<Department, Integer>> getTicketCreationsByHourOfDayPerDepartment(
     		final Timestamp start, 
     		final Timestamp end,
     		final List<Department> departments,
@@ -677,8 +672,7 @@ public class StatisticsExtractorImpl implements StatisticsExtractor, Initializin
      * @see org.esupportail.helpdesk.services.statistics.StatisticsExtractor#getTicketCreationsByDayPerOrigin(
      * java.sql.Timestamp, java.sql.Timestamp, java.util.List, java.util.List)
      */
-    @Override
-	public Map<Timestamp, Map<String, Integer>> getTicketCreationsByDayPerOrigin(
+    public Map<Timestamp, Map<String, Integer>> getTicketCreationsByDayPerOrigin(
     		final Timestamp start, 
     		final Timestamp end,
     		final List<Department> departments,
@@ -740,8 +734,7 @@ public class StatisticsExtractorImpl implements StatisticsExtractor, Initializin
      * @see org.esupportail.helpdesk.services.statistics.StatisticsExtractor#getTicketCreationsByDayOfWeekPerOrigin(
      * java.sql.Timestamp, java.sql.Timestamp, java.util.List, java.util.List)
      */
-    @Override
-	public Map<Integer, Map<String, Integer>> getTicketCreationsByDayOfWeekPerOrigin(
+    public Map<Integer, Map<String, Integer>> getTicketCreationsByDayOfWeekPerOrigin(
     		final Timestamp start, 
     		final Timestamp end,
     		final List<Department> departments,
@@ -1039,8 +1032,7 @@ public class StatisticsExtractorImpl implements StatisticsExtractor, Initializin
      * @see org.esupportail.helpdesk.services.statistics.StatisticsExtractor#getStatusStatistics(
      * java.sql.Timestamp, java.sql.Timestamp, java.util.List, boolean)
      */
-    @Override
-	public StatusStatisticSet getStatusStatistics(
+    public StatusStatisticSet getStatusStatistics(
     		final Timestamp start, 
     		final Timestamp end,
     		final List<Department> departments,
@@ -1106,8 +1098,7 @@ public class StatisticsExtractorImpl implements StatisticsExtractor, Initializin
      * @see org.esupportail.helpdesk.services.statistics.StatisticsExtractor#getSpentTimeStatistics(
      * java.sql.Timestamp, java.sql.Timestamp, java.util.List)
      */
-    @Override
-	public List<SpentTimeStatistic> getSpentTimeStatistics(
+    public List<SpentTimeStatistic> getSpentTimeStatistics(
     		final Timestamp start, 
     		final Timestamp end,
     		final List<Department> departments) {

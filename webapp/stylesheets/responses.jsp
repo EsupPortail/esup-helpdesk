@@ -18,254 +18,176 @@
 	}
 </script>
 
-	<%@include file="_navigation.jsp"%>
+    <t:htmlTag id="responses" value="div" styleClass="page-wrapper responses">
+               <t:htmlTag id="header" value="header" styleClass="header">
+                    <%@include file="_header.jsp"%>
+                </t:htmlTag>
+                <t:htmlTag value="div" styleClass="columns">
+                    <t:htmlTag value="aside" styleClass="navigation">
+                        <%@include file="_navigation.jsp"%>
+                    </t:htmlTag>
 
-	<h:panelGroup rendered="#{responsesController.currentUser == null}" >
-		<%@include file="_auth.jsp"%>
-	</h:panelGroup>
-	<e:form 
-		freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}" 
-		showSubmitPopupText="#{sessionController.showSubmitPopupText}" 
-		showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
-		id="responsesForm" rendered="#{responsesController.pageAuthorized}" >
-		<e:section value="#{msgs['RESPONSES.TITLE']}" />
-		<e:messages />
-		<e:panelGrid width="100%" columns="2" columnClasses="colLeft,colLeft">
-			<h:panelGroup>
-				<e:dataTable id="globalData" var="response" value="#{responsesController.globalResponses}" 
-					width="100%" alternateColors="true" columnClasses="colLeft,colLeftMax,colRight,colRight" rowIndexVar="index" 
-					rowOnMouseOver="javascript:{previousClass = this.className; this.className = 'portlet-table-selected';}"
-					rowOnMouseOut="javascript:{this.className = previousClass;}"
-					cellpadding="0" cellspacing="0" >
-					<f:facet name="header">
-						<h:panelGroup>
-							<e:panelGrid width="100%" columns="2" columnClasses="colLeft,colRight">
-								<e:subSection value="#{msgs['RESPONSES.HEADER.GLOBAL_RESPONSES']}" >
-									<f:param value="#{responsesController.globalResponsesNumber}" />
-								</e:subSection>
-								<h:panelGroup>
-									<h:panelGroup rendered="#{responsesController.userCanManageGlobalResponses}" >
-										<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('responsesForm:globalData:addResponseButton');" >
-											<e:bold value="#{msgs['RESPONSES.BUTTON.ADD_GLOBAL_RESPONSE']} " />
-											<t:graphicImage value="/media/images/add.png" />
-										</h:panelGroup>
-										<e:commandButton 
-											id="addResponseButton" style="display: none"
-											value="#{msgs['RESPONSES.BUTTON.ADD_GLOBAL_RESPONSE']}"
-											action="#{responsesController.addGlobalResponse}" />
-									</h:panelGroup>
-								</h:panelGroup>
-							</e:panelGrid>
-						</h:panelGroup>
-					</f:facet>
-					<t:column>
-						<h:panelGroup style="cursor: pointer" 
-							onclick="javascript:{toggleGlobalContent('#{index}'); return false;}" >
-							<t:graphicImage id="showContent" value="/media/images/show.png" style="display: block" />
-							<t:graphicImage id="hideContent" value="/media/images/hide.png" style="display: none" />
-						</h:panelGroup>
-					</t:column>
-					<t:column>
-						<e:bold value="#{msgs['RESPONSES.TEXT.GLOBAL_RESPONSE']} " >
-							<f:param value="#{response.label}" />
-						</e:bold>
-						<h:panelGroup id="content" style="display: none" >
-							<t:htmlTag value="hr" />
-							<h:outputText 
-								value="#{response.message}"
-								escape="false" />
-						</h:panelGroup>
-					</t:column>
-					<t:column>
-						<h:panelGroup rendered="#{responsesController.userCanManageGlobalResponses}" >
-							<t:graphicImage value="/media/images/edit.png" 
-								style="cursor: pointer" onclick="javascript:{if (#{responsesController.userCanManageGlobalResponses}) simulateLinkClick('responsesForm:globalData:#{index}:editResponseButton'); return false;}" />
-							<e:commandButton 
-								id="editResponseButton" style="display: none"
-								value="#{msgs['_.BUTTON.UPDATE']}"
-								action="#{responsesController.editResponse}" >
-								<t:updateActionListener value="#{response}" property="#{responsesController.responseToUpdate}" />
-							</e:commandButton>
-						</h:panelGroup>
-					</t:column>
-					<t:column>
-						<h:panelGroup rendered="#{responsesController.userCanManageGlobalResponses}" >
-							<t:graphicImage value="/media/images/delete.png" 
-								style="cursor: pointer" onclick="javascript:{if (#{responsesController.userCanManageGlobalResponses}) simulateLinkClick('responsesForm:globalData:#{index}:deleteResponseButton'); return false;}" />
-							<e:commandButton 
-								id="deleteResponseButton" style="display: none"
-								value="#{msgs['_.BUTTON.DELETE']}"
-								action="#{responsesController.doDeleteResponse}" >
-								<t:updateActionListener value="#{response}" property="#{responsesController.responseToDelete}" />
-							</e:commandButton>
-						</h:panelGroup>
-					</t:column>
-					<f:facet name="footer">
-						<t:htmlTag value="hr" />
-					</f:facet>
-				</e:dataTable>
-				<t:htmlTag value="br" />
-				<e:dataTable id="userData" var="response" value="#{responsesController.userResponses}" 
-					width="100%" alternateColors="true" columnClasses="colLeft,colLeftMax,colRight,colRight" rowIndexVar="index" 
-					rowOnMouseOver="javascript:{previousClass = this.className; this.className = 'portlet-table-selected';}"
-					rowOnMouseOut="javascript:{this.className = previousClass;}"
-					cellpadding="0" cellspacing="0" >
-					<f:facet name="header">
-						<e:panelGrid width="100%" columns="2" columnClasses="colLeft,colRight">
-							<e:subSection value="#{msgs['RESPONSES.HEADER.USER_RESPONSES']}" >
-								<f:param value="#{responsesController.userResponsesNumber}" />
-							</e:subSection>
-							<h:panelGroup>
-								<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('responsesForm:userData:addResponseButton');" >
-									<e:bold value="#{msgs['RESPONSES.BUTTON.ADD_USER_RESPONSE']} " />
-									<t:graphicImage value="/media/images/add.png" />
-								</h:panelGroup>
-								<e:commandButton 
-									id="addResponseButton" style="display: none"
-									value="#{msgs['RESPONSES.BUTTON.ADD_USER_RESPONSE']}"
-									action="#{responsesController.addUserResponse}" />
-							</h:panelGroup>
-						</e:panelGrid>
-					</f:facet>
-					<t:column>
-						<h:panelGroup style="cursor: pointer" 
-							onclick="javascript:{toggleUserContent('#{index}'); return false;}" >
-							<t:graphicImage id="showContent" value="/media/images/show.png" style="display: block" />
-							<t:graphicImage id="hideContent" value="/media/images/hide.png" style="display: none" />
-						</h:panelGroup>
-					</t:column>
-					<t:column>
-						<e:bold value="#{msgs['RESPONSES.TEXT.USER_RESPONSE']} " >
-							<f:param value="#{userFormatter[responsesController.currentUser]}" />
-							<f:param value="#{response.label}" />
-						</e:bold>
-						<h:panelGroup id="content" style="display: none" >
-							<t:htmlTag value="hr" />
-							<h:outputText 
-								value="#{response.message}"
-								escape="false" />
-						</h:panelGroup>
-					</t:column>
-					<t:column>
-						<h:panelGroup >
-							<t:graphicImage value="/media/images/edit.png" 
-								style="cursor: pointer" onclick="javascript:{simulateLinkClick('responsesForm:userData:#{index}:editResponseButton'); return false;}" />
-							<e:commandButton 
-								id="editResponseButton" style="display: none"
-								value="#{msgs['_.BUTTON.UPDATE']}"
-								action="#{responsesController.editResponse}" >
-								<t:updateActionListener value="#{response}" property="#{responsesController.responseToUpdate}" />
-							</e:commandButton>
-						</h:panelGroup>
-					</t:column>
-					<t:column>
-						<h:panelGroup >
-							<t:graphicImage value="/media/images/delete.png" 
-								style="cursor: pointer" onclick="javascript:{simulateLinkClick('responsesForm:userData:#{index}:deleteResponseButton'); return false;}" />
-							<e:commandButton 
-								id="deleteResponseButton" style="display: none"
-								value="#{msgs['_.BUTTON.DELETE']}"
-								action="#{responsesController.doDeleteResponse}" >
-								<t:updateActionListener value="#{response}" property="#{responsesController.responseToDelete}" />
-							</e:commandButton>
-						</h:panelGroup>
-					</t:column>
-					<f:facet name="footer">
-						<t:htmlTag value="hr" />
-					</f:facet>
-				</e:dataTable>
-			</h:panelGroup>
-			<h:panelGroup>
-				<t:dataList id="departmentData" 
-					value="#{responsesController.departments}" 
-					var="department" rowIndexVar="departmentIndex" >
-					<h:panelGroup >
-						<e:dataTable id="data" var="response" value="#{responsesController.departmentResponses[department]}" 
-							width="100%" alternateColors="true" columnClasses="colLeft,colLeftMax,colRight,colRight" rowIndexVar="responseIndex" 
-							rowOnMouseOver="javascript:{previousClass = this.className; this.className = 'portlet-table-selected';}"
-							rowOnMouseOut="javascript:{this.className = previousClass;}"
-							cellpadding="0" cellspacing="0" >
-							<f:facet name="header">
-								<e:panelGrid width="100%" columns="2" columnClasses="colLeft,colRight">
-									<e:subSection value="#{msgs['RESPONSES.HEADER.DEPARTMENT_RESPONSES']}" >
-										<f:param value="#{department.label}" />
-										<f:param value="#{responsesController.departmentResponsesNumber[department]}" />
-									</e:subSection>
-									<h:panelGroup>
-										<h:panelGroup rendered="#{responsesController.userCanManageDepartmentResponses[department]}" >
-											<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('responsesForm:departmentData:#{departmentIndex}:data:addResponseButton');" >
-												<e:bold value="#{msgs['RESPONSES.BUTTON.ADD_DEPARTMENT_RESPONSE']} " >
-													<f:param value="#{department.label}" />
-												</e:bold>
-												<t:graphicImage value="/media/images/add.png" />
-											</h:panelGroup>
-											<e:commandButton 
-												id="addResponseButton" style="display: none"
-												value="#{msgs['RESPONSES.BUTTON.ADD_DEPARTMENT_RESPONSE']}"
-												action="#{responsesController.addDepartmentResponse}" >
-												<t:updateActionListener value="#{department}" property="#{responsesController.targetDepartment}" />
-											</e:commandButton>
-										</h:panelGroup>
-									</h:panelGroup>
-								</e:panelGrid>
-							</f:facet>
-							<t:column>
-								<h:panelGroup style="cursor: pointer" 
-									onclick="javascript:{toggleDepartmentContent('#{departmentIndex}','#{responseIndex}'); return false;}" >
-									<t:graphicImage id="showContent" value="/media/images/show.png" style="display: block" />
-									<t:graphicImage id="hideContent" value="/media/images/hide.png" style="display: none" />
-								</h:panelGroup>
-							</t:column>
-							<t:column>
-								<e:bold value="#{msgs['RESPONSES.TEXT.DEPARTMENT_RESPONSE']} " >
-									<f:param value="#{department.label}" />
-									<f:param value="#{response.label}" />
-								</e:bold>
-								<h:panelGroup id="content" style="display: none" >
-									<t:htmlTag value="hr" />
-									<h:outputText 
-										value="#{response.message}"
-										escape="false" />
-								</h:panelGroup>
-							</t:column>
-							<t:column>
-								<h:panelGroup rendered="#{responsesController.userCanManageDepartmentResponses[department]}" >
-									<t:graphicImage value="/media/images/edit.png" 
-										style="cursor: pointer" 
-										onclick="javascript:{simulateLinkClick('responsesForm:departmentData:#{departmentIndex}:data:#{responseIndex}:editResponseButton'); return false;}" />
-									<e:commandButton 
-										id="editResponseButton" style="display: none"
-										value="#{msgs['_.BUTTON.UPDATE']}"
-										action="#{responsesController.editResponse}" >
-										<t:updateActionListener value="#{response}" property="#{responsesController.responseToUpdate}" />
-									</e:commandButton>
-								</h:panelGroup>
-							</t:column>
-							<t:column>
-								<h:panelGroup rendered="#{responsesController.userCanManageDepartmentResponses[department]}" >
-									<t:graphicImage value="/media/images/delete.png" 
-										style="cursor: pointer" 
-										onclick="javascript:{simulateLinkClick('responsesForm:departmentData:#{departmentIndex}:data:#{responseIndex}:deleteResponseButton'); return false;}" />
-									<e:commandButton 
-										id="deleteResponseButton" style="display: none"
-										value="#{msgs['_.BUTTON.DELETE']}"
-										action="#{responsesController.doDeleteResponse}" >
-										<t:updateActionListener value="#{response}" property="#{responsesController.responseToDelete}" />
-									</e:commandButton>
-								</h:panelGroup>
-							</t:column>
-							<f:facet name="footer">
-								<t:htmlTag value="hr" />
-							</f:facet>
-						</e:dataTable>
-						<t:htmlTag value="br" />
-					</h:panelGroup>
-				</t:dataList>
-			</h:panelGroup>
-		</e:panelGrid>
-	</e:form>
-	<t:aliasBean alias="#{controller}" value="#{responsesController}" >
-		<%@include file="_signature.jsp"%>
-	</t:aliasBean>
-	
+                    <t:htmlTag value="main" styleClass="content">
+                        <t:htmlTag value="div" styleClass="content-inner">
+                        <h:panelGroup rendered="#{responsesController.currentUser == null}" >
+                            <%@include file="_auth.jsp"%>
+                        </h:panelGroup>
+                            <e:form
+                                freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"
+                                showSubmitPopupText="#{sessionController.showSubmitPopupText}"
+                                showSubmitPopupImage="#{sessionController.showSubmitPopupImage}"
+                                id="responsesForm" rendered="#{responsesController.pageAuthorized}" >
+                                    <t:htmlTag value="div" styleClass="message">
+                                            <e:messages/>
+                                    </t:htmlTag>
+                                     <t:htmlTag value="div" styleClass="dashboard-header">
+                                        <t:htmlTag value="div" styleClass="controlPanel-title">
+                                            <t:htmlTag value="h1">
+                                                <t:htmlTag value="span">
+                                                    <h:outputText value="#{msgs['RESPONSES.TITLE']}"/>
+                                                </t:htmlTag>
+                                            </t:htmlTag>
+                                        </t:htmlTag>
+                                     </t:htmlTag>
+
+                                     <t:htmlTag value="fieldset" styleClass="collapsible collapsed">
+                                         <t:htmlTag value="legend">
+                                                  <t:htmlTag value="span" >
+                                                            <h:outputText value="#{msgs['RESPONSES.HEADER.GLOBAL_RESPONSES']}"/>
+                                                            <h:outputText value=" (#{responsesController.globalResponsesNumber})"/>
+                                                  </t:htmlTag>
+                                         </t:htmlTag>
+                                         <t:htmlTag value="div" styleClass="response-list">
+                                            <t:dataList value="#{responsesController.globalResponses}" var="response" rowIndexVar="index">
+                                                <t:htmlTag value="div" styleClass="response-item">
+                                                    <t:htmlTag value="div" styleClass="response-label">
+                                                        <h:outputText value="#{response.label}" styleClass="link"/>
+
+                                                        <t:htmlTag value="div"  styleClass="response-content hideme">
+                                                            <h:outputText  value="#{response.message}" escape="false" />
+                                                            <t:htmlTag value="div" styleClass="form-item display-flex" rendered="#{responsesController.userCanManageGlobalResponses}">
+                                                                <e:commandButton
+                                                                    id="editResponseButton" styleClass="button--secondary"
+                                                                    value="#{msgs['RESPONSES.MESSAGE.EDIT']}"
+                                                                    action="#{responsesController.editResponse}" >
+                                                                    <t:updateActionListener value="#{response}" property="#{responsesController.responseToUpdate}" />
+                                                                </e:commandButton>
+                                                                <e:commandButton
+                                                                    id="deleteResponseButton"
+                                                                    value="#{msgs['_.BUTTON.DELETE']}"
+                                                                    action="#{responsesController.doDeleteResponse}" >
+                                                                    <t:updateActionListener value="#{response}" property="#{responsesController.responseToDelete}" />
+                                                                </e:commandButton>
+                                                            </t:htmlTag>
+                                                        </t:htmlTag>
+                                                    </t:htmlTag>
+                                                </t:htmlTag>
+                                            </t:dataList>
+                                            <t:htmlTag value="div" styleClass="form-item" rendered="#{responsesController.userCanManageGlobalResponses}">
+                                                 <e:commandButton id="addResponseButton" styleClass="button--secondary"
+                                                    value="#{msgs['RESPONSES.BUTTON.ADD_GLOBAL_RESPONSE']}"
+                                                    action="#{responsesController.addGlobalResponse}" />
+                                            </t:htmlTag>
+                                        </t:htmlTag>
+                                     </t:htmlTag>
+
+                                     <t:htmlTag value="fieldset" styleClass="collapsible collapsed">
+                                         <t:htmlTag value="legend">
+                                                  <t:htmlTag value="span" >
+                                                            <h:outputText value="#{msgs['RESPONSES.HEADER.USER_RESPONSES']}"/>
+                                                            <h:outputText value=" (#{responsesController.userResponsesNumber})"/>
+                                                  </t:htmlTag>
+                                         </t:htmlTag>
+                                         <t:htmlTag value="div" styleClass="response-list">
+                                            <t:dataList id="userData" value="#{responsesController.userResponses}" var="response" rowIndexVar="index">
+                                                <t:htmlTag value="div" styleClass="response-item">
+                                                    <t:htmlTag value="div" styleClass="response-label">
+                                                        <h:outputText value="#{userFormatter[responsesController.currentUser]}" styleClass="link"/>
+                                                        <h:outputText value="#{response.label}" styleClass="link"/>
+
+                                                        <t:htmlTag value="div"  styleClass="response-content hideme">
+                                                            <h:outputText  value="#{response.message}" escape="false" />
+                                                            <t:htmlTag value="div" styleClass="form-item display-flex" rendered="#{responsesController.userCanManageGlobalResponses}">
+                                                                <e:commandButton
+                                                                    id="editResponseButton" styleClass="button--secondary"
+                                                                    value="#{msgs['RESPONSES.MESSAGE.EDIT']}"
+                                                                    action="#{responsesController.editResponse}" >
+                                                                    <t:updateActionListener value="#{response}" property="#{responsesController.responseToUpdate}" />
+                                                                </e:commandButton>
+                                                                <e:commandButton
+                                                                    id="deleteResponseButton"
+                                                                    value="#{msgs['_.BUTTON.DELETE']}"
+                                                                    action="#{responsesController.doDeleteResponse}" >
+                                                                    <t:updateActionListener value="#{response}" property="#{responsesController.responseToDelete}" />
+                                                                </e:commandButton>
+                                                            </t:htmlTag>
+                                                        </t:htmlTag>
+                                                    </t:htmlTag>
+                                                </t:htmlTag>
+                                            </t:dataList>
+                                            <t:htmlTag value="div" styleClass="form-item" rendered="#{responsesController.userCanManageGlobalResponses}">
+                                                 <e:commandButton id="addResponseButton" styleClass="button--secondary"
+                                                    value="#{msgs['RESPONSES.BUTTON.ADD_USER_RESPONSE']}"
+                                                    action="#{responsesController.addUserResponse}" />
+                                            </t:htmlTag>
+                                        </t:htmlTag>
+                                     </t:htmlTag>
+
+
+                                        <t:dataList id="departmentData"
+                                                    value="#{responsesController.departments}" var="department"
+                                                    rowIndexVar="departmentIndex" >
+                                            <t:htmlTag value="fieldset" styleClass="collapsible collapsed">
+                                                 <t:htmlTag value="legend">
+                                                          <t:htmlTag value="span" >
+                                                                    <h:outputText value="#{department.label}"/>
+                                                                    <h:outputText value=" (#{responsesController.departmentResponsesNumber[department]})"/>
+                                                          </t:htmlTag>
+                                                 </t:htmlTag>
+                                                 <t:htmlTag value="div" styleClass="response-list">
+                                                    <t:dataList value="#{responsesController.departmentResponses[department]}" var="response" rowIndexVar="index">
+                                                        <t:htmlTag value="div" styleClass="response-item">
+                                                            <t:htmlTag value="div" styleClass="response-label">
+                                                                <h:outputText value="#{response.label}" styleClass="link"/>
+
+                                                                <t:htmlTag value="div"  styleClass="response-content hideme">
+                                                                    <h:outputText  value="#{response.message}" escape="false" />
+                                                                    <t:htmlTag value="div" styleClass="form-item display-flex" rendered="#{responsesController.userCanManageDepartmentResponses[department]}">
+                                                                        <e:commandButton
+                                                                            id="editResponseButton" styleClass="button--secondary"
+                                                                            value="#{msgs['RESPONSES.MESSAGE.EDIT']}"
+                                                                            action="#{responsesController.editResponse}" >
+                                                                            <t:updateActionListener value="#{response}" property="#{responsesController.responseToUpdate}" />
+                                                                        </e:commandButton>
+
+                                                                        <e:commandButton
+                                                                            id="deleteResponseButton"
+                                                                            value="#{msgs['_.BUTTON.DELETE']}"
+                                                                            action="#{responsesController.doDeleteResponse}" >
+                                                                            <t:updateActionListener value="#{response}" property="#{responsesController.responseToDelete}" />
+                                                                        </e:commandButton>
+                                                                    </t:htmlTag>
+                                                                </t:htmlTag>
+                                                            </t:htmlTag>
+                                                        </t:htmlTag>
+                                                    </t:dataList>
+                                                    <t:htmlTag value="div" styleClass="form-item" rendered="#{responsesController.userCanManageDepartmentResponses[department]}">
+                                                           <e:commandButton
+                                                                 id="addResponseButton" styleClass="buton-secondary"
+                                                                        value="#{msgs['RESPONSES.BUTTON.ADD_DEPARTMENT_RESPONSE']}"
+                                                                        action="#{responsesController.addDepartmentResponse}" >
+                                                                        <t:updateActionListener value="#{department}" property="#{responsesController.targetDepartment}" />
+                                                           </e:commandButton>
+                                                    </t:htmlTag>
+                                                </t:htmlTag>
+                                            </t:htmlTag>
+                                        </t:dataList>
+                            </e:form>
+                    </t:htmlTag>
+                    </t:htmlTag>
+                </t:htmlTag>
+             <t:htmlTag value="footer" styleClass="footer">
+                     <%@include file="_footer.jsp"%>
+             </t:htmlTag>
+        </t:htmlTag>
 </e:page>

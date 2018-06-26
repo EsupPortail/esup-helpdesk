@@ -12,6 +12,8 @@ import org.esupportail.commons.services.logging.Logger;
 import org.esupportail.commons.services.logging.LoggerImpl;
 import org.esupportail.commons.utils.Assert;
 import org.esupportail.helpdesk.domain.ControlPanel;
+import org.esupportail.helpdesk.domain.ControlPanelOrder;
+import org.esupportail.helpdesk.domain.ControlPanelOrderPart;
 import org.esupportail.helpdesk.domain.DomainService;
 import org.esupportail.helpdesk.domain.TicketExtractor;
 import org.esupportail.helpdesk.domain.beans.Department;
@@ -89,8 +91,37 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 		List<ControlPanelEntry> controlPanelEntries = new ArrayList<ControlPanelEntry>();
 		List<Department> visibleDepartments = 
 			getDomainService().getTicketViewDepartments(getCurrentUser(), getClient());
+		String queryStringInvitation = null;
+		String queryStringLibre = null;
+
+		//cas ou l'on passe a 'service = Tous', il faut gérer le cas de 'Gestionnaire = Tous' qui n'est plus proposé dans la liste
+		//dans ce cas on force le currentUser
+		if(getCurrentUser().getControlPanelManagerDepartmentFilter() == null && selectedManager == null){
+			selectedManager = getCurrentUser();
+		}
+		//cas ou l'on passe a 'Implication = ...libres...', il faut gérer le cas de 'Gestionnaire = Tous' qui n'est plus proposé dans la liste
+		//dans ce cas on force le currentUser
+		if((selectedManager == null) && (getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
+				|| getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED))){
+			selectedManager = getCurrentUser();
+		}
+		//récupération des tickets invité
+		if(getCurrentUser().getControlPanelManagerInvolvementFilter() != null 
+		&& (getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
+			|| getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)) ){
+			queryStringInvitation = ticketExtractor.getControlPanelQueryString(
+					getCurrentUser(), selectedManager!=null ? selectedManager : getCurrentUser(), visibleDepartments, "INVITE", null, null);
+		}
+		//récupération des tickets libres du filtre 'Gérés invité ou libres'
+		if(getCurrentUser().getControlPanelManagerInvolvementFilter() != null 
+		&& getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) ){
+			queryStringLibre = ticketExtractor.getControlPanelQueryString(
+					getCurrentUser(), selectedManager!=null ? selectedManager : getCurrentUser(), visibleDepartments, "FREE", null, null);
+		}
+//		String queryString = ticketExtractor.getControlPanelQueryString(
+//				getCurrentUser(), selectedManager!=null ? selectedManager : getCurrentUser(), visibleDepartments, "OTHER", queryStringInvitation, queryStringLibre);
 		String queryString = ticketExtractor.getControlPanelQueryString(
-				getCurrentUser(), selectedManager, visibleDepartments, false);
+				getCurrentUser(), selectedManager, visibleDepartments, "OTHER", queryStringInvitation, queryStringLibre);
 		if (queryString == null) {
 			setVisibleItems(controlPanelEntries);
 			setCurrentPageInternal(0);
@@ -108,18 +139,12 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 		if (logger.isDebugEnabled()) {
 			logger.debug("executing " + query.getQueryString() + "...");
 		}
-		Query queryInvitations = null;
+		
+
 		query.setFirstResult(getCurrentPage() * getPageSize());
 		query.setMaxResults(getPageSize());
 		List<Ticket> tickets = query.list();
-		//récupération des tickets invité
-		if(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)){
-			String queryStringInvitations = ticketExtractor.getControlPanelQueryString(
-					getCurrentUser(), selectedManager, visibleDepartments, true);
-			queryInvitations = getDaoService().getQuery(queryStringInvitations);
-			List<Ticket>  ticketsInvitation = (List<Ticket> ) queryInvitations.list();
-			tickets.addAll(ticketsInvitation);
-		}
+		
 		for (Ticket ticket : tickets) {
 			controlPanelEntries.add(new ControlPanelEntry(
 					ticket, 
@@ -207,8 +232,16 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 	public User getSelectedManager() {
 		if (selectedManager != null) {
 			Department department = getCurrentUser().getControlPanelManagerDepartmentFilter();
-			if (!domainService.isDepartmentManager(department, selectedManager)) {
-				selectedManager = null;
+			if(department != null){
+				if (!domainService.isDepartmentManager(department, selectedManager)) {
+					selectedManager = null;
+				}
+			}
+		} 
+		else {
+			//on récupère le user manager stocké au niveau du user courant
+			if(getCurrentUser().getControlPanelManagerManagerFilter() != null){
+				selectedManager = domainService.getUserStore().getExistingUserFromId(getCurrentUser().getControlPanelManagerManagerFilter());
 			}
 		}
 		return selectedManager;
@@ -219,6 +252,12 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 	 */
 	public void setSelectedManager(final User selectedManager) {
 		this.selectedManager = selectedManager;
+		//maj du gestionnaire pour le user courant
+		if(selectedManager != null)	{
+			getCurrentUser().setControlPanelManagerManagerFilter(selectedManager.getId());
+		} else {
+			getCurrentUser().setControlPanelManagerManagerFilter(null);
+		}
 	}
 
 	/**

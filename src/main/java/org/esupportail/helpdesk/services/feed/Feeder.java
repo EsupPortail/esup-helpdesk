@@ -18,4 +18,6 @@ public interface Feeder extends Serializable {
 	 */
 	boolean feed(ErrorHolder errorHolder);
 
+	void afterPropertiesSet();
+
 }

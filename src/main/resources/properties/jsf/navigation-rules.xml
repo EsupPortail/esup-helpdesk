@@ -423,6 +423,7 @@
 		</navigation-case>
 	</navigation-rule>
 
+
 	<navigation-rule>
 		<from-view-id>/stylesheets/journal.jsp</from-view-id>
 		<navigation-case>
@@ -503,13 +504,25 @@
 		<navigation-case>
 			<from-outcome>giveInformationMoveBack</from-outcome>
 			<to-view-id>/stylesheets/giveInformationMoveBack.jsp</to-view-id>
-		</navigation-case>
+		</navigation-case>		
 		<navigation-case>
 			<from-outcome>giveInformation</from-outcome>
 			<to-view-id>
 				/stylesheets/ticketGiveInformation.jsp
 			</to-view-id>
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>updateInformation</from-outcome>
+			<to-view-id>
+				/stylesheets/ticketUpdateInformation.jsp
+			</to-view-id>
+		</navigation-case>	
+		<navigation-case>
+			<from-outcome>deleteFileInfo</from-outcome>
+			<to-view-id>
+				/stylesheets/ticketDeleteAttachment.jsp
+			</to-view-id>
+		</navigation-case>	
 		<navigation-case>
 			<from-outcome>requestInformation</from-outcome>
 			<to-view-id>
@@ -699,6 +712,36 @@
 			<to-view-id>/stylesheets/ticketView.jsp</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>
+			/stylesheets/ticketDeleteAttachment.jsp
+		</from-view-id>
+		<navigation-case>
+			<from-outcome>view</from-outcome>
+			<to-view-id>/stylesheets/ticketView.jsp</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>fileInfoDeleted</from-outcome>
+			<to-view-id>/stylesheets/ticketView.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>
+			/stylesheets/ticketUpdateInformation.jsp
+		</from-view-id>
+		<navigation-case>
+			<from-outcome>updated</from-outcome>
+			<to-view-id>/stylesheets/ticketView.jsp</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>view</from-outcome>
+			<to-view-id>/stylesheets/ticketView.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+
 
 	<navigation-rule>
 		<from-view-id>

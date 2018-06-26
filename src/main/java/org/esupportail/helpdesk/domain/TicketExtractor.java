@@ -24,10 +24,12 @@ public interface TicketExtractor extends Serializable {
 			User user, 
 			User selectedManager,
 			List<Department> visibleDepartments,
-			Boolean isInvitation);
+			String implication,
+			String queryInvitation,
+			String queryLibre);
 	
 	String getAllTicketsUserInvited(
 			User user);
 
-}
+}	
 

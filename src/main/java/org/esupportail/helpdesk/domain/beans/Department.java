@@ -3,6 +3,9 @@
  */
 package org.esupportail.helpdesk.domain.beans;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.esupportail.commons.utils.strings.StringUtils;
 import org.esupportail.helpdesk.domain.FaqScope;
 import org.esupportail.helpdesk.domain.TicketScope;
@@ -53,6 +56,11 @@ public class Department extends AbstractTicketContainer implements Comparable<De
     private Department realDepartment;
     
     /**
+     * List of the not visibles categories.
+     */
+    private List<Category> categoriesNotVisibles;
+    
+    /**
      * Bean constructor.
      */
     public Department() {
@@ -72,6 +80,7 @@ public class Department extends AbstractTicketContainer implements Comparable<De
     	this.effectiveDefaultFaqScope = department.effectiveDefaultFaqScope;
     	this.realDepartment = department.realDepartment;
     	this.computerUrlBuilderName = department.computerUrlBuilderName;
+    	this.categoriesNotVisibles = department.categoriesNotVisibles;
     }
 
 	/**
@@ -271,4 +280,22 @@ public class Department extends AbstractTicketContainer implements Comparable<De
 		this.computerUrlBuilderName = StringUtils.nullIfEmpty(computerUrlBuilderName);
 	}
 
+	public List<Category> getCategoriesNotVisibles() {
+		return categoriesNotVisibles;
+	}
+
+	public void setCategoriesNotVisibles(List<Category> categoriesNotVisibles) {
+		this.categoriesNotVisibles = categoriesNotVisibles;
+	}
+
+	/**
+	 * Add departments to the result set.
+	 * @param deps
+	 */
+	public void addCategorieNotVisible(final List<Category> categoriesNotVisible) {
+		if(categoriesNotVisibles == null){
+			categoriesNotVisibles = new ArrayList<Category>();
+		}
+		categoriesNotVisibles.addAll(categoriesNotVisible);
+	}
 }

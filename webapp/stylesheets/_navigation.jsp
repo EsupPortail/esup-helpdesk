@@ -3,13 +3,20 @@
 	freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}" 
 	showSubmitPopupText="#{sessionController.showSubmitPopupText}" 
 	showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
-	id="navigationForm" >
+	id="navigationForm"	styleClass="dashboard-menu">
 	<e:menu>
 		<%@include file="_navigationItems.jsp"%>
 		<h:panelGroup rendered="#{sessionController.currentUser !=null}" >
-			<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('navigationForm:toggleMenuButton');" >
-				<t:graphicImage value="/media/images/long-menu.png" rendered="#{sessionController.showShortMenu}"/>
-				<t:graphicImage value="/media/images/short-menu.png" rendered="#{not sessionController.showShortMenu}"/>
+			<h:panelGroup style="cursor: pointer" onclick="buttonClick('navigationForm:toggleMenuButton');" >
+
+			    <t:htmlTag value="div" styleClass="moreItems" rendered="#{sessionController.showShortMenu}">
+			    <t:htmlTag value="i" styleClass="fas fa-chevron-down"/>
+			     </t:htmlTag>
+
+			    <t:htmlTag value="div" styleClass="moreItems" rendered="#{not sessionController.showShortMenu}">
+			    <t:htmlTag value="i" styleClass="fas fa-chevron-up"/>
+			     </t:htmlTag>
+
 			</h:panelGroup>
 			<e:commandButton 
 				id="toggleMenuButton" style="display: none"

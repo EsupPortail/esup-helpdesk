@@ -94,7 +94,7 @@ public abstract class AbstractIndexer extends AbstractDomainAwareBean implements
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.Indexer#removeIndex()
 	 */
-	@Override
+@Override
 	public void removeIndex() {
 		logger.info("removing any existing indexing data...");
 		if (isIndexLocked()) {
@@ -115,7 +115,7 @@ public abstract class AbstractIndexer extends AbstractDomainAwareBean implements
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.Indexer#updateIndex(boolean)
 	 */
-	@Override
+@Override
 	public int updateIndex(
 			final boolean removeBefore) {
 		if (isIndexLocked()) {
@@ -229,7 +229,7 @@ public abstract class AbstractIndexer extends AbstractDomainAwareBean implements
 	/**
 	 * @see org.esupportail.helpdesk.services.indexing.Indexer#test()
 	 */
-	@Override
+@Override
 	public void test() {
 		throw new UnsupportedOperationException();
 	}

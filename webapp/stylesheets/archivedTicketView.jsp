@@ -1,86 +1,121 @@
 <%@include file="_include.jsp"%>
-<e:page stringsVar="msgs" menuItem=""
-	locale="#{sessionController.locale}" 
-	downloadId="#{archivedTicketController.downloadId}" >
-	<%@include file="_navigation.jsp"%>
+<e:page stringsVar="msgs" 
+    menuItem="" locale="#{sessionController.locale}" 
+    downloadId="#{archivedTicketController.downloadId}" >
+	   <t:htmlTag id="archivedTicketView" value="div" styleClass="page-wrapper ticketView">
+           <t:htmlTag id="header" value="header" styleClass="header">
+                <%@include file="_header.jsp"%>
+            </t:htmlTag>
+            <t:htmlTag value="div" styleClass="columns">
+                <t:htmlTag value="aside" styleClass="navigation">
+                    <%@include file="_navigation.jsp"%>
+                </t:htmlTag>
 
-	<h:panelGroup rendered="#{not archivedTicketController.userCanViewArchivedTicket}" >
-		<h:panelGroup rendered="#{archivedTicketController.currentUser == null}" >
-			<%@include file="_auth.jsp"%>
-		</h:panelGroup>
-		<h:panelGroup rendered="#{archivedTicketController.currentUser != null}" >
-			<e:messages/>
-		</h:panelGroup>
-	</h:panelGroup>
+                <t:htmlTag value="main" styleClass="content">
+                    <t:htmlTag value="div" styleClass="content-inner">
+                        <h:panelGroup rendered="#{not archivedTicketController.userCanViewArchivedTicket}" >
+                            <h:panelGroup rendered="#{archivedTicketController.currentUser == null}" >
+                                 <%@include file="_auth.jsp"%> 
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{archivedTicketController.currentUser != null}" >
+                                <e:messages/>
+                            </h:panelGroup>
+                        </h:panelGroup>
 
-	<e:form 
-		freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}" 
-		showSubmitPopupText="#{sessionController.showSubmitPopupText}" 
-		showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
-		id="viewArchivedTicketForm" enctype="multipart/form-data" 
-		rendered="#{archivedTicketController.userCanViewArchivedTicket}">
-		<e:panelGrid columns="2" width="100%" columnClasses="colLeft,colRight">
-			<e:section value="#{msgs['ARCHIVED_TICKET_VIEW.TITLE']}" >
-				<f:param value="#{archivedTicketController.archivedTicket.ticketId}" />
-				<f:param value="#{archivedTicketController.archivedTicket.label}" />
-			</e:section>
-			<h:panelGroup>
-				<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('viewArchivedTicketForm:backButton');" >
-					<e:bold value="#{msgs['_.BUTTON.BACK']} " />
-					<t:graphicImage value="/media/images/back.png" alt="#{msgs['_.BUTTON.BACK']}" title="#{msgs['_.BUTTON.BACK']}" />
-				</h:panelGroup>
-				<e:commandButton id="backButton"
-					value="#{msgs['_.BUTTON.BACK']}" 
-					action="#{archivedTicketController.backPage == 'controlPanel' 
-						? controlPanelController.enter 
-						: (archivedTicketController.backPage == 'journal' 
-							? journalController.enter 
-							: (archivedTicketController.backPage == 'bookmarks' 
-								? bookmarksController.enter 
-								: (archivedTicketController.backPage == 'statistics' 
-									? statisticsController.enter 
-									: searchController.enter)))}" />
-			</h:panelGroup>
-		</e:panelGrid>
-		<e:messages/>
-		<h:panelGroup>
-			<h:panelGroup style="cursor: pointer"
-				onclick="simulateLinkClick('viewArchivedTicketForm:gotoTicketButton');">
-				<t:graphicImage value="/media/images/search.png" />
-				<e:bold value=" #{msgs['CONTROL_PANEL.BUTTON.GOTO_TICKET']}" />
-			</h:panelGroup>
-			<e:commandButton style="display: none" id="gotoTicketButton"
-				action="#{controlPanelController.gotoTicket}"
-				value="#{msgs['CONTROL_PANEL.BUTTON.GOTO_TICKET']}" />
-			<e:inputText id="ticketNumber" value="#{controlPanelController.ticketNumberString}" size="5" 
-				onkeypress="if (event.keyCode == 13) { simulateLinkClick('viewArchivedTicketForm:gotoTicketButton'); return false; }" />
-		</h:panelGroup>
-		<e:panelGrid columns="3" width="100%" columnClasses="colLeft,colCenter,colLeft">
-			<f:facet name="header">
-				<t:htmlTag value="hr" />
-			</f:facet>
-			<h:panelGroup>
-				<%@include file="_archivedTicketViewProperties.jsp"%> 
-				<t:htmlTag value="hr" />
-				<%@include file="_archivedTicketViewFiles.jsp"%> 
-				<t:htmlTag value="hr" />
-				<%@include file="_archivedTicketViewInvitations.jsp"%>  
-				<t:htmlTag value="hr" />
-				<%@include file="_archivedTicketViewBookmark.jsp"%>  
-			</h:panelGroup>
-			<h:panelGroup>
-				<e:text value=" " />
-			</h:panelGroup>
-			<h:panelGroup>
-				<%@include file="_archivedTicketViewHistory.jsp"%> 
-			</h:panelGroup>
-		</e:panelGrid>
-	</e:form>
-	<t:aliasBean alias="#{controller}" value="#{archivedTicketController}" >
-		<%@include file="_signature.jsp"%>
-	</t:aliasBean>
-	<script type="text/javascript">
-		hideTableButtons("viewArchivedTicketForm:fileData","downloadButton");
-		hideButton("viewArchivedTicketForm:backButton");
-	</script>
+                        <e:form
+                            freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"
+                            showSubmitPopupText="#{sessionController.showSubmitPopupText}"
+                            showSubmitPopupImage="#{sessionController.showSubmitPopupImage}"
+                            id="viewArchivedTicketForm" enctype="multipart/form-data" 
+                            rendered="#{archivedTicketController.userCanViewArchivedTicket}" >
+
+                                <t:htmlTag value="div" styleClass="message ticketView-message">
+                                    <e:messages/>
+                                </t:htmlTag>
+
+                                <t:htmlTag value="div" styleClass="region view-ticket_header sticky">
+                                    <t:htmlTag styleClass="region-inner" value="div">
+                                        <t:htmlTag value="div">
+                                            <t:htmlTag value="div">
+                                                <t:htmlTag value="span" styleClass="ticket-prefix"><h:outputText value="#{msgs['TICKET_VIEW.TITLE.PREFIX']}"/> </t:htmlTag>
+                                                <t:htmlTag value="span" styleClass="ticket-number"><h:outputText  value="#{archivedTicketController.archivedTicket.ticketId} "/> </t:htmlTag>
+                                            </t:htmlTag>
+                                            <t:htmlTag value="div">
+                                                <t:htmlTag id="ticket-actions" styleClass="form-item form-select actions" value="div">
+                                                    <t:htmlTag styleClass="actions-header" value="div">
+                                                        <t:htmlTag styleClass="actions-header-inner" value="div">
+                                                            <t:htmlTag value="span"><h:outputText value="#{msgs['TICKET_VIEW.ACTIONS.HEADER']}"/></t:htmlTag>
+                                                            <t:htmlTag value="i" styleClass="fas fa-chevron-down"/>
+                                                        </t:htmlTag>
+                                                     </t:htmlTag>
+                                                    <t:htmlTag styleClass="actions-list hideme" value="div">
+                                                        <t:htmlTag styleClass="actions-list-inner" value="div">
+                                                            <%@include file="_archivedTicketViewActionsButtons.jsp"%>
+                                                        </t:htmlTag>
+                                                    </t:htmlTag>
+                                                </t:htmlTag>
+                                            </t:htmlTag>
+                                        </t:htmlTag>
+
+                                    </t:htmlTag>
+                                </t:htmlTag>
+
+                                <t:htmlTag value="div" styleClass="region view-ticket_title">
+                                    <t:htmlTag styleClass="region-inner" value="div">
+                                         <t:htmlTag value="h1"><h:outputText value="#{archivedTicketController.archivedTicket.label}"/> </t:htmlTag>
+                                    </t:htmlTag>
+                                </t:htmlTag>
+
+
+                                 <t:htmlTag styleClass="region view-ticket_main-properties" value="div">
+                                        <t:htmlTag styleClass="ticketView-properties" value="div">
+                                            <%@include file="_archivedTicketViewProperties.jsp"%>
+                                        </t:htmlTag>
+
+                                        <t:htmlTag styleClass="region view-ticket_extended-properties" value="div">
+                                            <t:htmlTag styleClass="tabs" value="ul">
+                                                <t:htmlTag id="history" styleClass="tab-link current" value="li">
+                                                    <h:outputText value="#{msgs['TICKET_VIEW.HISTORY.HEADER']} " />
+                                                </t:htmlTag>
+                                                <t:htmlTag id="extended-properties" styleClass="tab-link " value="li">
+                                                    <h:outputText value="#{msgs['TICKET_VIEW.PROPERTIES.HEADER']} " />
+                                                </t:htmlTag>
+                                                <t:htmlTag id="archived-files" styleClass="tab-link" value="li">
+                                                    <h:outputText value="#{msgs['TICKET_VIEW.FILES.HEADER_TAB']} " />
+                                                </t:htmlTag>
+                                                <t:htmlTag id="archived-invitations" styleClass="tab-link " value="li">
+                                                    <h:outputText value="#{msgs['TICKET_VIEW.INVITATIONS.HEADER_TAB']} " />
+                                                </t:htmlTag>
+                                            </t:htmlTag>
+                                        </t:htmlTag>
+
+                                        <t:htmlTag id="tab-history" styleClass="view-ticket_history tab-content current" value="div">
+                                            <%@include file="_archivedTicketViewHistory.jsp"%>
+                                        </t:htmlTag>
+
+                                        <t:htmlTag id="tab-extended-properties" styleClass="view-ticket_secondary_properties tab-content" value="div">
+                                            <%@include file="_archivedTicketViewExtendedProperties.jsp"%>
+                                        </t:htmlTag>
+
+                                        <t:htmlTag id="tab-archived-files"  styleClass="view-ticket_files tab-content" value="div" >
+                                            <%@include file="_archivedTicketViewFiles.jsp"%>
+                                        </t:htmlTag>
+
+
+                                        <t:htmlTag id="tab-archived-invitations" styleClass="view-ticket_invitations tab-content" value="div">
+                                            <%@include file="_archivedTicketViewInvitations.jsp"%>
+                                         </t:htmlTag>
+
+                                </t:htmlTag>
+
+                        </e:form>
+
+                    </t:htmlTag>
+            </t:htmlTag>
+            </t:htmlTag>
+                <t:htmlTag value="footer" styleClass="footer">
+                        <%@include file="_footer.jsp"%>
+                </t:htmlTag>
+        </t:htmlTag>
+
 </e:page>

@@ -740,6 +740,7 @@ public interface DaoService extends Serializable {
 	 * Retreive all the arcvided tickets older than a date.
 	 */
 	 List<ArchivedTicket> getArchivedTicketsOlderThan(final Date date);
+
 	//////////////////////////////////////////////////////////////
 	// Action
 	//////////////////////////////////////////////////////////////
@@ -750,6 +751,13 @@ public interface DaoService extends Serializable {
 	 * @return the actions of the ticket.
 	 */
 	List<Action> getActions(Ticket ticket, boolean dateAsc);
+
+	/**
+	 * @param ticket
+	 * @param dateAsc true to get the date order, false to inverse
+	 * @return the actions of the ticket without ACTION_TYPE UPLOAD.
+	 */
+	List<Action> getActionsWithoutUpload(Ticket ticket, boolean dateAsc);
 
 	/**
 	 * @param ticket
@@ -774,10 +782,17 @@ public interface DaoService extends Serializable {
 
 	/**
 	 * @param ticket
+	 * @return the last action of a ticket without UPLOAD ACTION_TYPE.
+	 */
+	Action getLastActionWithoutUpload(Ticket ticket);
+
+	/**
+	 * @param ticket
 	 * @param action type
 	 * @return the last action of a ticket.
 	 */
 	Action getLastActionByActionType(Ticket ticket, String actionType);
+
 	/**
 	 * Add an action.
 	 * @param action
@@ -849,6 +864,7 @@ public interface DaoService extends Serializable {
 	 * @param deleteContent
 	 */
 	void deleteFileInfo(FileInfo fileInfo, boolean deleteContent);
+
 	/**
 	 * Delete a archivedFileInfo.
 	 * @param archivedFileInfo

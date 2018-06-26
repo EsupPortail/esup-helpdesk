@@ -18,6 +18,7 @@ import org.esupportail.commons.utils.strings.StringUtils;
 import org.esupportail.helpdesk.domain.ControlPanel;
 import org.esupportail.helpdesk.domain.ControlPanelOrder;
 import org.esupportail.helpdesk.domain.Search;
+import org.esupportail.helpdesk.web.beans.ControlPanelPaginator;
 
 /**
  * The class that represent users.
@@ -145,6 +146,11 @@ public class User implements Serializable, Comparable<User> {
      * The department filter of the manager control panel.
      */
     private Department controlPanelManagerDepartmentFilter;
+
+    /**
+     * The manager filter of the manager control panel.
+     */
+    private String controlPanelManagerManagerFilter;
 
     /**
      * The category filter of the control panel.
@@ -342,7 +348,7 @@ public class User implements Serializable, Comparable<User> {
 		controlPanelUserStatusFilter = ControlPanel.STATUS_FILTER_ANY;
 		controlPanelManagerStatusFilter = ControlPanel.STATUS_FILTER_ANY;
 		controlPanelUserInvolvementFilter = ControlPanel.USER_INVOLVEMENT_FILTER_ANY;
-		controlPanelManagerInvolvementFilter = ControlPanel.MANAGER_INVOLVEMENT_FILTER_ANY;
+		controlPanelManagerInvolvementFilter = ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE;
 		searchTypeFilter = Search.TYPE_FILTER_ALL;
 		bookmarkMonitoring = true;
 		expirationMonitoring = true;
@@ -364,6 +370,7 @@ public class User implements Serializable, Comparable<User> {
 		setControlPanelColumns(u.getControlPanelColumns());
 		setControlPanelUserDepartmentFilter(u.getControlPanelUserDepartmentFilter());
 		setControlPanelManagerDepartmentFilter(u.getControlPanelManagerDepartmentFilter());
+		setControlPanelManagerManagerFilter(u.getControlPanelManagerManagerFilter());
 		setControlPanelManagerInvolvementFilter(u.getControlPanelManagerInvolvementFilter());
 		setControlPanelOrder(u.getControlPanelOrder());
 		setControlPanelPageSize(u.getControlPanelPageSize());
@@ -1302,6 +1309,14 @@ public class User implements Serializable, Comparable<User> {
 	 */
 	public void setExpirationMonitoring(final Boolean expirationMonitoring) {
 		this.expirationMonitoring = expirationMonitoring;
+	}
+
+	public String getControlPanelManagerManagerFilter() {
+		return controlPanelManagerManagerFilter;
+	}
+
+	public void setControlPanelManagerManagerFilter(String controlPanelManagerManagerFilter) {
+		this.controlPanelManagerManagerFilter = controlPanelManagerManagerFilter;
 	}
 
 }

@@ -31,6 +31,6 @@ public interface UserInfoProvider extends Serializable {
 	/**
 	 * @param domainService the domainService to set
 	 */
-	void setDomainService(DomainService domainService);
+	void setDomainService(final DomainService domainService);
 
 }

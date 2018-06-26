@@ -50,7 +50,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getUrl(java.lang.String, java.util.Map)
 	 */
-	@Override
 	@RequestCache
 	public String getUrl(final String authType, final Map<String, String> params) {
 		if (AuthUtils.SHIBBOLETH.equals(authType)) {
@@ -65,7 +64,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getNewDeepLinkParams(java.lang.String)
 	 */
-	@Override
 	@RequestCache
 	public Map<String, String> getNewDeepLinkParams(final String pageParam) {
 		Map<String, String> params = new HashMap<String, String>();
@@ -115,7 +113,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getPreferencesUrl(java.lang.String)
 	 */
-	@Override
 	@RequestCache
 	public String getPreferencesUrl(final String authType) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.PREFERENCES_PAGE_VALUE);
@@ -146,7 +143,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getToggleFaqReportsUrl(java.lang.String)
 	 */
-	@Override
 	@RequestCache
 	public String getToggleFaqReportsUrl(final String authType) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.MANAGER_PREFERENCES_PAGE_VALUE);
@@ -157,7 +153,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getTicketTakeUrl(java.lang.String, long)
 	 */
-	@Override
 	@RequestCache
 	public String getTicketTakeUrl(final String authType, final long ticketId) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.TICKET_TAKE_PAGE_VALUE);
@@ -168,7 +163,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getTicketPostponeUrl(java.lang.String, long)
 	 */
-	@Override
 	@RequestCache
 	public Object getTicketPostponeUrl(final String authType, final long ticketId) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.TICKET_POSTPONE_PAGE_VALUE);
@@ -179,7 +173,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getTicketAssignUrl(java.lang.String, long)
 	 */
-	@Override
 	@RequestCache
 	public Object getTicketAssignUrl(final String authType, final long ticketId) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.TICKET_ASSIGN_PAGE_VALUE
@@ -203,7 +196,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getTicketApproveClosureUrl(java.lang.String, long)
 	 */
-	@Override
 	@RequestCache
 	public Object getTicketApproveClosureUrl(final String authType, final long ticketId) {
 		Map<String, String> params = getNewDeepLinkParams(
@@ -237,7 +229,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getTicketGiveInformationUrl(java.lang.String, long)
 	 */
-	@Override
 	@RequestCache
 	public Object getTicketGiveInformationUrl(final String authType, final long ticketId) {
 		Map<String, String> params = getNewDeepLinkParams(
@@ -261,7 +252,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getTicketFreeUrl(java.lang.String, long)
 	 */
-	@Override
 	@RequestCache
 	public Object getTicketFreeUrl(final String authType, final long ticketId) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.TICKET_FREE_PAGE_VALUE);
@@ -272,7 +262,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getTicketCloseUrl(java.lang.String, long)
 	 */
-	@Override
 	@RequestCache
 	public Object getTicketCloseUrl(final String authType, final long ticketId) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.TICKET_CLOSE_PAGE_VALUE);
@@ -321,7 +310,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getTicketAddUrl(
 	 * java.lang.String, org.esupportail.helpdesk.domain.beans.Category)
 	 */
-	@Override
 	@RequestCache
 	public String getTicketAddUrl(
 			final String authType,
@@ -339,7 +327,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * org.esupportail.helpdesk.domain.beans.User)
 	 */
-	@Override
 	@RequestCache
 	public String getSearchUrl(
 			final String authType,
@@ -437,7 +424,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getJournalUrl(java.lang.String)
 	 */
-	@Override
 	@RequestCache
 	public String getJournalUrl(final String authType) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.JOURNAL_PAGE_VALUE);
@@ -463,7 +449,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getStatisticsUrl(java.lang.String)
 	 */
-	@Override
 	@RequestCache
 	public String getStatisticsUrl(final String authType) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.STATISTICS_PAGE_VALUE);
@@ -483,7 +468,6 @@ public class UrlBuilderImpl implements UrlBuilder, InitializingBean {
 	/**
 	 * @see org.esupportail.helpdesk.services.urlGeneration.UrlBuilder#getResponsesUrl(java.lang.String)
 	 */
-	@Override
 	@RequestCache
 	public String getResponsesUrl(final String authType) {
 		Map<String, String> params = getNewDeepLinkParams(DeepLinkingRedirector.RESPONSES_PAGE_VALUE);

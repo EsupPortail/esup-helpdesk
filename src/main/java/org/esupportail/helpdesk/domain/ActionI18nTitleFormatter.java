@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import org.esupportail.helpdesk.domain.beans.Action;
+import org.esupportail.helpdesk.domain.beans.User;
 
 /** 
  * The formatter of action i18n titles.
@@ -18,7 +19,7 @@ public interface ActionI18nTitleFormatter extends Serializable {
 	 * @param locale 
 	 * @return the i18n title of an action. 
 	 */
-	String getActionTitle(Action action, Locale locale);
+	String getActionTitle(Action action, Locale locale, User user);
 
 }
 

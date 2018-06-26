@@ -132,6 +132,7 @@ public class HelpdeskImpl extends AbstractIpProtectedWebService implements Helpd
 				TicketScope.PUBLIC,
 				TicketScope.SUBJECT_ONLY,
 				TicketScope.PRIVATE,
+				TicketScope.CAS,
 		}, "ticketScope", ticketScope);
 		Assert.contains(domainService.getOrigins(), "origin", origin);
 		Ticket ticket = domainService.addWebTicket(
@@ -188,67 +189,7 @@ public class HelpdeskImpl extends AbstractIpProtectedWebService implements Helpd
 		return applicationService.getVersion().toString();
 	}
 
-	/**
-	 * @see org.esupportail.helpdesk.services.remote.Helpdesk#getLastTickets(java.lang.String, int, java.lang.String, boolean)
-	 */
-	@Override
-	public List<SimpleTicketView> getLastTickets(
-			final String userId,
-			final int simpleTicketViewsNumber, 
-			final String controlPanelInvolvementFilter,
-			final boolean controlPanelInterface) {
-		checkClient();
-		List<SimpleTicketView> simpleTicketViews = new Vector<SimpleTicketView>();
-		User user = getDomainService().getUserStore().getUserFromRealId(userId); 
-		
-		// backup user control panels prefs
-		Boolean initUserControlPanelUserInterface = user.getControlPanelUserInterface();
-		String initUserControlPanelUserInvolvementFilter = user.getControlPanelUserInvolvementFilter();
-		String initUserControlPanelManagerInvolvementFilter = user.getControlPanelManagerInvolvementFilter();
-		
-		user.setControlPanelUserInterface(controlPanelInterface);
-		if(controlPanelInterface==true){
-			if(controlPanelInvolvementFilter != null && !controlPanelInvolvementFilter.isEmpty())
-				user.setControlPanelUserInvolvementFilter(controlPanelInvolvementFilter);
-		}
-		else{
-			if(controlPanelInvolvementFilter != null && !controlPanelInvolvementFilter.isEmpty())
-				user.setControlPanelManagerInvolvementFilter(controlPanelInvolvementFilter);			
-		}
-		// We set departmentFilter to null so that we get all user tickets, 
-		// and not only tickets filtered in the current controlPanel interface of the user
-		user.setControlPanelManagerDepartmentFilter(null);
-		user.setControlPanelUserDepartmentFilter(null);
-		
-		List<Department> visibleDepartments = getDomainService().getManagedOrTicketViewVisibleDepartments(user, getClient());
-		String queryString = getTicketExtractor().getControlPanelQueryString(user, user, visibleDepartments, false);
-		Query query = getDaoService().getQuery(queryString);
-		query.setMaxResults(simpleTicketViewsNumber);
-		@SuppressWarnings("unchecked")
-		List<Ticket> depSimpleTicketViews = query.list();
-		for(Ticket ticket: depSimpleTicketViews) {
-			String viewUrl = this.getUrlBuilder().getTicketViewUrl(AuthUtils.CAS, ticket.getId());
-			List<Action> actions = this.getDaoService().getActions(ticket, true); 
-			List<SimpleActionView> actionsView = new Vector<SimpleActionView>();
-			for(Action action: actions) {
-				SimpleActionView actionView = new SimpleActionViewImpl(action);
-				actionsView.add(actionView);
-			}
-			String isViewed =  new Boolean(getDomainService().hasTicketChangedSinceLastView(ticket, user)).toString(); 
-			boolean userInterface = user.getControlPanelUserInterface();
-			SimpleTicketView simpleTicketView = new SimpleTicketViewImpl(ticket, actionsView, viewUrl, isViewed, userInterface);
-			simpleTicketViews.add(simpleTicketView);
-		}
-		
-		// restore user control panels prefs
-		// -> we restore its because without this, that modify current controlPanel interface of the user
-		user.setControlPanelUserInterface(initUserControlPanelUserInterface);
-		user.setControlPanelUserInvolvementFilter(initUserControlPanelUserInvolvementFilter);
-		user.setControlPanelManagerInvolvementFilter(initUserControlPanelManagerInvolvementFilter);
-		
-		return simpleTicketViews;
-	}
-	
+
 	/**
 	 * @see org.esupportail.helpdesk.services.remote.Helpdesk#getControlPanelUserInvolvementFilter(java.lang.String)
 	 */
@@ -296,7 +237,8 @@ public class HelpdeskImpl extends AbstractIpProtectedWebService implements Helpd
 			ControlPanel.MANAGER_INVOLVEMENT_FILTER_FREE,
 			ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED,
 			ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_FREE,
-			ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED
+			ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED,
+			ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE
 		};
 		return Arrays.asList(filters);
 	}

@@ -14,6 +14,8 @@ public abstract class ActionScope {
 	/** Action scope value. */
 	public static final String INVITED = "INVITED";
 	/** Action scope value. */
+	public static final String INVITED_MANAGER = "INVITED_MANAGER";
+	/** Action scope value. */
 	public static final String OWNER = "OWNER";
 	/** Action scope value. */
 	public static final String MANAGER = "MANAGER";

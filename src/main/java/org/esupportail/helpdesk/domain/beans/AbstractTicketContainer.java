@@ -112,6 +112,17 @@ public abstract class AbstractTicketContainer implements Serializable, TicketCon
     private Icon icon;
 
     /**
+     * The visibility inter department.
+     */
+    private String visibilityInterSrv;
+
+    /**
+     * To set the service anonymous.
+     */
+    private Boolean srvAnonymous;
+
+
+	/**
      * Bean constructor.
      */
     public AbstractTicketContainer() {
@@ -152,6 +163,9 @@ public abstract class AbstractTicketContainer implements Serializable, TicketCon
     	this.monitoringLocalEmails = container.monitoringLocalEmails;
     	this.monitoringEmailAuthType = container.monitoringEmailAuthType;
     	this.icon = container.icon;
+    	this.visibilityInterSrv = container.visibilityInterSrv;
+    	this.srvAnonymous = container.srvAnonymous;
+    	
     }
 
 	/**
@@ -168,6 +182,8 @@ public abstract class AbstractTicketContainer implements Serializable, TicketCon
 		+ ", defaultTicketLabel=[" + defaultTicketLabel + "]"
 		+ ", defaultTicketMessage=[" + defaultTicketMessage + "]"
 		+ ", defaultTicketPriority=[" + defaultTicketPriority + "]"
+		+ ", visibilityInterSrv=[" + visibilityInterSrv + "]"
+		+ ", srvAnonymous=[" + srvAnonymous + "]"
 		+ ", url=[" + url + "]";
 	}
 
@@ -470,4 +486,20 @@ public abstract class AbstractTicketContainer implements Serializable, TicketCon
 		this.icon = icon;
 	}
 
+    
+    public String getVisibilityInterSrv() {
+		return visibilityInterSrv;
+	}
+
+	public void setVisibilityInterSrv(String visibilityInterSrv) {
+		this.visibilityInterSrv = visibilityInterSrv;
+	}
+
+	public Boolean getSrvAnonymous() {
+		return srvAnonymous;
+	}
+
+	public void setSrvAnonymous(Boolean srvAnonymous) {
+		this.srvAnonymous = srvAnonymous;
+	}
 }

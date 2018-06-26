@@ -79,7 +79,14 @@
     			URLs are prefixed by property portletMediaPath or servletMediaPath.
     		</description>
     		<list>
+
     			<value>functions.js</value>
+					<value>jquery-3.3.1.min.js</value>
+					<value>jquery.cookie.js</value>
+					<value>custom.js</value>
+					<value>accordion.block.js</value>
+					<value>jquery.nice-select.min.js</value>
+					<value>jquery-collapsible-fieldset.js</value>
     		</list>
     	</property>
     	<property name="stylesheets" >
@@ -94,6 +101,15 @@
     			<value>portlet.css</value>
     			<value>helpdesk.css</value>
     			<value>custom.css</value>
+				<value>base.style.css</value>
+				<value>layout.style.css</value>
+				<value>form.style.css</value>
+				<value>nice-select.css</value>
+				<value>treeview.style.css</value>
+				<value>navigation.style.css</value>
+				<value>calendar.style.css</value>
+				<value>//use.fontawesome.com/releases/v5.0.13/css/all.css</value>
+				<value>//fonts.googleapis.com/css?family=Roboto:300,400,600,700</value>
     		</list>
     	</property>
     	<property name="documentBodyStyleClass" value="portlet-section-body" >
@@ -121,7 +137,7 @@
     			The default value used for attribute activeItemClass of tag panelNavigationItem. 
     		</description>
     	</property>
-    	<property name="footerStyleClass" value="portlet-menu" >
+    	<property name="footerStyleClass" value="portlet-footer-menu" >
     		<description>
     			The default value used for attribute styleClass of tag footer. 
     		</description>

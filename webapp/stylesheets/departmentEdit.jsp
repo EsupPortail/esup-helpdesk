@@ -203,6 +203,20 @@ function selectIcon(src, value) {
 					<f:param value="#{msgs[ticketScopeI18nKeyProvider[domainService.departmentDefaultTicketScope]]}" />
 				</e:italic>
 			</h:panelGroup>
+			<e:outputLabel for="visibilityInterSrv"
+				value="#{msgs['DEPARTMENT_EDIT.TEXT.VISIBILITE_INTER_SRV']}" />
+			<h:panelGroup>
+				<e:inputText id="visibilityInterSrv"
+					value="#{departmentsController.departmentToUpdate.visibilityInterSrv}" />
+				<e:message for="visibilityInterSrv" />
+			</h:panelGroup>
+			<e:outputLabel for="srvAnonymous"
+				value="#{msgs['DEPARTMENT_EDIT.TEXT.SERVICE_ANONYMOUS']}" />
+			<h:panelGroup>
+				<e:selectBooleanCheckbox id="srvAnonymous"
+					value="#{departmentsController.departmentToUpdate.srvAnonymous}" />
+				<e:message for="srvAnonymous" />
+			</h:panelGroup>			
 			<e:outputLabel for="defaultTicketPriority"
 				value="#{msgs['DEPARTMENT_EDIT.TEXT.DEFAULT_TICKET_PRIORITY']}" 
 				rendered="#{not departmentsController.departmentToUpdate.virtual}" />

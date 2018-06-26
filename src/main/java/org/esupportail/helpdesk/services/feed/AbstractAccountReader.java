@@ -25,7 +25,6 @@ public abstract class AbstractAccountReader implements AccountReader {
 	/**
 	 * @see org.esupportail.helpdesk.services.feed.AccountReader#isEnabled()
 	 */
-	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -42,6 +41,16 @@ public abstract class AbstractAccountReader implements AccountReader {
 	 */
 	public void setDisabled(final boolean disabled) {
 		setEnabled(!disabled);
+	}
+
+	public void afterPropertiesSet() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean read(ErrorHolder errorHolder) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

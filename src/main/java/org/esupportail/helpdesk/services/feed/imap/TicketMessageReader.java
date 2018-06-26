@@ -10,6 +10,7 @@ import javax.mail.Message;
 import org.esupportail.helpdesk.domain.beans.Category;
 import org.esupportail.helpdesk.domain.beans.Department;
 import org.esupportail.helpdesk.domain.beans.Ticket;
+import org.esupportail.helpdesk.domain.beans.User;
 import org.esupportail.helpdesk.services.feed.ErrorHolder;
 import org.esupportail.helpdesk.services.feed.imap.spam.SpamFilter;
 
@@ -39,5 +40,9 @@ public interface TicketMessageReader extends Serializable {
 			boolean deleteSpam,
 			Category spamCategory,
 			ErrorHolder errorHolder);
+
+	void afterPropertiesSet();
+
+	User readMessage(Message message, Ticket ticket, ErrorHolder errorHolder);
 
 }

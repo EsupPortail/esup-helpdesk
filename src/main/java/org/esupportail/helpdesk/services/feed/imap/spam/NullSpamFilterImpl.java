@@ -54,4 +54,9 @@ public class NullSpamFilterImpl implements SpamFilter {
 		return false;
 	}
 
+	public void afterPropertiesSet() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
