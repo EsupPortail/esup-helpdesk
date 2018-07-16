@@ -26,7 +26,6 @@
 			   <e:section value="#{msgs['TICKET_ACTION.TITLE.ADD']}"/>
 		</h:panelGroup>
 
-		<e:messages />
         <t:htmlTag value="div" styleClass="category-filter"  rendered="#{not ticketController.showAddHelp and ticketController.addTargetCategory == null and ticketController.addTargetDepartment == null}">
                 <t:htmlTag value="h1">
                     <t:htmlTag value="span" styleClass="title">
@@ -67,6 +66,7 @@
 			</h:panelGroup>
         </t:htmlTag>
 
+<e:messages />
 
 		<h:panelGroup rendered="#{ticketController.showAddHelp}">
 			<e:paragraph value="#{msgs['TICKET_ACTION.TEXT.ADD.HELP.TOP.1']}" rendered="#{msgs['TICKET_ACTION.TEXT.ADD.HELP.TOP.1'] != ''}" />
@@ -285,19 +285,15 @@
                               </t:htmlTag>
                         </t:htmlTag>
                         <t:htmlTag value="div" styleClass="form-block">
+                             <t:htmlTag value="div" styleClass="form-item form-checkbox">
                                     <e:outputLabel for="owner" value="#{msgs['TICKET_ACTION.TEXT.ADD.OWNER_PROMPT']} "
                                         rendered="#{ticketController.userCanSetOwner}" />
                                         <h:panelGroup rendered="#{ticketController.userCanSetOwner}" >
                                             <e:inputText id="owner" value="#{ticketController.ldapUid}" size="50"
                                                 onkeypress="if (event.keyCode == 13) { return false;}" />
                                             <h:panelGroup rendered="#{domainService.useLdap}" >
-                                                <h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ticketActionForm:ldapSearchButton');" >
-                                                    <e:bold value=" #{msgs['_.BUTTON.LDAP']} " />
-                                                    <t:graphicImage value="/media/images/search.png"
-                                                        alt="#{msgs['_.BUTTON.LDAP']}"
-                                                        title="#{msgs['_.BUTTON.LDAP']}" />
-                                                </h:panelGroup>
-                                                <e:commandButton style="display:none"
+
+                                                <e:commandButton
                                                     id="ldapSearchButton" action="#{ldapSearchController.firstSearch}"
                                                     value="#{msgs['_.BUTTON.LDAP']}" >
                                                     <t:updateActionListener value="#{ticketController}"
@@ -311,6 +307,7 @@
                                             <t:htmlTag value="br" />
                                             <e:italic value=" #{domainService.useLdap ? msgs['TICKET_ACTION.TEXT.ADD.OWNER_HELP_LDAP'] : msgs['TICKET_ACTION.TEXT.ADD.OWNER_HELP_NO_LDAP']}" />
                                         </h:panelGroup>
+                             </t:htmlTag>
                         </t:htmlTag>
                     </t:htmlTag>
                 </t:htmlTag>
@@ -331,8 +328,6 @@
 							<f:facet name="root">
 								<h:panelGroup>
 									<h:panelGroup style="white-space: nowrap" >
-										<t:graphicImage value="/media/images/root-opened.png" rendered="#{t.nodeExpanded}" />
-										<t:graphicImage value="/media/images/root-closed.png" rendered="#{!t.nodeExpanded}" />
 										<e:italic value=" #{msgs['TICKET_ACTION.TEXT.ADD.FAQ_LINKS_HELP']}" />
 									</h:panelGroup>
 								</h:panelGroup>
@@ -341,13 +336,11 @@
 								<h:panelGroup>
 									<h:panelGroup style="cursor: pointer; white-space: nowrap"
 										onclick="showHideElement('ticketActionForm:faqTree:#{node.identifier}:faqContent');return false;">
-				                        <t:graphicImage value="/media/images/faq.png" rendered="#{node.leaf}" />
-				                        <t:graphicImage value="/media/images/faq-container-#{t.nodeExpanded?'opened':'closed'}.png" rendered="#{not node.leaf}" />
 										<e:bold value=" #{node.faq.label} " />
-
 									</h:panelGroup>
-									<e:text id="faqContent" escape="false"
-										style="display: none" value="#{node.faq.content}" />
+									<t:htmlTag value="div" id="faqContent"  styleClass="faq-content" style="display: none">
+									<e:text  escape="false" value="#{node.faq.content}" />
+									</t:htmlTag>
 								</h:panelGroup>
 							</f:facet>
 						</t:tree2>

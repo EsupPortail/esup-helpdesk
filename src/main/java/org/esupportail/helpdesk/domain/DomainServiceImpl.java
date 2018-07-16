@@ -5221,7 +5221,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (user == null) {
 			return false;
 		}
-		if(user.equals(ticket.getManager()) || user.equals(ticket.getManager())) {
+		if(user.equals(ticket.getManager()) || user.equals(ticket.getOwner())) {
 			return true;
 		}
 		return false;

@@ -15,7 +15,7 @@
 
                     <script type="text/javascript">
                         function selectUser(index) {
-                            simulateLinkClick('ldapResultsForm:data:'+index+':selectButton');
+                            //simulateLinkClick('ldapResultsForm:data:'+index+':selectButton');
                         }
                     </script>
 
@@ -66,7 +66,7 @@
                                                     </t:htmlTag>
                                                 </t:htmlTag>
                                                 <t:htmlTag value="div" styleClass="form-item">
-                                                    <e:commandButton value="#{msgs['LDAP_SEARCH.BUTTON.USER.SELECT']}" id="selectButton" styleClass="user-select" action="#{ldapSearchController.selectUser}" immediate="true">
+                                                    <e:commandButton  onclick="storeInSession('invite-user-select','true')" value="#{msgs['LDAP_SEARCH.BUTTON.USER.SELECT']}" id="selectButton" styleClass="user-select" action="#{ldapSearchController.selectUser}" >
                                                           <t:updateActionListener value="#{ldapUser}" property="#{ldapSearchController.selectedUser}" />
                                                     </e:commandButton>
                                                 </t:htmlTag>

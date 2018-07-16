@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <!--
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2008 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -34,7 +34,7 @@
 			<span fckLang="DlgLnkType">Link Type</span><br />
 			<select id="cmbLinkType" onchange="SetLinkType(this.value);">
 				<option value="url" fckLang="DlgLnkTypeURL" selected="selected">URL</option>
-				<!--option value="anchor" fckLang="DlgLnkTypeAnchor">Anchor in this page</option-->
+				<option value="anchor" fckLang="DlgLnkTypeAnchor">Anchor in this page</option>
 				<option value="email" fckLang="DlgLnkTypeEMail">E-Mail</option>
 			</select>
 			<br />
@@ -48,7 +48,7 @@
 								<option value="http://" selected="selected">http://</option>
 								<option value="https://">https://</option>
 								<option value="ftp://">ftp://</option>
-								<!--option value="news://">news://</option-->
+								<option value="news://">news://</option>
 								<option value="" fckLang="DlgLnkProtoOther">&lt;other&gt;</option>
 							</select>
 						</td>
@@ -61,7 +61,7 @@
 				</table>
 				<br />
 				<div id="divBrowseServer">
-				<!--input type="button" value="Browse Server" fckLang="DlgBtnBrowseServer" onclick="BrowseServer();" /-->
+				<input type="button" value="Browse Server" fckLang="DlgBtnBrowseServer" onclick="BrowseServer();" />
 				</div>
 			</div>
 			<div id="divLinkTypeAnchor" style="DISPLAY: none" align="center">

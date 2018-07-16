@@ -1,4 +1,4 @@
-/*
+﻿/*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
  * Copyright (C) 2003-2008 Frederico Caldeira Knabben
  *
@@ -23,6 +23,8 @@
  * Follow this link for more information:
  * http://docs.fckeditor.net/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options
  */
+
+FCKConfig.Height = '722';
 
 FCKConfig.CustomConfigurationsPath = '' ;
 
@@ -203,6 +205,8 @@ FCKConfig.RemoveFormatTags = 'b,big,code,del,dfn,em,font,i,ins,kbd,q,samp,small,
 
 // Attributes that will be removed
 FCKConfig.RemoveAttributes = 'class,style,lang,width,height,align,hspace,valign' ;
+
+FCKConfig.Height ='800px';
 
 FCKConfig.CustomStyles =
 {

@@ -44,7 +44,8 @@
   padding: 0 1em;
 }
 
-.header .region .ent-link a {
+.header .region .ent-link a,
+.header .region .logout-link a{
   text-decoration: none;
   color: #ffffff;
   font-size: 1.4em;
@@ -54,9 +55,11 @@
   height: 100%;
   align-items: center;
   padding: 0 1em;
+
 }
 
-.header .region .ent-link:hover {
+.header .region .ent-link:hover,
+.header .region .logout-link:hover{
   background-color: #1D8AC0;
 }
 
@@ -66,8 +69,15 @@
   height: 100%;
 }
 
-.header .region .ent-link {
+.header .region .ent-link,
+.header .region .logout-link,
+.header .region .current-user
+{
   border-left: solid 2px #0f81ba;
+}
+
+.header .region .logout-link a .fas.fa-sign-out-alt{
+  color: #ffffff;
 }
 
 .header .region .current-user {
@@ -75,6 +85,8 @@
   align-items: center;
   padding: 0 1em;
 }
+
+
 
 .footer .region {
   background-color: #e7e7e7;
@@ -151,7 +163,7 @@
   cursor: pointer;
 }
 
-.block.accordion h2 >span{
+.block.accordion h2 > span {
   font-size: 1.2rem;
 }
 
@@ -279,6 +291,9 @@ ul.tabs li.current:hover {
 .ticket-form .form-files,
 .ticket-form .form-properties {
   margin-bottom: 20px;
+}
+.ticket-add .faq-content{
+  margin-top:10px;
 }
 
 /* ------------------------------------ *\
@@ -668,8 +683,8 @@ ul.tabs li.current:hover {
   cursor: pointer;
 }
 
-.ticketInvite .form-uids .button--secondary {
-  margin: 0 0 0 10px;
+.ticketInvite .ldap-search-form  input{
+  margin-top:7px;
 }
 
 .ticketInvite .form-content {
@@ -903,7 +918,7 @@ ul.tabs li.current:hover {
   margin-top: 30px;
 }
 
-.search .search-result-score{
+.search .search-result-score {
   display: inline-block;
   width: 40px;
 }
@@ -911,18 +926,351 @@ ul.tabs li.current:hover {
 /* ------------------------------------ *\
   ==responses
 \* ------------------------------------ */
-.response-content{
+.response-content {
   display: block;
   background-color: #f3f3f3;
   padding: 8px;
-  margin:4px 0 12px 0;
+  margin: 4px 0 12px 0;
   min-height: 50px;
 }
 
-.response-list .response-item{
-  margin-bottom:10px;
+.response-list .response-item {
+  margin-bottom: 10px;
 }
 
-.response-content.hideme{
+.response-content.hideme {
   display: none !important;
 }
+
+/* ------------------------------------ *\
+  ==Utils
+\* ------------------------------------ */
+.utils-select, .utils-ldapuid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.utils-select .form-item, .utils-ldapuid .form-item {
+  margin-right: 20px;
+}
+
+.utils-ldapuid .form-submit {
+  flex-basis: 100%;
+}
+
+/* ------------------------------------ *\
+  ==administrators
+\* ------------------------------------ */
+.administrators thead > tr:nth-child(1) .portlet-table-header {
+  background-color: #fafafa;
+}
+
+.administrators .admin-users tbody td {
+  border-bottom: solid thin #c6c6c6;
+  padding: 12px 5px;
+}
+
+.administrators .admin-users tbody td > span {
+  color: #707070;
+  font-size: 0.95rem;
+}
+
+@media (min-width: 1200px) {
+  .administratorDelete .form-body,
+  .administratorAdd .form-body {
+    max-width: 60%;
+  }
+}
+
+.administratorAdd .form-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.administratorAdd .form-body .form-item {
+  margin-right: 20px;
+}
+
+.administratorAdd .form-body .form-submit {
+  flex-basis: 100%;
+}
+
+/* ------------------------------------ *\
+  ==departemnts
+\* ------------------------------------ */
+.departments .dashboard .column-header,
+.departments .dashboard .portlet-table-text {
+  padding-left: 10px;
+}
+
+.departments .form-block.items-sort {
+  display: flex;
+  align-items: baseline;
+}
+
+.departments .form-block.items-sort .form-item {
+  margin-left: 20px;
+}
+
+.departments .dashboard .move .fas {
+  cursor: pointer;
+  color: #7b7b7b;
+  font-size: 1.2rem;
+}
+
+.dashboard tbody td.portlet-table-text span.department-active {
+  color: #ffffff;
+  background-color: #11990b;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.dashboard tbody td.portlet-table-text span.department-inactive {
+  color: #ffffff;
+  background-color: #ffa22c;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+/* ------------------------------------ *\
+  ==departemntView
+\* ------------------------------------ */
+
+.departmentView .tab-content table th {
+  background-color: transparent;
+  padding: 5px 5px 20px 5px;
+  text-align: left;
+  border-bottom: solid 1px #707070;
+
+}
+
+.departmentView .tab-content table th .portlet-section-text {
+  color: #707070;
+  text-transform: uppercase;
+}
+
+.departmentView .tab-content table tbody tr:hover {
+  background-color: #f7f7f9;
+}
+
+.departmentView .tab-content table tbody td {
+  border-bottom: solid thin #c6c6c6;
+  padding: 12px 5px;
+}
+
+.departmentView .tab-content table tbody td > span {
+  color: #707070;
+  font-size: 0.95rem;
+}
+
+.departmentView .tab-content table .colCenter .fa-check-square {
+  color: #11990b;
+}
+
+.departmentView .department-active {
+  color: #ffffff;
+  background-color: #11990b;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.departmentView .department-inactive {
+  color: #ffffff;
+  background-color: #ffa22c;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.departmentView .tab-link .form-item {
+  display: inline;
+}
+
+.departmentView .tabs .form-item input[type='submit'] {
+  margin: 0;
+  display: inline;
+  min-height: auto;
+  color: red;
+  background-color: transparent;
+
+}
+
+.departmentView .tab-content .treeview.readonly-style td {
+  border-bottom: none;
+  padding: inherit;
+}
+
+.departmentView .tab-content .treeview.readonly-style tr:hover {
+  background-color: inherit;
+}
+
+.departmentView .treeview .redirections.leaf {
+  display: inline-block;
+}
+
+.departmentView .treeview .redirections.leaf span,
+.departmentView .treeview .redirections.leaf fa {
+  display: inline;
+}
+
+.departmentView .form-block.form-submit{
+  margin-top: 30px;
+}
+
+/* ------------------------------------ *\
+  ==departmentManagerEdit
+\* ------------------------------------ */
+
+.departmentManagerEdit .form-category .form-item {
+  margin-bottom: 15px;
+}
+
+.departmentManagerEdit .form-category label {
+  min-width: 150px;
+}
+
+@media (min-width: 1200px) {
+  .departmentManagerEdit .form-block {
+    width: 60%;
+  }
+}
+
+/* ------------------------------------ *\
+  ==departmentEdit - categoryEdit - departmentAdd - departmentDelete
+\* ------------------------------------ */
+
+.departmenEdit .form-body .form-block,
+.categoryEdit .form-body .form-block {
+  border-bottom: solid thin #c6c6c6;
+  padding: 8px 0 10px 0px;
+}
+
+.departmenEdit .form-body .form-block .form-item,
+.categoryEdit .form-body .form-block .form-item{
+  padding-bottom: 5px;
+}
+
+@media (min-width: 1200px) {
+  .departmentAdd .form-body,
+  .departmentDelete .form-item.display-flex{
+    max-width: 40%;
+  }
+}
+
+/* ------------------------------------ *\
+  ==categories
+\* ------------------------------------ */
+
+.categories .form-header{
+  margin-bottom: 15px;
+}
+
+.categories .form-header .form-item:first-child > span span{
+  margin:0 5px;
+}
+
+.categories .form-header .form-item:first-child input{
+  margin:0 80px 0 10px;
+}
+
+.categories .form-header, .categories .form-header .form-item:first-child > span {
+  display: flex;
+  align-items: center;
+}
+
+.categories .form-header .form-item {
+  margin-left: 10px;
+}
+
+.categories .treeview .extra-cell {
+  display: none;
+}
+
+.categories .treeview .properties .portlet-section-text {
+  font-size: 0.95rem;
+  color: #7b7b7b;
+}
+
+.categories .treeview .properties .form-submit,
+.categories .treeview .action .form-submit
+{
+  display: inline-block;
+  padding: 2px 0;
+  margin-top:0;
+}
+
+.categories .treeview .category .no-members{
+  display: inline-block;
+  font-style: italic;
+  margin-left:20px;
+  color: #7b7b7b;
+  font-size: 0.95rem;
+}
+.categories .treeview .properties .form-submit input[type='submit'],
+.categories .treeview .action .form-submit input[type='submit'] {
+  margin: 0 5px;
+  font-size: 0.9rem;
+  min-height: inherit;
+  padding: 5px;
+}
+
+.categories .treeview .order{
+  border: solid 1px #c0c0c0;
+  padding:3px;
+  text-align: center;
+  margin:2px 5px;
+}
+
+.categories .treeview .order:hover .fas{
+  color:#1093d3;
+}
+
+.categories .virtualCategories,
+.categories .members{
+  position: relative;
+  display: inline-block;
+}
+
+
+.categories .virtualCategories-list ul li,
+.categories .members-list ul li{
+  white-space:nowrap;
+}
+
+.categories .virtualCategories-list,
+.categories .members-list{
+  background-color: rgb(239, 239, 239);
+  color: rgb(102, 102, 102);
+  border-radius: 2px;
+  padding: 3px 5px;
+  font-size: 1em;
+  font-weight: normal;
+  box-shadow: 3px 3px 6px #aaa;
+  position: absolute;
+  z-index: 1;
+  top: 25px;
+  left: 5px;
+}
+
+.categories .link{
+  margin-left: 8px;
+}
+
+/* ------------------------------------ *\
+  ==categoryDelete
+\* ------------------------------------ */
+
+
+@media (min-width: 1200px) {
+  .categoryDelete .form-body{
+    max-width: 60%;
+    min-height: 100px;
+  }
+}
+
+

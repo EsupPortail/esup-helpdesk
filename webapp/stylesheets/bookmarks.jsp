@@ -58,9 +58,9 @@
                                              </t:htmlTag>
                                         </t:htmlTag>
                                     </t:htmlTag>
-
                                 </t:htmlTag>
                             </t:htmlTag>
+
                             <t:htmlTag id="tab-bookmarks" styleClass="tab-content current" value="div">
                                 <e:dataTable
                                     id="bookmarkData" rowIndexVar="variable"

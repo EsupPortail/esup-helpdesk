@@ -189,6 +189,7 @@ label {
 }
 
 .form-checkbox input[type='checkbox'],
+.form-checkbox input[type='text'],
 .form-item.form-checkbox select,
 .form-checkbox label {
   display: inline-block;

@@ -79,6 +79,8 @@ function addInvitation(select) {
                                      <e:selectOneMenu id="addInvitation"  onchange="addInvitation(this);" >
                                          <f:selectItems value="#{ticketController.recentInvitationItems}" />
                                      </e:selectOneMenu>
+                                     <e:commandButton id="cancelActionButton02" action="#{ticketController.cancelAction}"
+                                                                         		value="#{msgs['_.BUTTON.CANCEL']}" immediate="true" />
                            </t:htmlTag>
                       </t:htmlTag>
                       <t:htmlTag value="div" id="uids" styleClass="form-block form-uids ">
@@ -90,6 +92,8 @@ function addInvitation(select) {
                                     <h:panelGroup id="ldap-search-button" onclick="buttonClick('ticketActionForm:ldapSearchButton');" styleClass="cursor--pointer button--secondary">
                                         <h:outputText value="#{msgs['SEARCH.BUTTON.SEARCH']}"/>
                                     </h:panelGroup>
+                                    	<e:commandButton id="cancelActionButton00" action="#{ticketController.cancelAction}"
+                                    		value="#{msgs['_.BUTTON.CANCEL']}" immediate="true" />
                                     <e:commandButton style="display:none"
                                         id="ldapSearchButton" action="#{ldapSearchController.firstSearch}"
                                         value="#{msgs['_.BUTTON.LDAP']}" >
@@ -156,6 +160,8 @@ function addInvitation(select) {
                                                     </h:panelGroup>
                                                 </f:facet>
                                   </t:tree2>
+                                  <e:commandButton id="cancelActionButton01" action="#{ticketController.cancelAction}"
+                                                                      		value="#{msgs['_.BUTTON.CANCEL']}" immediate="true" />
                            </t:htmlTag>
                       </t:htmlTag>
 

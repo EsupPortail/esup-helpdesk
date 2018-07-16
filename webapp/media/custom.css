@@ -127,7 +127,7 @@ hr {
   color: #4d4d4d;
 }
 
-.dashboard tbody tr:hover td:first-of-type span {
+.controlPanel .dashboard tbody tr:hover td:first-of-type span {
   color: inherit;
 }
 

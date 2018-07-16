@@ -3,7 +3,6 @@
 <e:page stringsVar="msgs" menuItem=""
 	locale="#{sessionController.locale}"
 	authorized="#{ticketController.userCanGiveInformation}">
-
 		   <t:htmlTag id="ticketGiveInformations" value="div" styleClass="page-wrapper ticketGiveInformations">
                <t:htmlTag id="header" value="header" styleClass="header">
                     <%@include file="_header.jsp"%>
@@ -94,10 +93,11 @@
                     </t:htmlTag>
             </t:htmlTag>
             </t:htmlTag>
+           <t:htmlTag value="footer" styleClass="footer">
+                        <%@include file="_footer.jsp"%>
+           </t:htmlTag>
         </t:htmlTag>
-    <t:htmlTag value="footer" styleClass="footer">
-            <%@include file="_footer.jsp"%>
-    </t:htmlTag>
+
 
 </e:page>
 

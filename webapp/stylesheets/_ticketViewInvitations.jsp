@@ -38,6 +38,7 @@
         <t:htmlTag value="div" styleClass="form-item">
 		<e:commandButton
 			id="inviteButton"
+			onclick="storeInSession('invite-user-select',null)"
 			value="#{msgs['TICKET_VIEW.INVITATIONS.BUTTON.INVITE']}"
 			styleClass="button--secondary"
 			action="#{ticketController.invite}" />

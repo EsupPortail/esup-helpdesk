@@ -35,6 +35,11 @@ jQuery(function ($) {
     };
 
 
+    storeInSession = function (itemKey, itemValue) {
+        $.cookie(itemKey, itemValue);
+    };
+
+
     $('input[type=\'submit\']').click(function (e) {
         e.stopImmediatePropagation();
     });
@@ -102,8 +107,30 @@ jQuery(function ($) {
         $(this).addClass("collapsed");
     });
 
+
+
     $(".category.leaf.last").each(function () {
-        $(this).parent().prepend("<span class=\"\">-</span>");
+        var prevcellImg = $(this).parent().prev().find('img[onclick]');
+        if(prevcellImg.length > 0){
+            var onClickValue = prevcellImg.attr('onclick');
+            $(this).addClass('no-last');
+            var parentTable= $(this).closest('table').clone().addClass("clone");
+            $(this).removeClass('last');
+            $(this).addClass('parent');
+            $(this).attr('onclick',onClickValue);
+            $(this).closest('table').next().prepend(parentTable);
+        }else{
+            $(this).parent().prepend("<span class=\"\">-</span>");
+        }
+
+    });
+
+    $(".clone tr").each(function () {
+        $(this).prepend("<td width='19'></td>");
+    });
+
+    $(".clone tr td:last-of-type .last").each(function () {
+        $(this).before("<span class=\"\">-</span>");
     });
 
     $(".category.leaf.parent").each(function () {
@@ -125,12 +152,6 @@ jQuery(function ($) {
     $(".treeview .department").each(function () {
         var $parentRow = $(this).parent().parent();
         $parentRow.append("<td class=\"extra-cell\"><div><i class=\"fas fa-chevron-down\"></i></div></td>");
-    });
-    
-    $("#ticketActionForm\\:cancelFilterTreeButton").click(function () {
-    	if ($("#ticketActionForm\\:filtreTree").length > 0) {
-    		$("#ticketActionForm\\:filtreTree").val() = "";
-    	}
     });
 
     //Highligh text
@@ -348,7 +369,7 @@ jQuery(function ($) {
     //Invite users to ticket
     $(document).ready(function () {
         $("#ticketActionForm\\:ldap-search-button").each(function () {
-            if (($.cookie('invite-user-select') != 'null') && ($.cookie('invite-user-select') != null)) {
+            if (($.cookie('invite-user-select') != 'null')) {
                 $(this).addClass("hideme");
                 $("#ticketActionForm\\:inviteComment").removeClass('hideme');
                 $("#ticketActionForm\\:ldapUid-label").removeClass('hideme');
@@ -357,7 +378,7 @@ jQuery(function ($) {
     });
 
     $("#viewTicketForm\\:inviteButton").click(function () {
-        $.cookie('invite-user-select', null);
+        //$.cookie('invite-user-select', null);
     });
 
     $("#ticketActionForm\\:showLdapForm").click(function () {
@@ -457,9 +478,11 @@ jQuery(function ($) {
     }
 
     //LDAP search result
-    $('.search-result-data .user-select').click(function (e) {
+
+
+/*    $('.search-result-data .user-select').click(function (e) {
         $.cookie('invite-user-select', "true");
-    });
+    });*/
 
 
     $(".ldap-search-result .user-data ").each(function () {

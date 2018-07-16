@@ -9,11 +9,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+
 import org.apache.turbine.util.BrowserDetector;
 import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.exceptions.ConfigException;
 import org.esupportail.commons.exceptions.UserNotFoundException;
+import org.esupportail.commons.services.ldap.LdapAttributesMapper;
+import org.esupportail.commons.services.ldap.LdapEntity;
 import org.esupportail.commons.services.ldap.LdapException;
+import org.esupportail.commons.services.ldap.LdapStructureService;
 import org.esupportail.commons.services.ldap.LdapUser;
 import org.esupportail.commons.services.ldap.LdapUserService;
 import org.esupportail.commons.services.logging.Logger;
@@ -24,6 +31,13 @@ import org.esupportail.commons.utils.strings.StringUtils;
 import org.esupportail.helpdesk.domain.beans.Category;
 import org.esupportail.helpdesk.domain.beans.Department;
 import org.esupportail.helpdesk.domain.beans.User;
+import org.springframework.ldap.AttributesMapper;
+
+import org.springframework.ldap.LdapTemplate;
+import org.springframework.ldap.support.filter.AndFilter;
+import org.springframework.ldap.support.filter.EqualsFilter;
+import org.springframework.ldap.support.filter.NotFilter;
+
 
 /**
  * A simple implementation of UserInfoProvider.
@@ -45,10 +59,28 @@ public class BasicUserInfoProviderImpl extends AbstractUserInfoProvider {
 	 */
 	private LdapUserService ldapUserService;
 
+	
+	
+	private LdapTemplate ldapTemplate;
+	/**
+	 * The LDAP service.
+	 */
+	private LdapStructureService ldapStructureService;
+
 	/**
 	 * The names of the LDAP attributes to show, all if not set.
 	 */
 	private List<String> ldapAttributeNames;
+
+	/**
+	 * The names of the LDAP AMU attributes to show, all if not set.
+	 */
+	private List<String> ldapAmuAttributeNames;
+
+	/**
+	 * The attributes mapper.
+	 */
+	private LdapAttributesMapper attributesMapper;
 
 	/**
 	 * The names of the Shibboleth attributes to show, all if not set.
@@ -123,8 +155,13 @@ public class BasicUserInfoProviderImpl extends AbstractUserInfoProvider {
 		super.afterPropertiesSet();
 		Assert.notNull(this.ldapUserService,
 				"property ldapUserService of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(this.ldapTemplate,
+				"property ldapTemplate of class " + this.getClass().getName() + " can not be null");
 		if (ldapAttributeNames != null && ldapAttributeNames.isEmpty()) {
 			ldapAttributeNames = null;
+		}
+		if (ldapAmuAttributeNames != null && ldapAmuAttributeNames.isEmpty()) {
+			ldapAmuAttributeNames = null;
 		}
 		if (shibbolethAttributeNames != null && shibbolethAttributeNames.isEmpty()) {
 			shibbolethAttributeNames = null;
@@ -259,6 +296,32 @@ public class BasicUserInfoProviderImpl extends AbstractUserInfoProvider {
     	return StringUtils.nullIfEmpty(info);
     }
 
+	
+	
+	private String getLibelleSupannEntiteAffectation(String valeur) {
+		final List<String> sites = new ArrayList<String>();
+
+		EqualsFilter filter = new EqualsFilter("supannCodeEntite", valeur);
+		AndFilter andFilter = new AndFilter();
+		andFilter.and(new EqualsFilter("objectclass", "supannEntite"));
+		andFilter.and(filter);
+		List<String> attributes = new ArrayList<String>();
+		attributes.add("description");
+		String[] attrs = {"description"};
+		attributesMapper = new LdapAttributesMapper("description", attributes);
+		
+		List<LdapEntity> liste = ldapTemplate.search(
+				"ou=structures", andFilter.encode(), SearchControls.SUBTREE_SCOPE, attrs, attributesMapper);
+
+		
+ 		return liste.get(0).getAttribute("description");
+		 
+	}
+
+	
+	
+	
+	
     /**
      * @param user
      * @param locale
@@ -270,6 +333,7 @@ public class BasicUserInfoProviderImpl extends AbstractUserInfoProvider {
     	String info = "<p>";
     	try {
 			LdapUser ldapUser = ldapUserService.getLdapUser(user.getRealId());
+
 			List<String> names;
 			if (shibbolethAttributeNames == null) {
 				names = ldapUser.getAttributeNames();
@@ -292,15 +356,44 @@ public class BasicUserInfoProviderImpl extends AbstractUserInfoProvider {
 									"USER_INFO.LDAP.NO_VALUE",
 									locale));
 					} else if (values.size() == 1) {
-						info += "[" + strong(values.get(0)) + "]";
-					} else {
-						String separator = "{";
-						for (String value : values) {
-							info += separator + "["
-							+ strong(value) + "]";
-							separator = ", ";
+						if(name.equals("memberOf")) {
+							info += "[";
+							for (String string : values) {
+								info += "[" + strong(string.substring(0, string.indexOf(","))) + "] ";
+							}
+							info += "]";
 						}
-						info += "}";
+						else {
+							info += "[" + strong(values.get(0));
+							if(name.equals("supannEntiteAffectation") || name.equals("supannEntiteAffectationPrincipale")) {
+								String libelle = getLibelleSupannEntiteAffectation(values.get(0));
+								info += " : " + libelle;
+							}
+							info += "]";
+						}
+					} else {
+						if(name.equals("memberOf")) {
+							info += "[";
+							for (String string : values) {
+								info += "[" + strong(string.substring(0, string.indexOf(","))) + "] ";
+							}
+							info += "]";
+						}
+						else {
+							String separator = "{";
+							for (String value : values) {
+								info += separator + "[" + strong(value);
+								
+								if(name.equals("supannEntiteAffectation") || name.equals("supannEntiteAffectationPrincipale")) {
+									String libelle = getLibelleSupannEntiteAffectation(value);
+									info += " : "
+											+ libelle;
+								}
+								info += "]";
+								separator = ", ";
+							}
+							info += "}";
+						}
 					}
 				}
 			}
@@ -623,5 +716,19 @@ public class BasicUserInfoProviderImpl extends AbstractUserInfoProvider {
 	public void setShowBrowser(final boolean showBrowser) {
 		this.showBrowser = showBrowser;
 	}
+	
+	/**
+	 * @param ldapTemplate the ldapTemplate to set
+	 */
+	public void setLdapTemplate(final LdapTemplate ldapTemplate) {
+		this.ldapTemplate = ldapTemplate;
+	}
 
+	public List<String> getLdapAmuAttributeNames() {
+		return ldapAmuAttributeNames;
+	}
+
+	public void setLdapAmuAttributeNames(List<String> ldapAmuAttributeNames) {
+		this.ldapAmuAttributeNames = ldapAmuAttributeNames;
+	}
 }

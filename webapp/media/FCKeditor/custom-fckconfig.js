@@ -1,10 +1,6 @@
 FCKConfig.ToolbarSets["actionMessage"] = [
-	['Undo','Redo'],
-	['Cut','Copy','Paste','PasteText'],
-	['FontFormat', 'Bold','Italic','Underline','StrikeThrough','-','Subscript','Superscript','TextColor','-','RemoveFormat'],
-	['OrderedList','UnorderedList','-','Outdent','Indent'],
-	['Link','Unlink'],
-	['SpecialChar','Smiley','-','FitWindow','Source']
+	['Bold','Italic','TextColor','OrderedList','UnorderedList'],['Link','Unlink'],['PasteWord','Table','Smiley']
+
 ] ;
 
 FCKConfig.ToolbarSets["faqContent"] = [
@@ -15,6 +11,13 @@ FCKConfig.ToolbarSets["faqContent"] = [
 	['Link','Unlink'],
 	['SpecialChar','Smiley','-','FitWindow','Source']
 ] ;
+
+
+
+
+FCKConfig.Height = '500';
+FCKConfig.SkinPath = FCKConfig.BasePath + 'skins/amu/' ;
+
 
 FCKConfig.ProcessHTMLEntities = false ;
 FCKConfig.IncludeLatinEntities = false ;
@@ -36,5 +39,8 @@ FCKConfig.LinkUpload = false;
 FCKConfig.LinkDlgHideAdvanced = true;
 
 FCKConfig.FontFormats	= 'div;p;pre;h3;h4;h5;h6' ;
+
+
+
 
 

@@ -34,6 +34,8 @@ public class ControlPanelOrder implements Serializable {
 	public static final String OWNER = "owner";
 	/** An order part name. */
 	public static final String MANAGER = "manager";
+	/** An order part name. */
+	public static final String SERVICE_OWNER = "serviceOwner";
 
 	/**
 	 * The serialization id.
@@ -54,6 +56,7 @@ public class ControlPanelOrder implements Serializable {
 		LAST_ACTION_DATE,
 		OWNER,
 		MANAGER,
+		SERVICE_OWNER,
 	};
 	
 	/**

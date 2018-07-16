@@ -62,6 +62,7 @@ section {
 }
 
 .link,
+.link .portlet-section-text,
 a {
   color: #1093d3;
   cursor: pointer;
@@ -118,12 +119,26 @@ a:hover {
   color: #0f81ba;
 }
 
+.fa-trash-alt{
+  cursor: pointer;
+}
 .fa-trash-alt:hover {
   color: #ff0000;
 }
 
 .fa-chevron-down {
   color: #1093d3;
+}
+
+.redirect.fa-arrow-alt-circle-right{
+  color: #1093d3;
+  padding:0 5px;
+}
+
+.redirect.fa-arrow-alt-circle-left{
+  color: #11990b;
+  padding:0 5px;
+  display: inline;
 }
 
 /* ------------------------------------ *\
@@ -188,6 +203,23 @@ a:hover {
   visibility: visible;
 }
 
+
+/* ------------------------------------ *\
+  ==entriesNumber invités - fichiers
+\* ------------------------------------ */
+
+.entriesNumber{
+
+  background-color:#8e8e8e ;
+  color: #ffffff;
+  text-align:center;
+  border:1px solid #8e8e8e;
+  border-radius: 50%;
+  display: inline-block;
+  width:22px;
+  height: 22px;
+  line-height: 19px;
+}
 /*------------------------------------*\
   ==@media only screen and (min-width: 1025px)
 \*------------------------------------*/

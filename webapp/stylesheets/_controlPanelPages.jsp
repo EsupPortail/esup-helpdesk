@@ -11,7 +11,6 @@
 	</h:panelGroup>
 
 	<t:dataList value="#{controlPanelController.paginator.nearPages}" var="page" >
-
 		<e:text value="#{page + 1}"
 			rendered="#{page == controlPanelController.paginator.currentPage}" styleClass="current-page"/>
 		<h:commandLink value="#{page + 1}"
@@ -19,7 +18,6 @@
 			<t:updateActionListener value="#{page}"
 				property="#{controlPanelController.paginator.currentPage}" />
 		</h:commandLink>
-
 	</t:dataList>
 
 	<h:panelGroup rendered="#{not controlPanelController.paginator.lastPage}">

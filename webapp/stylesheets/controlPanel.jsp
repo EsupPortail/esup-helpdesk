@@ -1,7 +1,7 @@
 <%@include file="_include.jsp"%>
 <e:page stringsVar="msgs" menuItem="controlPanel"
 	locale="#{sessionController.locale}">
-	   <t:htmlTag id="page-wrapper" value="div" styleClass="page-wrapper">
+	   <t:htmlTag id="page-wrapper" value="div" styleClass="page-wrapper controlPanel">
 	   <t:htmlTag id="header" value="header" styleClass="header">
 		    <%@include file="_header.jsp"%>
 		</t:htmlTag>

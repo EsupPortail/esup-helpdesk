@@ -62,6 +62,11 @@ public final class Ticket extends AbstractTicket {
      */
     private String managerDisplayName;
     
+    /**
+     * The service of the owner.
+     */
+    private String serviceOwner;
+    
 	/**
 	 * Default constructor.
 	 */
@@ -84,6 +89,7 @@ public final class Ticket extends AbstractTicket {
 		this.category = t.category;
 		this.recallDate = t.recallDate;
 		this.managerDisplayName = t.managerDisplayName;
+		this.serviceOwner = t.serviceOwner;
 	}
 
 	/**
@@ -442,6 +448,14 @@ public final class Ticket extends AbstractTicket {
 		} else {
 			setManagerDisplayName(manager.getDisplayName());
 		}
+	}
+
+	public String getServiceOwner() {
+		return serviceOwner;
+	}
+
+	public void setServiceOwner(String serviceOwner) {
+		this.serviceOwner = serviceOwner;
 	}
 
 }

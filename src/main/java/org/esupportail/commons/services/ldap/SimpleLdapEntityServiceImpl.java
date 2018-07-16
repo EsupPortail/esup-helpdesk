@@ -74,7 +74,7 @@ public class SimpleLdapEntityServiceImpl extends AbstractLdapService implements 
 	 * The names of the attributes to retrieve.  
 	 */
 	private List<String> attributes;
-	
+
 	/**
 	 * The attributes mapper.
 	 */
@@ -380,5 +380,6 @@ public class SimpleLdapEntityServiceImpl extends AbstractLdapService implements 
 		}
 		setAttributes(list);
 	}
+
 
 }

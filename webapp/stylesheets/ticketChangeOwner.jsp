@@ -3,72 +3,80 @@
 <e:page stringsVar="msgs" menuItem=""
 	locale="#{sessionController.locale}"
 	authorized="#{ticketController.userCanChangeOwner}">
-	<%@include file="_navigation.jsp"%>
+		   <t:htmlTag id="ticketChangeOwner" value="div" styleClass="page-wrapper ticketChangeOwner">
+               <t:htmlTag id="header" value="header" styleClass="header">
+                    <%@include file="_header.jsp"%>
+                </t:htmlTag>
+                <t:htmlTag value="div" styleClass="columns">
+                    <t:htmlTag value="aside" styleClass="navigation">
+                        <%@include file="_navigation.jsp"%>
+                    </t:htmlTag>
 
-	<e:form 
-		freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}" 
-		showSubmitPopupText="#{sessionController.showSubmitPopupText}" 
-		showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
-		id="ticketActionForm">
-		<e:panelGrid columns="2" width="100%" columnClasses="colLeft,colRight">
-			<e:section value="#{msgs['TICKET_ACTION.TITLE.CHANGE_OWNER']}" >
-				<f:param value="#{ticketController.ticket.id}" />
-			</e:section>
-			<%@include file="_ticketActionCancel.jsp"%>
-		</e:panelGrid>
-		<e:messages />
-		<e:paragraph value="#{msgs['TICKET_ACTION.TEXT.CHANGE_OWNER.1_LDAP']}" rendered="#{domainService.useLdap}" />
-		<e:paragraph value="#{msgs['TICKET_ACTION.TEXT.CHANGE_OWNER.1_NO_LDAP']}" rendered="#{not domainService.useLdap}" />
-		<e:inputText id="ldapUid" value="#{ticketController.ldapUid}" size="50"
-			onkeypress="if (event.keyCode == 13) { simulateLinkClick('ticketActionForm:actionButton'); return false;}" />
-		<h:panelGroup rendered="#{domainService.useLdap}" >
-			<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ticketActionForm:ldapSearchButton');" >
-				<e:bold value=" #{msgs['_.BUTTON.LDAP']} " />
-				<t:graphicImage value="/media/images/search.png"
-					alt="#{msgs['_.BUTTON.LDAP']}" 
-					title="#{msgs['_.BUTTON.LDAP']}" />
-			</h:panelGroup>
-			<e:commandButton 
-				id="ldapSearchButton" style="display: none"
-				value="#{msgs['_.BUTTON.LDAP']}" action="#{ldapSearchController.firstSearch}" >
-				<t:updateActionListener value="#{ticketController}"
-					property="#{ldapSearchController.caller}" />
-				<t:updateActionListener value="userSelectedToTicketChangeOwner"
-					property="#{ldapSearchController.successResult}" />
-				<t:updateActionListener value="cancelToTicketChangeOwner"
-					property="#{ldapSearchController.cancelResult}" />
-			</e:commandButton>
-		</h:panelGroup>
-		<e:panelGrid columns="2" width="100%" columnClasses="colLeftMax,colRightNowrap">
-			<e:paragraph value="#{msgs['TICKET_ACTION.TEXT.CHANGE_OWNER.2']}" />
-			<%@include file="_ticketActionResponses.jsp"%>
-		</e:panelGrid>
-		<fck:editor  
-			id="actionMessage" 
-			value="#{ticketController.actionMessage}" 
-			toolbarSet="actionMessage" />
-		<e:panelGrid columns="2" columnClasses="colLeftNowrap,colRightMaxNowrap" width="100%" >
-			<h:panelGroup id="mainButtonGroup" style="position: absolute; white-space: nowrap;" >
-				<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ticketActionForm:actionButton');" >
-					<e:bold value="#{msgs['TICKET_ACTION.BUTTON.CHANGE_OWNER']} " />
-					<t:graphicImage value="/media/images/user.png" />
-				</h:panelGroup>
-				<e:commandButton 
-					id="actionButton" style="display: none"
-					value="#{msgs['TICKET_ACTION.BUTTON.CHANGE_OWNER']}"
-					action="#{ticketController.doChangeOwner}" />
-			</h:panelGroup>
-			<h:panelGroup>
-				<%@include file="_ticketActionScope.jsp"%>
-				<%@include file="_ticketActionPreviewButton.jsp"%>
-			</h:panelGroup>
-		</e:panelGrid>
-		<%@include file="_ticketActionPreview.jsp"%>
-		<%@include file="_ticketActionHistory.jsp"%>
-	</e:form>
-	<t:aliasBean alias="#{controller}" value="#{null}" >
-		<%@include file="_signature.jsp"%>
-	</t:aliasBean>
+                    <t:htmlTag value="main" styleClass="content">
+                        <t:htmlTag value="div" styleClass="content-inner">
+                            <e:form
+                                freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"
+                                showSubmitPopupText="#{sessionController.showSubmitPopupText}"
+                                showSubmitPopupImage="#{sessionController.showSubmitPopupImage}"
+                                id="ticketActionForm">
+                                <t:htmlTag value="div" styleClass="message">
+                                     <e:messages/>
+                                 </t:htmlTag>
+                                 <t:htmlTag value="div" styleClass="ticket-form">
+                                     <t:htmlTag value="div" styleClass="form-block form-header">
+                                         <t:htmlTag value="h1">
+                                             <t:htmlTag value="span" styleClass="title">
+                                                   <h:outputText value="#{msgs['TICKET_ACTION.TITLE.CHANGE_OWNER']}" escape="false" />
+                                             </t:htmlTag>
+                                             <t:htmlTag value="span" styleClass="subtitle">
+                                                 <h:outputText value=" #{ticketController.ticket.id}" escape="false" />
+                                             </t:htmlTag>
+                                         </t:htmlTag>
+                                     </t:htmlTag>
+                                     <t:htmlTag value="div" styleClass="form-block utils-ldapuid">
+                                         <t:htmlTag value="div" styleClass="form-item">
+                                            <e:outputLabel  for="ldapUid" value="#{domainService.useLdap ? msgs['UTILS.TEXT.USER_PROMPT'] : msgs['UTILS.TEXT.USER_PROMPT_NO_LDAP']} " />
+                                            <e:inputText id="ldapUid" value="#{ticketController.ldapUid}"/>
+                                         </t:htmlTag>
+                                         <t:htmlTag value="div" styleClass="form-item " >
+                                            <e:commandButton rendered="#{domainService.useLdap}" id="ldapSearchButton"
+                                                value="#{msgs['_.BUTTON.LDAP']}" action="#{ldapSearchController.firstSearch}" >
+                                                <t:updateActionListener value="#{ticketController}"
+                                                                        property="#{ldapSearchController.caller}" />
+                                                <t:updateActionListener value="userSelectedToTicketChangeOwner"
+                                                                        property="#{ldapSearchController.successResult}" />
+                                                <t:updateActionListener value="cancelToTicketChangeOwner"
+                                                                        property="#{ldapSearchController.cancelResult}" />
+                                            </e:commandButton>
+                                          </t:htmlTag>
+
+                                     </t:htmlTag>
+                                     <t:htmlTag value="div" styleClass="form-block form-body">
+                                         <t:htmlTag value="div" styleClass="form-item">
+                                                 <fck:editor
+                                                 id="actionMessage"
+                                                 value="#{ticketController.actionMessage}"
+                                                 toolbarSet="actionMessage" />
+                                         </t:htmlTag>
+                                     </t:htmlTag>
+                                     <t:htmlTag value="div" styleClass="form-block">
+                                         <t:htmlTag value="div" styleClass="form-item display-flex" >
+                                             <e:commandButton id="actionButton"
+                                                     styleClass="button--primary"
+                                                     value="#{msgs['TICKET_ACTION.BUTTON.CHANGE_OWNER']}"
+                                                     action="#{ticketController.doChangeOwner}" />
+                                             <%@include file="_ticketActionCancel.jsp"%>
+                                        </t:htmlTag>
+                                     </t:htmlTag>
+                                 </t:htmlTag>
+                            </e:form>
+                    </t:htmlTag>
+            </t:htmlTag>
+            </t:htmlTag>
+           <t:htmlTag value="footer" styleClass="footer">
+                        <%@include file="_footer.jsp"%>
+           </t:htmlTag>
+        </t:htmlTag>
 	<%@include file="_ticketActionJavascript.jsp"%>
 </e:page>
 

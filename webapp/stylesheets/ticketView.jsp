@@ -110,9 +110,11 @@
                                                 </t:htmlTag>
                                                 <t:htmlTag id="files" styleClass="tab-link" value="li">
                                                     <h:outputText value="#{msgs['TICKET_VIEW.FILES.HEADER_TAB']} " />
+                                                    <h:outputText styleClass="entriesNumber" value="#{ticketController.fileInfoEntriesNumber}" />
                                                 </t:htmlTag>
                                                 <t:htmlTag id="invitations" styleClass="tab-link " value="li">
                                                     <h:outputText value="#{msgs['TICKET_VIEW.INVITATIONS.HEADER_TAB']} " />
+                                                     <h:outputText styleClass="entriesNumber" value="#{ticketController.invitationsNumber}" />
                                                 </t:htmlTag>
                                                 <t:htmlTag id="monitoring" styleClass="tab-link" value="li">
                                                     <h:outputText value="#{msgs['TICKET_VIEW.MONITORING.HEADER_TAB']} " />
