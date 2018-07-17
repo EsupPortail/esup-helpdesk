@@ -17,6 +17,11 @@ public class FileInfo extends AbstractTicketInfo {
 	 * The name of the file, as given by the client when uploading.
 	 */
 	private String filename;
+
+	/**
+	 * The name of the file, as given by the client when uploading.
+	 */
+	private long serviceId;
 	
 	/**
 	 * The size of the file.
@@ -52,6 +57,7 @@ public class FileInfo extends AbstractTicketInfo {
 		super(user, ticket, scope);
 		this.filename = filename;
 		this.content = content;
+		this.serviceId = ticket.getDepartment().getId();
 	}
 
 	/**
@@ -116,6 +122,14 @@ public class FileInfo extends AbstractTicketInfo {
 	 */
 	public void setFilesize(final int filesize) {
 		this.filesize = filesize;
+	}
+
+	public long getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(long serviceId) {
+		this.serviceId = serviceId;
 	}
 
 }

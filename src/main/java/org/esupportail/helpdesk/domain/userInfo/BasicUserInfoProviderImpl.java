@@ -313,8 +313,10 @@ public class BasicUserInfoProviderImpl extends AbstractUserInfoProvider {
 		List<LdapEntity> liste = ldapTemplate.search(
 				"ou=structures", andFilter.encode(), SearchControls.SUBTREE_SCOPE, attrs, attributesMapper);
 
-		
- 		return liste.get(0).getAttribute("description");
+		if(liste.size() > 0) {
+			return liste.get(0).getAttribute("description");
+		}
+		return "";
 		 
 	}
 

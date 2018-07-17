@@ -96,12 +96,73 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	}
 
 	/**
+	 * Check a path.
+	 * @param thePath
+	 * @param create true to create the folder if it does not exist.
+	 * @throws FileException
+	 */
+	protected void checkPath(final String thePath, final boolean create, final FileInfo fileInfo) throws FileException {
+		File dir = new File(thePath + "/" + fileInfo.getTicket().getCreationDepartment().getId());
+		if (!dir.exists()) {
+			if (!create) {
+				dir = new File(thePath);
+				if (!dir.exists()) {
+					throw new FileException("directory [" + thePath + "] does not exist");
+				}
+			}
+			else if (!dir.mkdirs()) {
+				throw new FileException("could not create directory [" + thePath + "]");
+			}
+			logger.info("directory [" + thePath + "] was successfully created.");
+		}
+	}
+
+	/**
+	 * Check a path.
+	 * @param thePath
+	 * @param create true to create the folder if it does not exist.
+	 * @throws FileException
+	 */
+	protected void checkPath(final String thePath, final boolean create, final ArchivedFileInfo archivedFfileInfo) throws FileException {
+		File dir = new File(thePath + "/" + archivedFfileInfo.getArchivedTicket().getCreationDepartment().getId());
+		if (!dir.exists()) {
+			if (!create) {
+				dir = new File(thePath);
+				if (!dir.exists()) {
+					throw new FileException("directory [" + thePath + "] does not exist");
+				}
+			}
+			else if (!dir.mkdirs()) {
+				throw new FileException("could not create directory [" + thePath + "]");
+			}
+			logger.info("directory [" + thePath + "] was successfully created.");
+		}
+	}	
+	/**
 	 * Check the path.
 	 * @param create true to create the folder if it does not exist.
 	 * @throws FileException
 	 */
 	protected void checkPath(final boolean create) throws FileException {
 		checkPath(path, create);
+	}
+
+	/**
+	 * Check the path.
+	 * @param create true to create the folder if it does not exist.
+	 * @throws FileException
+	 */
+	protected void checkPath(final boolean create, final FileInfo fileInfo) throws FileException {
+		checkPath(path, create, fileInfo);
+	}
+
+	/**
+	 * Check the path.
+	 * @param create true to create the folder if it does not exist.
+	 * @throws FileException
+	 */
+	protected void checkPath(final boolean create, final ArchivedFileInfo archivedFileInfo) throws FileException {
+		checkPath(path, create, archivedFileInfo);
 	}
 
 	/**
@@ -120,7 +181,15 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 * @return the name of the filesystem entry for a FileInfo.
 	 */
 	protected String getFilename(final FileInfo fileInfo) {
-		return path + "/" + fileInfo.getId();
+		return path + "/" + fileInfo.getTicket().getCreationDepartment().getId() + "/" + fileInfo.getId();
+	}
+
+	/**
+	 * @param fileInfo
+	 * @return the name of the filesystem entry for a FileInfo.
+	 */
+	protected String getOldFilename(final Long fileInfoId) {
+		return path + "/" + fileInfoId;
 	}
 
 	/**
@@ -156,7 +225,7 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 */
 	@Override
 	public void writeFileInfoContent(final FileInfo fileInfo) {
-		checkPath(true);
+		checkPath(true, fileInfo);
 		writeContent(getFilename(fileInfo), fileInfo.getContent());
 	}
 
@@ -164,10 +233,13 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 * @param filename
 	 * @return the content read from the filesystem.
 	 */
-	protected byte[] readContent(final String filename) {
+	protected byte[] readContent(final String filename, final Long fileInfoId) {
 		File file = new File(filename);
 		if (!file.exists()) {
-			throw new FileException("file [" + file.getAbsolutePath() + "] does not exist");
+			file = new File(getOldFilename(fileInfoId));
+			if (!file.exists()) {
+				throw new FileException("file [" + file.getAbsolutePath() + "] does not exist");
+			}
 		}
 		if (!file.isFile()) {
 			throw new FileException("[" + file.getAbsolutePath() + "] is not a file");
@@ -205,8 +277,8 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	@RequestCache
 	public byte[] readFileInfoContent(final FileInfo fileInfo) {
 		if (fileInfo.getContent() == null) {
-			checkPath(false);
-			byte[] content = readContent(getFilename(fileInfo));
+			checkPath(false, fileInfo);
+			byte[] content = readContent(getFilename(fileInfo), fileInfo.getId());
 			fileInfo.setContent(content);
 		}
 		return fileInfo.getContent();
@@ -237,14 +309,20 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 * Delete a content.
 	 * @param filename
 	 */
-	protected void deleteContent(final String filename) {
+	protected void deleteContent(final String filename, final Long fileInfoId) {
 		File file = new File(filename);
 		if (file.exists()) {
 			if (!file.delete()) {
 				logger.error("could not delete file [" + filename + "]");
 			}
 		} else {
-			logger.error("file [" + filename + "] not found");
+			file = new File(getOldFilename(fileInfoId));
+			if (!file.exists()) {
+				logger.error("file [" + filename + "] not found");
+			}
+			if (!file.delete()) {
+				logger.error("could not delete file [" + filename + "]");
+			}
 		}
 	}
 
@@ -254,8 +332,8 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 */
 	@Override
 	public void deleteFileInfoContent(final FileInfo fileInfo) {
-		checkPath(false);
-		deleteContent(getFilename(fileInfo));
+		checkPath(false, fileInfo);
+		deleteContent(getFilename(fileInfo), fileInfo.getId());
 	}
 
 	/**
@@ -264,8 +342,8 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 */
 	@Override
 	public void deleteArchivedFileInfoContent(final ArchivedFileInfo archivedFileInfo) {
-		checkPath(false);
-		deleteContent(getFilename(archivedFileInfo));
+		checkPath(false, archivedFileInfo);
+		deleteContent(getFilename(archivedFileInfo), archivedFileInfo.getId());
 	}
 
 	/**
@@ -273,7 +351,7 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 * @return the name of the filesystem entry for a ArchivedFileInfo.
 	 */
 	protected String getFilename(final ArchivedFileInfo archivedFileInfo) {
-		return path + "/" + archivedFileInfo.getFileInfoId();
+		return path + "/" + archivedFileInfo.getArchivedTicket().getCreationDepartment().getId() + "/" + archivedFileInfo.getFileInfoId();
 	}
 
 	/**
@@ -283,8 +361,8 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	@Override
 	public byte[] readArchivedFileInfoContent(final ArchivedFileInfo archivedFileInfo) {
 		if (archivedFileInfo.getContent() == null) {
-			checkPath(false);
-			byte[] content = readContent(getFilename(archivedFileInfo));
+			checkPath(false, archivedFileInfo);
+			byte[] content = readContent(getFilename(archivedFileInfo), archivedFileInfo.getId());
 			archivedFileInfo.setContent(content);
 		}
 		return archivedFileInfo.getContent();
@@ -309,7 +387,7 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	public byte[] readOldFileInfoContent(final OldFileInfo oldFileInfo) {
 		if (oldFileInfo.getContent() == null) {
 			checkV2Path(false);
-			byte[] content = readContent(getFilename(oldFileInfo));
+			byte[] content = readContent(getFilename(oldFileInfo), oldFileInfo.getId());
 			oldFileInfo.setContent(content);
 		}
 		return oldFileInfo.getContent();
@@ -322,7 +400,7 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	@Override
 	public void deleteOldFileInfoContent(final OldFileInfo oldFileInfo) {
 		checkV2Path(false);
-		deleteContent(getFilename(oldFileInfo));
+		deleteContent(getFilename(oldFileInfo), oldFileInfo.getId());
 	}
 
 }

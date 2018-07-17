@@ -86,6 +86,7 @@ public final class ArchivedTicket extends AbstractTicket {
 		setTicketId(ticket.getId());
 		setChargeTime(ticket.getChargeTime());
 		setClosureTime(ticket.getClosureTime());
+		setCreationDepartment(ticket.getCreationDepartment());
 	}
 
 	/**
