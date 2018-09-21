@@ -527,7 +527,7 @@ jQuery(function ($) {
     $(".view-ticket_secondary_properties .copy").click(function () {
         var $temp = $("<input>");
         $("body").append($temp);
-        $temp.val($("#viewTicketForm\\:ticketCasLink").text()).select();
+        $temp.val($("#viewTicketForm\\:ticketLink").text()).select();
         document.execCommand("copy");
         $temp.remove();
     });

@@ -119,6 +119,9 @@
                                                 <t:htmlTag id="monitoring" styleClass="tab-link" value="li">
                                                     <h:outputText value="#{msgs['TICKET_VIEW.MONITORING.HEADER_TAB']} " />
                                                 </t:htmlTag>
+                                                <t:htmlTag id="history_owner" styleClass="tab-link" value="li">
+                                                    <h:outputText value="#{msgs['TICKET_VIEW.HISTORY_OWNER.HEADER_TAB']} " />
+                                                </t:htmlTag>
                                             </t:htmlTag>
                                         </t:htmlTag>
 
@@ -140,6 +143,10 @@
 
                                          <t:htmlTag id="tab-monitoring" styleClass="view-ticket_monitoring tab-content" value="div">
                                              <%@include file="_ticketViewMonitoring.jsp"%>
+                                         </t:htmlTag>
+
+                                         <t:htmlTag id="tab-history_owner" styleClass="view-ticket_history_owner tab-content" value="div">
+                                             <%@include file="_ticketViewHistoryOwner.jsp"%>
                                          </t:htmlTag>
                                 </t:htmlTag>
                         </e:form>

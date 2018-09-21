@@ -607,6 +607,12 @@ public interface DaoService extends Serializable {
 
 	/**
 	 * @param department
+	 * @return the tickets of the user.
+	 */
+	List<Ticket> getTicketsByOwner(User user);
+
+	/**
+	 * @param department
 	 * @return the opened tickets of the department.
 	 */
 	List<Ticket> getOpenedTicketsByLastActionDate(Department department);

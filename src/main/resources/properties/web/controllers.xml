@@ -312,7 +312,7 @@
 		<property name="ticketNavigator" ref="ticketNavigator" />
 		<property name="userInfoProvider" ref="userInfoProvider" />
 		<property name="paginator" ref="controlPanelPaginator" />
-		<property name="userFormattingService" ref="userFormattingService" /> 
+		<property name="userFormattingService" ref="userFormattingService" />
 	</bean>
 
 	<bean id="archivedTicketController"

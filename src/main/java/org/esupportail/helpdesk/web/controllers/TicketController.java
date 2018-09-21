@@ -3330,6 +3330,23 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		//
 	}
 
+
+	/**
+	 * @return a permanent link to the page for any users.
+	 */
+	public String getPermLink() {
+		if(getUserStore().isCasUser(getCurrentUser())) {
+			return getPermLink(AuthUtils.CAS);
+		}
+		if(getUserStore().isApplicationUser(getCurrentUser())) {
+			return getPermLink(AuthUtils.APPLICATION);
+		}
+		if(getUserStore().isShibbolethUser(getCurrentUser())) {
+			return getPermLink(AuthUtils.SHIBBOLETH);
+		}
+		return getPermLink(AuthUtils.SPECIFIC);
+	}
+	
 	/**
 	 * @param authType
 	 * @return a permanent link to the page.

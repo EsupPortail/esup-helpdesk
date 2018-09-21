@@ -350,6 +350,39 @@ ul.tabs li.current:hover {
   left: 110px;
 }
 
+
+/* ------------------------------------ *\
+  ==ticketView.faces
+\* ------------------------------------ */
+
+.ticketView .tab-content table th {
+  background-color: transparent;
+  padding: 5px 5px 20px 5px;
+  text-align: left;
+  border-bottom: solid 1px #707070;
+
+}
+
+.ticketView .tab-content table th .portlet-section-text {
+  color: #707070;
+  text-transform: uppercase;
+}
+
+.ticketView .tab-content table tbody tr:hover {
+  background-color: #f7f7f9;
+}
+
+.ticketView .tab-content table tbody td {
+  border-bottom: solid thin #c6c6c6;
+  padding: 12px 5px;
+}
+
+.ticketView .tab-content table tbody td > span {
+  color: #707070;
+  font-size: 0.95rem;
+}
+
+
 /* ------------------------------------ *\
   ==controlPanel.faces
 \* ------------------------------------ */
@@ -471,6 +504,10 @@ ul.tabs li.current:hover {
 }
 
 .view-ticket_history td {
+  border-top: solid thin #c6c6c6;
+  vertical-align: text-top;
+}
+.view-ticket_history_owner td {
   border-top: solid thin #c6c6c6;
   vertical-align: text-top;
 }

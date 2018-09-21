@@ -12,7 +12,8 @@ import org.esupportail.helpdesk.domain.departmentSelection.DepartmentSelectionCo
 import org.esupportail.helpdesk.domain.departmentSelection.Result;
 
 /**
- * an Action implementation that returns the departments corresponding to a label.
+ * an Action implementation that returns the departments corresponding to a
+ * label.
  */
 public class AddByLabelAction extends AbstractAction {
 
@@ -25,7 +26,7 @@ public class AddByLabelAction extends AbstractAction {
 	 * The label searched for.
 	 */
 	private String label;
-	
+
 	/**
 	 * Empty constructor.
 	 */
@@ -35,15 +36,34 @@ public class AddByLabelAction extends AbstractAction {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.departmentSelection.actions.AbstractAction#evalInternal(
-	 * org.esupportail.helpdesk.domain.DomainService, org.esupportail.helpdesk.domain.departmentSelection.Result)
+	 *      org.esupportail.helpdesk.domain.DomainService,
+	 *      org.esupportail.helpdesk.domain.departmentSelection.Result)
 	 */
 	@Override
-	public List<Department> evalInternal(
-			final DomainService domainService, 
-			@SuppressWarnings("unused")
-			final Result result) {
+	public List<Department> evalInternal(final DomainService domainService,
+			@SuppressWarnings("unused") final Result result, final boolean evaluateCondition) {
+
+		if (evaluateCondition == false) {
+			return null;
+		}
 		List<Department> departments = new ArrayList<Department>();
 		Department department = domainService.getDepartmentByLabel(label);
+		// on vérifie si le département est déja dans result afin de conserver les
+		// conditions d'autres rules précédement traitées
+		for (Department departmentResult : result.getDepartments()) {
+			if (departmentResult != null && department != null) {
+				if (departmentResult.getLabel().equals(department.getLabel())) {
+					// departement deja traité dans une regles précédente
+					// on vide la liste des catégories qui n'ont pas de regle définie
+					// du coup a ce niveau on sait qu'il faut afficher toutes les catégories sauf
+					// celles déja présent dans les non visibles
+					if (departmentResult.getCategoriesUndefinedRule() != null) {
+						departmentResult.getCategoriesUndefinedRule().clear();
+					}
+					return null;
+				}
+			}
+		}
 		if (department == null) {
 			return null;
 		}
@@ -52,21 +72,21 @@ public class AddByLabelAction extends AbstractAction {
 	}
 
 	/**
-	 * @param label The label to set.
+	 * @param label
+	 *            The label to set.
 	 */
 	public void setLabel(final String label) {
 		this.label = label;
 	}
 
 	/**
-	 * @throws DepartmentSelectionCompileError 
+	 * @throws DepartmentSelectionCompileError
 	 * @see org.esupportail.helpdesk.domain.departmentSelection.actions.AbstractAction#compile()
 	 */
 	@Override
 	public void compile() throws DepartmentSelectionCompileError {
 		if (label == null) {
-			throw new DepartmentSelectionCompileError(
-					"<add-by-label> tags should have a 'label' attribute");
+			throw new DepartmentSelectionCompileError("<add-by-label> tags should have a 'label' attribute");
 		}
 	}
 

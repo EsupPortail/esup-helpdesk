@@ -789,6 +789,9 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 				getDomainService().transformEntitiesCreatedWithEmail(user);
 				faqsController.reset();
 			}
+			if (user == null) {
+				return null;
+			}
 			if (CHANGE_PASSWORD_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
 				return redirectChangePassword(params);
 			}
@@ -861,9 +864,6 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 			if (logger.isDebugEnabled()) {
 				logger.debug("params is null");
 			}
-		}
-		if (user == null) {
-			return null;
 		}
 		if (User.START_PAGE_CONTROL_PANEL.equals(user.getStartPage())) {
 			return redirectControlPanel(params);

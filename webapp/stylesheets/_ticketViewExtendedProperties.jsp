@@ -290,9 +290,7 @@
             <h:panelGroup styleClass="button--default copy no-margin">
                     <h:outputText value=" #{msgs['COMMON.PERM_LINKS.COPY_LINK']}"/>
             </h:panelGroup>
-        <e:text  id="ticketCasLink" style="display:none" escape="false" value="#{ticketController.casPermLink}" />
-        <e:text  id="ticketAppLink" style="display:none" escape="false" value="#{ticketController.applicationPermLink}" />
-        <e:text  id="ticketShibbLink" style="display:none" escape="false" value="#{ticketController.shibbolethPermLink}" />
+        <e:text  id="ticketLink" style="display:none" escape="false" value="#{ticketController.permLink}" />
         </t:htmlTag>
 </t:htmlTag>
 

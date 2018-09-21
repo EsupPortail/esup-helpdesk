@@ -333,6 +333,14 @@ public interface DomainService extends Serializable {
 	/**
 	 * @param user
 	 * @param client
+	 * @return the departments visible by a user on ticket view.
+	 */
+	List<Ticket> getTicketsByOwner(
+			User user);
+
+	/**
+	 * @param user
+	 * @param client
 	 * @return the departments visible by a user on faq view.
 	 */
 	List<Department> getFaqViewDepartments(

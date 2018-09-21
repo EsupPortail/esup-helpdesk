@@ -11,7 +11,8 @@ import org.esupportail.helpdesk.domain.beans.Department;
 import org.esupportail.helpdesk.domain.departmentSelection.Result;
 
 /**
- * an Action implementation that returns the departments corresponding to a filter.
+ * an Action implementation that returns the departments corresponding to a
+ * filter.
  */
 public class AddByFilterAction extends AbstractAction {
 
@@ -23,7 +24,7 @@ public class AddByFilterAction extends AbstractAction {
 	 * The filter searched for.
 	 */
 	private String filter;
-	
+
 	/**
 	 * Empty constructor.
 	 */
@@ -34,14 +35,36 @@ public class AddByFilterAction extends AbstractAction {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.departmentSelection.actions.AbstractAction#evalInternal(
-	 * org.esupportail.helpdesk.domain.DomainService, org.esupportail.helpdesk.domain.departmentSelection.Result)
+	 *      org.esupportail.helpdesk.domain.DomainService,
+	 *      org.esupportail.helpdesk.domain.departmentSelection.Result)
 	 */
 	@Override
-	public List<Department> evalInternal(
-			final DomainService domainService, 
-			@SuppressWarnings("unused")
-			final Result result) {
-		return domainService.getDepartmentsByFilter(filter); 
+	public List<Department> evalInternal(final DomainService domainService,
+			@SuppressWarnings("unused") final Result result, final boolean evaluateCondition) {
+		if (evaluateCondition == false) {
+			return null;
+		}
+		List<Department> depts = domainService.getDepartmentsByFilter(filter);
+		// on supprime les département qui sont potentiellement déja dans result afin de
+		// conserver les
+		// conditions d'autres rules précédement traitées
+		for (Department departmentFiltre : depts) {
+			for (Department departmentResult : result.getDepartments()) {
+				if (departmentResult != null && departmentFiltre != null) {
+					if (departmentResult.getLabel().equals(departmentFiltre.getLabel())) {
+						// departement deja traité dans une regles précédente
+						// on vide la liste des catégories qui n'ont pas de regle définie
+						// du coup a ce niveau on sait qu'il faut afficher toutes les catégories sauf
+						// celles déja présent dans les non visibles
+						if (departmentResult.getCategoriesUndefinedRule() != null) {
+							departmentResult.getCategoriesUndefinedRule().clear();
+						}
+						depts.remove(departmentResult);
+					}
+				}
+			}
+		}
+		return depts;
 	}
 
 	/**
@@ -73,7 +96,8 @@ public class AddByFilterAction extends AbstractAction {
 	}
 
 	/**
-	 * @param filter the filter to set
+	 * @param filter
+	 *            the filter to set
 	 */
 	public void setFilter(final String filter) {
 		this.filter = StringUtils.nullIfEmpty(filter);

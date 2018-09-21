@@ -11,6 +11,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.naming.LimitExceededException;
+
 import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.aop.monitor.Monitor;
 import org.esupportail.commons.dao.AbstractJdbcJndiHibernateDaoService;
@@ -146,19 +148,29 @@ implements DaoService {
 
 	/**
 	 * The name of the 'category' attribute.
+	private static final String Owner = "category";
 	 */
-	private static final String CATEGORY_ATTRIBUTE = "category";
 
 	/**
 	 * The name of the 'category' attribute.
 	 */
 	private static final String CREATION_DATE_ATTRIBUTE = "creationDate";
 
+	/**
+	 * The name of the 'category' attribute.
+	 */
+	private static final String OWNER_ATTRIBUTE = "owner";
+
 	
 	/**
 	 * The name of the 'realCategory' attribute.
 	 */
 	private static final String REAL_CATEGORY_ATTRIBUTE = "realCategory";
+
+	/**
+	 * The name of the 'realCategory' attribute.
+	 */
+	private static final String CATEGORY_ATTRIBUTE = "category";
 
 	/**
 	 * The name of the 'ticket' attribute.
@@ -1492,6 +1504,19 @@ implements DaoService {
 		criteria.add(Restrictions.eq(CATEGORY_ATTRIBUTE, category));
 		criteria.addOrder(Order.asc(ID_ATTRIBUTE));
 		return getHibernateTemplate().findByCriteria(criteria);
+	}
+
+	
+
+	public List<Ticket> getTicketsByOwner(User user) {
+		int maxResults = 10;
+		
+		Query query = getQuery(HqlUtils.fromWhereOrderByAsc(
+				Ticket.class.getSimpleName() + HqlUtils.AS_KEYWORD + "ticket",
+				HqlUtils.equals("owner", HqlUtils.quote(user.getId())),
+				"owner"));
+		query.setMaxResults(maxResults);
+		return query.list();
 	}
 
 	/**

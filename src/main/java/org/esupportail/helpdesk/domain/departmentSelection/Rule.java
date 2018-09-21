@@ -117,6 +117,8 @@ public class Rule extends Actions {
 			final Result result,
 			final int type) {
 		boolean evaluateRule = false;
+		boolean evaluateCondition = true;
+
 		for (Action action : getActions()) {
 			if (action.evalForType(type)) {
 				evaluateRule = true;
@@ -127,7 +129,7 @@ public class Rule extends Actions {
 			if (logger.isDebugEnabled()) {
 				logger.debug("no action to evaluate, skipping rule");
 			}
-			return;
+			evaluateCondition = false;
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("evaluating rule " + this + "...");
@@ -136,14 +138,14 @@ public class Rule extends Actions {
 			if (logger.isDebugEnabled()) {
 				logger.debug("condition of rule " + this + " is not matched");
 			}
-			return;
+			evaluateCondition = false;
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("condition of rule " + this + " is matched");
 		}
 		for (Action action : getActions()) {
 			if (action.evalForType(type)) {
-				action.eval(domainService, result);
+				action.eval(domainService, result, evaluateCondition);
 				if (!result.evaluateNextRule()) {
 					return;
 				}

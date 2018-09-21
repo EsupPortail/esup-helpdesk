@@ -32,11 +32,6 @@ public class AddByCateAction extends AbstractAction {
 	private String cateIds;
 
 	/**
-	 * The visible searched for.
-	 */
-	private String visible;
-
-	/**
 	 * The label searched for.
 	 */
 	private String label;
@@ -60,62 +55,86 @@ public class AddByCateAction extends AbstractAction {
 	 */
 	@Override
 	public List<Department> evalInternal(final DomainService domainService,
-			@SuppressWarnings("unused") final Result result) {
-		// si la catégorie n'est pas visiblle, on l'alimente dans la liste du
-		// départment lié. Ca va servir ensuite pour supprimer du Tree les
-		// catégories non visibles
+			@SuppressWarnings("unused") final Result result, final boolean evaluateCondition) {
+
 		List<Department> departments = new ArrayList<Department>();
 		Department department = domainService.getDepartmentByLabel(label);
 		List<Category> categories = domainService.getCategories(department);
 		String ids[] = cateIds.split(",");
+		Boolean departementPresentResult = false;
 
-		// liste des catégories définies ne doivent pas etres visibles pour
-		// Traitement de l'indicateur visible : si false, cela veux dire que le
-		// l'utilisateur et inversement
-		if (visible.equals("true")) {
-			for (String cateId : ids) {
-				Category category = domainService.getCategory(Long.parseLong(cateId.trim()));
-				categories.remove(category);
-				//cas ou la catégorie est deja dans les non visible -> rules an amont qui aurait deja été traitée
-				if(department != null) {
-					List<Category> categoriesNotVisibles = department.getCategoriesNotVisibles();
-					if(categoriesNotVisibles != null){
-						categoriesNotVisibles.remove(category);
-						for (Category sousCategories : domainService.getSubCategories(category)) {
-							categoriesNotVisibles.remove(sousCategories);
-						}
-					}
-				}
-				// on gère les catégories enfant
-				categories.removeAll(domainService.getSubCategories(category));
-				// on gére les catégories parentes
-				removeParent(categories, category);
-			}
-		} else {
+		// la personne ne doit pas voir la/les catégories spécifiées
+		if (evaluateCondition == false) {
+			List<Category> categorieUndefinedRule = domainService.getCategories(department);
+			boolean departementDejaDansResult = false;
+
 			for (Department departmentResult : result.getDepartments()) {
-				List<Category> categoriesNotVisibles = new ArrayList<Category>();
-				if(departmentResult.getLabel().equals(department.getLabel())){
+				if (departmentResult.getLabel().equals(department.getLabel())) {
+					departementDejaDansResult = true;
 					for (String cateId : ids) {
 						Category category = domainService.getCategory(Long.parseLong(cateId.trim()));
+						List<Category> categoriesNotVisibles = departmentResult.getCategoriesNotVisibles();
+						// ajout de la categorie indiquée dans la rule en tant que catégorie non
+						// visibles
 						categoriesNotVisibles.add(category);
+						// ajout de ses categories enfants
 						categoriesNotVisibles.addAll(domainService.getSubCategories(category));
-						
-						logger.info("categorie Not Visible : " + category);
 					}
+					break;
 				}
-				//on supprime de result les catégories qui ne sont finalement pas visibles
-				departmentResult.addCategorieNotVisible(categoriesNotVisibles);
-				return null;
 			}
-		}
-		if(categories.size() != 0){
-			department.addCategorieNotVisible(categories);
-		}
-		if(department != null) {
+			// departement absent de result, il faut donc l'ajouter avec prise en compte de
+			// la rule
+			if (!departementDejaDansResult) {
+				for (String cateId : ids) {
+					Category category = domainService.getCategory(Long.parseLong(cateId.trim()));
+					department.getCategoriesNotVisibles().add(category);
+					department.getCategoriesNotVisibles().addAll(domainService.getSubCategories(category));
+
+					List<Category> categoriesNotVisibles = domainService.getCategories(department);
+					// suppression de la categorie indiquée dans la rule en tant que catégorie non
+					// visibles
+					categoriesNotVisibles.remove(category);
+					// suppression de ses categories enfants
+					categoriesNotVisibles.removeAll(domainService.getSubCategories(category));
+					department.getCategoriesUndefinedRule().addAll(categoriesNotVisibles);
+					departments.add(department);
+				}
+			}
+		} // la personne doit voir le liste des catégories spécifiées
+		else {
+			List<Category> categorieUndefinedRule = domainService.getCategories(department);
+			boolean departementDejaDansResult = false;
+			for (Department departmentResult : result.getDepartments()) {
+				if (departmentResult.getLabel().equals(department.getLabel())) {
+					for (String cateId : ids) {
+						Category category = domainService.getCategory(Long.parseLong(cateId.trim()));
+
+						List<Category> categoriesNotVisibles = departmentResult.getCategoriesNotVisibles();
+						// suppression de la categorie indiquée dans la rule en tant que catégorie non
+						// visibles
+						categoriesNotVisibles.remove(category);
+						// suppression de ses categories enfants
+						categoriesNotVisibles.removeAll(domainService.getSubCategories(category));
+						departmentResult.getCategoriesUndefinedRule().remove(category);
+						departementDejaDansResult = true;
+					}
+					break;
+				}
+			}
+			// departement absent de result, il faut donc l'ajouter avec prise en compte de
+			// la rule
+			if (!departementDejaDansResult) {
+				for (String cateId : ids) {
+					Category category = domainService.getCategory(Long.parseLong(cateId.trim()));
+					categorieUndefinedRule.remove(category);
+					categorieUndefinedRule.removeAll(domainService.getSubCategories(category));
+				}
+			}
+			department.addCategoriesUndefinedRule(categorieUndefinedRule);
 			departments.add(department);
 		}
 		return departments;
-
 	}
 
 	private void removeParent(List<Category> categories, Category category) {
@@ -123,6 +142,15 @@ public class AddByCateAction extends AbstractAction {
 			categories.remove(category.getParent());
 			removeParent(categories, category.getParent());
 		}
+	}
+
+	private List<Category> getParents(List<Category> categories, Category category) {
+		List<Category> categoriesParent = new ArrayList<Category>();
+		if (category.getParent() != null) {
+			categoriesParent.add(category.getParent());
+			getParents(categories, category.getParent());
+		}
+		return categoriesParent;
 	}
 
 	public void setCateIds(String cateIds) {
@@ -137,7 +165,7 @@ public class AddByCateAction extends AbstractAction {
 	public void compile() throws DepartmentSelectionCompileError {
 		if (cateIds == null) {
 			throw new DepartmentSelectionCompileError(
-					"<add-by-cate> tags should have a 'cateIds' and visible attribute");
+					"<add-by-cate> tags should have a 'cateIds' ");
 		}
 	}
 
@@ -146,7 +174,7 @@ public class AddByCateAction extends AbstractAction {
 	 */
 	@Override
 	public String toString() {
-		return "<add-by-cate label=\"" + label + "\"" + " visible=\"" + visible + "\"" + " cateIds=\"" + cateIds + "\""
+		return "<add-by-cate label=\"" + label + "\"" + " cateIds=\"" + cateIds + "\""
 				+ forToString() + " />";
 	}
 
@@ -164,14 +192,6 @@ public class AddByCateAction extends AbstractAction {
 
 	public String getLabel() {
 		return label;
-	}
-
-	public String getVisible() {
-		return visible;
-	}
-
-	public void setVisible(String visible) {
-		this.visible = visible;
 	}
 
 	public void setLabel(String label) {

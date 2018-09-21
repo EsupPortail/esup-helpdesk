@@ -34,7 +34,11 @@ public class StopAction extends AbstractAction {
 	public List<Department> evalInternal(
 			@SuppressWarnings("unused")
 			final DomainService domainService, 
-			final Result result) {
+			final Result result,
+			final boolean evaluateCondition) {
+		if(evaluateCondition == false) {
+			return null;
+		}
 		result.stopAfterThisRule();
 		return null;
 	}

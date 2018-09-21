@@ -1056,6 +1056,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		return departmentSelector.getTicketViewDepartments(this, user, client);
 	}
 
+	@Override
+	public List<Ticket> getTicketsByOwner(User user) {
+		return daoService.getTicketsByOwner(user);
+	}
+
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqViewDepartments(
 	 *      org.esupportail.helpdesk.domain.beans.User, java.net.InetAddress)

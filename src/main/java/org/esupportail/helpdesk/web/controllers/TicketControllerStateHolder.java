@@ -14,7 +14,6 @@ import javax.faces.model.SelectItem;
 import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.utils.Assert;
 import org.esupportail.commons.utils.strings.StringUtils;
-import org.esupportail.helpdesk.domain.ActionType;
 import org.esupportail.helpdesk.domain.TicketExtractor;
 import org.esupportail.helpdesk.domain.TicketNavigation;
 import org.esupportail.helpdesk.domain.TicketNavigator;
@@ -33,6 +32,7 @@ import org.esupportail.helpdesk.domain.comparators.DepartmentManagerIdComparator
 import org.esupportail.helpdesk.domain.comparators.DepartmentManagerOrderComparator;
 import org.esupportail.helpdesk.domain.userFormatting.UserFormattingService;
 import org.esupportail.helpdesk.domain.userInfo.UserInfoProvider;
+import org.esupportail.helpdesk.web.beans.ControlPanelEntry;
 import org.esupportail.helpdesk.web.beans.FileInfoEntry;
 import org.esupportail.helpdesk.web.beans.ResponseEntry;
 import org.esupportail.helpdesk.web.beans.SpentTimeI18nFormatter;
@@ -62,7 +62,6 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 	private static final Comparator<DepartmentManager> MANAGER_ORDER_COMPARATOR =
 		new DepartmentManagerOrderComparator();
 
-	private DepartmentsController departementController;
     /**
      * The current ticket.
      */
@@ -288,6 +287,36 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 		return getString(
 				"TICKET_VIEW.BUTTON.TICKET_NAVIGATION." + i18nKeySuffix,
 				String.valueOf(theTicket.getId()), theTicket.getLabel());
+	}
+
+
+	/**
+	 * @param i18nKeySuffix
+	 * @param theTicket
+	 * @return a navigation ticket title
+	 */
+	public List<ControlPanelEntry> getTicketsByOwner() {
+
+		List<ControlPanelEntry> controlPanelEntries = new ArrayList<ControlPanelEntry>();
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		
+		if (ticket == null) {
+			return null;
+		}
+		tickets = getDomainService().getTicketsByOwner(ticket.getCreator());
+		List<Department> visibleDepartments = 
+				getDomainService().getTicketViewDepartments(getCurrentUser(), getClient());
+		
+		for (Ticket ticket : tickets) {
+			controlPanelEntries.add(new ControlPanelEntry(
+					ticket, 
+					!getDomainService().hasTicketChangedSinceLastView(ticket, getCurrentUser()), 
+					getDomainService().userCanViewTicket(
+							getCurrentUser(), ticket, visibleDepartments),
+					getDomainService().getBookmark(getCurrentUser(), ticket) != null));
+		}
+		
+		return controlPanelEntries;
 	}
 
 	/**
