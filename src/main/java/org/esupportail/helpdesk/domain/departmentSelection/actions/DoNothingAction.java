@@ -33,8 +33,7 @@ public class DoNothingAction implements Action {
 			@SuppressWarnings("unused")
 			final DomainService domainService, 
 			@SuppressWarnings("unused")
-			final Result result,
-			final boolean evaluateCondition) {
+			final Result result) {
 		// do nothing
 	}
 

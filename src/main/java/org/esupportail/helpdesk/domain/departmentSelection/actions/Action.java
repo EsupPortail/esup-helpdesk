@@ -21,8 +21,7 @@ public interface Action extends Serializable {
 	 */
 	void eval(
 			DomainService domainService,
-			Result result,
-			boolean evaluateCondition);
+			Result result);
 
 	/**
 	 * @param type

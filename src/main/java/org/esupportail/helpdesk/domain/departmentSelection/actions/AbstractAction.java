@@ -58,8 +58,7 @@ public abstract class AbstractAction implements Action {
 	 */
 	protected abstract List<Department> evalInternal(
 			final DomainService domainService, 
-			final Result result,
-			final boolean evaluateCondition);
+			final Result result);
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.departmentSelection.actions.Action#eval(
@@ -69,12 +68,11 @@ public abstract class AbstractAction implements Action {
 	@Override
 	public final void eval(
 			final DomainService domainService, 
-			final Result result,
-			final boolean evaluateCondition) {
+			final Result result) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("evaluating action " + this + "...");
 		}
-		List<Department> departments = evalInternal(domainService, result, evaluateCondition);
+		List<Department> departments = evalInternal(domainService, result);
 		if (departments != null) {
 			result.addDepartments(departments);
 		}

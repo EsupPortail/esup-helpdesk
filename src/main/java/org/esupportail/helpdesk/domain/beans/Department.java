@@ -59,18 +59,12 @@ public class Department extends AbstractTicketContainer implements Comparable<De
      * List of the not visibles categories.
      */
     private List<Category> categoriesNotVisibles;
-
-    /**
-     * List of the categories with undefind rule.
-     */
-    private List<Category> categoriesUndefinedRule;
     
     /**
      * Bean constructor.
      */
     public Department() {
     	super();
-    	this.categoriesUndefinedRule = new ArrayList<Category>();
     	this.categoriesNotVisibles = new ArrayList<Category>();
     }
 
@@ -307,31 +301,5 @@ public class Department extends AbstractTicketContainer implements Comparable<De
 			categoriesNotVisibles = new ArrayList<Category>();
 		}
 		categoriesNotVisibles.addAll(categoriesNotVisible);
-	}
-
-	public List<Category> getCategoriesUndefinedRule() {
-		if(this.categoriesUndefinedRule == null){
-			this.categoriesUndefinedRule = new ArrayList<Category>();
-		}
-		return this.categoriesUndefinedRule;
-	}
-
-	public void setCategoriesUndefinedRule(List<Category> categoriesUndefinedRule) {
-		this.categoriesUndefinedRule = categoriesUndefinedRule;
-	}
-	
-	public void addCategoriesUndefinedRule(final List<Category> categoriesUndefinedRule) {
-		if(this.categoriesUndefinedRule == null){
-			this.categoriesUndefinedRule = new ArrayList<Category>();
-		}
-		this.categoriesUndefinedRule.addAll(categoriesUndefinedRule);
-	}
-	
-	public void removeCategorieUndefinedRule(final Category categorie) {
-		if(this.categoriesUndefinedRule == null){
-			this.categoriesUndefinedRule = new ArrayList<Category>();
-		} else {
-			this.categoriesUndefinedRule.remove(categorie);
-		}
 	}
 }

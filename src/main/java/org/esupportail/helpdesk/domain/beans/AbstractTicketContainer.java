@@ -117,6 +117,11 @@ public abstract class AbstractTicketContainer implements Serializable, TicketCon
     private String visibilityInterSrv;
 
     /**
+     * The visibility of the category.
+     */
+    private Boolean cateInvisible;
+
+    /**
      * To set the service anonymous.
      */
     private Boolean srvAnonymous;
@@ -165,7 +170,7 @@ public abstract class AbstractTicketContainer implements Serializable, TicketCon
     	this.icon = container.icon;
     	this.visibilityInterSrv = container.visibilityInterSrv;
     	this.srvAnonymous = container.srvAnonymous;
-    	
+    	this.cateInvisible = container.cateInvisible;
     }
 
 	/**
@@ -184,6 +189,7 @@ public abstract class AbstractTicketContainer implements Serializable, TicketCon
 		+ ", defaultTicketPriority=[" + defaultTicketPriority + "]"
 		+ ", visibilityInterSrv=[" + visibilityInterSrv + "]"
 		+ ", srvAnonymous=[" + srvAnonymous + "]"
+		+ ", cateInvisible=[" + cateInvisible + "]"
 		+ ", url=[" + url + "]";
 	}
 
@@ -501,5 +507,16 @@ public abstract class AbstractTicketContainer implements Serializable, TicketCon
 
 	public void setSrvAnonymous(Boolean srvAnonymous) {
 		this.srvAnonymous = srvAnonymous;
+	}
+
+	public Boolean getCateInvisible() {
+		if(cateInvisible == null) {
+			return false;
+		}
+		return cateInvisible;
+	}
+
+	public void setCateInvisible(Boolean cateInvisible) {
+		this.cateInvisible = cateInvisible;
 	}
 }

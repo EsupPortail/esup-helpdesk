@@ -3,10 +3,12 @@
  */
 package org.esupportail.helpdesk.domain.departmentSelection.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.esupportail.commons.utils.strings.StringUtils;
 import org.esupportail.helpdesk.domain.DomainService;
+import org.esupportail.helpdesk.domain.beans.Category;
 import org.esupportail.helpdesk.domain.beans.Department;
 import org.esupportail.helpdesk.domain.departmentSelection.Result;
 
@@ -40,29 +42,40 @@ public class AddByFilterAction extends AbstractAction {
 	 */
 	@Override
 	public List<Department> evalInternal(final DomainService domainService,
-			@SuppressWarnings("unused") final Result result, final boolean evaluateCondition) {
-		if (evaluateCondition == false) {
-			return null;
-		}
+			@SuppressWarnings("unused") final Result result) {
+
 		List<Department> depts = domainService.getDepartmentsByFilter(filter);
-		// on supprime les département qui sont potentiellement déja dans result afin de
-		// conserver les
-		// conditions d'autres rules précédement traitées
 		for (Department departmentFiltre : depts) {
+			// on vérifie si le département est déja dans result
+			// on retire toutes les catégories qui sont dans catNonVisible et qui n'ont pas
+			// la propriété CateInvisible
 			for (Department departmentResult : result.getDepartments()) {
 				if (departmentResult != null && departmentFiltre != null) {
 					if (departmentResult.getLabel().equals(departmentFiltre.getLabel())) {
-						// departement deja traité dans une regles précédente
-						// on vide la liste des catégories qui n'ont pas de regle définie
-						// du coup a ce niveau on sait qu'il faut afficher toutes les catégories sauf
-						// celles déja présent dans les non visibles
-						if (departmentResult.getCategoriesUndefinedRule() != null) {
-							departmentResult.getCategoriesUndefinedRule().clear();
+						for (Category catNonVisibleResult : departmentResult.getCategoriesNotVisibles()) {
+							if (!catNonVisibleResult.getCateInvisible()) {
+								departmentResult.getCategoriesNotVisibles().remove(catNonVisibleResult);
+							}
 						}
-						depts.remove(departmentResult);
+						return null;
 					}
 				}
 			}
+			if (departmentFiltre == null) {
+				return null;
+			}
+			//cas ou le service n'est pas encore traité dans les regles,
+			//on va l'ajouter à la liste mais on va exclure les catégories invisibles avant tout
+			List <Category> categoriesNonVisibles = new ArrayList<Category>();
+			for(Category cate : domainService.getCategories(departmentFiltre)) {
+				if(cate.getCateInvisible()) {
+					categoriesNonVisibles.add(cate);
+				}
+			}
+			if(categoriesNonVisibles.size() != 0) {
+				departmentFiltre.addCategorieNotVisible(categoriesNonVisibles);
+			}
+			depts.add(departmentFiltre);
 		}
 		return depts;
 	}

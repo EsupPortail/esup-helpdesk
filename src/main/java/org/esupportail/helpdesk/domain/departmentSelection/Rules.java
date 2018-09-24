@@ -70,12 +70,6 @@ public class Rules {
 				break;
 			}
 		}
-		for (Department department : result.getDepartments()) {
-			if(department.getCategoriesUndefinedRule() != null) {
-				department.getCategoriesNotVisibles().addAll(department.getCategoriesUndefinedRule());
-				department.getCategoriesUndefinedRule().clear();
-			}
-		}
 		return result.getDepartments();
 	}
 

@@ -62,19 +62,7 @@ public interface Helpdesk extends Serializable {
 	 */
 	String getVersion();
 	
-//	/**
-//	 * @param userId
-//	 * @param ticketsNumber
-//	 * @param controlPanelInvolvementFilter
-//	 * @param controlPanelInterface
-//	 * @return the last tickets that correspond to the filter.
-//	 */
-//	List<SimpleTicketView> getLastTickets(
-//			final String userId,
-//			final int ticketsNumber,
-//			final String controlPanelInvolvementFilter,
-//			final boolean controlPanelInterface);
-//	
+
 	/**
 	 * @param userId
 	 * @return the involvement filter for the user control panel. 

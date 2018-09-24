@@ -118,8 +118,6 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 			queryStringLibre = ticketExtractor.getControlPanelQueryString(
 					getCurrentUser(), selectedManager!=null ? selectedManager : getCurrentUser(), visibleDepartments, "FREE", null, null);
 		}
-//		String queryString = ticketExtractor.getControlPanelQueryString(
-//				getCurrentUser(), selectedManager!=null ? selectedManager : getCurrentUser(), visibleDepartments, "OTHER", queryStringInvitation, queryStringLibre);
 		String queryString = ticketExtractor.getControlPanelQueryString(
 				getCurrentUser(), selectedManager, visibleDepartments, "OTHER", queryStringInvitation, queryStringLibre);
 		if (queryString == null) {
