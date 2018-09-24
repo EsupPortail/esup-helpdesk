@@ -31,6 +31,7 @@
 		<property name="oldDefaultPriorityLevel" column="defa_prio_leve" not-null="true" />
 		<property name="addNewTickets" column="add_new_tick" />
 		<property name="hideToExternalUsers" column="hide_to_exte_user" />
+		<property name="cateInvisible" column="cate_invi"  not-null="true"/>
 		<property name="monitoringEmail" column="moni_emai" />
 		<property name="monitoringLocalEmails" column="moni_loca_emai" />
 		<property name="monitoringEmailAuthType" column="moni_emai_auth_type" />

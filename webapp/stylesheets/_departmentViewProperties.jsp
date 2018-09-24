@@ -82,6 +82,9 @@
 	<e:outputLabel for="visibilityInterSrv"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.VISIBILITE_INTER_SRV']}" />
 	<e:text value=" #{departmentsController.department.visibilityInterSrv}" id="visibilityInterSrv"/>	
+	<e:outputLabel for="cateInvisible"
+		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.CATEGORIE_INVISIBLE']}" />
+	<e:text value=" #{departmentsController.department.cateInvisible ? msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.CATEGORIE_INVISIBLE_TRUE'] : msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.CATEGORIE_INVISIBLE_FALSE']}" id="cateInvisible"/>	
 	<e:outputLabel for="srvAnonymous"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS']}" />
 	<e:text value=" #{departmentsController.department.srvAnonymous ? msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_TRUE'] : msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_FALSE']}" id="srvAnonymous"/>	

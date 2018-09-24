@@ -196,6 +196,17 @@
                                             </t:htmlTag>
                                             <t:htmlTag value="div" styleClass="form-block" rendered="#{not departmentsController.categoryToUpdate.virtual}">
                                                  <t:htmlTag value="div" styleClass="form-item">
+                                                    <e:outputLabel for="cateInvisible" value="#{msgs['CATEGORY_EDIT.TEXT.CATEGORIE_INVISIBLE']}" />
+                                                        <h:panelGroup>
+                                                            <e:selectBooleanCheckbox id="cateInvisible"
+                                                                value="#{departmentsController.categoryToUpdate.cateInvisible}" />
+                                                            <e:italic
+                                                                value=" #{msgs['CATEGORY_EDIT.TEXT.CATEGORIE_INVISIBLE_HELP']}" />
+                                                        </h:panelGroup>
+                                                 </t:htmlTag>
+                                            </t:htmlTag>                                            
+                                            <t:htmlTag value="div" styleClass="form-block" rendered="#{not departmentsController.categoryToUpdate.virtual}">
+                                                 <t:htmlTag value="div" styleClass="form-item">
                                                      <e:outputLabel for="assignmentAlgorithm" value="#{msgs['CATEGORY_EDIT.TEXT.ASSIGNMENT_ALGORITHM']}"/>
                                                      <h:panelGroup>
                                                          <e:selectOneMenu id="assignmentAlgorithm"

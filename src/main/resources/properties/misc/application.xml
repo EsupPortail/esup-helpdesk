@@ -35,7 +35,7 @@
 	    		The major number of the application (1 for version 1.2.3).
 	    	</description>
     	</property>
-    	<property name="versionMinorNumber" value="1" >
+    	<property name="versionMinorNumber" value="2" >
 	    	<description>
 	    		The minor number of the application (2 for version 1.2.3).
 	    	</description>
