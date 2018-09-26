@@ -656,7 +656,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	@RequestCache
 	public List<SelectItem> getSpentTimeMinuteItems() {
 		List<SelectItem> items = new ArrayList<SelectItem>();
-    	addSpentTimeMinuteItem(items, 0);
+//    	addSpentTimeMinuteItem(items, 0);
     	addSpentTimeMinuteItem(items, 1);
     	addSpentTimeMinuteItem(items, 2);
     	for (long m = MINUTE_ITEM_STEP; m < SpentTimeI18nFormatter.MINUTES_PER_HOUR; m += MINUTE_ITEM_STEP) {
