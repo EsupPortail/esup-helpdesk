@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.axis.utils.StringUtils;
 import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.aop.monitor.Monitor;
 import org.esupportail.commons.exceptions.ConfigException;
@@ -2709,6 +2710,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 */
 	@Override
 	public void updateTicket(final Ticket ticket) {
+		//suppression des blancs en début de champ
+		ticket.setLabel(StringUtils.stripStart(ticket.getLabel(), null));
 		ticket.computeEffectiveDefaultTicketScope();
 		this.daoService.updateTicket(ticket);
 	}
@@ -5867,6 +5870,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (origin == null) {
 			origin = getWebOrigin();
 		}
+		//suppression des blancs en début de champ
+		StringUtils.stripStart(label, null);
 		Ticket ticket = new Ticket(author, origin, category.getDepartment(), category, label, computer, priorityLevel,
 				ticketScope);
 		ticket.computeEffectiveDefaultTicketScope();
@@ -5891,6 +5896,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	@Override
 	public Ticket addEmailTicket(final User sender, final String address, final Department creationDepartment,
 			final Category category, final String label) {
+		//suppression des blancs en début de champ
+		StringUtils.stripStart(label, null);
 		Ticket ticket = new Ticket(sender, emailOrigin, category.getDepartment(), category, label, null,
 				category.getEffectiveDefaultTicketPriority(), TicketScope.PRIVATE);
 		ticket.computeEffectiveDefaultTicketScope();
