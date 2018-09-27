@@ -20,7 +20,6 @@
 		<property name="showFaqViewDepartments" value="${userInfo.showFaqViewDepartments}" />
 		<property name="showLdapAttributes" value="${userInfo.showLdapAttributes}" />
         <property name="ldapAttributeNames" value="${userInfo.ldapAttributes}" />
-        <property name="ldapAmuAttributeNames" value="${userInfo.ldapAmuAttributes}" />
         <property name="showShibbolethAttributes" value="${userInfo.showShibbolethAttributes}" />
         <property name="shibbolethAttributeNames" value="${userInfo.shibbolethAttributes}" />
 		<property name="showBrowser" value="${userInfo.showBrowser}" />
