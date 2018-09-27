@@ -147,13 +147,6 @@
 	<e:text
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.EXTRA_MONITORING']}" 
 		rendered="#{not departmentsController.department.virtual}" />
-	<e:outputLabel for="cateInvisible"
-		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.CATEGORIE_INVISIBLE']}"  
-		rendered="#{not departmentsController.department.virtual}" />
-	<e:text
-		value=" #{msgs[departmentsController.department.cateInvisible ? 'DEPARTMENT_VIEW.TEXT.PROPERTIES.CATEGORIE_INVISIBLE_TRUE' : 'DEPARTMENT_VIEW.TEXT.PROPERTIES.CATEGORIE_INVISIBLE_FALSE']}"
-		id="cateInvisible" 
-		rendered="#{not departmentsController.department.virtual}" />
 	<e:text
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.EXTRA_MONITORING']}" 
 		rendered="#{not departmentsController.department.virtual}" />
