@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 
 import org.apache.turbine.util.BrowserDetector;
@@ -20,7 +18,6 @@ import org.esupportail.commons.exceptions.UserNotFoundException;
 import org.esupportail.commons.services.ldap.LdapAttributesMapper;
 import org.esupportail.commons.services.ldap.LdapEntity;
 import org.esupportail.commons.services.ldap.LdapException;
-import org.esupportail.commons.services.ldap.LdapStructureService;
 import org.esupportail.commons.services.ldap.LdapUser;
 import org.esupportail.commons.services.ldap.LdapUserService;
 import org.esupportail.commons.services.logging.Logger;
@@ -31,12 +28,9 @@ import org.esupportail.commons.utils.strings.StringUtils;
 import org.esupportail.helpdesk.domain.beans.Category;
 import org.esupportail.helpdesk.domain.beans.Department;
 import org.esupportail.helpdesk.domain.beans.User;
-import org.springframework.ldap.AttributesMapper;
-
 import org.springframework.ldap.LdapTemplate;
 import org.springframework.ldap.support.filter.AndFilter;
 import org.springframework.ldap.support.filter.EqualsFilter;
-import org.springframework.ldap.support.filter.NotFilter;
 
 
 /**
@@ -62,10 +56,6 @@ public class BasicUserInfoProviderImpl extends AbstractUserInfoProvider {
 	
 	
 	private LdapTemplate ldapTemplate;
-	/**
-	 * The LDAP service.
-	 */
-	private LdapStructureService ldapStructureService;
 
 	/**
 	 * The names of the LDAP attributes to show, all if not set.

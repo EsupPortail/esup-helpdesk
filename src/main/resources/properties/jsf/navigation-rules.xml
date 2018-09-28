@@ -621,7 +621,7 @@
 		</navigation-case>
 		<navigation-case>
 			<from-outcome>takenAndClosed</from-outcome>
-			<to-view-id>/stylesheets/ticketView.jsp</to-view-id>
+			<to-view-id>/stylesheets/controlPanel.jsp</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<from-outcome>connectToTicket</from-outcome>

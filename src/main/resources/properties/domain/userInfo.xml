@@ -23,6 +23,7 @@
         <property name="showShibbolethAttributes" value="${userInfo.showShibbolethAttributes}" />
         <property name="shibbolethAttributeNames" value="${userInfo.shibbolethAttributes}" />
 		<property name="showBrowser" value="${userInfo.showBrowser}" />
+		<property name="ldapTemplate" ref="ldapTemplate" />
 		<property name="testUserId" value="${userInfo.testUserId}" />
 	</bean>
 
