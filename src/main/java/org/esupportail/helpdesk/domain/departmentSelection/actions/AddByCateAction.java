@@ -70,6 +70,9 @@ public class AddByCateAction extends AbstractAction {
 					Category category = domainService.getCategory(Long.parseLong(cateId.trim()));
 					// on retire les catégories spécifiés de la liste non visible
 					departmentResult.getCategoriesNotVisibles().remove(category);
+					for(Category subCat : domainService.getSubCategories(category)) {
+						departmentResult.getCategoriesNotVisibles().remove(subCat);
+					}
 				}
 				return null;
 			}

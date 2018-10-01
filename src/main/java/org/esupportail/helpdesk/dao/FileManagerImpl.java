@@ -102,7 +102,7 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 * @throws FileException
 	 */
 	protected void checkPath(final String thePath, final boolean create, final FileInfo fileInfo) throws FileException {
-		File dir = new File(thePath + "/" + fileInfo.getTicket().getCreationDepartment().getId());
+		File dir = new File(thePath + "/service-" + fileInfo.getTicket().getCreationDepartment().getId());
 		if (!dir.exists()) {
 			if (!create) {
 				dir = new File(thePath);
@@ -124,7 +124,7 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 * @throws FileException
 	 */
 	protected void checkPath(final String thePath, final boolean create, final ArchivedFileInfo archivedFfileInfo) throws FileException {
-		File dir = new File(thePath + "/" + archivedFfileInfo.getArchivedTicket().getCreationDepartment().getId());
+		File dir = new File(thePath + "/service-" + archivedFfileInfo.getArchivedTicket().getCreationDepartment().getId());
 		if (!dir.exists()) {
 			if (!create) {
 				dir = new File(thePath);
@@ -181,7 +181,7 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	 * @return the name of the filesystem entry for a FileInfo.
 	 */
 	protected String getFilename(final FileInfo fileInfo) {
-		return path + "/" + fileInfo.getTicket().getCreationDepartment().getId() + "/" + fileInfo.getId();
+		return path + "/service-" + fileInfo.getTicket().getCreationDepartment().getId() + "/" + fileInfo.getId();
 	}
 
 	/**
