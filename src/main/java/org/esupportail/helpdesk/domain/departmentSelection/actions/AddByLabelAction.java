@@ -49,13 +49,18 @@ public class AddByLabelAction extends AbstractAction {
 		// on vérifie si le département est déja dans result
 		// on retire toutes les catégories qui sont dans catNonVisible et qui n'ont pas
 		// la propriété CateInvisible
+		List<Category> categoryToRemove = new ArrayList<Category>();
+
 		for (Department departmentResult : result.getDepartments()) {
 			if (departmentResult != null && department != null) {
 				if (departmentResult.getLabel().equals(department.getLabel())) {
 					for (Category catNonVisibleResult : departmentResult.getCategoriesNotVisibles()) {
 						if (!catNonVisibleResult.getCateInvisible()) {
-							departmentResult.getCategoriesNotVisibles().remove(catNonVisibleResult);
+							categoryToRemove.add(catNonVisibleResult);
 						}
+					}
+					if(!categoryToRemove.isEmpty()) {
+						departmentResult.getCategoriesNotVisibles().removeAll(categoryToRemove);
 					}
 					return null;
 				}

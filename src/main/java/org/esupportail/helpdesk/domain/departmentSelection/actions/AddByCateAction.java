@@ -62,6 +62,7 @@ public class AddByCateAction extends AbstractAction {
 		List<Category> categories = domainService.getCategories(department);
 		String ids[] = cateIds.split(",");
 		Boolean departementPresentResult = false;
+		List<Category> categoryToRemove = new ArrayList<Category>();
 
 		for (Department departmentResult : result.getDepartments()) {
 			// cas ou le departement a deja été traité dans les précédentes rules
@@ -71,8 +72,12 @@ public class AddByCateAction extends AbstractAction {
 					// on retire les catégories spécifiés de la liste non visible
 					departmentResult.getCategoriesNotVisibles().remove(category);
 					for(Category subCat : domainService.getSubCategories(category)) {
-						departmentResult.getCategoriesNotVisibles().remove(subCat);
+						categoryToRemove.add(subCat);
 					}
+					if(!categoryToRemove.isEmpty()) {
+						departmentResult.getCategoriesNotVisibles().removeAll(categoryToRemove);
+					}
+					categoryToRemove.clear();
 				}
 				return null;
 			}
@@ -83,9 +88,18 @@ public class AddByCateAction extends AbstractAction {
 		// on n'a pas eu de regle nous indiquant que ces catégories doivent etres
 		// affichées
 		List<Category> categoriesNonVisibles = new ArrayList<Category>();
+		List<Category> categoriesVisibles = new ArrayList<Category>();
 		for (Category cat : categories) {
 			if (!cat.getCateInvisible()) {
 				categoriesNonVisibles.add(cat);
+			} else {
+				categoriesVisibles.add(cat);
+			}
+		}
+		//pour toutes les catégories visibles, on va retirer les catégories enfants de la liste des categories invisibles
+		for(Category categorieVisible : categoriesVisibles) {
+			for(Category subCat : domainService.getSubCategories(categorieVisible)) {
+				categoriesNonVisibles.remove(subCat);
 			}
 		}
 		department.addCategorieNotVisible(categoriesNonVisibles);
