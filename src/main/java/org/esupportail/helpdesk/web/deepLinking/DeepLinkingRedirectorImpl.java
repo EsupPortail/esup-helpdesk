@@ -134,34 +134,34 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	@Override
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
-		Assert.notNull(domainService, "property domainService of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(sessionController, "property sessionController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(ticketController, "property ticketController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(archivedTicketController, "property archivedTicketController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(preferencesController, "property preferencesController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(searchController, "property searchController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(controlPanelController, "property controlPanelController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(administratorsController, "property administratorsController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(departmentsController, "property departmentsController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(journalController, "property journalController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(faqsController, "property faqsController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(statisticsController, "property statisticsController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(bookmarksController, "property bookmarksController of class "
-				+ this.getClass().getName() + " can not be null");
-		Assert.notNull(responsesController, "property responsesController of class "
-				+ this.getClass().getName() + " can not be null");
+		Assert.notNull(domainService,
+				"property domainService of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(sessionController,
+				"property sessionController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(ticketController,
+				"property ticketController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(archivedTicketController,
+				"property archivedTicketController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(preferencesController,
+				"property preferencesController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(searchController,
+				"property searchController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(controlPanelController,
+				"property controlPanelController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(administratorsController,
+				"property administratorsController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(departmentsController,
+				"property departmentsController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(journalController,
+				"property journalController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(faqsController,
+				"property faqsController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(statisticsController,
+				"property statisticsController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(bookmarksController,
+				"property bookmarksController of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(responsesController,
+				"property responsesController of class " + this.getClass().getName() + " can not be null");
 	}
 
 	/**
@@ -176,8 +176,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	 * @return the ticket id that corresponds to params.
 	 * @throws IllegalArgumentException
 	 */
-	protected Long getTicketId(
-			final Map<String, String> params) throws IllegalArgumentException {
+	protected Long getTicketId(final Map<String, String> params) throws IllegalArgumentException {
 		if (params.get(TICKET_ID_PARAM) == null) {
 			addErrorMessageMissingParameter(TICKET_ID_PARAM);
 			throw new IllegalArgumentException(TICKET_ID_PARAM);
@@ -195,8 +194,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	 * @return the ticket that corresponds to params.
 	 * @throws IllegalArgumentException
 	 */
-	protected Ticket getTicket(
-			final Map<String, String> params) throws IllegalArgumentException {
+	protected Ticket getTicket(final Map<String, String> params) throws IllegalArgumentException {
 		try {
 			return domainService.getTicket(getTicketId(params));
 		} catch (TicketNotFoundException e) {
@@ -206,11 +204,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the ticketView page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected ArchivedTicket getArchivedTicket(
-			final Map<String, String> params) {
+	protected ArchivedTicket getArchivedTicket(final Map<String, String> params) {
 		try {
 			return domainService.getArchivedTicketByOriginalId(getTicketId(params));
 		} catch (ArchivedTicketNotFoundException e) {
@@ -220,26 +218,24 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the ticketView page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectTicketAction(
-			final Map<String, String> params) {
+	protected String redirectTicketAction(final Map<String, String> params) {
 		try {
 			Ticket ticket = getTicket(params);
 			if (ticket != null) {
 				ticketController.setTicket(ticket);
 				if (!ticketController.isUserCanViewTicket()) {
-					addErrorMessage(null, "DEEP_LINKS.MESSAGE.VIEW_TICKET_NOT_ALLOWED",
-							String.valueOf(ticket.getId()));
+					addErrorMessage(null, "DEEP_LINKS.MESSAGE.VIEW_TICKET_NOT_ALLOWED", String.valueOf(ticket.getId()));
 				}
 				if (TICKET_TAKE_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
 					if (ticketController.isUserCanTake()) {
 						ticketController.take();
 						return "/stylesheets/ticketTake.jsp";
 					}
-					addErrorMessage(null, "DEEP_LINKS.MESSAGE.TAKE_TICKET_NOT_ALLOWED",
-							String.valueOf(ticket.getId()));
+					addErrorMessage(null, "DEEP_LINKS.MESSAGE.TAKE_TICKET_NOT_ALLOWED", String.valueOf(ticket.getId()));
 				}
 				if (TICKET_POSTPONE_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
 					if (ticketController.isUserCanPostpone()) {
@@ -302,7 +298,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 						ticketController.requestInformation();
 						return "/stylesheets/ticketRequestInformation.jsp";
 					}
-                    addErrorMessage(null, "DEEP_LINKS.MESSAGE.REQUEST_INFORMATION_TICKET_NOT_ALLOWED",
+					addErrorMessage(null, "DEEP_LINKS.MESSAGE.REQUEST_INFORMATION_TICKET_NOT_ALLOWED",
 							String.valueOf(ticket.getId()));
 				}
 				if (TICKET_FREE_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
@@ -310,8 +306,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 						ticketController.free();
 						return "/stylesheets/ticketFree.jsp";
 					}
-					addErrorMessage(null, "DEEP_LINKS.MESSAGE.FREE_TICKET_NOT_ALLOWED",
-							String.valueOf(ticket.getId()));
+					addErrorMessage(null, "DEEP_LINKS.MESSAGE.FREE_TICKET_NOT_ALLOWED", String.valueOf(ticket.getId()));
 				}
 				if (TICKET_CLOSE_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
 					if (ticketController.isUserCanClose()) {
@@ -334,7 +329,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 						ticketController.takeAndRequestInformation();
 						return "/stylesheets/ticketTakeAndRequestInformation.jsp";
 					}
-                    addErrorMessage(null, "DEEP_LINKS.MESSAGE.TAKE_AND_REQUEST_INFORMATION_TICKET_NOT_ALLOWED",
+					addErrorMessage(null, "DEEP_LINKS.MESSAGE.TAKE_AND_REQUEST_INFORMATION_TICKET_NOT_ALLOWED",
 							String.valueOf(ticket.getId()));
 				}
 				return "/stylesheets/ticketView.jsp";
@@ -348,8 +343,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 				}
 				return "/stylesheets/archivedTicketView.jsp";
 			}
-			addErrorMessage(null, "DEEP_LINKS.MESSAGE.TICKET_NOT_FOUND",
-					params.get(TICKET_ID_PARAM));
+			addErrorMessage(null, "DEEP_LINKS.MESSAGE.TICKET_NOT_FOUND", params.get(TICKET_ID_PARAM));
 			return null;
 		} catch (IllegalArgumentException e) {
 			return null;
@@ -358,11 +352,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the ticketAdd page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectTicketAdd(
-			final Map<String, String> params) {
+	protected String redirectTicketAdd(final Map<String, String> params) {
 		Department department = null;
 		if (params.get(DEPARTMENT_ID_PARAM) != null) {
 			Long departmentId = null;
@@ -375,10 +369,9 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 				try {
 					department = getDomainService().getDepartment(departmentId);
 				} catch (DepartmentNotFoundException e) {
-					addErrorMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND",
-							departmentId.toString());
+					addErrorMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", departmentId.toString());
 				}
-				//evolution : on passe le département pour filtrer le nodetree sur ce dernier
+				// evolution : on passe le département pour filtrer le nodetree sur ce dernier
 				ticketController.setFilteredTree(ticketController.addTreeFiltered(department));
 			}
 		}
@@ -397,8 +390,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 						category = category.getRealCategory();
 					}
 				} catch (CategoryNotFoundException e) {
-					addErrorMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND",
-							categoryId.toString());
+					addErrorMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", categoryId.toString());
 				}
 			}
 		}
@@ -413,7 +405,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 				ticketController.setAddTargetCategory(category);
 				ticketController.setAddTargetDepartment(category.getDepartment());
 				ticketController.addChooseCategory();
-			} 
+			}
 			if (params.get(DEPARTMENT_ID_PARAM) != null) {
 				ticketController.setAddTargetDepartment(department);
 			}
@@ -423,31 +415,31 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the welcome page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectWelcome(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectWelcome(@SuppressWarnings("unused") final Map<String, String> params) {
 		return "/stylesheets/welcome.jsp";
 	}
 
 	/**
 	 * Redirect to the about page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectAbout(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectAbout(@SuppressWarnings("unused") final Map<String, String> params) {
 		return "/stylesheets/about.jsp";
 	}
 
 	/**
 	 * Redirect to the preferences page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectPreferences(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectPreferences(@SuppressWarnings("unused") final Map<String, String> params) {
 		if (!preferencesController.isPageAuthorized()) {
 			addAuthenticationRequiredErrorMessage();
 		}
@@ -457,11 +449,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the manager preferences page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectManagerPreferences(
-			final Map<String, String> params) {
+	protected String redirectManagerPreferences(final Map<String, String> params) {
 		if (!preferencesController.isPageAuthorized()) {
 			addAuthenticationRequiredErrorMessage();
 		} else if (!preferencesController.isUserManagerOrAdmin()) {
@@ -480,11 +472,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the search page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectSearch(
-			final Map<String, String> params) {
+	protected String redirectSearch(final Map<String, String> params) {
 		if (!searchController.isPageAuthorized()) {
 			addAuthenticationRequiredErrorMessage();
 		}
@@ -499,12 +491,10 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 			User currentUser = sessionController.getCurrentUser();
 			if (currentUser != null) {
 				if (params.get(ADVANCED_SEARCH_PARAM) != null) {
-					currentUser.setAdvancedSearch(
-							Boolean.parseBoolean(params.get(ADVANCED_SEARCH_PARAM)));
+					currentUser.setAdvancedSearch(Boolean.parseBoolean(params.get(ADVANCED_SEARCH_PARAM)));
 				}
 				if (params.get(SEARCH_SORT_BY_DATE_PARAM) != null) {
-					currentUser.setSearchSortByDate(
-							Boolean.parseBoolean(params.get(SEARCH_SORT_BY_DATE_PARAM)));
+					currentUser.setSearchSortByDate(Boolean.parseBoolean(params.get(SEARCH_SORT_BY_DATE_PARAM)));
 				}
 				currentUser.setSearchTypeFilter(params.get(SEARCH_TYPE_PARAM));
 				if (params.get(DEPARTMENT_ID_PARAM) != null) {
@@ -512,14 +502,12 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 					try {
 						departmentId = Long.valueOf(params.get(DEPARTMENT_ID_PARAM));
 					} catch (NumberFormatException e) {
-						addErrorMessageInvalidParameter(
-								DEPARTMENT_ID_PARAM, params.get(DEPARTMENT_ID_PARAM));
+						addErrorMessageInvalidParameter(DEPARTMENT_ID_PARAM, params.get(DEPARTMENT_ID_PARAM));
 						return null;
 					}
 					try {
 						Department department = domainService.getDepartment(departmentId);
-						if (getDomainService().isDepartmentVisibleForSearch(
-								currentUser, department,
+						if (getDomainService().isDepartmentVisibleForSearch(currentUser, department,
 								sessionController.getClient())) {
 							currentUser.setSearchDepartmentFilter(department);
 						}
@@ -536,11 +524,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the control panel page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectControlPanel(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectControlPanel(@SuppressWarnings("unused") final Map<String, String> params) {
 		if (!controlPanelController.isPageAuthorized()) {
 			addAuthenticationRequiredErrorMessage();
 		}
@@ -550,11 +538,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the departmentView page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectDepartmentView(
-			final Map<String, String> params) {
+	protected String redirectDepartmentView(final Map<String, String> params) {
 		if (params.get(DEPARTMENT_ID_PARAM) == null) {
 			addErrorMessageMissingParameter(DEPARTMENT_ID_PARAM);
 			return null;
@@ -571,26 +559,24 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 			departmentsController.enter();
 			departmentsController.setDepartment(department);
 			if (!departmentsController.isCurrentUserCanViewDepartment()) {
-				addErrorMessage(null, "DEEP_LINKS.MESSAGE.VIEW_DEPARTMENT_NOT_ALLOWED",
-						department.getLabel());
+				addErrorMessage(null, "DEEP_LINKS.MESSAGE.VIEW_DEPARTMENT_NOT_ALLOWED", department.getLabel());
 			} else {
 				departmentsController.viewDepartment();
 			}
 			return "/stylesheets/departmentView.jsp";
 		} catch (DepartmentNotFoundException e) {
-			addErrorMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND",
-					departmentId.toString());
+			addErrorMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", departmentId.toString());
 			return null;
 		}
 	}
 
 	/**
 	 * Redirect to the departments page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectDepartments(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectDepartments(@SuppressWarnings("unused") final Map<String, String> params) {
 		if (sessionController.getCurrentUser() == null) {
 			addAuthenticationRequiredErrorMessage();
 		} else if (!departmentsController.isCurrentUserCanViewDepartments()) {
@@ -602,11 +588,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the administrators page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectAdministrators(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectAdministrators(@SuppressWarnings("unused") final Map<String, String> params) {
 		if (sessionController.getCurrentUser() == null) {
 			addAuthenticationRequiredErrorMessage();
 		} else if (!administratorsController.isPageAuthorized()) {
@@ -619,11 +605,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the journal page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectJournal(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectJournal(@SuppressWarnings("unused") final Map<String, String> params) {
 		if (sessionController.getCurrentUser() == null) {
 			addAuthenticationRequiredErrorMessage();
 		} else if (!journalController.isPageAuthorized()) {
@@ -636,34 +622,29 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the FAQ page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectFaq(
-			final Map<String, String> params) {
+	protected String redirectFaq(final Map<String, String> params) {
 		faqsController.enter();
 		if (params != null && params.get(FAQ_ID_PARAM) != null) {
 			Long faqId = null;
 			try {
 				faqId = Long.valueOf(params.get(FAQ_ID_PARAM));
 			} catch (NumberFormatException e) {
-				addErrorMessageInvalidParameter(
-						FAQ_ID_PARAM, params.get(FAQ_ID_PARAM));
+				addErrorMessageInvalidParameter(FAQ_ID_PARAM, params.get(FAQ_ID_PARAM));
 			}
 			if (faqId != null) {
 				try {
 					Faq faq = domainService.getFaq(faqId);
 					if (!faqsController.userCanViewFaq(faq)) {
-						addErrorMessage(
-								null,
-								"DEEP_LINKS.MESSAGE.VIEW_FAQ_NOT_ALLOWED",
-								faqId.toString());
+						addErrorMessage(null, "DEEP_LINKS.MESSAGE.VIEW_FAQ_NOT_ALLOWED", faqId.toString());
 					} else {
 						faqsController.setFaq(faq);
 					}
 				} catch (FaqNotFoundException e) {
-					addErrorMessage(null, "DEEP_LINKS.MESSAGE.FAQ_NOT_FOUND",
-							faqId.toString());
+					addErrorMessage(null, "DEEP_LINKS.MESSAGE.FAQ_NOT_FOUND", faqId.toString());
 				}
 			}
 		}
@@ -672,11 +653,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the statistics page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectStatistics(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectStatistics(@SuppressWarnings("unused") final Map<String, String> params) {
 		if (sessionController.getCurrentUser() == null) {
 			addAuthenticationRequiredErrorMessage();
 		} else if (!statisticsController.isPageAuthorized()) {
@@ -689,11 +670,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the bookmarks page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectBookmarks(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectBookmarks(@SuppressWarnings("unused") final Map<String, String> params) {
 		if (sessionController.getCurrentUser() == null) {
 			addAuthenticationRequiredErrorMessage();
 		}
@@ -703,11 +684,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the responses page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectResponses(
-			@SuppressWarnings("unused") final Map<String, String> params) {
+	protected String redirectResponses(@SuppressWarnings("unused") final Map<String, String> params) {
 		if (sessionController.getCurrentUser() == null) {
 			addAuthenticationRequiredErrorMessage();
 		} else if (!responsesController.isPageAuthorized()) {
@@ -720,11 +701,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 
 	/**
 	 * Redirect to the changePassword page.
+	 * 
 	 * @param params
 	 * @return a String.
 	 */
-	protected String redirectChangePassword(
-			final Map<String, String> params) {
+	protected String redirectChangePassword(final Map<String, String> params) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("redirectChangePassword()");
 			logger.debug("params=" + params);
@@ -760,8 +741,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	 * @see org.esupportail.commons.web.deepLinking.DeepLinkingRedirector#redirect(java.util.Map)
 	 */
 	@Override
-	public String redirect(
-			final Map<String, String> params) {
+	public String redirect(final Map<String, String> params) {
 		sessionController.resetSessionLocale();
 		if (sessionController.getCurrentUser() == null) {
 			sessionController.cookieLogin();
@@ -808,8 +788,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 					|| TICKET_FREE_PAGE_VALUE.equals(params.get(PAGE_PARAM))
 					|| TICKET_CLOSE_PAGE_VALUE.equals(params.get(PAGE_PARAM))
 					|| TICKET_TAKE_AND_CLOSE_PAGE_VALUE.equals(params.get(PAGE_PARAM))
-					|| TICKET_TAKE_AND_REQUEST_INFORMATION_PAGE_VALUE.equals(params.get(PAGE_PARAM))
-					) {
+					|| TICKET_TAKE_AND_REQUEST_INFORMATION_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
 				return redirectTicketAction(params);
 			}
 			if (ADD_TICKET_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
@@ -865,38 +844,41 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 				logger.debug("params is null");
 			}
 		}
-		if (User.START_PAGE_CONTROL_PANEL.equals(user.getStartPage())) {
-			return redirectControlPanel(params);
-		}
-		if (User.START_PAGE_ABOUT.equals(user.getStartPage())) {
-			return redirectAbout(params);
-		}
-		if (User.START_PAGE_PREFERENCES.equals(user.getStartPage())) {
-			return redirectPreferences(params);
-		}
-		if (User.START_PAGE_SEARCH.equals(user.getStartPage())) {
-			return redirectSearch(params);
-		}
-		if (User.START_PAGE_JOURNAL.equals(user.getStartPage())) {
-			return redirectJournal(params);
-		}
-		if (User.START_PAGE_FAQ.equals(user.getStartPage())) {
-			return redirectFaq(params);
-		}
-		if (User.START_PAGE_STATISTICS.equals(user.getStartPage())) {
-			return redirectStatistics(params);
-		}
-		if (User.START_PAGE_BOOKMARKS.equals(user.getStartPage())) {
-			return redirectBookmarks(params);
-		}
-		if (User.START_PAGE_BOOKMARKS.equals(user.getStartPage())) {
-			return redirectBookmarks(params);
+		if (user != null) {
+			if (User.START_PAGE_CONTROL_PANEL.equals(user.getStartPage())) {
+				return redirectControlPanel(params);
+			}
+			if (User.START_PAGE_ABOUT.equals(user.getStartPage())) {
+				return redirectAbout(params);
+			}
+			if (User.START_PAGE_PREFERENCES.equals(user.getStartPage())) {
+				return redirectPreferences(params);
+			}
+			if (User.START_PAGE_SEARCH.equals(user.getStartPage())) {
+				return redirectSearch(params);
+			}
+			if (User.START_PAGE_JOURNAL.equals(user.getStartPage())) {
+				return redirectJournal(params);
+			}
+			if (User.START_PAGE_FAQ.equals(user.getStartPage())) {
+				return redirectFaq(params);
+			}
+			if (User.START_PAGE_STATISTICS.equals(user.getStartPage())) {
+				return redirectStatistics(params);
+			}
+			if (User.START_PAGE_BOOKMARKS.equals(user.getStartPage())) {
+				return redirectBookmarks(params);
+			}
+			if (User.START_PAGE_BOOKMARKS.equals(user.getStartPage())) {
+				return redirectBookmarks(params);
+			}
 		}
 		return redirectWelcome(params);
 	}
 
 	/**
-	 * @param sessionController the sessionController to set
+	 * @param sessionController
+	 *            the sessionController to set
 	 */
 	public void setSessionController(final SessionController sessionController) {
 		this.sessionController = sessionController;
@@ -910,10 +892,10 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param archivedTicketController the archivedTicketController to set
+	 * @param archivedTicketController
+	 *            the archivedTicketController to set
 	 */
-	public void setArchivedTicketController(
-			final ArchivedTicketController archivedTicketController) {
+	public void setArchivedTicketController(final ArchivedTicketController archivedTicketController) {
 		this.archivedTicketController = archivedTicketController;
 	}
 
@@ -932,7 +914,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param domainService the domainService to set
+	 * @param domainService
+	 *            the domainService to set
 	 */
 	public void setDomainService(final DomainService domainService) {
 		this.domainService = domainService;
@@ -946,7 +929,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param ticketController the ticketController to set
+	 * @param ticketController
+	 *            the ticketController to set
 	 */
 	public void setTicketController(final TicketController ticketController) {
 		this.ticketController = ticketController;
@@ -960,7 +944,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param preferencesController the preferencesController to set
+	 * @param preferencesController
+	 *            the preferencesController to set
 	 */
 	public void setPreferencesController(final PreferencesController preferencesController) {
 		this.preferencesController = preferencesController;
@@ -974,7 +959,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param searchController the searchController to set
+	 * @param searchController
+	 *            the searchController to set
 	 */
 	public void setSearchController(final SearchController searchController) {
 		this.searchController = searchController;
@@ -988,10 +974,10 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param controlPanelController the controlPanelController to set
+	 * @param controlPanelController
+	 *            the controlPanelController to set
 	 */
-	public void setControlPanelController(
-			final ControlPanelController controlPanelController) {
+	public void setControlPanelController(final ControlPanelController controlPanelController) {
 		this.controlPanelController = controlPanelController;
 	}
 
@@ -1003,10 +989,10 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param administratorsController the administratorsController to set
+	 * @param administratorsController
+	 *            the administratorsController to set
 	 */
-	public void setAdministratorsController(
-			final AdministratorsController administratorsController) {
+	public void setAdministratorsController(final AdministratorsController administratorsController) {
 		this.administratorsController = administratorsController;
 	}
 
@@ -1018,7 +1004,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param departmentsController the departmentsController to set
+	 * @param departmentsController
+	 *            the departmentsController to set
 	 */
 	public void setDepartmentsController(final DepartmentsController departmentsController) {
 		this.departmentsController = departmentsController;
@@ -1032,7 +1019,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param journalController the journalController to set
+	 * @param journalController
+	 *            the journalController to set
 	 */
 	public void setJournalController(final JournalController journalController) {
 		this.journalController = journalController;
@@ -1046,7 +1034,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param faqsController the faqsController to set
+	 * @param faqsController
+	 *            the faqsController to set
 	 */
 	public void setFaqsController(final FaqsController faqsController) {
 		this.faqsController = faqsController;
@@ -1060,7 +1049,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param statisticsController the statisticsController to set
+	 * @param statisticsController
+	 *            the statisticsController to set
 	 */
 	public void setStatisticsController(final StatisticsController statisticsController) {
 		this.statisticsController = statisticsController;
@@ -1074,7 +1064,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param bookmarksController the bookmarksController to set
+	 * @param bookmarksController
+	 *            the bookmarksController to set
 	 */
 	public void setBookmarksController(final BookmarksController bookmarksController) {
 		this.bookmarksController = bookmarksController;
@@ -1088,7 +1079,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	}
 
 	/**
-	 * @param responsesController the responsesController to set
+	 * @param responsesController
+	 *            the responsesController to set
 	 */
 	public void setResponsesController(final ResponsesController responsesController) {
 		this.responsesController = responsesController;
