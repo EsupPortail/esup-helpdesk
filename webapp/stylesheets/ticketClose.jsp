@@ -52,7 +52,7 @@
                                             <e:commandButton
                                                 id="actionButton" styleClass="button--primary"
                                                 value="#{msgs['TICKET_ACTION.BUTTON.CLOSE.CLOSE']}"
-                                                action="#{ticketController.doClose}" />
+                                                action="#{controlPanelController.doClose}" />
                                             <%@include file="_ticketActionCancel.jsp"%>
                                        </t:htmlTag>
                                     </t:htmlTag>

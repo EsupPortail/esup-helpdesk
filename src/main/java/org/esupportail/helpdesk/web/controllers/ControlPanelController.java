@@ -198,6 +198,24 @@ public class ControlPanelController extends AbstractContextAwareController {
 
 	/**
 	 * JSF callback.
+	 * @return a String.
+	 */
+	public String doTakeAndClose() {
+		enter();
+		return ticketController.doTakeAndClose();
+	}
+
+	/**
+	 * JSF callback.
+	 * @return a String.
+	 */
+	public String doClose() {
+		enter();
+		return ticketController.doClose();
+	}
+	
+	/**
+	 * JSF callback.
 	 * @return A String.
 	 */
 	public String viewTicket() {
