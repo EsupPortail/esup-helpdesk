@@ -102,6 +102,13 @@ public class AddByCateAction extends AbstractAction {
 				categoriesNonVisibles.remove(subCat);
 			}
 		}
+		//pour toutes les catégories visibles, on va retirer les catégories parentes de la liste des categories invisibles
+		for(Category categorieVisible : categoriesVisibles) {
+			List<Category> categoriesParent = new ArrayList<Category>();
+			for(Category subCat : getParents(categoriesParent, categorieVisible)) {
+				categoriesNonVisibles.remove(subCat);
+			}
+		}
 		department.addCategorieNotVisible(categoriesNonVisibles);
 
 		departments.add(department);
@@ -118,12 +125,12 @@ public class AddByCateAction extends AbstractAction {
 	}
 
 	private List<Category> getParents(List<Category> categories, Category category) {
-		List<Category> categoriesParent = new ArrayList<Category>();
+		
 		if (category.getParent() != null) {
-			categoriesParent.add(category.getParent());
+			categories.add(category.getParent());
 			getParents(categories, category.getParent());
 		}
-		return categoriesParent;
+		return categories;
 	}
 
 	public void setCateIds(String cateIds) {
