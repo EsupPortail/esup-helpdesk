@@ -121,10 +121,9 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	 * The max number of recent invitations.
 	 */
 	private static final int RECENT_INVITATIONS_MAX_NUMBER = 20;
-
-    /**
-     * The control panel paginator.
-     */
+	/**
+	 * The control panel controller.
+	 */
     private Paginator<ControlPanelEntry> paginator;
 
 	/**
@@ -494,7 +493,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	 */
 	protected List<SelectItem> getInvitedActionScopeItems() {
 		List<SelectItem> invitedActionScopeItems = new ArrayList<SelectItem>();
-		addActionScopeItem(invitedActionScopeItems, ActionScope.DEFAULT, getTicket().getEffectiveScope());
+//		addActionScopeItem(invitedActionScopeItems, ActionScope.DEFAULT, getTicket().getEffectiveScope());
 		addActionScopeItem(invitedActionScopeItems, ActionScope.INVITED);
 		addActionScopeItem(invitedActionScopeItems, ActionScope.INVITED_MANAGER);
 		return invitedActionScopeItems;
