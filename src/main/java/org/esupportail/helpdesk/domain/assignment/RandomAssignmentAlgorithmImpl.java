@@ -48,7 +48,7 @@ extends AbstractAssignmentAlgorithm {
 		}
 		List<DepartmentManager> allowedManagers = new ArrayList<DepartmentManager>();
 		for (DepartmentManager manager : managers) {
-			if (!manager.getUser().equals(excludedUser)) {
+			if (!manager.getUser().equals(excludedUser) && manager.getRate() != 0) {
 				allowedManagers.add(manager);
 			}
 		}
