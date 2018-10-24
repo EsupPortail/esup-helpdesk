@@ -119,7 +119,7 @@
                                                 <t:htmlTag id="monitoring" styleClass="tab-link" value="li">
                                                     <h:outputText value="#{msgs['TICKET_VIEW.MONITORING.HEADER_TAB']} " />
                                                 </t:htmlTag>
-                                                <t:htmlTag id="history_owner" styleClass="tab-link" value="li">
+                                                <t:htmlTag id="history_owner" styleClass="tab-link" value="li" rendered="#{departmentsController.currentUserCanViewDepartments}">
                                                     <h:outputText value="#{msgs['TICKET_VIEW.HISTORY_OWNER.HEADER_TAB']} " />
                                                 </t:htmlTag>
                                             </t:htmlTag>
