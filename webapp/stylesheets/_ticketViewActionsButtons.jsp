@@ -42,7 +42,7 @@
 			</h:panelGroup>
 			<e:commandButton style="display: none" id="cancelButton"
 				value="#{msgs['TICKET_VIEW.BUTTON.CANCEL']}"
-				action="#{ticketController.cancel}" />
+				action="#{controlPanelController.cancel}" />
 		</t:htmlTag>
 
 		<t:htmlTag styleClass="action-item" value="div" rendered="#{ticketController.userCanRequestInformation}" >
