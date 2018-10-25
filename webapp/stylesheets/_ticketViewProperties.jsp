@@ -300,4 +300,13 @@
          </t:htmlTag>
     </t:htmlTag>
 </t:htmlTag>
-
+<t:htmlTag styleClass="ticket-property ticket-status" value="div" rendered="#{ticketController.ticket.scope == 'PUBLIC'}">
+    <t:htmlTag styleClass="ticket-property-inner" value="div">
+        <t:htmlTag styleClass="ticket-property_label" value="div">
+              <e:text value="#{msgs['TICKET_ACTION.TEXT.SCOPE_PROMPT']} " />
+        </t:htmlTag>
+        <t:htmlTag styleClass="ticket-property_lib" value="div">
+            	<e:text  value="#{msgs[ticketScopeI18nKeyProvider[ticketController.ticket.scope]]} " />
+        </t:htmlTag>
+    </t:htmlTag>
+</t:htmlTag>
