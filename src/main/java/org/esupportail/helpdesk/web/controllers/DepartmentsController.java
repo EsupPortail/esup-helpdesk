@@ -1715,13 +1715,7 @@ public class DepartmentsController extends AbstractContextAwareController implem
 				notMembers.add(departmentManager);
 			}
 		}
-		if ("displayName".equals(notMembersPresentOrder)) {
-			Collections.sort(notMembers, MANAGER_DISPLAY_NAME_COMPARATOR);
-		} else if ("id".equals(notMembersPresentOrder)) {
-			Collections.sort(notMembers, MANAGER_ID_COMPARATOR);
-		} else {
-			Collections.sort(notMembers, MANAGER_ORDER_COMPARATOR);
-		}
+		Collections.sort(notMembers, MANAGER_DISPLAY_NAME_COMPARATOR);
 		inheritedMembers = getDomainService().getInheritedDepartmentManagers(categoryToUpdate);
 	}
 

@@ -1079,8 +1079,9 @@ implements DaoService {
 	@SuppressWarnings("unchecked")
 	@RequestCache
 	public List<CategoryMember> getCategoryMembers(final Category category) {
-		DetachedCriteria criteria = DetachedCriteria.forClass(CategoryMember.class);
-		criteria.addOrder(Order.asc(ORDER_ATTRIBUTE));
+		DetachedCriteria criteria = DetachedCriteria.forClass(CategoryMember.class, "cm");
+		criteria.createAlias("cm.user", "user");
+		criteria.addOrder(Order.asc("user.displayName"));
 		criteria.add(Restrictions.eq(CATEGORY_ATTRIBUTE, category));
 		return getHibernateTemplate().findByCriteria(criteria);
 	}
