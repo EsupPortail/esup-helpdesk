@@ -1951,16 +1951,9 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		
 		boolean updated = updateTicket();
 		logger.info("doUpdateInformation : scope " + actionToUpdate.getScope());
-		if (!getDomainService().userCanChangeActionScope(getCurrentUser(), actionToUpdate)) {
-			logger.info("addUnauthorizedActionMessage : scope " + actionToUpdate.getScope());
-			addUnauthorizedActionMessage();
-			if (isPageAuthorized()) {
-				return "view";
-			}
-			return back();
-		}
 		if (updated) {
-			return null;
+			actionMessage = null;
+			return "view";
 		}
 		limitActionScope();
 		
