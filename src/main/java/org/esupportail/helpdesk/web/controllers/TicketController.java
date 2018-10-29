@@ -1398,7 +1398,12 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		if (updated) {
 			return null;
 		}
+		
+		
 		if (getTicketScope() != null && !getTicketScope().equals(getTicket().getScope())) {
+			if(getTicketScope().equals(TicketScope.PUBLIC)) {
+				addWarnMessage(null, "TICKET_ACTION.MESSAGE.VISBILITE.TICKET.PUBLIC");
+			}
 			getDomainService().changeTicketScope(
 					getCurrentUser(), getTicket(), getTicketScope(), !scopeNoAlert);
 			resetActionForm();
@@ -3068,7 +3073,9 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		}
 		setTicket(newTicket);
 		addInfoMessage(null, "TICKET_ACTION.MESSAGE.TICKET_ADDED");
-
+		if(getTicketScope().equals(TicketScope.PUBLIC)) {
+			addWarnMessage(null, "TICKET_ACTION.MESSAGE.VISBILITE.TICKET.PUBLIC");
+		}
 		return "created";
 	}
 
