@@ -132,7 +132,7 @@
                                     value="#{msgs['CONTROL_PANEL.DEPARTMENT_FILTER.PROMPT']}" />
                                  <e:selectOneMenu id="managerDepartmentFilter"
                                      value="#{controlPanelController.currentUser.controlPanelManagerDepartmentFilter}"
-                                     converter="#{departmentConverter}" >
+                                     converter="#{departmentConverter}"  onchange="hideElement('controlPanelForm:managerCategoryFilterSpec');">
                                      <f:selectItems
                                          value="#{controlPanelController.managerDepartmentItems}" />
                                  </e:selectOneMenu>
