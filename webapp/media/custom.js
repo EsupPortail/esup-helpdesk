@@ -142,16 +142,22 @@ jQuery(function ($) {
         if ($this.hasClass("collapsed")) {
             $this.removeClass("collapsed");
             $this.addClass("expanded");
+            $this.parent().next(".extra-cell").children().children().removeClass("fa-chevron-down");
+            $this.parent().next(".extra-cell").children().children().addClass("fa-chevron-up");
         }
         else if ($this.hasClass("expanded")) {
             $this.removeClass("expanded");
             $this.addClass("collapsed");
+            $this.parent().next(".extra-cell").children().children().removeClass("fa-chevron-up");
+            $this.parent().next(".extra-cell").children().children().addClass("fa-chevron-down");
         }
+        
     });
-
+    
     $(".treeview .department").each(function () {
         var $parentRow = $(this).parent().parent();
-        $parentRow.append("<td class=\"extra-cell\"><div><i class=\"fas fa-chevron-down\"></i></div></td>");
+        var $onclick = $(this).attr('onclick');
+        $parentRow.append("<td class=\"extra-cell\" onclick=\"" + $onclick  + "\"><div><i class=\"fas fa-chevron-down\"></i></div></td>");
     });
 
     //Highligh text
@@ -163,7 +169,18 @@ jQuery(function ($) {
         }
     }
 
-
+    $(".treeview .extra-cell").click(function () {
+    	var $this = $(this).children().children();
+        if ($this.hasClass("fa-chevron-down")) {
+            $this.removeClass("fa-chevron-down");
+            $this.addClass("fa-chevron-up");
+        }
+        else if ($this.hasClass("fa-chevron-up")) {
+            $this.removeClass("fa-chevron-up");
+            $this.addClass("fa-chevron-down");
+        }
+    });
+    
     //FAQ
     $("#faqsForm\\:tree .parentLeaf").each(function () {
         var $this = $(this);
@@ -248,9 +265,9 @@ jQuery(function ($) {
 
 
     //history view more
-    $(".history-container thead").each(function () {
-        $(this).addClass('hideme');
-    });
+//    $(".history-container thead").each(function () {
+//        $(this).addClass('hideme');
+//    });
 
     if ($.cookie('view-ticket-history') != null) {
 
@@ -287,7 +304,7 @@ jQuery(function ($) {
     });
 
     function viewMoreLessProcess() {
-        $(".history-container thead").toggleClass("hideme");
+//        $(".history-container thead").toggleClass("hideme");
         $(".history-container .portlet-table-header > span").toggleClass("hideme");
         $(".history-container .col-option").toggleClass('hideme');
     }
@@ -325,6 +342,63 @@ jQuery(function ($) {
 
 
     //----------------------------dashboard-----------------------------------//
+    //sort column
+
+    $( ".not-selected .column-label.column-alpha" ).each(function() {
+        var parent = $(this).parent().parent();
+        if(parent.find(".sort-column").length ==0 ){
+            parent.append("<span class=\"sort-column\"><i class=\"fas fa-sort-alpha-down\"></i></span>");
+        }
+    });
+
+    $( ".not-selected .column-label.column-numeric" ).each(function() {
+        var parent = $(this).parent().parent();
+        if(parent.find(".sort-column").length ==0 ){
+            parent.append("<span class=\"sort-column\"><i class=\"fas fa-sort-numeric-down\"></i></span>");
+        }
+    });
+
+    $( ".selected .column-label" ).mouseover(function() {
+        var parent = $(this).parent().parent();
+
+        if(parent.find(".fa-sort-alpha-down").length > 0 ){
+            parent.find(".fa-sort-alpha-down").removeClass("fa-sort-alpha-down")
+                .addClass("fa-sort-alpha-up");
+
+        }else if(parent.find(".fa-sort-alpha-up").length > 0 ){
+            parent.find(".fa-sort-alpha-up").removeClass("fa-sort-alpha-up")
+                .addClass("fa-sort-alpha-down");
+
+        }else if(parent.find(".fa-sort-numeric-up").length > 0){
+            parent.find(".fa-sort-numeric-up").removeClass("fa-sort-numeric-up")
+            .addClass("fa-sort-numeric-down");
+
+        }else if(parent.find(".fa-sort-numeric-down").length > 0) {
+            parent.find(".fa-sort-numeric-down").removeClass("fa-sort-numeric-down")
+                .addClass("fa-sort-numeric-up");
+        }
+
+    });
+
+    $( ".not-selected .column-label" ).mouseover(function() {
+        $(this).parent().parent().find(".fas").css("visibility", "visible");
+    });
+
+    $( ".not-selected .column-label" ).mouseout(function() {
+        $(this).parent().parent().find(".fas").css("visibility", "hidden");;
+    });
+
+    $( ".selected .column-label" ).mouseout(function() {
+        var parent = $(this).parent().parent();
+        if(parent.find(".fa-sort-alpha-down").length > 0 ){
+            parent.find(".fa-sort-alpha-down").removeClass("fa-sort-alpha-down")
+                .addClass("fa-sort-alpha-up");
+
+        }else{
+            parent.find(".fa-sort-alpha-up").removeClass("fa-sort-alpha-up")
+                .addClass("fa-sort-alpha-down");
+        }
+    });
 
 
     //rewrite cell content
@@ -547,7 +621,7 @@ jQuery(function ($) {
         var sticky = $('.sticky'),
             scroll = $(window).scrollTop();
         if (scroll >= 100) sticky.addClass('fixed');
-        else sticky.removeClass('fixed');
+	if (scroll < 30) sticky.removeClass('fixed');
     });
 
     //manager preference
@@ -561,4 +635,5 @@ jQuery(function ($) {
         $(this).parent().find('.response-content').toggleClass('hideme');
         $(this).parent().find('.form-block').toggleClass('hideme');
     });
+
 });

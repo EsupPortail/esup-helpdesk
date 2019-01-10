@@ -37,7 +37,6 @@ public class ControlPanelColumnOrderer extends HashMap<Integer, String> {
 		"CHANGE_DATE_TIME",
 		"OWNER",
 		"MANAGER",
-		"SERVICE_OWNER",
 	};
 	
 	/**

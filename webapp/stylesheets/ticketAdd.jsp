@@ -7,11 +7,11 @@
                 <%@include file="_header.jsp"%>
             </t:htmlTag>
             <t:htmlTag value="div" styleClass="columns">
-                <t:htmlTag value="aside" styleClass="navigation">
+                <t:htmlTag value="aside" styleClass="navigation #{(sessionController.showShortMenu) ? 'close' : ''}">
                     <%@include file="_navigation.jsp"%>
                 </t:htmlTag>
 
-                <t:htmlTag value="main" styleClass="content">
+                <t:htmlTag value="main" styleClass="content #{(sessionController.showShortMenu) ? 'fullSize' : ''}">
                     <t:htmlTag value="div" styleClass="content-inner">
 	<h:panelGroup rendered="#{not ticketController.userCanAdd}" >
 		<%@include file="_auth.jsp"%>
@@ -236,7 +236,9 @@
                           <t:htmlTag value="span"><h:outputText value="#{msgs['TICKET_ACTION.TEXT.ADD.SHOW_ADVANCED']}" escape="false" /></t:htmlTag>
                           <t:htmlTag value="i" styleClass="fas fa-chevron-down"/>
                     </t:htmlTag>
-
+		    <t:htmlTag value="hr">
+                         <h:outputText value="#{msgs['TICKET_ACTION.MESSAGE.ADD.TICKET.PUBLIC']}" rendered="#{ticketController.ticketScope == 'PUBLIC'"/>
+	            </t:htmlTag>
                     <t:htmlTag value="div" styleClass="content">
                         <t:htmlTag value="div" styleClass="form-block">
                             <t:htmlTag value="div" styleClass="form-item">

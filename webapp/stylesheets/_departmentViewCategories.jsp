@@ -38,7 +38,8 @@
         </t:tree2>
      </t:htmlTag>
   </t:htmlTag>
-<e:paragraph 
+
+<e:paragraph
 	rendered="#{departmentsController.department.virtual}" 
 	value="#{msgs['DEPARTMENT_VIEW.TEXT.VIRTUAL_HAS_NO_CATEGORY']}" />
 

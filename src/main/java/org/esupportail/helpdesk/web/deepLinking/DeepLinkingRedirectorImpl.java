@@ -311,6 +311,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 				if (TICKET_CLOSE_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
 					if (ticketController.isUserCanClose()) {
 						ticketController.close();
+						controlPanelController.enter();
 						return "/stylesheets/ticketClose.jsp";
 					}
 					addErrorMessage(null, "DEEP_LINKS.MESSAGE.CLOSE_TICKET_NOT_ALLOWED",
@@ -319,6 +320,7 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 				if (TICKET_TAKE_AND_CLOSE_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
 					if (ticketController.isUserCanTakeAndClose()) {
 						ticketController.takeAndClose();
+						controlPanelController.enter();
 						return "/stylesheets/ticketTakeAndClose.jsp";
 					}
 					addErrorMessage(null, "DEEP_LINKS.MESSAGE.TAKE_AND_CLOSE_TICKET_NOT_ALLOWED",
@@ -768,9 +770,6 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 			if (user != null) {
 				getDomainService().transformEntitiesCreatedWithEmail(user);
 				faqsController.reset();
-			}
-			if (user == null) {
-				return null;
 			}
 			if (CHANGE_PASSWORD_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
 				return redirectChangePassword(params);

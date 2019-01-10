@@ -3230,6 +3230,15 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 						keepUser = false;
 						error = true;
 					} else {
+						if(getDomainService().isEmail(invitedUserId)) {
+							if(! getDomainService().isFormatEmailValid(invitedUserId)){
+								addWarnMessage(null,
+										"TICKET_ACTION.MESSAGE.EMAIL_FORMAT_ERROR",
+										formatUser(invitedUser));
+								keepUser = false;
+								error = true;
+							}
+						}
 						invitedUsers.add(invitedUser);
 					}
 				} catch (UserNotFoundException e) {
@@ -3241,10 +3250,11 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 					separator = ",";
 				}
 			}
+			if (error) {
+				return null;
+			}
 		}
-		if (error) {
-			return null;
-		}
+
 		if (invitedUsers.isEmpty()) {
 			addErrorMessage(null, "TICKET_ACTION.MESSAGE.ENTER_INVITED_USER");
 			ldapUid = null;

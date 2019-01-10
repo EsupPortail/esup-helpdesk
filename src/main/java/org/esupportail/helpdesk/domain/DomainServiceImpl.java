@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import org.apache.axis.utils.StringUtils;
 import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.aop.monitor.Monitor;
@@ -740,10 +743,20 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 * @param email
 	 * @return true if the given email is valid.
 	 */
-	protected boolean isEmail(final String email) {
+	public boolean isEmail(final String email) {
 		return email != null && email.contains("@");
 	}
 
+	public boolean isFormatEmailValid (String email) {
+		   boolean result = true;
+		   try {
+		      InternetAddress emailAddr = new InternetAddress(email);
+		      emailAddr.validate();
+		   } catch (AddressException ex) {
+		      result = false;
+		   }
+		   return result;
+	};
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#transformEntitiesCreatedWithEmail(
 	 *      org.esupportail.helpdesk.domain.beans.User)
@@ -2096,12 +2109,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 */
 	protected void deleteCategoryMember(final CategoryMember categoryMember, final boolean reassignTickets,
 			final boolean useAssignmentAlgorithm, final User newManager) {
+
+		daoService.deleteCategoryMember(categoryMember);
+		reorderCategoryMembers(daoService.getCategoryMembers(categoryMember.getCategory()));
 		if (reassignTickets) {
 			reassignTickets(null, categoryMember.getCategory(), categoryMember.getUser(), useAssignmentAlgorithm,
 					newManager);
 		}
-		daoService.deleteCategoryMember(categoryMember);
-		reorderCategoryMembers(daoService.getCategoryMembers(categoryMember.getCategory()));
 	}
 
 	/**

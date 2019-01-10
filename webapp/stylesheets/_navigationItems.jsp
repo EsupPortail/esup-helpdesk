@@ -1,24 +1,25 @@
 <%@include file="_include.jsp"%>
 <e:menuItem id="welcome" value="#{msgs['NAVIGATION.TEXT.WELCOME']}"
 	action="#{welcomeController.enter}"
-	accesskey="#{msgs['NAVIGATION.ACCESSKEY.WELCOME']}" />
+	accesskey="#{msgs['NAVIGATION.ACCESSKEY.WELCOME']}"
+	rendered="#{not sessionController.showShortMenu}" />
 <e:menuItem id="faqs" value="#{msgs['NAVIGATION.TEXT.FAQS']}"
 	action="#{faqsController.enter}"
 	accesskey="#{msgs['NAVIGATION.ACCESSKEY.FAQS']}"
-	rendered="#{faqsController.pageAuthorized}" />
+	rendered="#{faqsController.pageAuthorized and not sessionController.showShortMenu}" />
 <e:menuItem id="controlPanel" value="#{msgs['NAVIGATION.TEXT.CONTROL_PANEL']}"
 	action="#{controlPanelController.enter}"
 	accesskey="#{msgs['NAVIGATION.ACCESSKEY.CONTROL_PANEL']}"
-	rendered="#{controlPanelController.pageAuthorized}" />
+	rendered="#{controlPanelController.pageAuthorized and not sessionController.showShortMenu}" />
 <e:menuItem id="search" value="#{msgs['NAVIGATION.TEXT.SEARCH']}"
 	action="#{searchController.enter}"
 	accesskey="#{msgs['NAVIGATION.ACCESSKEY.SEARCH']}"
-	rendered="#{searchController.pageAuthorized}" />
+	rendered="#{searchController.pageAuthorized and not sessionController.showShortMenu}" />
 <e:menuItem id="bookmarks"
 	value="#{msgs['NAVIGATION.TEXT.BOOKMARKS']}"
 	accesskey="#{msgs['NAVIGATION.ACCESSKEY.BOOKMARKS']}"
 	action="#{bookmarksController.enter}"
-	rendered="#{bookmarksController.pageAuthorized}" />
+	rendered="#{bookmarksController.pageAuthorized and not sessionController.showShortMenu}" />
 <e:menuItem id="preferences"
 	value="#{msgs['NAVIGATION.TEXT.PREFERENCES']}"
 	accesskey="#{msgs['NAVIGATION.ACCESSKEY.PREFERENCES']}"

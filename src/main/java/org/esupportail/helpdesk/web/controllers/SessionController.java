@@ -140,7 +140,7 @@ public class SessionController extends AbstractDomainAwareBean {
 		state = NORMAL_STATE;
 		displayName = null;
 		loginParams = null;
-		showShortMenu = true;
+		showShortMenu = false;
 	}
 
 	/**

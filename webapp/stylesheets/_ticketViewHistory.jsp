@@ -15,7 +15,7 @@
 	value="#{ticketController.historyEntries}" rowIndexVar="variable" 
 	var="he" border="0" cellspacing="0" cellpadding="0" rowClasses="oddRow,evenRow">
 
-	<t:column styleClass="col-main view--full">
+	<t:column styleClass="col-main">
         <f:facet name="header">
              <h:outputText value="" />
         </f:facet>
@@ -28,29 +28,9 @@
             </t:htmlTag>
         </t:htmlTag>
 	</t:column>
-
-	<t:column styleClass="col-option action--edit hideme">
+	<t:column styleClass="col-main action--scope">
 		   <f:facet name="header">
-                 <h:outputText value=""/>
-            </f:facet>
-             <t:htmlTag value="div" rendered="#{he.canUpdateInformation}">
-                <h:panelGroup onclick="buttonClick('viewTicketForm:actionData:'+#{variable}+':updateInformation');">
-                    <t:htmlTag style="cursor:pointer" value="i" styleClass="far fa-edit fa-2x"/>
-                 </h:panelGroup>
-            </t:htmlTag>
-            <e:commandButton
-                id="updateInformation"
-                style="display: none"
-                value="#{msgs['_.BUTTON.VIEW_EDIT']}"
-                action="#{ticketController.updateInformation}">
-                <t:updateActionListener value="#{he.action}" property="#{ticketController.actionToUpdate}" />
-                <t:updateActionListener value="#{he.action.message}" property="#{ticketController.actionMessage}" />
-            </e:commandButton>
-    </t:column>
-
-	<t:column styleClass="col-option action--scope hideme">
-		   <f:facet name="header">
-		        <t:htmlTag value="span" styleClass="hideme">
+		        <t:htmlTag value="div" >
                     <h:outputText value="#{msgs['DOMAIN.ACTION_SCOPE.COL.HEADER']}"/>
                  </t:htmlTag>
             </f:facet>
@@ -116,14 +96,30 @@
                     </t:htmlTag>
 
 	</t:column>
-    <t:column styleClass="col-option action--alert hideme">
-    		<f:facet name="header">
-    		    <t:htmlTag value="span" styleClass="hideme">
-                     <h:outputText value="#{msgs['TICKET_VIEW.HISTORY.HEADER.ALERT']}"/>
-                </t:htmlTag>
+	<t:column styleClass="col-option action--edit hideme">
+		   <f:facet name="header">
+                 <h:outputText value=""/>
             </f:facet>
+             <t:htmlTag value="div" rendered="#{he.canUpdateInformation}">
+                <h:panelGroup onclick="buttonClick('viewTicketForm:actionData:'+#{variable}+':updateInformation');" title="#{msgs['CHANGE_COMMENT']}">
+                    <t:htmlTag style="cursor:pointer" value="i" styleClass="far fa-edit fa-2x" />
+                 </h:panelGroup>
+            </t:htmlTag>
+            <e:commandButton
+                id="updateInformation"
+                style="display: none"
+                value="#{msgs['_.BUTTON.VIEW_EDIT']}"
+                action="#{ticketController.updateInformation}">
+                <t:updateActionListener value="#{he.action}" property="#{ticketController.actionToUpdate}" />
+                <t:updateActionListener value="#{he.action.message}" property="#{ticketController.actionMessage}" />
+            </e:commandButton>
+    </t:column>
+
+
+    <t:column styleClass="col-option action--alert hideme">
+
             <h:panelGroup styleClass="action-show-alert" rendered="#{not empty he.alerts}" >
-                <h:panelGroup rendered="#{not ticketController.showAlerts and not empty he.alerts}">
+                <h:panelGroup rendered="#{not ticketController.showAlerts and not empty he.alerts}" title="#{msgs['ALERT_SENDING']}">
                     <t:htmlTag style="cursor:pointer" value="i" styleClass="far fa-envelope fa-2x"/>
                  </h:panelGroup>
             </h:panelGroup>

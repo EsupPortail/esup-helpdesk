@@ -7,10 +7,10 @@
                     <%@include file="_header.jsp"%>
                 </t:htmlTag>
                 <t:htmlTag value="div" styleClass="columns">
-                    <t:htmlTag value="aside" styleClass="navigation">
+                    <t:htmlTag value="aside" styleClass="navigation #{(sessionController.showShortMenu) ? 'close' : ''}">
                         <%@include file="_navigation.jsp"%>
                     </t:htmlTag>
-                    <t:htmlTag value="main" styleClass="content">
+                    <t:htmlTag value="main" styleClass="content #{(sessionController.showShortMenu) ? 'fullSize' : ''}">
                         <t:htmlTag value="div" styleClass="content-inner">
 	
                             <h:panelGroup rendered="#{utilsController.currentUser == null}" >
@@ -39,12 +39,12 @@
                                                 <f:selectItems value="#{utilsController.utilitiesItems}" />
                                             </e:selectOneMenu>
                                         </t:htmlTag>
-                                     <t:htmlTag value="div" styleClass="form-item" >
-                                               <e:commandButton  id="changeUtilityButton" styleClass="button--secondary"
-                                                   action="#{utilsController.enter}"
-                                                   value="#{msgs['_.BUTTON_OK']}" >
-                                               </e:commandButton>
-                                      </t:htmlTag>
+                                         <t:htmlTag value="div" styleClass="form-item" >
+                                                   <e:commandButton  id="changeUtilityButton" styleClass="button--secondary"
+                                                       action="#{utilsController.enter}"
+                                                       value="#{msgs['_.BUTTON_OK']}" >
+                                                   </e:commandButton>
+                                          </t:htmlTag>
                                     </t:htmlTag>
 
                                     <t:htmlTag value="div" styleClass="form-block utils-ldapuid" rendered="#{utilsController.utility != 0}">

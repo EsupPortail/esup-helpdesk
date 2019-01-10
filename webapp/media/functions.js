@@ -21,6 +21,13 @@ function simulateLinkClick(linkId) {
 		fireOnThis.click();
 	}
 }
+function changeChevron(input) {
+    var $this = input;
+    
+    $this.removeClass("fa-chevron-down");
+    $this.addClass("fa-chevron-up");
+
+}
 
 /** 
  * @return the body element of a table.

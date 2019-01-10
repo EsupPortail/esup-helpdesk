@@ -226,6 +226,18 @@ public interface DomainService extends Serializable {
 	 */
 	void transformEntitiesCreatedWithEmail(User user);
 
+	/**
+	 * check if it is email
+	 * @param email
+	 */
+	boolean isEmail(String email);
+
+	/**
+	 * check if email valid
+	 * @param email
+	 */
+	boolean isFormatEmailValid (String email);
+
 	//////////////////////////////////////////////////////////////
 	// Department
 	//////////////////////////////////////////////////////////////

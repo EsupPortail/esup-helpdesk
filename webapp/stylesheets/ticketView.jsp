@@ -5,11 +5,11 @@
                 <%@include file="_header.jsp"%>
             </t:htmlTag>
             <t:htmlTag value="div" styleClass="columns">
-                <t:htmlTag value="aside" styleClass="navigation">
+                <t:htmlTag value="aside" styleClass="navigation #{(sessionController.showShortMenu) ? 'close' : ''}">
                     <%@include file="_navigation.jsp"%>
                 </t:htmlTag>
 
-                <t:htmlTag value="main" styleClass="content">
+                <t:htmlTag value="main" styleClass="content #{(sessionController.showShortMenu) ? 'fullSize' : ''}">
                     <t:htmlTag value="div" styleClass="content-inner">
                         <h:panelGroup rendered="#{not ticketController.userCanViewTicket}" >
                             <h:panelGroup rendered="#{ticketController.currentUser == null}" >
@@ -45,6 +45,7 @@
                                                             <t:htmlTag value="i" styleClass="fas fa-chevron-down"/>
                                                         </t:htmlTag>
                                                      </t:htmlTag>
+
                                                     <t:htmlTag styleClass="actions-list hideme" value="div">
                                                         <t:htmlTag styleClass="actions-list-inner" value="div">
                                                             <%@include file="_ticketViewActionsButtons.jsp"%>
@@ -52,6 +53,14 @@
                                                     </t:htmlTag>
                                                 </t:htmlTag>
                                             </t:htmlTag>
+											<h:panelGroup>
+												<t:htmlTag value="div" styleClass="form-item returnPanel">
+									                <e:commandButton  id="returnPanel"
+									                            styleClass="button--secondary"
+																action="back"											                            
+																value="#{msgs['CONTROL_PANEL.BUTTON.RETURN.PANEL']}" />
+									            </t:htmlTag>
+											</h:panelGroup>                                            
                                         </t:htmlTag>
                                             <%@include file="_ticketViewNavigationButtons.jsp"%>
                                     </t:htmlTag>

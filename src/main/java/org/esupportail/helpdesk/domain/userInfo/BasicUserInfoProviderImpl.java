@@ -465,18 +465,26 @@ public class BasicUserInfoProviderImpl extends AbstractUserInfoProvider {
     				"USER_INFO.BROWSER.UNKNOWN",
     				locale));
     	} else {
-    		BrowserDetector bd = new BrowserDetector(agent);
-    		info += em(getI18nService().getString(
-    				"USER_INFO.BROWSER.KNOWN",
-    				locale, 
-    				bd.getUserAgentString(), 
-    				bd.getBrowserName(), 
-    				bd.getBrowserVersion(), 
-    				bd.getBrowserPlatform(),
-    				bd.isCssOK() ? "on" : "off",
-    			    bd.isJavascriptOK() ? "on" : "off",
-    	    	    bd.isFileUploadOK() ? "on" : "off"
-    				));
+    		try {
+				BrowserDetector bd = new BrowserDetector(agent);
+				info += em(getI18nService().getString(
+						"USER_INFO.BROWSER.KNOWN",
+						locale, 
+						bd.getUserAgentString(), 
+						bd.getBrowserName(), 
+						bd.getBrowserVersion(), 
+						bd.getBrowserPlatform(),
+						bd.isCssOK() ? "on" : "off",
+					    bd.isJavascriptOK() ? "on" : "off",
+					    bd.isFileUploadOK() ? "on" : "off"
+						));
+			} catch (Exception e) {
+		   		info += em(getI18nService().getString(
+	    				"USER_INFO.BROWSER.KNOWN_PARTIAL",
+	    				locale, 
+	    				agent.toString()
+	    				));
+			}
     	}
 		info += "</p>";
     	return info;

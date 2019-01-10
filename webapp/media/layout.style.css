@@ -45,7 +45,7 @@
 }
 
 .header .region .ent-link a,
-.header .region .logout-link a{
+.header .region .logout-link a {
   text-decoration: none;
   color: #ffffff;
   font-size: 1.4em;
@@ -59,7 +59,7 @@
 }
 
 .header .region .ent-link:hover,
-.header .region .logout-link:hover{
+.header .region .logout-link:hover {
   background-color: #1D8AC0;
 }
 
@@ -71,12 +71,11 @@
 
 .header .region .ent-link,
 .header .region .logout-link,
-.header .region .current-user
-{
+.header .region .current-user {
   border-left: solid 2px #0f81ba;
 }
 
-.header .region .logout-link a .fas.fa-sign-out-alt{
+.header .region .logout-link a .fas.fa-sign-out-alt {
   color: #ffffff;
 }
 
@@ -85,8 +84,6 @@
   align-items: center;
   padding: 0 1em;
 }
-
-
 
 .footer .region {
   background-color: #e7e7e7;
@@ -292,8 +289,9 @@ ul.tabs li.current:hover {
 .ticket-form .form-properties {
   margin-bottom: 20px;
 }
-.ticket-add .faq-content{
-  margin-top:10px;
+
+.ticket-add .faq-content {
+  margin-top: 10px;
 }
 
 /* ------------------------------------ *\
@@ -350,7 +348,6 @@ ul.tabs li.current:hover {
   left: 110px;
 }
 
-
 /* ------------------------------------ *\
   ==ticketView.faces
 \* ------------------------------------ */
@@ -375,13 +372,13 @@ ul.tabs li.current:hover {
 .ticketView .tab-content table tbody td {
   border-bottom: solid thin #c6c6c6;
   padding: 12px 5px;
+  width: 90%;
 }
 
 .ticketView .tab-content table tbody td > span {
   color: #707070;
   font-size: 0.95rem;
 }
-
 
 /* ------------------------------------ *\
   ==controlPanel.faces
@@ -507,13 +504,14 @@ ul.tabs li.current:hover {
   border-top: solid thin #c6c6c6;
   vertical-align: text-top;
 }
+
 .view-ticket_history_owner td {
   border-top: solid thin #c6c6c6;
   vertical-align: text-top;
 }
 
 .view-ticket_history .col-main.view--full {
-  width: 60%;
+  width: 80%;
 }
 
 .view-ticket_history .action--header {
@@ -575,7 +573,7 @@ ul.tabs li.current:hover {
 }
 
 .history-container .action--alert {
-  min-width: 180px;
+  min-width: 60px;
   padding-left: 8px;
   position: relative;
 }
@@ -720,8 +718,8 @@ ul.tabs li.current:hover {
   cursor: pointer;
 }
 
-.ticketInvite .ldap-search-form  input{
-  margin-top:7px;
+.ticketInvite .ldap-search-form input {
+  margin-top: 7px;
 }
 
 .ticketInvite .form-content {
@@ -795,6 +793,12 @@ ul.tabs li.current:hover {
 
 .ticketMove .form-body .form-item {
   margin-bottom: 20px;
+}
+
+.ticketMove .category_choice {
+  padding: 15px 0 10px 15px;
+  background-color: #ededed;
+  min-height: 250px;
 }
 
 /*----------------------LDAP Search result page------------------*/
@@ -1076,6 +1080,14 @@ ul.tabs li.current:hover {
 }
 
 /* ------------------------------------ *\
+  ==journal
+\* ------------------------------------ */
+.service-select .form-item > * {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+/* ------------------------------------ *\
   ==departemntView
 \* ------------------------------------ */
 
@@ -1096,9 +1108,20 @@ ul.tabs li.current:hover {
   background-color: #f7f7f9;
 }
 
-.departmentView .tab-content table tbody td {
+.departmentView .tab-content table tbody td,
+.departmentView .tab-content .form-item > div,
+.departmentFaqLinks .current-faq-links-list table tbody td {
   border-bottom: solid thin #c6c6c6;
   padding: 12px 5px;
+}
+
+.departmentFaqLinks .current-faq-links-list {
+  margin-bottom: 2rem;
+}
+
+.departmentFaqLinks .current-faq-links-list table td span {
+  margin-bottom: 2rem;
+  font-size: 105%;
 }
 
 .departmentView .tab-content table tbody td > span {
@@ -1155,7 +1178,7 @@ ul.tabs li.current:hover {
   display: inline;
 }
 
-.departmentView .form-block.form-submit{
+.departmentView .form-block.form-submit {
   margin-top: 30px;
 }
 
@@ -1188,13 +1211,13 @@ ul.tabs li.current:hover {
 }
 
 .departmenEdit .form-body .form-block .form-item,
-.categoryEdit .form-body .form-block .form-item{
+.categoryEdit .form-body .form-block .form-item {
   padding-bottom: 5px;
 }
 
 @media (min-width: 1200px) {
   .departmentAdd .form-body,
-  .departmentDelete .form-item.display-flex{
+  .departmentDelete .form-item.display-flex {
     max-width: 40%;
   }
 }
@@ -1203,16 +1226,16 @@ ul.tabs li.current:hover {
   ==categories
 \* ------------------------------------ */
 
-.categories .form-header{
+.categories .form-header {
   margin-bottom: 15px;
 }
 
-.categories .form-header .form-item:first-child > span span{
-  margin:0 5px;
+.categories .form-header .form-item:first-child > span span {
+  margin: 0 5px;
 }
 
-.categories .form-header .form-item:first-child input{
-  margin:0 80px 0 10px;
+.categories .form-header .form-item:first-child input {
+  margin: 0 80px 0 10px;
 }
 
 .categories .form-header, .categories .form-header .form-item:first-child > span {
@@ -1234,20 +1257,20 @@ ul.tabs li.current:hover {
 }
 
 .categories .treeview .properties .form-submit,
-.categories .treeview .action .form-submit
-{
+.categories .treeview .action .form-submit {
   display: inline-block;
   padding: 2px 0;
-  margin-top:0;
+  margin-top: 0;
 }
 
-.categories .treeview .category .no-members{
+.categories .treeview .category .no-members {
   display: inline-block;
   font-style: italic;
-  margin-left:20px;
+  margin-left: 20px;
   color: #7b7b7b;
   font-size: 0.95rem;
 }
+
 .categories .treeview .properties .form-submit input[type='submit'],
 .categories .treeview .action .form-submit input[type='submit'] {
   margin: 0 5px;
@@ -1256,31 +1279,30 @@ ul.tabs li.current:hover {
   padding: 5px;
 }
 
-.categories .treeview .order{
+.categories .treeview .order {
   border: solid 1px #c0c0c0;
-  padding:3px;
+  padding: 3px;
   text-align: center;
-  margin:2px 5px;
+  margin: 2px 5px;
 }
 
-.categories .treeview .order:hover .fas{
-  color:#1093d3;
+.categories .treeview .order:hover .fas {
+  color: #1093d3;
 }
 
 .categories .virtualCategories,
-.categories .members{
+.categories .members {
   position: relative;
   display: inline-block;
 }
 
-
 .categories .virtualCategories-list ul li,
-.categories .members-list ul li{
-  white-space:nowrap;
+.categories .members-list ul li {
+  white-space: nowrap;
 }
 
 .categories .virtualCategories-list,
-.categories .members-list{
+.categories .members-list {
   background-color: rgb(239, 239, 239);
   color: rgb(102, 102, 102);
   border-radius: 2px;
@@ -1294,17 +1316,39 @@ ul.tabs li.current:hover {
   left: 5px;
 }
 
-.categories .link{
+.categories .link {
   margin-left: 8px;
+}
+
+/* ------------------------------------ *\
+  ==categoryMembers
+\* ------------------------------------ */
+.category-members .members_array {
+  background-color: #ededed;
+}
+
+.category-members .members_array tbody td {
+  border-bottom: solid thin #c6c6c6;
+  padding: 12px 5px;
+}
+
+.category-members .members_array tbody td:last-of-type .form-item {
+  text-align: right;
+}
+
+@media (min-width: 1200px) {
+  .category-members .members_array {
+
+    min-width: 50%;
+  }
 }
 
 /* ------------------------------------ *\
   ==categoryDelete
 \* ------------------------------------ */
 
-
 @media (min-width: 1200px) {
-  .categoryDelete .form-body{
+  .categoryDelete .form-body {
     max-width: 60%;
     min-height: 100px;
   }

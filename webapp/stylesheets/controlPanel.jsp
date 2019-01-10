@@ -6,11 +6,10 @@
 		    <%@include file="_header.jsp"%>
 		</t:htmlTag>
     	<t:htmlTag value="div" styleClass="columns">
-            <t:htmlTag value="aside" styleClass="navigation">
+            <t:htmlTag value="aside" styleClass="navigation #{(sessionController.showShortMenu) ? 'close' : ''} #{(sessionController.showShortMenu) ? 'close' : ''}" >
                 <%@include file="_navigation.jsp"%>
             </t:htmlTag>
-
-            <t:htmlTag value="main" styleClass="content">
+            <t:htmlTag value="main" styleClass="content #{(sessionController.showShortMenu) ? 'fullSize' : ''}">
 	            <t:htmlTag value="div" styleClass="content-inner">
 
             <script type="text/javascript">
@@ -41,7 +40,7 @@
                     }
                     marker.innerHTML = getRefreshMessage(delay);
                     if (delay <= 0) {
-                        simulateLinkClick('controlPanelForm:filterChangeButton');
+                        simulateLinkClick('controlPanelForm:data:filterChangeButton');
                     } else {
                         setTimeout("refreshWindow("+(delay - 10000)+")", 10000);
                     }
@@ -105,6 +104,7 @@
                              <e:outputLabel for="controlPanelForm:userStatusFilter"
                                  value="#{msgs['CONTROL_PANEL.STATUS_FILTER.PROMPT']}"/>
                             <e:selectOneMenu id="userStatusFilter"
+                            	onchange="buttonClick('controlPanelForm:filter');"
                                 value="#{controlPanelController.currentUser.controlPanelUserStatusFilter}">
                                 <f:selectItems value="#{controlPanelController.statusItems}" />
                             </e:selectOneMenu>
@@ -113,6 +113,7 @@
                             <e:outputLabel for="controlPanelForm:managerStatusFilter"
                                 value="#{msgs['CONTROL_PANEL.STATUS_FILTER.PROMPT']}"/>
                             <e:selectOneMenu id="managerStatusFilter"
+                            	onchange="buttonClick('controlPanelForm:filter');"
                                 value="#{controlPanelController.currentUser.controlPanelManagerStatusFilter}">
                                 <f:selectItems value="#{controlPanelController.statusItems}" />
                             </e:selectOneMenu>
@@ -121,24 +122,29 @@
                             <e:outputLabel for="controlPanelForm:userDepartmentFilter"
                                 value="#{msgs['CONTROL_PANEL.DEPARTMENT_FILTER.PROMPT']}"/>
                              <e:selectOneMenu id="userDepartmentFilter"
+                             	 onchange="buttonClick('controlPanelForm:filter');"
                                  value="#{controlPanelController.currentUser.controlPanelUserDepartmentFilter}"
                                  converter="#{departmentConverter}">
                                  <f:selectItems
                                      value="#{controlPanelController.userDepartmentItems}" />
                              </e:selectOneMenu>
+
                         </t:htmlTag>
                         <t:htmlTag value="div" styleClass="form-item" rendered="#{not controlPanelController.currentUser.controlPanelUserInterface}" >
                                 <e:outputLabel for="controlPanelForm:managerDepartmentFilter"
                                     value="#{msgs['CONTROL_PANEL.DEPARTMENT_FILTER.PROMPT']}" />
                                  <e:selectOneMenu id="managerDepartmentFilter"
                                      value="#{controlPanelController.currentUser.controlPanelManagerDepartmentFilter}"
-                                     converter="#{departmentConverter}"  onchange="hideElement('controlPanelForm:managerCategoryFilterSpec');">
+  									 onchange="buttonClick('controlPanelForm:filter');"
+                                     converter="#{departmentConverter}" >
                                      <f:selectItems
                                          value="#{controlPanelController.managerDepartmentItems}" />
                                  </e:selectOneMenu>
                                 <e:selectOneMenu id="managerCategoryFilterSpec"
                                     value="#{controlPanelController.managerCategoryFilterSpec}"
+                                    onchange="buttonClick('controlPanelForm:filter');"
                                     rendered="#{not empty controlPanelController.managerCategorySpecItems}" >
+                                    
                                     <f:selectItems
                                         value="#{controlPanelController.managerCategorySpecItems}" />
                                 </e:selectOneMenu>
@@ -147,7 +153,8 @@
                             <e:outputLabel for="controlPanelForm:userInvolvementFilter"
                                 value="#{msgs['CONTROL_PANEL.INVOLVEMENT_FILTER.PROMPT']}"/>
                              <e:selectOneMenu id="userInvolvementFilter"
-                                 value="#{controlPanelController.currentUser.controlPanelUserInvolvementFilter}">
+                                 value="#{controlPanelController.currentUser.controlPanelUserInvolvementFilter}"
+                                 onchange="buttonClick('controlPanelForm:filter');">
                                  <f:selectItems
                                      value="#{controlPanelController.userInvolvementItems}" />
                              </e:selectOneMenu>
@@ -156,7 +163,8 @@
                             <e:outputLabel for="controlPanelForm:managerInvolvementFilter"
                                 value="#{msgs['CONTROL_PANEL.INVOLVEMENT_FILTER.PROMPT']}"/>
                              <e:selectOneMenu id="managerInvolvementFilter"
-                                 value="#{controlPanelController.currentUser.controlPanelManagerInvolvementFilter}">
+                                 value="#{controlPanelController.currentUser.controlPanelManagerInvolvementFilter}"
+                                 onchange="buttonClick('controlPanelForm:filter');">
                                  <f:selectItems
                                      value="#{controlPanelController.managerInvolvementItems}" />
                              </e:selectOneMenu>
@@ -166,6 +174,7 @@
                                     value="#{msgs['CONTROL_PANEL.MANAGER_FILTER.PROMPT']}"/>
                                   <e:selectOneMenu id="managerManagerFilter"
                                       value="#{controlPanelController.paginator.selectedManager}"
+                                      onchange="buttonClick('controlPanelForm:filter');"
                                       converter="#{userConverter}">
                                       <f:selectItems value="#{controlPanelController.managerManagerItems}" />
                                   </e:selectOneMenu>
@@ -174,16 +183,16 @@
                                   <e:outputLabel for="controlPanelForm:pageSizeFilter"
                                                                      value="#{msgs['CONTROL_PANEL.TEXT.TICKETS_PER_PAGE']}"/>
                                    <e:selectOneMenu id="pageSizeFilter"
-                                             onchange="buttonClick('controlPanelForm:filterChangeButton');"
+                                             onchange="buttonClick('controlPanelForm:filter');"
                                              value="#{controlPanelController.currentUser.controlPanelPageSize}">
                                              <f:selectItems
                                                  value="#{controlPanelController.paginator.pageSizeItems}" />
                                    </e:selectOneMenu>
                           </t:htmlTag>
-                        <t:htmlTag value="div" styleClass="form-item" >
+                        <t:htmlTag value="div" styleClass="hideme" >
                                   <e:commandButton  id="filter"
                                   styleClass="button--secondary"
-                                      onclick="buttonClick('controlPanelForm:filterChangeButton');"
+                                      action="#{controlPanelController.enter}"
                                       value="#{msgs['CONTROL_PANEL.BUTTON.FILTER']}" >
                                   </e:commandButton>
                          </t:htmlTag>

@@ -21,11 +21,11 @@ function addInvitation(select) {
                     <%@include file="_header.jsp"%>
                 </t:htmlTag>
                 <t:htmlTag value="div" styleClass="columns">
-                    <t:htmlTag value="aside" styleClass="navigation">
+                    <t:htmlTag value="aside" styleClass="navigation #{(sessionController.showShortMenu) ? 'close' : ''}">
                         <%@include file="_navigation.jsp"%>
                     </t:htmlTag>
 
-                    <t:htmlTag value="main" styleClass="content">
+                    <t:htmlTag value="main" styleClass="content #{(sessionController.showShortMenu) ? 'fullSize' : ''}">
                         <t:htmlTag value="div" styleClass="content-inner">
                         <e:form
                             freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"
@@ -130,7 +130,7 @@ function addInvitation(select) {
 											</h:panelGroup>
 										</f:facet>
 										<f:facet name="category">
-											<h:panelGroup styleClass="category leaf #{node.leaf ? 'last' : 'parent'}" onclick="simulateLinkClick('ticketActionForm:tree:#{node.identifier}:#{node.leaf ? 'chooseCategoryButton' : 't2'}');" >
+											<h:panelGroup styleClass="category leaf #{node.category.addNewTickets or node.leaf ? 'last' : 'parent'}" onclick="simulateLinkClick('ticketActionForm:tree:#{node.identifier}:#{node.leaf ? 'chooseCategoryButton' : 't2'}');" >
 												<e:text value=" #{msgs['TICKET_ACTION.TEXT.ADD.CATEGORY_LABEL']}" >
 														<f:param value="#{node.description}" />
 												</e:text>

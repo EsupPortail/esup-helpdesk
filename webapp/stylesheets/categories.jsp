@@ -6,10 +6,10 @@
                     <%@include file="_header.jsp"%>
                 </t:htmlTag>
                 <t:htmlTag value="div" styleClass="columns">
-                    <t:htmlTag value="aside" styleClass="navigation">
+                    <t:htmlTag value="aside" styleClass="navigation #{(sessionController.showShortMenu) ? 'close' : ''}">
                         <%@include file="_navigation.jsp"%>
                     </t:htmlTag>
-                    <t:htmlTag value="main" styleClass="content">
+                    <t:htmlTag value="main" styleClass="content #{(sessionController.showShortMenu) ? 'fullSize' : ''}">
                         <t:htmlTag value="div" styleClass="content-inner">
 
                             <e:form
@@ -42,7 +42,7 @@
                                                 </e:selectOneMenu>
                                                 <e:commandButton value="#{msgs['CATEGORIES.TEXT.ACTION.PROMPT']}"
                                                     id="actionsButton" styleClass="button--secondary"/>
-                                                <h:panelGroup id="sortActions" rendered="#{departmentsController.currentUserCanManageDepartmentCategories}" >
+                                                <h:panelGroup id="sortActions" styleClass="hideme" rendered="#{departmentsController.currentUserCanManageDepartmentCategories}" >
                                                     <e:selectOneMenu onchange="javascript:{simulateLinkClick('categoriesForm:sortCategoriesButton');}"
                                                         value="#{departmentsController.categoriesSortOrder}">
                                                         <f:selectItem

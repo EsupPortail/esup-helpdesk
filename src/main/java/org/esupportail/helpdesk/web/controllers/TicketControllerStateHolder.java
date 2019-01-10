@@ -1161,13 +1161,7 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 				targetNonCategoryMembers.add(departmentManager);
 			}
 		}
-		if ("displayName".equals(targetNonCategoryMembersPresentOrder)) {
-			Collections.sort(targetNonCategoryMembers, MANAGER_DISPLAY_NAME_COMPARATOR);
-		} else if ("id".equals(targetNonCategoryMembersPresentOrder)) {
-			Collections.sort(targetNonCategoryMembers, MANAGER_ID_COMPARATOR);
-		} else {
-			Collections.sort(targetNonCategoryMembers, MANAGER_ORDER_COMPARATOR);
-		}
+		Collections.sort(targetNonCategoryMembers, MANAGER_DISPLAY_NAME_COMPARATOR);
 		return targetNonCategoryMembers;
 	}
 
@@ -1200,14 +1194,8 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 				targetCategoryMembers.add(departmentManager);
 			}
 		}
-		if ("displayName".equals(targetCategoryMembersPresentOrder)) {
-			Collections.sort(
+		Collections.sort(
 					targetCategoryMembers, MANAGER_DISPLAY_NAME_COMPARATOR);
-		} else if ("id".equals(targetCategoryMembersPresentOrder)) {
-			Collections.sort(targetCategoryMembers, MANAGER_ID_COMPARATOR);
-		} else {
-			Collections.sort(targetCategoryMembers, MANAGER_ORDER_COMPARATOR);
-		}
 		return targetCategoryMembers;
 	}
 
