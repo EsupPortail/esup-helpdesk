@@ -9,7 +9,7 @@
 		<%@include file="_navigationItems2.jsp"%>
 	</e:menu>
 		<h:panelGroup rendered="#{sessionController.currentUser !=null}" >
-			<h:panelGroup style="cursor: pointer" styleClass="#{(controlPanelController.currentUserDepartmentManager) ? 'manager' : 'user'}" onclick="buttonClick('navigationForm:toggleMenuButton');" >
+			<h:panelGroup style="cursor: pointer" styleClass="#{(controlPanelController.currentUserDepartmentManager) ? 'manager' : 'user'}" >
 
 			    <t:htmlTag value="div" styleClass="moreItems" rendered="#{sessionController.showShortMenu}">
 			    <t:htmlTag value="i" styleClass="fas fa-chevron-right fa-2x"/>

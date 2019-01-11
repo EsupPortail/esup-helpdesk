@@ -1,15 +1,6 @@
 <%@include file="_include.jsp"%>
 
- <t:htmlTag styleClass="form-block" value="div">
-    <t:htmlTag styleClass="form-item" value="div">
-      <h:panelGroup styleClass="button--tertiary view-more">
-           <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.HISTORY.OPTIONS.MORE']}" />
-       </h:panelGroup>
-       <h:panelGroup styleClass="button--tertiary view-less hideme">
-                  <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.HISTORY.OPTIONS.LESS']} " />
-        </h:panelGroup>
-    </t:htmlTag>
-  </t:htmlTag>
+
 
 <e:dataTable  id="actionData" styleClass="history-container" width="100%"
 	value="#{ticketController.historyEntries}" rowIndexVar="variable" 

@@ -5,11 +5,11 @@
                 <%@include file="_header.jsp"%>
             </t:htmlTag>
             <t:htmlTag value="div" styleClass="columns">
-                <t:htmlTag value="aside" styleClass="navigation #{(sessionController.showShortMenu) ? 'close' : ''}">
+                <t:htmlTag value="aside" styleClass="navigation">
                     <%@include file="_navigation.jsp"%>
                 </t:htmlTag>
 
-                <t:htmlTag value="main" styleClass="content #{(sessionController.showShortMenu) ? 'fullSize' : ''}">
+                <t:htmlTag value="main" styleClass="content">
                     <t:htmlTag value="div" styleClass="content-inner">
                         <h:panelGroup rendered="#{not ticketController.userCanViewTicket}" >
                             <h:panelGroup rendered="#{ticketController.currentUser == null}" >
@@ -110,7 +110,7 @@
                                         </t:htmlTag>
 
                                         <t:htmlTag styleClass="region view-ticket_extended-properties" value="div">
-                                            <t:htmlTag styleClass="tabs" value="ul">
+                                            <t:htmlTag styleClass="tabs block-inline" value="ul">
                                                 <t:htmlTag id="history" styleClass="tab-link current" value="li">
                                                     <h:outputText value="#{msgs['TICKET_VIEW.HISTORY.HEADER']} " />
                                                 </t:htmlTag>
@@ -132,6 +132,17 @@
                                                     <h:outputText value="#{msgs['TICKET_VIEW.HISTORY_OWNER.HEADER_TAB']} " />
                                                 </t:htmlTag>
                                             </t:htmlTag>
+                                            
+                                             <t:htmlTag styleClass="block-inline button-right" value="div">
+											    <t:htmlTag styleClass="form-item" value="div">
+											      <h:panelGroup styleClass="button--tertiary view-more">
+											           <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.HISTORY.OPTIONS.MORE']}" />
+											      </h:panelGroup>
+											      <h:panelGroup styleClass="button--tertiary view-less hideme">
+											                  <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.HISTORY.OPTIONS.LESS']} " />
+											      </h:panelGroup>
+											    </t:htmlTag>
+											 </t:htmlTag>
                                         </t:htmlTag>
 
                                         <t:htmlTag id="tab-history" styleClass="view-ticket_history tab-content current" value="div">

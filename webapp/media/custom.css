@@ -460,3 +460,8 @@ hr {
 .returnPanel {
 	margin-left : 10em!important;
 }
+.button-right {
+    float: right;
+    margin-top: 20px;	
+}
+}

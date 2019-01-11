@@ -263,46 +263,93 @@ jQuery(function ($) {
         $action.toggle();
     });
 
+    if ($.cookie('view-ticket_extended-properties') != null) {
 
-    //history view more
-//    $(".history-container thead").each(function () {
-//        $(this).addClass('hideme');
-//    });
-
-    if ($.cookie('view-ticket-history') != null) {
-
-        switch ($.cookie('view-ticket-history')) {
+        switch ($.cookie('view-ticket_extended-properties')) {
             case 'view-more':
-                $(".view-ticket_history .view-less").addClass("hideme");
-                $(".view-ticket_history .view-more").removeClass("hideme");
+                $(".view-ticket_extended-properties .view-less").addClass("hideme");
+                $(".view-ticket_extended-properties .view-more").removeClass("hideme");
                 $(".history-container .col-main").removeClass('view--full');
                 break;
             case 'view-less':
-                $(".view-ticket_history .view-less").removeClass("hideme");
-                $(".view-ticket_history .view-more").addClass("hideme");
+                $(".view-ticket_extended-properties .view-less").removeClass("hideme");
+                $(".view-ticket_extended-properties .view-more").addClass("hideme");
                 $(".history-container .col-main").addClass('view--full');
                 viewMoreLessProcess();
                 break;
         }
     }
 
-    $('.view-ticket_history .view-more').click(function () {
-        $.cookie('view-ticket-history', 'view-less');
+    $('.view-ticket_extended-properties .view-more').click(function () {
+        $.cookie('view-ticket_extended-properties', 'view-less');
         $(this).toggleClass("hideme");
-        $(".view-ticket_history .view-less").toggleClass("hideme");
+        $(".view-ticket_extended-properties .view-less").toggleClass("hideme");
 
         $(".history-container .col-main").addClass('view--full');
         viewMoreLessProcess();
     })
 
-    $('.view-ticket_history .view-less').click(function () {
-        $.cookie('view-ticket-history', 'view-more');
+    $('.view-ticket_extended-properties .view-less').click(function () {
+        $.cookie('view-ticket_extended-properties', 'view-more');
         $(this).toggleClass("hideme");
-        $(".view-ticket_history .view-more").toggleClass("hideme");
+        $(".view-ticket_extended-properties .view-more").toggleClass("hideme");
         $(".history-container .col-main").removeClass('view--full');
         viewMoreLessProcess();
     });
+//
+    if ($.cookie('view-menu') != null) {
 
+        switch ($.cookie('view-menu')) {
+            case 'view-open':
+                $('.navigation .portlet-menu').show();
+                $('.navigation').removeClass("close");
+                $('.content').removeClass("fullSize");
+                $('.navigation .moreItems .fas').removeClass("fa-chevron-right");
+                $('.navigation .moreItems .fas').addClass("fa-chevron-left");
+                break;
+            case 'view-close':
+                $('.navigation .portlet-menu').hide();
+                $('.navigation').addClass("close");
+                $('.content').addClass("fullSize");
+                $('.navigation .moreItems .fas').removeClass("fa-chevron-left");
+                $('.navigation .moreItems .fas').addClass("fa-chevron-right");
+                break;
+        }
+    }
+
+    $('.navigation .moreItems .fas').click(function () {
+    	if($(this).hasClass("fa-chevron-right")){
+            $.cookie('view-menu', 'view-open');
+            $('.navigation .portlet-menu').show();
+            $('.navigation').removeClass("close");
+            $('.content').removeClass("fullSize");
+            $('.navigation .moreItems .fas').removeClass("fa-chevron-right");
+            $('.navigation .moreItems .fas').addClass("fa-chevron-left");
+    	} else {
+            $.cookie('view-menu', 'view-close');
+            $('.navigation .portlet-menu').hide();
+            $('.navigation').addClass("close");
+            $('.content').addClass("fullSize");
+            $('.navigation .moreItems .fas').removeClass("fa-chevron-left");
+            $('.navigation .moreItems .fas').addClass("fa-chevron-right");
+    	}
+    })
+//
+    $(document).ready(function () {
+	    if($('#viewTicketForm\\:history').hasClass("current")){
+	    	$('.view-ticket_extended-properties .form-item').removeClass("hideme");
+	    } else {
+	    	$('.view-ticket_extended-properties .form-item').addClass("hideme");
+	    }
+    });
+    
+    $('.view-ticket_extended-properties .tabs').click(function () {
+	    if($('#viewTicketForm\\:history').hasClass("current")){
+	    	$('.view-ticket_extended-properties .form-item').removeClass("hideme");
+	    } else {
+	    	$('.view-ticket_extended-properties .form-item').addClass("hideme");
+	    }
+    });
     function viewMoreLessProcess() {
 //        $(".history-container thead").toggleClass("hideme");
         $(".history-container .portlet-table-header > span").toggleClass("hideme");
@@ -636,4 +683,6 @@ jQuery(function ($) {
         $(this).parent().find('.form-block').toggleClass('hideme');
     });
 
+    
+    
 });

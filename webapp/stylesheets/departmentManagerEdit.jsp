@@ -8,10 +8,10 @@
                     <%@include file="_header.jsp"%>
                 </t:htmlTag>
                 <t:htmlTag value="div" styleClass="columns">
-                    <t:htmlTag value="aside" styleClass="navigation #{(sessionController.showShortMenu) ? 'close' : ''}">
+                    <t:htmlTag value="aside" styleClass="navigation">
                         <%@include file="_navigation.jsp"%>
                     </t:htmlTag>
-                    <t:htmlTag value="main" styleClass="content #{(sessionController.showShortMenu) ? 'fullSize' : ''}">
+                    <t:htmlTag value="main" styleClass="content">
                         <t:htmlTag value="div" styleClass="content-inner">
                             <e:form
                                 freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"

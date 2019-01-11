@@ -121,9 +121,10 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	 * The max number of recent invitations.
 	 */
 	private static final int RECENT_INVITATIONS_MAX_NUMBER = 20;
-	/**
-	 * The control panel controller.
-	 */
+
+    /**
+     * The control panel paginator.
+     */
     private Paginator<ControlPanelEntry> paginator;
 
 	/**
@@ -2755,8 +2756,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 			final CategoryNode categoryNode,
 			final List<Category> subCategories,
 			final List <Department> departmentsViewable,
-			final String filter,
-			boolean matchFiltre) {
+			final String filter) {
 		for (Category subCategory : subCategories) {
     		Category realSubCategory = subCategory;
     		while (realSubCategory.isVirtual()) {
@@ -2780,18 +2780,13 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	        	CategoryNode subCategoryNode = new CategoryNode(creationDepartment, realSubCategory, subCategory.getXlabel());
 	        	categoryNode.getChildren().add(subCategoryNode);
 	    		categoryNode.setLeaf(false);
-	    		
-	    		if(subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) || matchFiltre){
-	    			matchFiltre = true;
-	    		}
 	    		addAddTreeSubCategories(
 	    				creationDepartment, subCategoryNode,
 	    				getSubCategories(realSubCategory),
 	    				departmentsViewable, 
-	    				filter,
-	    				matchFiltre);
+	    				filter);
 		    		//on supprime la catégorie si son libellé ne correspond pas au filtre
-		    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1 && !matchFiltre){
+		    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1){
 		    			categoryNode.getChildren().remove(subCategoryNode);
 		    		}    		
 	    		}
@@ -2854,11 +2849,10 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 					|| !getDomainService().getUserStore().isApplicationUser(getCurrentUser()))
 					&& departmentsViewable.contains(realDepartment)) {
 		    	CategoryNode departmentNode = new CategoryNode(department);
-		    	boolean matchFiltre = false;
 		    	addAddTreeSubCategories(
 		    			department, departmentNode,
 		    			getRootCategories(realDepartment),
-		    			departmentsViewable, filter, matchFiltre);
+		    			departmentsViewable, filter);
 		    	if (departmentNode.getChildCount() > 0) {
 			    	rootNode.getChildren().add(departmentNode);
 			    	rootNode.setLeaf(false);
@@ -2905,25 +2899,6 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		}
 	}
 
-	/**
-	 * Refresh the category tree.
-	 */
-	public void filterMoveTree() {
-		moveTree = null;
-		TreeNode rootNode = buildRootAddNode(cateFilter);
-
-		//ouverture complète de l'arborescence
-		if (rootNode.getChildCount() > 0) {
-			moveTree = new TreeModelBase(rootNode);
-			TreeState treeState = new TreeStateBase();
-			treeState.toggleExpanded("0");
-			
-			List<CategoryNode> nodesToCollapse = rootNode.getChildren();
-			expandAllTree(treeState, nodesToCollapse);
-			
-			moveTree.setTreeState(treeState);
-		}
-	}
 	private void expandAllTree(TreeState treeState, List<CategoryNode> nodesToCollapse){
 		for (Object child : nodesToCollapse) {
 			CategoryNode node = (CategoryNode) child;
