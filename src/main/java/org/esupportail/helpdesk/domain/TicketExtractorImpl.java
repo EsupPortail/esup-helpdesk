@@ -82,12 +82,48 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	 * @return the condition regarding the selected department.
 	 */
 	protected String getSelectedDepartmentCondition(
-			final Department departmentFilter) {
+			final Department departmentFilter,
+			List <Department> visibleDepartments,
+			User user) {
 		String condition;
 		if (departmentFilter == null) {
-			condition = HqlUtils.alwaysTrue();
+			List<Long> departmentsIds = new ArrayList<Long>();
+			List<Long> cateIds = new ArrayList<Long>();
+			
+			for (Department department : visibleDepartments) {
+				//cas d'un dpt confidentiel
+				//on va récupérer uniquement les catégories dont le user est membre 
+				if(department.getSrvConfidential()) {
+					List<Category> categories = getDomainService().getMemberCategories(user,department);
+					for (Category category : categories) {
+						cateIds.add(category.getId());
+					}
+				} else {
+					departmentsIds.add(new Long(department.getId()));
+				}
+			}
+
+			if(cateIds.size() > 0) {
+				condition = HqlUtils.or(
+						HqlUtils.longIn("ticket.department.id", departmentsIds),
+						HqlUtils.longIn("ticket.category.id", cateIds));
+			} else {
+				condition = HqlUtils.alwaysTrue();
+			}
 		} else {
-			condition = HqlUtils.equals("ticket.department.id", departmentFilter.getId());
+			
+			//cas d'un dpt confidentiel
+			//on va récupérer uniquement les catégories dont le user est membre 
+			if(departmentFilter.getSrvConfidential()) {
+				List<Category> categories = getDomainService().getMemberCategories(user,departmentFilter);
+				List<Long> cateIds = new ArrayList<Long>();
+				for (Category category : categories) {
+					cateIds.add(category.getId());
+				}
+				condition = HqlUtils.longIn("ticket.category.id", cateIds);
+			} else {
+				condition = HqlUtils.equals("ticket.department.id", departmentFilter.getId());
+			}			
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("selectedDepartmentCondition = " + condition);
@@ -190,13 +226,34 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	 * @return the condition regarding the managed departments.
 	 */
 	protected String getManagedDepartmentCondition(
-			final User user) {
+			final User user,
+			List<Long> depaIdConfidentials) {
 		List<Long> departmentsIds = new ArrayList<Long>();
+		List<Long> cateIds = new ArrayList<Long>();
+		
 		for (Department department : getDomainService().getManagedDepartments(user)) {
-			departmentsIds.add(new Long(department.getId()));
+			//cas d'un dpt confidentiel
+			//on va récupérer uniquement les catégories dont le user est membre 
+			if(department.getSrvConfidential()) {
+				depaIdConfidentials.add(department.getId());
+				
+				List<Category> categories = getDomainService().getMemberCategories(user,department);
+				for (Category category : categories) {
+					cateIds.add(category.getId());
+				}
+			} else {
+				departmentsIds.add(new Long(department.getId()));
+			}
 		}
 		String condition;
-		condition = HqlUtils.longIn("ticket.department.id", departmentsIds);
+
+		if(cateIds.size() > 0) {
+			condition = HqlUtils.or(
+					HqlUtils.longIn("ticket.department.id", departmentsIds),
+					HqlUtils.longIn("ticket.category.id", cateIds));
+		} else {
+			condition = HqlUtils.longIn("ticket.department.id", departmentsIds);
+		}
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("managedDepartmentCondition = " + condition);
@@ -239,6 +296,18 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		String condition = HqlUtils.equals("ticket.manager.id", HqlUtils.quote(user.getId()));
 		if (logger.isDebugEnabled()) {
 			logger.debug("managedCondition = " + condition);
+		}
+		return condition;
+	}
+
+	/**
+	 * @param user
+	 * @return the condition for the user to manage the tickets.
+	 */
+	protected String getDepartmentConfidentialCondition(List<Long> departmentsIds) {
+		String condition = 	HqlUtils.longIn("ticket.department.id", departmentsIds);
+		if (logger.isDebugEnabled()) {
+			logger.debug("departmentConfidentialCondition = " + condition);
 		}
 		return condition;
 	}
@@ -333,10 +402,21 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 			final User user,
 			final Department departmentFilter) {
 		List<Long> categoryIds = new ArrayList<Long>();
+		String condition = null;
+
 		for (Category category : getDomainService().getMemberCategories(user, departmentFilter)) {
 			categoryIds.add(new Long(category.getId()));
 		}
-		String condition = HqlUtils.longIn("ticket.category.id", categoryIds);
+		if(departmentFilter.getSrvConfidential()) {
+			condition = HqlUtils.and(
+							HqlUtils.longIn("ticket.category.id", categoryIds),
+							HqlUtils.or(
+									getOwnerCondition(user),
+									getManagedCondition(user)
+						));
+		} else {
+			condition = HqlUtils.longIn("ticket.category.id", categoryIds);
+		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("categoryMemberCondition = " + condition);
 		}
@@ -367,7 +447,8 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	protected String getManagerVisibleTicketCondition(
 			final User user, 
 			final User userSelected,
-			String implication) {
+			String implication,
+			List<Long> depaIdConfidentials) {
 		
 		String condition = null;
 		
@@ -378,7 +459,7 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		}
 		if (departmentFilter == null) {
 			if(implication.equals("OTHER")) {
-				condition = getManagedDepartmentCondition(userSelected);
+				condition = getManagedDepartmentCondition(userSelected, depaIdConfidentials);
 			}			
 			else if(implication.equals("FREE")) {
 				condition = getManagedCategoryCondition(managedDepartments, userSelected);
@@ -398,11 +479,32 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 				}
 				
 				if (categoryFilter == null) {
-					
-					condition = HqlUtils.equals("ticket.department.id", departmentFilter.getId());
+					//cas d'un dpt confidentiel
+					//on va récupérer uniquement les catégories dont le user est membre 
+					if(departmentFilter.getSrvConfidential()) {
+						depaIdConfidentials.add(departmentFilter.getId());
+						
+						List<Category> categories = getDomainService().getMemberCategories(user,departmentFilter);
+						List<Long> cateIds = new ArrayList<Long>();
+						for (Category category : categories) {
+							cateIds.add(category.getId());
+						}
+						condition = HqlUtils.longIn("ticket.category.id", cateIds);
+					} else {
+						condition = HqlUtils.equals("ticket.department.id", departmentFilter.getId());
+					}
 					
 				} else {
-					condition = HqlUtils.longIn("ticket.category.id", getCategoryTreeIds(categoryFilter, null));
+					if(departmentFilter.getSrvConfidential()) {
+						condition = HqlUtils.and(
+										HqlUtils.longIn("ticket.category.id", getCategoryTreeIds(categoryFilter, null)),
+										HqlUtils.or(
+												getOwnerCondition(user),
+												getManagedCondition(user)))
+									;
+					} else {
+						condition = HqlUtils.longIn("ticket.category.id", getCategoryTreeIds(categoryFilter, null));
+					}
 				}
 			}
 		}
@@ -501,6 +603,7 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 			String queryInvitation, 
 			String queryLibre) {
 		
+		List<Long> depaIdConfidentials = new ArrayList<Long>();
 		String managerCondition = null;
 		if (user == null) {
 			return null;
@@ -509,17 +612,25 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 			managerCondition = HqlUtils.and(
 					getStatusCondition(user),
 					getManagerInvolvementCondition(user, selectedManager, implication),
-					getManagerVisibleTicketCondition(user, selectedManager!=null?selectedManager:user, implication));
+					getManagerVisibleTicketCondition(user, selectedManager!=null?selectedManager:user, implication, depaIdConfidentials));
 		} 
 		if(implication.equals("INVITE")){
 			managerCondition = HqlUtils.and(HqlUtils.and(
 					getStatusCondition(user),
-					getManagerVisibleTicketCondition(user, selectedManager!=null?selectedManager:user, implication)),
+					getManagerVisibleTicketCondition(user, selectedManager!=null?selectedManager:user, implication, depaIdConfidentials)),
 					getInvitedCondition(selectedManager!=null?selectedManager:user));
 			
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("managerCondition = " + managerCondition);
+		}
+		if(!depaIdConfidentials.isEmpty()) {
+			managerCondition = HqlUtils.or(
+					managerCondition,
+					HqlUtils.and(
+							getStatusCondition(user),
+							getOwnerCondition(user),
+							getDepartmentConfidentialCondition(depaIdConfidentials)));
 		}
 		if (HqlUtils.isAlwaysFalse(managerCondition)) {
 			if(user.getControlPanelManagerInvolvementFilter() != null && (
@@ -573,11 +684,23 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	 * @return the condition regarding the department for non managers.
 	 */
 	protected String getUserVisibleDepartmentCondition(
-			final List<Department> visibleDepartments) {
+			final List<Department> visibleDepartments,
+			User user) {
 		String condition;
 		List<Long> departmentsIds = new ArrayList<Long>();
+		List<Long> cateIds = new ArrayList<Long>();
+
 		for (Department department : visibleDepartments) {
-			departmentsIds.add(new Long(department.getId()));
+			//cas d'un dpt confidentiel
+			//on va récupérer uniquement les catégories dont le user est membre 
+			if(department.getSrvConfidential()) {
+				List<Category> categories = getDomainService().getMemberCategories(user,department);
+				for (Category category : categories) {
+					cateIds.add(category.getId());
+				}
+			} else {
+				departmentsIds.add(new Long(department.getId()));
+			}
 		}
 		condition = HqlUtils.longIn("ticket.department.id", departmentsIds);
 		if (logger.isDebugEnabled()) {
@@ -593,10 +716,11 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	 */
 	protected String getUserControlPanelVisibleDepartmentCondition(
 			final Department departmentFilter,
-			final List<Department> visibleDepartments) {
+			final List<Department> visibleDepartments,
+			User user) {
 		String condition;
 		if (departmentFilter == null) {
-			condition = getUserVisibleDepartmentCondition(visibleDepartments);
+			condition = getUserVisibleDepartmentCondition(visibleDepartments, user);
 		} else {
 			condition = HqlUtils.alwaysTrue();
 		}
@@ -642,7 +766,7 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 					HqlUtils.and(
 							getUserVisibleTicketCondition(),
 							getUserControlPanelVisibleDepartmentCondition(
-									departmentFilter, visibleDepartments)
+									departmentFilter, visibleDepartments, user)
 							)
 			);
 		}
@@ -669,7 +793,7 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		}
 		String userCondition = HqlUtils.and(
 				getStatusCondition(user),
-				getSelectedDepartmentCondition(departmentFilter),
+				getSelectedDepartmentCondition(departmentFilter, visibleDepartments, user),
 				getUserControlPanelInvolvementCondition(user, departmentFilter, visibleDepartments));
 		if (logger.isDebugEnabled()) {
 			logger.debug("userCondition = " + userCondition);
