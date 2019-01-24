@@ -108,7 +108,9 @@
 				<value>navigation.style.css</value>
 				<value>calendar.style.css</value>
 				<value>//use.fontawesome.com/releases/v5.0.13/css/all.css</value>
-				<value>//fonts.googleapis.com/css?family=Roboto:300,400,600,700</value>
+				<!--<value>//fonts.googleapis.com/css?family=Roboto:300,400,600,700</value>-->
+                <value>fonts.googleapis.comi.Roboto.css</value>
+
     		</list>
     	</property>
     	<property name="documentBodyStyleClass" value="portlet-section-body" >
