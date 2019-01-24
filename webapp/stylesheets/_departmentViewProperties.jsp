@@ -84,7 +84,10 @@
 	<e:text value=" #{departmentsController.department.visibilityInterSrv}" id="visibilityInterSrv"/>	
 	<e:outputLabel for="srvAnonymous"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS']}" />
-	<e:text value=" #{departmentsController.department.srvAnonymous ? msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_TRUE'] : msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_FALSE']}" id="srvAnonymous"/>	
+	<e:text value=" #{departmentsController.department.srvAnonymous ? msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_TRUE'] : msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_FALSE']}" id="srvAnonymous"/>
+	<e:outputLabel for="srvConfidential"
+		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_CONFIDENTIAL']}" />
+	<e:text value=" #{departmentsController.department.srvConfidential ? msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_CONFIDENTIAL_TRUE'] : msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_CONFIDENTIAL_FALSE']}" id="srvConfidential"/>
 	<e:outputLabel for="defaultTicketLabel"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.DEFAULT_TICKET_LABEL']}" 
 		rendered="#{not departmentsController.department.virtual}" />

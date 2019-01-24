@@ -178,6 +178,13 @@ function selectIcon(src, value) {
                                                     <e:message for="srvAnonymous" />
                                                 </t:htmlTag>
                                            </t:htmlTag>
+                                           <t:htmlTag value="div" styleClass="form-block">
+                                                <t:htmlTag value="div" styleClass="form-item">
+                                                    <e:outputLabel for="srvConfidential" value="#{msgs['DEPARTMENT_EDIT.TEXT.SERVICE_CONFIDENTIAL']}" />
+                                                    <e:selectBooleanCheckbox id="srvConfidential" value="#{departmentsController.departmentToUpdate.srvConfidential}" />
+                                                    <e:message for="srvConfidential" />
+                                                </t:htmlTag>
+                                           </t:htmlTag>                                           
                                            <t:htmlTag value="div" styleClass="form-block" rendered="#{not departmentsController.departmentToUpdate.virtual}">
                                                 <t:htmlTag value="div" styleClass="form-item">
                                                     <e:outputLabel for="defaultTicketPriority" value="#{msgs['DEPARTMENT_EDIT.TEXT.DEFAULT_TICKET_PRIORITY']}"/>

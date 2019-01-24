@@ -60,6 +60,13 @@ public class Department extends AbstractTicketContainer implements Comparable<De
      */
     private List<Category> categoriesNotVisibles;
     
+
+    /**
+     * To set the service confidential.
+     */
+    private Boolean srvConfidential;
+
+
     /**
      * Bean constructor.
      */
@@ -82,6 +89,8 @@ public class Department extends AbstractTicketContainer implements Comparable<De
     	this.realDepartment = department.realDepartment;
     	this.computerUrlBuilderName = department.computerUrlBuilderName;
     	this.categoriesNotVisibles = department.categoriesNotVisibles;
+    	this.srvConfidential = department.srvConfidential;
+
     }
 
 	/**
@@ -301,5 +310,13 @@ public class Department extends AbstractTicketContainer implements Comparable<De
 			categoriesNotVisibles = new ArrayList<Category>();
 		}
 		categoriesNotVisibles.addAll(categoriesNotVisible);
+	}
+
+	public Boolean getSrvConfidential() {
+		return srvConfidential;
+	}
+
+	public void setSrvConfidential(Boolean srvConfidential) {
+		this.srvConfidential = srvConfidential;
 	}
 }

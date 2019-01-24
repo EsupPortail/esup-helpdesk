@@ -37,6 +37,7 @@
 		<property name="monitoringLevel" column="moni_leve" />
 		<property name="visibilityInterSrv" column="visi_inte_depa" />
 		<property name="srvAnonymous" column="anon" />
+		<property name="srvConfidential" column="confi" />
 		<many-to-one name="icon" column="icon_id" fetch="join"/>
 	</class>
 
