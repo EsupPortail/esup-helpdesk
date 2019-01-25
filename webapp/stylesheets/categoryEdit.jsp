@@ -201,7 +201,10 @@
                                                             <e:selectBooleanCheckbox id="cateInvisible"
                                                                 value="#{departmentsController.categoryToUpdate.cateInvisible}" />
                                                             <e:italic
-                                                                value=" #{msgs['CATEGORY_EDIT.TEXT.CATEGORIE_INVISIBLE_HELP']}" />
+                                                                value=" #{msgs['CATEGORY_EDIT.TEXT.CATEGORIE_INVISIBLE_HELP']}" >
+                                                                <f:param value="#{departmentsController.department.label}" />
+                                                                <f:param value="#{departmentsController.categoryToUpdate.id}" />
+                                                            </e:italic>
                                                         </h:panelGroup>
                                                  </t:htmlTag>
                                             </t:htmlTag>                                            
