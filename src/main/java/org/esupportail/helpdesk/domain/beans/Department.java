@@ -120,7 +120,6 @@ public class Department extends AbstractTicketContainer implements Comparable<De
 	 * @return an int.
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	@Override
 	public int compareTo(final Department d) {
 		if (d == null) {
 			return 0;
