@@ -686,7 +686,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 */
 	@Override
 	public void updateUser(final User user) {
-		if (user.getControlPanelManagerDepartmentFilter() == null) {
+		if (user.getControlPanelManagerDepartmentFilter() == null && user.getControlPanelUserDepartmentFilter() == null) {
 			user.setControlPanelCategoryFilter(null);
 		}
 		user.setStoredControlPanelOrder(user.getControlPanelOrder().toString());

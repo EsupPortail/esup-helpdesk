@@ -122,13 +122,31 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 				}
 				condition = HqlUtils.longIn("ticket.category.id", cateIds);
 			} else {
-				condition = HqlUtils.equals("ticket.department.id", departmentFilter.getId());
+				//si filtre sur catégorie :
+				Category categoryFilter = user.getControlPanelCategoryFilter();
+				if(categoryFilter != null) {
+					List<Long> cateIds = new ArrayList<Long>();
+					getAllChildCategories(cateIds, categoryFilter);
+					cateIds.add(categoryFilter.getId());
+					condition = HqlUtils.longIn("ticket.category.id", cateIds);
+				}
+				else {
+					condition = HqlUtils.equals("ticket.department.id", departmentFilter.getId());
+				}
 			}			
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("selectedDepartmentCondition = " + condition);
 		}
 		return condition;
+	}
+
+	private void getAllChildCategories(List<Long>cateIds, Category categoryFilter) {
+		for (Category category : getDomainService().getSubCategories(categoryFilter)) {
+			cateIds.add(category.getId());
+			getAllChildCategories(cateIds, category);
+		}
+		return;
 	}
 
 	/**
@@ -791,6 +809,7 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		if (departmentFilter != null && !visibleDepartments.contains(departmentFilter)) {
 			departmentFilter = null;
 		}
+		
 		String userCondition = HqlUtils.and(
 				getStatusCondition(user),
 				getSelectedDepartmentCondition(departmentFilter, visibleDepartments, user),

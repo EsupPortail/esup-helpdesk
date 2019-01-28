@@ -347,7 +347,7 @@ public class User implements Serializable, Comparable<User> {
 		receiveManagerMonitoring = true;
 		controlPanelUserStatusFilter = ControlPanel.STATUS_FILTER_ANY;
 		controlPanelManagerStatusFilter = ControlPanel.STATUS_FILTER_ANY;
-		controlPanelUserInvolvementFilter = ControlPanel.USER_INVOLVEMENT_FILTER_ANY;
+		controlPanelUserInvolvementFilter = ControlPanel.USER_INVOLVEMENT_FILTER_OWNER;
 		controlPanelManagerInvolvementFilter = ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE;
 		searchTypeFilter = Search.TYPE_FILTER_ALL;
 		bookmarkMonitoring = true;
@@ -613,7 +613,7 @@ public class User implements Serializable, Comparable<User> {
 	 * @return the controlPanelCategoryFilter
 	 */
 	public Category getControlPanelCategoryFilter() {
-		if (controlPanelManagerDepartmentFilter == null) {
+		if (controlPanelManagerDepartmentFilter == null && controlPanelUserDepartmentFilter == null) {
 			return null;
 		}
 		return controlPanelCategoryFilter;

@@ -85,9 +85,9 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 	/**
 	 * @see org.esupportail.commons.web.beans.AbstractPaginator#loadItemsInternal()
 	 */
-	@Override
 	@SuppressWarnings("unchecked")
 	protected void loadItemsInternal() {
+
 		List<ControlPanelEntry> controlPanelEntries = new ArrayList<ControlPanelEntry>();
 		List<Department> visibleDepartments = 
 			getDomainService().getTicketViewDepartments(getCurrentUser(), getClient());
@@ -101,14 +101,19 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 		}
 		//cas ou l'on passe a 'Implication = ...libres...', il faut gérer le cas de 'Gestionnaire = Tous' qui n'est plus proposé dans la liste
 		//dans ce cas on force le currentUser
-		if((selectedManager == null) && (getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
-				|| getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED))){
-			selectedManager = getCurrentUser();
+		if((selectedManager == null) && 
+				(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
+				|| 
+				getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED))
+			){
+				selectedManager = getCurrentUser();
 		}
 		//récupération des tickets invité
 		if(getCurrentUser().getControlPanelManagerInvolvementFilter() != null 
 		&& (getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
-			|| getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)) ){
+			|| 
+			getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)) 
+		){
 			queryStringInvitation = ticketExtractor.getControlPanelQueryString(
 					getCurrentUser(), selectedManager!=null ? selectedManager : getCurrentUser(), visibleDepartments, "INVITE", null, null);
 		}

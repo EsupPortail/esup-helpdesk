@@ -599,6 +599,61 @@ public class ControlPanelController extends AbstractContextAwareController {
 	}
 
 	/**
+	 * @return the managerCategoryFilterSpec
+	 */
+	@RequestCache
+	public String getUserCategoryFilterSpec() {
+		User user = getCurrentUser();
+		String spec = null;
+		if (user.getControlPanelCategoryMemberFilter()) {
+			spec = "member";
+		} else if (user.getControlPanelCategoryFilter() == null) {
+			spec = "*";
+		} else {
+			spec = String.valueOf(user.getControlPanelCategoryFilter().getId());
+		}
+		return spec;
+	}
+
+	/**
+	 * Set the managerCategoryFilterSpec.
+	 * @param managerCategorySpec
+	 */
+	public void setUserCategoryFilterSpec(final String userCategorySpec) {
+		User user = getCurrentUser();
+		if ("member".equals(userCategorySpec)) {
+			user.setControlPanelCategoryMemberFilter(true);
+			user.setControlPanelCategoryFilter(null);
+		} else {
+			user.setControlPanelCategoryMemberFilter(false);
+			if ("*".equals(userCategorySpec)) {
+				user.setControlPanelCategoryFilter(null);
+			} else {
+				user.setControlPanelCategoryFilter(
+						getDomainService().getCategory(Long.valueOf(userCategorySpec)));
+			}
+		}
+	}
+
+	/**
+	 * @return the managerDepartmentItems
+	 */
+	@RequestCache
+	public List<SelectItem> getUserCategorySpecItems() {
+		if (getCurrentUser().getControlPanelUserDepartmentFilter() == null) {
+			return null;
+		}
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		items.add(new SelectItem("*", getString("CONTROL_PANEL.CATEGORY_FILTER.ANY")));
+		items.add(new SelectItem("member", getString("CONTROL_PANEL.CATEGORY_FILTER.MEMBER")));
+		for (Category category : getDomainService().getRootCategories(
+				getCurrentUser().getControlPanelUserDepartmentFilter())) {
+			addCategoryItems(items, category, "");
+		}
+		return items;
+	}
+
+	/**
 	 * JSF callback.
 	 */
 	public void refreshColumnOrderer() {

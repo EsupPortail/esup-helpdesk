@@ -128,7 +128,14 @@
                                  <f:selectItems
                                      value="#{controlPanelController.userDepartmentItems}" />
                              </e:selectOneMenu>
-
+                             <e:selectOneMenu id="userCategoryFilterSpec"
+                                 value="#{controlPanelController.userCategoryFilterSpec}"
+                                 onchange="buttonClick('controlPanelForm:filter');"
+                                 rendered="#{not empty controlPanelController.userCategorySpecItems}" >
+                                 
+                                 <f:selectItems
+                                     value="#{controlPanelController.userCategorySpecItems}" />
+                             </e:selectOneMenu>
                         </t:htmlTag>
                         <t:htmlTag value="div" styleClass="form-item" rendered="#{not controlPanelController.currentUser.controlPanelUserInterface}" >
                                 <e:outputLabel for="controlPanelForm:managerDepartmentFilter"
