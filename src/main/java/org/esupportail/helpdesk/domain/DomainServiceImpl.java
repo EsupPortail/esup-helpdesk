@@ -296,7 +296,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 */
 	private String mailToConvertPattern;
 
-
+	/**
+	 * indicator for manager invited.
+	 */
+	private Boolean inviteManagerMoveTicket;
+	
 	/**
 	 * Bean constructor.
 	 */
@@ -378,6 +382,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 				"property tryConvertMaillToCasUser of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(this.mailToConvertPattern,
 				"property mailToConvertPattern of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(this.inviteManagerMoveTicket,
+				"property inviteManagerMoveTicket of class " + this.getClass().getName() + " can not be null");
 	}
 
 	/** Eclipse outline delimiter. */
@@ -7794,6 +7800,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	public void setMailToConvertPattern(String mailToConvertPattern) {
 		this.mailToConvertPattern = mailToConvertPattern;
+	}
+
+	public Boolean getInviteManagerMoveTicket() {
+		return inviteManagerMoveTicket;
+	}
+
+	public void setInviteManagerMoveTicket(Boolean inviteManagerMoveTicket) {
+		this.inviteManagerMoveTicket = inviteManagerMoveTicket;
 	}
 
 }

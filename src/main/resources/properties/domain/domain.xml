@@ -44,6 +44,7 @@
 		<property name="faqReporter" ref="faqReporter" />
 		<property name="tryConvertMaillToCasUser" value="${auth.tryConvertMaillToCasUser}" />
 		<property name="mailToConvertPattern" value="${auth.mailToConvertPattern}" />
+		<property name="inviteManagerMoveTicket" value="${conf.inviteManagerMoveTicket}" />
 	</bean>
 
 	<bean id="ticketExtractor"

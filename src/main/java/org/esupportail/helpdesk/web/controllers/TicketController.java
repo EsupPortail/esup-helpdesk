@@ -1790,7 +1790,11 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		resetMoveTargetCategory();
 		refreshMoveTree();
 		looseTicketManagementMonitor = false;
-		looseTicketManagementInvite = true;
+		if(getDomainService().getInviteManagerMoveTicket()) {
+			looseTicketManagementInvite = true;
+		} else {
+			looseTicketManagementInvite = false;
+		}
 		freeTicket = null;
 		return "move";
 	}
@@ -1855,6 +1859,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 				lastAction = lastActionDepartment;
 			}
 		}
+
 		if(lastAction != null && lastAction.getCategoryBefore() != null) {
 			//ajout de l'action de changement de catégorie
 			getDomainService().moveTicket(
@@ -1916,6 +1921,10 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		}
 		if (!handleTempUploadedFiles(null)) {
 			return null;
+		}
+		//cas d'un déplacement vers un service confidentiel : on n'invite pas l'ancien gestionnaire au ticket
+		if(getMoveTargetCategory().getDepartment().getSrvConfidential() == true) {
+			looseTicketManagementInvite = false;
 		}
 		getDomainService().moveTicket(
 				getCurrentUser(), getTicket(), moveTargetCategory,
