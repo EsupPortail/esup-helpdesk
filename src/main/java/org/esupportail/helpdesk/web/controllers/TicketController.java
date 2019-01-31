@@ -761,7 +761,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	 * JSF callback.
 	 * @return a String.
 	 */
-	protected String back() {
+	public String back() {
 		if (BACK_PAGE_SEARCH.equals(backPage)) {
 			return "navigationSearch";
 		}
