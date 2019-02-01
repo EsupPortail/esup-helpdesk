@@ -347,7 +347,7 @@ public class User implements Serializable, Comparable<User> {
 		receiveManagerMonitoring = true;
 		controlPanelUserStatusFilter = ControlPanel.STATUS_FILTER_ANY;
 		controlPanelManagerStatusFilter = ControlPanel.STATUS_FILTER_ANY;
-		controlPanelUserInvolvementFilter = ControlPanel.USER_INVOLVEMENT_FILTER_OWNER;
+		controlPanelUserInvolvementFilter = ControlPanel.USER_INVOLVEMENT_FILTER_OWNER_OR_INVITED;
 		controlPanelManagerInvolvementFilter = ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE;
 		searchTypeFilter = Search.TYPE_FILTER_ALL;
 		bookmarkMonitoring = true;
