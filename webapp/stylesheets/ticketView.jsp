@@ -57,8 +57,8 @@
 												<t:htmlTag value="div" styleClass="form-item returnPanel">
 									                <e:commandButton  id="returnPanel"
 									                            styleClass="button--secondary"
-																action="back"											                            
-																value="#{msgs['CONTROL_PANEL.BUTTON.RETURN.PANEL']}" />
+																action="#{ticketController.back}"											                            
+																value="#{msgs['CONTROL_PANEL.BUTTON.RETURN']}" />
 									            </t:htmlTag>
 											</h:panelGroup>                                            
                                         </t:htmlTag>
