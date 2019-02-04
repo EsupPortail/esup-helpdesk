@@ -509,10 +509,10 @@ ul.tabs li.current:hover {
   vertical-align: text-top;
 }
 
-.view-ticket_history .col-main.view--full {
+/*.view-ticket_history .col-main.view--full {
   width: 80%;
 }
-
+*/
 .view-ticket_history .action--header {
   padding: 8px 5px;
   display: flex;
