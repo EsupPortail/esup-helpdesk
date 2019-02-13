@@ -1,53 +1,43 @@
 <%@include file="_include.jsp"%>
 <e:page stringsVar="msgs" locale="#{sessionController.locale}" >
-<t:htmlTag id="page-wrapper" value="div" styleClass="page-wrapper ldap-search">
-           <t:htmlTag id="header" value="header" styleClass="header">
-                <%@include file="_header.jsp"%>
-            </t:htmlTag>
-            <t:htmlTag value="div" styleClass="columns">
-                <t:htmlTag value="aside" styleClass="navigation">
-                    <%@include file="_navigation.jsp"%>
-                </t:htmlTag>
+	<%@include file="_navigation.jsp"%>
+	<e:form 
+		freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}" 
+		showSubmitPopupText="#{sessionController.showSubmitPopupText}" 
+		showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
+		id="ldapSearchForm">
 
-                <t:htmlTag value="main" styleClass="content">
-                    <t:htmlTag value="div" styleClass="content-inner">
-                        <e:form
-                            freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"
-                            showSubmitPopupText="#{sessionController.showSubmitPopupText}"
-                            showSubmitPopupImage="#{sessionController.showSubmitPopupImage}"
-                            id="ldapSearchForm">
-                            <t:htmlTag value="div" styleClass="message">
-                                    <e:messages/>
-                            </t:htmlTag>
-                            <t:htmlTag value="div" styleClass="ldap-search-form">
-                                <t:htmlTag value="div" styleClass="form-block form-header">
-                                    <t:htmlTag value="h1">
-                                        <t:htmlTag value="span" styleClass="title">
-                                            <h:outputText value="#{msgs['LDAP_SEARCH.TITLE']}" escape="false" />
-                                        </t:htmlTag>
-                                    </t:htmlTag>
-                                </t:htmlTag>
-                                <t:htmlTag value="div" styleClass="form-block">
-                                    <t:htmlTag value="div" styleClass="form-item">
-                                            <e:inputText id="searchInput" value="#{ldapSearchController.searchInput}"
-                                                             onkeypress="if (event.keyCode == 13) { simulateLinkClick('ldapSearchForm:searchButton'); return false;}" />
-                                            <e:commandButton styleClass="button--secondary" id="searchButton" action="#{ldapSearchController.search}"
-                                                                            value="#{msgs['LDAP_SEARCH.BUTTON.SEARCH']}" />
-                                            <e:commandButton id="cancelButton" action="#{ldapSearchController.cancel}"
-                                                value="#{msgs['_.BUTTON.CANCEL']}" immediate="true" />
-                                            </t:htmlTag>
-                                    </t:htmlTag>
-                            </t:htmlTag>
-                        </e:form>
-                        <script type="text/javascript">
-                            focusElement("ldapSearchForm:searchInput");
-                        </script>
-                    </t:htmlTag>
-            </t:htmlTag>
-            </t:htmlTag>
-        </t:htmlTag>
-    <t:htmlTag value="footer" styleClass="footer">
-            <%@include file="_footer.jsp"%>
-    </t:htmlTag>
+		<e:panelGrid columns="2" width="100%" columnClasses="colLeft,colRight">
+			<e:section value="#{msgs['LDAP_SEARCH.TITLE']}" />
+			<h:panelGroup>
+				<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ldapSearchForm:cancelButton');" >
+					<e:bold value="#{msgs['_.BUTTON.CANCEL']} " />
+					<t:graphicImage value="/media/images/back.png"
+						alt="#{msgs['_.BUTTON.CANCEL']}" 
+						title="#{msgs['_.BUTTON.CANCEL']}" />
+				</h:panelGroup>
+				<e:commandButton style="display: none" id="cancelButton" action="#{ldapSearchController.cancel}"
+					value="#{msgs['_.BUTTON.CANCEL']}" immediate="true" />
+			</h:panelGroup>
+		</e:panelGrid>
 
+		<e:messages />
+
+		<e:inputText id="searchInput" value="#{ldapSearchController.searchInput}" 
+			onkeypress="if (event.keyCode == 13) { simulateLinkClick('ldapSearchForm:searchButton'); return false;}" />
+		<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ldapSearchForm:searchButton');" >
+			<e:bold value=" #{msgs['LDAP_SEARCH.BUTTON.SEARCH']} " />
+			<t:graphicImage value="/media/images/search.png"
+				alt="#{msgs['LDAP_SEARCH.BUTTON.SEARCH']}" 
+				title="#{msgs['LDAP_SEARCH.BUTTON.SEARCH']}" />
+		</h:panelGroup>
+		<e:commandButton style="display: none" id="searchButton" action="#{ldapSearchController.search}"
+			value="#{msgs['LDAP_SEARCH.BUTTON.SEARCH']}" />
+	</e:form>
+	<t:aliasBean alias="#{controller}" value="#{null}" >
+		<%@include file="_signature.jsp"%>
+	</t:aliasBean>
+	<script type="text/javascript">
+		focusElement("ldapSearchForm:searchInput");
+	</script>
 </e:page>

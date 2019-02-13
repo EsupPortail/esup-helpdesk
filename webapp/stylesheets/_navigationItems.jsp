@@ -1,8 +1,7 @@
 <%@include file="_include.jsp"%>
 <e:menuItem id="welcome" value="#{msgs['NAVIGATION.TEXT.WELCOME']}"
 	action="#{welcomeController.enter}"
-	accesskey="#{msgs['NAVIGATION.ACCESSKEY.WELCOME']}"
-	rendered="#{not sessionController.showShortMenu}" />
+	accesskey="#{msgs['NAVIGATION.ACCESSKEY.WELCOME']}" />
 <e:menuItem id="faqs" value="#{msgs['NAVIGATION.TEXT.FAQS']}"
 	action="#{faqsController.enter}"
 	accesskey="#{msgs['NAVIGATION.ACCESSKEY.FAQS']}"
@@ -24,7 +23,7 @@
 	value="#{msgs['NAVIGATION.TEXT.PREFERENCES']}"
 	accesskey="#{msgs['NAVIGATION.ACCESSKEY.PREFERENCES']}"
 	action="#{preferencesController.enter}"
-	rendered="#{preferencesController.pageAuthorized}" />
+	rendered="#{preferencesController.pageAuthorized and not sessionController.showShortMenu}" />
 <e:menuItem id="about" value="#{msgs['NAVIGATION.TEXT.ABOUT']}"
 	accesskey="#{msgs['NAVIGATION.ACCESSKEY.ABOUT']}"
 	action="#{aboutController.enter}" 

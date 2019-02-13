@@ -1,9 +1,26 @@
 <%@include file="_include.jsp"%>
+<e:panelGrid columns="2" columnClasses="colLeftNowrap,colRightNowrap">
+	<e:subSection value="#{msgs['TICKET_VIEW.FILES.HEADER']}" >
+		<f:param value="#{archivedTicketController.archivedFileInfoEntriesNumber}" />
+	</e:subSection>
+	<h:panelGroup style="cursor: pointer" onclick="javascript:{showHideElement('viewArchivedTicketForm:files');showHideElement('viewArchivedTicketForm:showFiles');showHideElement('viewArchivedTicketForm:hideFiles');return false;}" >
+		<h:panelGroup id="showFiles" >
+			<t:graphicImage value="/media/images/show.png" 
+				alt="#{msgs['TICKET_VIEW.TEXT.SHOW']} " />
+		</h:panelGroup>
+		<h:panelGroup id="hideFiles" style="display: none" >
+			<t:graphicImage value="/media/images/hide.png"
+				alt="#{msgs['TICKET_VIEW.TEXT.SHOW']} " />
+		</h:panelGroup>
+	</h:panelGroup>
+</e:panelGrid>
 
-<h:panelGroup id="files" >
-	<e:paragraph value="#{msgs['TICKET_VIEW.FILES.NO_FILE']}" rendered="#{empty archivedTicketController.archivedFileInfoEntries}" />
-
-	<e:dataTable width="100%" columnClasses="colCenter,colLeftMaxNowrap,colRight"
+<h:panelGroup 
+	id="files" 
+	style="display: none" >
+	<e:paragraph value="#{msgs['TICKET_VIEW.FILES.NO_FILE']}"
+		rendered="#{empty archivedTicketController.archivedFileInfoEntries}" />
+	<e:dataTable width="100%" columnClasses="colCenter,colLeftMaxNowrap,colRight" 
 		id="fileData" rowIndexVar="variable" 
 		value="#{archivedTicketController.archivedFileInfoEntries}"
 		var="afie" border="0" cellspacing="0" cellpadding="0"

@@ -5,9 +5,9 @@
 
 /* PLT.C.3 Messages */
 .portlet-msg-status,
-.portlet-msg-info, 
-.portlet-msg-error, 
-.portlet-msg-alert, 
+.portlet-msg-info,
+.portlet-msg-error,
+.portlet-msg-alert,
 .portlet-msg-success {padding:1em 1em 1em 3em; border:2px solid #ccc; color:#666; background:#ddd url(images/information.png) 1em 1em no-repeat;}
 .portlet-msg-status {}
 .portlet-msg-info { border:1px solid #b80000; color:#333; background:#fff url(images/information.png) 1em 1em no-repeat;}
@@ -23,7 +23,7 @@
 .portlet-section-subheader {	background-color:transparent; color:#800104; font-size:13px; font-weight:bold; margin:1em 0; padding:0;}
 .portlet-section-footer { color:#666; font-size:.8em; border-top:1px solid #ccf; padding:5px 0 0 0; text-align:left; margin:10px 0 0 0;}
 .portlet-section-text {font-family: Verdana,Arial; color:#666; }
-	
+
 /* PLT.C.5 Forms */
 .portlet-form-label {}
 .portlet-form-input-field {}
@@ -107,14 +107,14 @@ h2 {margin-bottom:0.2em;}
 
 /* Messages */
 .portlet-msg-status h2,
-.portlet-msg-info h2, 
-.portlet-msg-error h2, 
-.portlet-msg-alert h2, 
+.portlet-msg-info h2,
+.portlet-msg-error h2,
+.portlet-msg-alert h2,
 .portlet-msg-success h2 {margin:0; color:#666;}
 .portlet-msg-status h3,
-.portlet-msg-info h3, 
-.portlet-msg-error h3, 
-.portlet-msg-alert h3, 
+.portlet-msg-info h3,
+.portlet-msg-error h3,
+.portlet-msg-alert h3,
 .portlet-msg-success h3 {margin:0; color:#666;}
 
 /* Notes */
@@ -183,7 +183,8 @@ h2 {margin-bottom:0.2em;}
 .up td {border:none !important;}
 th {padding:0; border-color:#336699; background-color:#e2e8e7; color:#666;}
 th {padding:0; border-color:#336699; background-color:#0071b9; color:white;}
-
+#controlPanelForm .portlet-table-header .portlet-section-text {color:white;}
+#controlPanelForm .portlet-table-header  a {color:white;}
 /* Add the "purpose-layout" class to any table you are using for layout purposes. */
 .portlet table.purpose-layout,
 .portlet table.purpose-layout th,
@@ -270,14 +271,14 @@ th {padding:0; border-color:#336699; background-color:#0071b9; color:white;}
 .portlet .news-source p {border-bottom:1px solid #ccc;}
 .portlet .news-item-title {}
 .portlet .news-item-excerpt {font-size:85%; color:#666;}
-	
+
 .portlet .portlet-body td {border:none !important;}
 
 /* ?? */
 * html input.portlet-form-button, * html input.uportal-button{
 	padding:0;
 	margin:0px;
-}	
+}
 
 .portlet li
 {
@@ -311,32 +312,32 @@ th {padding:0; border-color:#336699; background-color:#0071b9; color:white;}
 
 .portlet, .portlet p {
 	color: #65635C;
-	
+
 }
-.portlet a {	
+.portlet a {
 	color : #65625C;
 	text-decoration:underline;
 }
 
 .portlet a:visited {
-    color : #A30413;   
+    color : #A30413;
     text-decoration : underline;
 }
 
 .portlet a:hover {
-	color : #A30413;     
-    text-decoration : underline;  
+	color : #A30413;
+    text-decoration : underline;
 }
 table { font-size: 13px; font-family: Verdana, Arial, Helvetica, sans-serif;}
 /*Ajouts dom helpdesk #C3D9E0*/
 .portlet-table-header .portlet-table-body .portlet-table-text-bold .portlet-table-text .portlet-table-footer .portlet-table-alternate .portlet-table-subheader .portlet-table-selected {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; }
 /*
 .portlet-table-header { background-color: #C3D9E0; color: #993333; font-weight: bold; text-align: left; width: auto; padding: 0em; }
-.portlet-table-body { background-color: #FFFFFF; color: Black;  } 
-.portlet-table-footer { background: #FEC98D; background-color: #C3D9E0; color: #993333;} 
+.portlet-table-body { background-color: #FFFFFF; color: Black;  }
+.portlet-table-footer { background: #FEC98D; background-color: #C3D9E0; color: #993333;}
 .portlet-table-text-bold { font-weight: bold; line-height:0.3em;}
 */
-/*.portlet-table-text { vertical-align: top; color: Black;line-height:1.7em;}*/
+.portlet-table-text { vertical-align: top; color: Black;line-height:1.7em;}
 .portlet-table-text span[id^='viewTicketForm'] { line-height:1.3em;}
 .portlet-table-selected { background-color: #0071B9;line-height:1.7em;}
 /*tbody[id^='searchForm'] .portlet-table-selected .portlet-section-text{color:white};*/
@@ -378,66 +379,68 @@ th.uportal-channel-subtitle {
 td.colLeftMax span .portlet-section-text {font-style:italic;color:#888}
 .portlet-menu-item input {border-bottom:none;background-color:white;border-color:white;font-family:verdana;font-size:12px;cursor:pointer;}
 
-  /*@import url('https://fonts.googleapis.com/css?family=Open+Sans');*/
-	/* cyrillic-ext */
-	@font-face {
-	  font-family: 'Open Sans';
-	  font-style: normal;
-	  font-weight: 400;
-	  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWJ0bbck.woff2) format('woff2');
-	  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
-	}
-	/* cyrillic */
-	@font-face {
-	  font-family: 'Open Sans';
-	  font-style: normal;
-	  font-weight: 400;
-	  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFUZ0bbck.woff2) format('woff2');
-	  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-	}
-	/* greek-ext */
-	@font-face {
-	  font-family: 'Open Sans';
-	  font-style: normal;
-	  font-weight: 400;
-	  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWZ0bbck.woff2) format('woff2');
-	  unicode-range: U+1F00-1FFF;
-	}
-	/* greek */
-	@font-face {
-	  font-family: 'Open Sans';
-	  font-style: normal;
-	  font-weight: 400;
-	  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFVp0bbck.woff2) format('woff2');
-	  unicode-range: U+0370-03FF;
-	}
-	/* vietnamese */
-	@font-face {
-	  font-family: 'Open Sans';
-	  font-style: normal;
-	  font-weight: 400;
-	  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWp0bbck.woff2) format('woff2');
-	  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
-	}
-	/* latin-ext */
-	@font-face {
-	  font-family: 'Open Sans';
-	  font-style: normal;
-	  font-weight: 400;
-	  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFW50bbck.woff2) format('woff2');
-	  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-	}
-	/* latin */
-	@font-face {
-	  font-family: 'Open Sans';
-	  font-style: normal;
-	  font-weight: 400;
-	  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFVZ0b.woff2) format('woff2');
-	  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-	}  
-
+/*******************************************************************
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+*********************************************************************/
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWJ0bbck.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFUZ0bbck.woff2) format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWZ0bbck.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFVp0bbck.woff2) format('woff2');
+  unicode-range: U+0370-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWp0bbck.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFW50bbck.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFVZ0b.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/************************************/
   body {
-    font-family: Oswald,'Open Sans',Lustria,Verdana,sans-serif;
+    font-family: Verdana,'Open Sans',Lustria,Verdana,sans-serif;
   }
 
   .portal .block {
@@ -454,6 +457,7 @@ td.colLeftMax span .portlet-section-text {font-style:italic;color:#888}
     margin: 0;
     padding: 4px;
   }
+
 
   .portlet-menu-item, .portlet-menu-item-selected {
     padding: 2px;
@@ -474,28 +478,35 @@ td.colLeftMax span .portlet-section-text {font-style:italic;color:#888}
   }
 
   .portlet-menu-item-selected input {
-    background-color: #0071B9 ;
-    border-color: #0071B9 ;
-    color: white ;
-    font-weight: normal ;
+    background-color: #0071B9 !important;
+    border-color: #0071B9 !important;
+    color: white !important;
+    font-weight: normal !important;
   }
 
   .portlet-form-input-field {
-/*    border: 1px solid grey;
+    border: 1px solid grey;
     border-radius: 4px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     display: inline-block;
-    padding: 6px 12px;*/
+    padding: 6px 12px;
   }
 
+	.portlet-footer-menu {
+		display: none;
+	}
+
   .portlet-table-header .portlet-section-text {
-    color: white;
+    color: white !important;
   }
 
   .portlet-table-selected .portlet-section-text {
-    color: white;
+    color: white !important;
   }
 
+  .dashboard-header thead {
+    background-color: none;
+  }
 
   .dashboard-header thead th {
     background-color: inherit;
@@ -510,4 +521,3 @@ td.colLeftMax span .portlet-section-text {font-style:italic;color:#888}
   border-top: 1px solid #cdcdcd;
 }
 .style3{color:black;}
-

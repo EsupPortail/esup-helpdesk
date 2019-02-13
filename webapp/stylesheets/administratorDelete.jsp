@@ -1,53 +1,45 @@
 <%@include file="_include.jsp"%>
 <e:page stringsVar="msgs" menuItem="administrators" locale="#{sessionController.locale}" authorized="#{administratorsController.currentUserCanDeleteAdmin}" >
-		   <t:htmlTag id="administratorDelete" value="div" styleClass="page-wrapper administratorDelete">
-               <t:htmlTag id="header" value="header" styleClass="header">
-                    <%@include file="_header.jsp"%>
-                </t:htmlTag>
-                <t:htmlTag value="div" styleClass="columns">
-                    <t:htmlTag value="aside" styleClass="navigation">
-                        <%@include file="_navigation.jsp"%>
-                    </t:htmlTag>
+	<%@include file="_navigation.jsp"%>
 
-                    <t:htmlTag value="main" styleClass="content">
-                        <t:htmlTag value="div" styleClass="content-inner">
-                        <e:form
-                            freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"
-                            showSubmitPopupText="#{sessionController.showSubmitPopupText}"
-                            showSubmitPopupImage="#{sessionController.showSubmitPopupImage}"
-                            id="administratorDeleteForm" >
-                             <t:htmlTag value="div" styleClass="message">
-                                     <e:messages/>
-                             </t:htmlTag>
-                            <t:htmlTag value="div" styleClass="dashboard-header">
-                                        <t:htmlTag value="div" styleClass="controlPanel-title">
-                                            <t:htmlTag value="h1">
-                                                <t:htmlTag value="span">
-                                                    <h:outputText value="#{msgs['ADMINISTRATOR_DELETE.TITLE']}"/>
-                                                </t:htmlTag>
-                                            </t:htmlTag>
-                                        </t:htmlTag>
-                            </t:htmlTag>
-                            <t:htmlTag value="div" styleClass="form-block form-body">
-                                <e:text value="#{msgs['ADMINISTRATOR_DELETE.TEXT.TOP']}">
-                                    <f:param value="#{userFormatter[administratorsController.userToDelete]}" />
-                                </e:text>
-                                <t:htmlTag value="div" styleClass="form-block">
-                                        <t:htmlTag value="div" styleClass="form-item display-flex" >
-                                            <e:commandButton id="confirmButton" action="#{administratorsController.confirmDeleteAdmin}"
-                                                value="#{msgs['_.BUTTON.CONFIRM']}" styleClass="button--primary" />
-                                            <e:commandButton id="cancelButton" action="cancel"
-                                                value="#{msgs['_.BUTTON.CANCEL']}" immediate="true" />
-                                        </t:htmlTag>
-                                </t:htmlTag>
-                            </t:htmlTag>
+	<e:form 
+		freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}" 
+		showSubmitPopupText="#{sessionController.showSubmitPopupText}" 
+		showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
+		id="administratorDeleteForm" >
+		<e:panelGrid columns="2" width="100%" columnClasses="colLeft,colRight">
+			<e:section value="#{msgs['ADMINISTRATOR_DELETE.TITLE']}">
+				<f:param value="#{userFormatter[administratorsController.userToDelete]}" />
+			</e:section>
+			<h:panelGroup>
+				<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('administratorDeleteForm:cancelButton');" >
+					<e:bold value="#{msgs['_.BUTTON.CANCEL']} " />
+					<t:graphicImage value="/media/images/back.png"
+						alt="#{msgs['_.BUTTON.CANCEL']}" 
+						title="#{msgs['_.BUTTON.CANCEL']}" />
+				</h:panelGroup>
+				<e:commandButton id="cancelButton" action="cancel" style="display: none" 
+					value="#{msgs['_.BUTTON.CANCEL']}" immediate="true" />
+			</h:panelGroup>
+		</e:panelGrid>
 
-                        </e:form>
-                    </t:htmlTag>
-            </t:htmlTag>
-            </t:htmlTag>
-           <t:htmlTag value="footer" styleClass="footer">
-                        <%@include file="_footer.jsp"%>
-           </t:htmlTag>
-        </t:htmlTag>
+		<e:messages />
+
+		<e:paragraph value="#{msgs['ADMINISTRATOR_DELETE.TEXT.TOP']}">
+				<f:param value="#{userFormatter[administratorsController.userToDelete]}" />
+		</e:paragraph>
+
+		<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('administratorDeleteForm:confirmButton');" >
+			<e:bold value="#{msgs['_.BUTTON.CONFIRM']} " />
+			<t:graphicImage value="/media/images/delete.png"
+				alt="#{msgs['_.BUTTON.CONFIRM']}" 
+				title="#{msgs['_.BUTTON.CONFIRM']}" />
+		</h:panelGroup>
+		<e:commandButton id="confirmButton" action="#{administratorsController.confirmDeleteAdmin}"
+			value="#{msgs['_.BUTTON.CONFIRM']}" style="display: none" />
+
+	</e:form>
+	<t:aliasBean alias="#{controller}" value="#{null}" >
+		<%@include file="_signature.jsp"%>
+	</t:aliasBean>
 </e:page>

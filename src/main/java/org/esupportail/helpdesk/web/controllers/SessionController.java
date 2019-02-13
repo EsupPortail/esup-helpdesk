@@ -129,12 +129,6 @@ public class SessionController extends AbstractDomainAwareBean {
 	private boolean showShortMenu;
 
 	/**
-	 * Url de l'ENT.
-	 */
-	private String urlEnt;
-	
-
-	/**
 	 * Constructor.
 	 */
 	public SessionController() {
@@ -896,14 +890,6 @@ public class SessionController extends AbstractDomainAwareBean {
 	 */
 	public void setId(final String id) {
 		this.id = StringUtils.nullIfEmpty(id);
-	}
-
-	public String getUrlEnt() {
-		return urlEnt;
-	}
-
-	public void setUrlEnt(String urlEnt) {
-		this.urlEnt = urlEnt;
 	}
 
 }

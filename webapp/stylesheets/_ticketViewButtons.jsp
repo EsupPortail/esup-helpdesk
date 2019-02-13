@@ -1,7 +1,6 @@
 <%@include file="_include.jsp"%>
 
 <e:panelGrid columns="2" width="100%" columnClasses="colLeftNowrap,colRight">
-
 	<h:panelGroup>
 		<h:panelGroup rendered="#{ticketController.previousUnreadTicket != null}" >
 			<h:panelGroup style="cursor: pointer"
@@ -19,7 +18,6 @@
 					property="#{ticketController.ticket}" />
 			</e:commandButton>
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.previousVisibleTicket != null}" >
 			<h:panelGroup style="cursor: pointer"
 				onclick="simulateLinkClick('viewTicketForm:gotoPreviousVisibleTicketButton');">
@@ -36,7 +34,6 @@
 					property="#{ticketController.ticket}" />
 			</e:commandButton>
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.nextVisibleTicket != null}" >
 			<h:panelGroup style="cursor: pointer"
 				onclick="simulateLinkClick('viewTicketForm:gotoNextVisibleTicketButton');">
@@ -53,7 +50,6 @@
 					property="#{ticketController.ticket}" />
 			</e:commandButton>
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.nextUnreadTicket != null}" >
 			<h:panelGroup style="cursor: pointer"
 				onclick="simulateLinkClick('viewTicketForm:gotoNextUnreadTicketButton');">
@@ -70,7 +66,6 @@
 					property="#{ticketController.ticket}" />
 			</e:commandButton>
 		</h:panelGroup>
-
 		<h:panelGroup style="cursor: pointer"
 			onclick="simulateLinkClick('viewTicketForm:gotoTicketButton');">
 			<e:bold value=" #{msgs['CONTROL_PANEL.BUTTON.GOTO_TICKET']} " />
@@ -87,11 +82,7 @@
 		</h:panelGroup>
 		<e:commandButton id="addTicketButton" action="#{ticketController.add}" style="display: none"
 			value="#{msgs['CONTROL_PANEL.BUTTON.ADD_TICKET']}" immediate="true" />
-
 	</h:panelGroup>
-
-	<%-- --%>
-
 	<h:panelGroup>
 		<h:panelGroup rendered="#{ticketController.userCanApproveClosure}" >
 			<h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
@@ -103,7 +94,6 @@
 				value="#{msgs['TICKET_VIEW.BUTTON.APPROVE_CLOSURE']}"
 				action="#{ticketController.approveClosure}" />
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.userCanRefuseClosure}" >
 			<h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
 			<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('viewTicketForm:refuseClosureButton');" >
@@ -114,7 +104,6 @@
 				value="#{msgs['TICKET_VIEW.BUTTON.REFUSE_CLOSURE']}"
 				action="#{ticketController.refuseClosure}" />
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.userCanGiveInformation}" >
 			<h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
 			<h:panelGroup style="cursor: pointer" onclick="var reopen = false; if (#{ticketController.userCanReopen}) { reopen = confirm('#{msgs['TICKET_VIEW.CONFIRM.GIVE_INFORMATION_OR_REOPEN']}'); } simulateLinkClick(reopen ? 'viewTicketForm:reopenButton' : 'viewTicketForm:giveInformationButton');" >
@@ -125,7 +114,6 @@
 				value="#{msgs['TICKET_VIEW.BUTTON.GIVE_INFORMATION']}"
 				action="#{ticketController.giveInformation}" />
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.userCanCancel}" >
 			<h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
 			<h:panelGroup style="cursor: pointer" 
@@ -137,7 +125,6 @@
 				value="#{msgs['TICKET_VIEW.BUTTON.CANCEL']}"
 				action="#{ticketController.cancel}" />
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.userCanRequestInformation}" >
 			<h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
 			<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('viewTicketForm:requestInformationButton');" >
@@ -148,11 +135,10 @@
 				value="#{msgs['TICKET_VIEW.BUTTON.REQUEST_INFORMATION']}"
 				action="#{ticketController.requestInformation}" />
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.userCanClose}" >
 			<h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
 			<h:panelGroup style="cursor: pointer" 
-				onclick="simulateLinkClick('viewTicketForm:closeButton');" >
+				onclick="if (#{ticketController.currentUser.showPopupOnClosure} && !confirm('#{msgs['TICKET_VIEW.CONFIRM.CLOSE']}')) { return false; } simulateLinkClick('viewTicketForm:closeButton');" >
 				<e:bold value="#{msgs['TICKET_VIEW.BUTTON.CLOSE']} " />
 				<t:graphicImage value="/media/images/close.png" />
 			</h:panelGroup>
@@ -160,7 +146,6 @@
 				value="#{msgs['TICKET_VIEW.BUTTON.CLOSE']}"
 				action="#{ticketController.close}" />
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.userCanRefuse}" >
 			<h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
 			<h:panelGroup style="cursor: pointer" 
@@ -183,7 +168,6 @@
 				value="#{msgs['TICKET_VIEW.BUTTON.POSTPONE']}"
 				action="#{ticketController.postpone}" />
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.userCanCancelPostponement}" >
 			<h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
 			<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('viewTicketForm:cancelPostponementButton');" >
@@ -194,7 +178,6 @@
 				value="#{msgs['TICKET_VIEW.BUTTON.CANCEL_POSTPONEMENT']}"
 				action="#{ticketController.cancelPostponement}" />
 		</h:panelGroup>
-
 		<h:panelGroup rendered="#{ticketController.userCanReopen}" >
 			<h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
 			<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('viewTicketForm:reopenButton');" >
@@ -205,6 +188,5 @@
 				value="#{msgs['TICKET_VIEW.BUTTON.REOPEN']}"
 				action="#{ticketController.reopen}" />
 		</h:panelGroup>
-
 	</h:panelGroup>
 </e:panelGrid>

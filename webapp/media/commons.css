@@ -85,3 +85,10 @@
  	width:100%;
 	text-align: center;
 }
+html {
+	font: 12px verdana;
+}
+h1 {
+	color: #369;
+	font-size: 16px;
+}

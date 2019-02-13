@@ -21,13 +21,6 @@ function simulateLinkClick(linkId) {
 		fireOnThis.click();
 	}
 }
-function changeChevron(input) {
-    var $this = input;
-    
-    $this.removeClass("fa-chevron-down");
-    $this.addClass("fa-chevron-up");
-
-}
 
 /** 
  * @return the body element of a table.
@@ -144,29 +137,6 @@ function showHideElement(id){
   	  }
 	} else if (debug) 
       alert("element [" + id + "] not found");
-}
-
-
-/*
- * Show an element.
- */
-function showHideMultipleElements(idList){
-    alert(idList);
-
-    //var ids = idList.split(",") + '';
-
-    idList.forEach(function(element) {
-
-        var element = document.getElementById(element);
-        if (element != null) {
-            if (element.style.display == "none") {
-                element.style.display = "block";
-            } else {
-                element.style.display = "none";
-            }
-        } else if (debug)
-            alert("element [" + id + "] not found");
-    });
 }
 
 /*

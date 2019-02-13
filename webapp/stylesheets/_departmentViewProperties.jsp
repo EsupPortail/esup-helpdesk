@@ -1,18 +1,46 @@
 <%@include file="_include.jsp"%>
-
-
+<e:panelGrid columns="2" width="100%"  columnClasses="colLeft,colRight" >
+	<e:subSection value="#{msgs['DEPARTMENT_VIEW.HEADER.PROPERTIES']}" />
+	<h:panelGroup>
+		<h:panelGroup rendered="#{departmentsController.currentUserCanEditDepartmentProperties}" >
+			<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('departmentViewForm:editPropertiesButton');" >
+				<e:bold value="#{msgs['DEPARTMENT_VIEW.BUTTON.EDIT_PROPERTIES']} " />
+				<t:graphicImage value="/media/images/edit.png"
+					alt="#{msgs['DEPARTMENT_VIEW.BUTTON.EDIT_PROPERTIES']}" 
+					title="#{msgs['DEPARTMENT_VIEW.BUTTON.EDIT_PROPERTIES']}" />
+			</h:panelGroup>
+			<e:commandButton style="display: none" id="editPropertiesButton" action="editProperties"
+				value="#{msgs['DEPARTMENT_VIEW.BUTTON.EDIT_PROPERTIES']}" >
+				<t:updateActionListener value="#{departmentsController.department}"
+					property="#{departmentsController.departmentToUpdate}" />
+			</e:commandButton>
+		</h:panelGroup>
+	</h:panelGroup>
+</e:panelGrid>
 <e:panelGrid columns="2">
+	<e:outputLabel for="id"
+		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.ID']}" />
+	<e:text value=" #{departmentsController.department.id}" id="id" />
+	<e:outputLabel for="icon"
+		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.ICON']}" />
+	<h:panelGroup id="icon" >
+		<t:graphicImage value="#{departmentIconUrlProvider[departmentsController.department]}" />
+		<e:italic value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.DEFAULT_ICON']}" 
+			rendered="#{departmentsController.department.icon == null}" />
+		<e:text value=" #{departmentsController.department.icon.name}" 
+			rendered="#{departmentsController.department.icon != null}" />
+	</h:panelGroup>
 	<e:outputLabel for="enabled"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.ENABLED']}" />
 	<h:panelGroup id="enabled" >
-
-        <h:panelGroup styleClass="department-active" rendered="#{departmentsController.department.enabled}">
-              <h:outputText value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.ENABLED_TRUE']}" escape="false" />
-        </h:panelGroup>
-        <h:panelGroup styleClass="department-inactive" rendered="#{not departmentsController.department.enabled}">
-              <h:outputText value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.ENABLED_FALSE']}" escape="false" />
-        </h:panelGroup>
-
+		<e:text
+			value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.ENABLED_TRUE']}"
+			rendered="#{departmentsController.department.enabled}"
+			style="color: #007f00" />
+		<e:text
+			value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.ENABLED_FALSE']}"
+			rendered="#{not departmentsController.department.enabled}"
+			style="color: #ff0000" />
 	</h:panelGroup>
 	<e:outputLabel for="label"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.LABEL']}" />
@@ -38,26 +66,23 @@
 	<e:outputLabel for="redirection"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION']}" />
 	<h:panelGroup>
-        <h:panelGroup style="cursor: default" rendered="#{departmentsController.department.virtual}">
-           <t:htmlTag value="i" styleClass="redirect far fa-2x fa-arrow-alt-circle-right"/>
-        </h:panelGroup>
+		<t:graphicImage value="/media/images/redirection.png" rendered="#{departmentsController.department.virtual}"/>
 		<e:text
 			value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION_VALUE']}"
 			rendered="#{departmentsController.department.virtual}">
 			<f:param
 				value="#{departmentsController.department.realDepartment.label}" />
 		</e:text>
-		<h:panelGroup rendered="#{not empty departmentsController.virtualDepartments}">
+		<h:panelGroup
+			rendered="#{not empty departmentsController.virtualDepartments}">
 			<t:dataList value="#{departmentsController.virtualDepartments}"
 				var="virtualDepartment" rowIndexVar="virtualDepartmentIndex">
-				<t:htmlTag value="div">
-                    <h:panelGroup style="cursor: default" >
-                         <t:htmlTag value="i" styleClass="redirect far fa-2x fa-arrow-alt-circle-left"/>
-                    </h:panelGroup>
-                    <e:text value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION_VALUE_INVERTED']}">
-                        <f:param value="#{virtualDepartment.label}" />
-                    </e:text>
-				</t:htmlTag>
+				<t:htmlTag value="br" />
+				<t:graphicImage value="/media/images/redirection-inverted.png" />
+				<e:text
+					value=" #{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.REDIRECTION_VALUE_INVERTED']}">
+					<f:param value="#{virtualDepartment.label}" />
+				</e:text>
 			</t:dataList>
 		</h:panelGroup>
 		<e:italic
@@ -84,10 +109,7 @@
 	<e:text value=" #{departmentsController.department.visibilityInterSrv}" id="visibilityInterSrv"/>	
 	<e:outputLabel for="srvAnonymous"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS']}" />
-	<e:text value=" #{departmentsController.department.srvAnonymous ? msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_TRUE'] : msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_FALSE']}" id="srvAnonymous"/>
-	<e:outputLabel for="srvConfidential"
-		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_CONFIDENTIAL']}" />
-	<e:text value=" #{departmentsController.department.srvConfidential ? msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_CONFIDENTIAL_TRUE'] : msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_CONFIDENTIAL_FALSE']}" id="srvConfidential"/>
+	<e:text value=" #{departmentsController.department.srvAnonymous ? msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_TRUE'] : msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.SERVICE_ANONYMOUS_FALSE']}" id="srvAnonymous"/>	
 	<e:outputLabel for="defaultTicketLabel"
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.DEFAULT_TICKET_LABEL']}" 
 		rendered="#{not departmentsController.department.virtual}" />
@@ -147,13 +169,9 @@
 		value=" #{msgs[departmentsController.department.hideToExternalUsers ? 'DEPARTMENT_VIEW.TEXT.PROPERTIES.HIDDEN_TO_APPLICATION_USERS_TRUE' : 'DEPARTMENT_VIEW.TEXT.PROPERTIES.HIDDEN_TO_APPLICATION_USERS_FALSE']}"
 		id="hideToExternalUsers" 
 		rendered="#{not departmentsController.department.virtual}" />
-	<e:text
+	<e:bold 
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.EXTRA_MONITORING']}" 
 		rendered="#{not departmentsController.department.virtual}" />
-	<e:text
-		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.EXTRA_MONITORING']}" 
-		rendered="#{not departmentsController.department.virtual}" />
-		
 	<h:panelGroup
 		rendered="#{not departmentsController.department.virtual}" >
 		<e:text
@@ -177,13 +195,3 @@
 		value=" #{departmentsController.archivedTicketsNumber}"
 		id="archivedTicketsNumber" />
 </e:panelGrid>
-
-
- <t:htmlTag value="div" styleClass="form-block" rendered="#{departmentsController.currentUserCanEditDepartmentProperties}">
-     <t:htmlTag value="div" styleClass="form-item" >
-		<e:commandButton styleClass="button--secondary" id="editPropertiesButton" action="editProperties"
-		value="#{msgs['DEPARTMENT_VIEW.BUTTON.EDIT_PROPERTIES']}" >
-				<t:updateActionListener value="#{departmentsController.department}" property="#{departmentsController.departmentToUpdate}" />
-		</e:commandButton>
-     </t:htmlTag>
- </t:htmlTag>

@@ -27,12 +27,12 @@
 		<property name="testUserId" value="${userInfo.testUserId}" />
 	</bean>
 
-        <bean 
-                id="basicUserInfoProvider"
-                class="org.esupportail.helpdesk.domain.userInfo.BasicUserInfoProviderImpl"
-                lazy-init="true"
-                >
-                <property name="ldapTemplate" ref="ldapTemplate" />
-        </bean>
 
+	<bean 
+		id="basicUserInfoProvider"
+		class="org.esupportail.helpdesk.domain.userInfo.BasicUserInfoProviderImpl"
+		lazy-init="true"
+		>
+		<property name="ldapTemplate" ref="ldapTemplate" />
+	</bean>
 </beans>

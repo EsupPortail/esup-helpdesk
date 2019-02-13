@@ -104,12 +104,12 @@
 		<param-value>true</param-value>
 	</context-param>
 <!--END-SERVLET-ONLY-->
-<!--BEGIN-PORTLET-ONLY-->
+<!--BEGIN-PORTLET-ONLY
 	<context-param>
 		<param-name>net.sf.jsfcomp.chartcreator.USE_CHARTLET</param-name>
 		<param-value>false</param-value>
 	</context-param>
-<!--END-PORTLET-ONLY-->
+END-PORTLET-ONLY-->
 
 	<servlet>
 		<servlet-name>Chartlet</servlet-name>
@@ -134,12 +134,12 @@
 		<param-value>true</param-value>
 	</context-param>
 <!--END-SERVLET-ONLY-->
-<!--BEGIN-PORTLET-ONLY-->
+<!--BEGIN-PORTLET-ONLY
 	<context-param>
 		<param-name>org.apache.myfaces.CHECK_EXTENSIONS_FILTER</param-name>
 		<param-value>false</param-value>
 	</context-param>
-<!--END-PORTLET-ONLY-->
+END-PORTLET-ONLY-->
 
 	<filter>
 		<description>
@@ -166,6 +166,7 @@
 		<filter-name>MyFacesExtensionsFilter</filter-name>
 	    <url-pattern>/faces/myFacesExtensionResource/*</url-pattern>
 	</filter-mapping>
+
 
 <!--
 	============================================================== 
@@ -263,11 +264,11 @@
 		<url-pattern>*.faces</url-pattern>
 	</servlet-mapping>
 <!--END-SERVLET-ONLY-->
-<!--BEGIN-PORTLET-ONLY-->
+<!--BEGIN-PORTLET-ONLY
 	<servlet> 
 		<servlet-name>esup-helpdesk</servlet-name>
 		<servlet-class>
-			org.apache.pluto.core.PortletServlet
+			org.apache.pluto.container.driver.PortletServlet
 		</servlet-class>
 		<init-param>
 			<param-name>portlet-class</param-name>
@@ -276,15 +277,20 @@
 			</param-value>
 		</init-param>
 		<init-param>
+                        <param-name>portlet-name</param-name>
+                        <param-value>esup-helpdesk</param-value>
+                </init-param>
+		<init-param>
 			<param-name>portlet-guid</param-name>
 			<param-value>esup-helpdesk.esup-helpdesk</param-value>
 		</init-param>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>esup-helpdesk</servlet-name>
-		<url-pattern>/esup-helpdesk/*</url-pattern>
+		<url-pattern>/PlutoInvoker/esup-helpdesk</url-pattern>
 	</servlet-mapping>
-<!--END-PORTLET-ONLY-->
+END-PORTLET-ONLY-->
 
 <!--
 	============================================================== 
@@ -358,10 +364,10 @@
 		<url-pattern>/version</url-pattern>
 	</servlet-mapping>
 
-<!--BEGIN-SERVLET-ONLY
+<!--BEGIN-SERVLET-ONLY-->
     <session-config>
     	<session-timeout>${sessionTimeout}</session-timeout>
     </session-config>
-END-SERVLET-ONLY-->
+<!--END-SERVLET-ONLY-->
 
 </web-app>

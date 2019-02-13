@@ -1,5 +1,6 @@
 <%@include file="_include.jsp"%>
 
+<e:subSection value="#{msgs['TICKET_VIEW.HISTORY.HEADER']}" />
 <e:dataTable columnClasses="colCenter,colLeft" id="actionData" width="100%" 
 	value="#{archivedTicketController.archivedHistoryEntries}" rowIndexVar="variable" 
 	var="ahe" border="0" cellspacing="0" cellpadding="0">
