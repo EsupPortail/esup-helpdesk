@@ -120,6 +120,11 @@
                                                             <%@include file="_ticketActionScope.jsp"%>
                                                         </t:htmlTag>
                                      </t:htmlTag>
+                                     <t:htmlTag value="div" styleClass="form-item form-checkbox" rendered="#{ticketController.userCanSetNoAlert}" >
+		                                 <e:selectBooleanCheckbox id="noAlert"
+        		 	                        value="#{ticketController.noAlert}" />
+                                         <e:outputLabel for="noAlert" value=" #{msgs['TICKET_ACTION.TEXT.NO_NOTIFICATION']}"/>
+                                     </t:htmlTag>                                     
                                      <t:htmlTag id="tab-history" styleClass="tab-content view-ticket_history" value="div">
                                                         <%@include file="_ticketActionHistory.jsp"%>
                                      </t:htmlTag>
