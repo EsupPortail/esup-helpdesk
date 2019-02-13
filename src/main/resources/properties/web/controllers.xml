@@ -53,6 +53,9 @@
 		<property name="casLogoutUrl" value="${cas.url}/logout?service=%s">
 			<description>The CAS logout URL.</description>
 		</property>
+		<property name="urlEnt" value="${ent.url}">
+			<description>The CAS logout URL.</description>
+		</property>
 		<property name="passwordSender" ref="passwordSender" />
 		<property name="timeZone" value="${timezone}" />
 	</bean>
