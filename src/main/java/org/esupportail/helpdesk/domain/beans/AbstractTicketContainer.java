@@ -136,6 +136,8 @@ public abstract class AbstractTicketContainer implements Serializable, TicketCon
     	this.defaultTicketPriority = DomainService.DEFAULT_PRIORITY_VALUE;
     	this.hideToExternalUsers = Boolean.FALSE;
     	this.inheritMonitoring = Boolean.TRUE;
+    	this.cateInvisible = Boolean.FALSE;
+    	this.srvAnonymous = Boolean.FALSE;
     	this.monitoringEmail = null;
     	this.monitoringLocalEmails = Boolean.TRUE;
     	this.monitoringEmailAuthType = null;

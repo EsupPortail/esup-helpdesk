@@ -4,7 +4,9 @@
 package org.esupportail.helpdesk.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.esupportail.commons.aop.monitor.Monitor;
 import org.esupportail.commons.dao.HqlUtils;
@@ -85,42 +87,105 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 			final Department departmentFilter,
 			List <Department> visibleDepartments,
 			User user) {
-		String condition;
+		String condition = "";
+		//cas ou aucun filtre sur le département
 		if (departmentFilter == null) {
 			List<Long> departmentsIds = new ArrayList<Long>();
 			List<Long> cateIds = new ArrayList<Long>();
+			ArrayList<Long> distinctCateIds = new ArrayList<Long>();
 			
 			for (Department department : visibleDepartments) {
+		
 				//cas d'un dpt confidentiel
 				//on va récupérer uniquement les catégories dont le user est membre 
 				if(department.getSrvConfidential()) {
 					List<Category> categories = getDomainService().getMemberCategories(user,department);
 					for (Category category : categories) {
-						cateIds.add(category.getId());
+						if(category.getCategoryConfidential()) {
+							cateIds.add(category.getId());
+						} else {
+							if(category.getParent()!=null) {
+								if(getDomainService().isCategoryParentConfidential(category.getParent(), false)){;
+									cateIds.add(category.getId());
+								}
+							}
+						}
 					}
+					
+					List<Category> categoriesAll = getDomainService().getCategories(department);
+					for (Category category : categoriesAll) {
+						//si la catégorie ou tous ces parents ne sont pas confidentiels
+						if(category.getCategoryConfidential() || (category.getParent()==null ? false : getDomainService().isCategoryParentConfidential(category.getParent(), false)) ) {
+							continue;
+						} else {
+							cateIds.add(category.getId());
+						}
+					}
+			        Set<Long> set = new HashSet<Long>() ;
+			        set.addAll(cateIds) ;
+			        distinctCateIds.addAll(set);
+
 				} else {
 					departmentsIds.add(new Long(department.getId()));
 				}
 			}
 
-			if(cateIds.size() > 0) {
+			if(distinctCateIds.size() > 0) {
 				condition = HqlUtils.or(
 						HqlUtils.longIn("ticket.department.id", departmentsIds),
-						HqlUtils.longIn("ticket.category.id", cateIds));
+						HqlUtils.longIn("ticket.category.id", distinctCateIds));
 			} else {
 				condition = HqlUtils.alwaysTrue();
 			}
 		} else {
+			//cas ou on filtre sur le département
 			
 			//cas d'un dpt confidentiel
 			//on va récupérer uniquement les catégories dont le user est membre 
 			if(departmentFilter.getSrvConfidential()) {
-				List<Category> categories = getDomainService().getMemberCategories(user,departmentFilter);
-				List<Long> cateIds = new ArrayList<Long>();
-				for (Category category : categories) {
-					cateIds.add(category.getId());
+				//si filtre sur catégorie :
+				Category categoryFilter = user.getControlPanelCategoryFilter();
+				//si filtre sur catégorie
+				if(categoryFilter != null) {
+					//si catégorie confidentielle ou qu'un de ses parents l'est
+					if(categoryFilter.getCategoryConfidential() || (categoryFilter.getParent()==null ? false : getDomainService().isCategoryParentConfidential(categoryFilter.getParent(), false)) ) {
+						//si l'utilisateur est membre de al catégorie
+						if(getDomainService().isCategoryMember(categoryFilter, user)) {
+							List<Long> cateIds = new ArrayList<Long>();
+							getAllChildCategories(cateIds, categoryFilter);
+							cateIds.add(categoryFilter.getId());
+							condition = HqlUtils.longIn("ticket.category.id", cateIds);						}
+					} else {
+						List<Long> cateIds = new ArrayList<Long>();
+						getAllChildCategories(cateIds, categoryFilter);
+						cateIds.add(categoryFilter.getId());
+						condition = HqlUtils.longIn("ticket.category.id", cateIds);					}
+
+				} else {
+					List<Category> categories = getDomainService().getMemberCategories(user,departmentFilter);
+					List<Long> cateIds = new ArrayList<Long>();
+					for (Category category : categories) {
+						//si catégorie confidentielle ou qu'un de ses parents l'est
+						if(category.getCategoryConfidential()  || (category.getParent()==null ? false : getDomainService().isCategoryParentConfidential(category.getParent(), false))) {
+							cateIds.add(category.getId());
+						}
+					}
+					
+					List<Category> categoriesAll = getDomainService().getCategories(departmentFilter);
+					for (Category category : categoriesAll) {
+						//si catégorie confidentielle ou qu'un de ses parents l'est
+						if(category.getCategoryConfidential() || (category.getParent()==null ? false : getDomainService().isCategoryParentConfidential(category.getParent(), false)) ) {
+							continue;
+						} else {
+							cateIds.add(category.getId());
+						}
+					}
+			        Set<Long> set = new HashSet<Long>() ;
+			        set.addAll(cateIds) ;
+			        ArrayList<Long> distinctCateIds = new ArrayList<Long>(set) ;
+	
+					condition = HqlUtils.longIn("ticket.category.id", distinctCateIds);
 				}
-				condition = HqlUtils.longIn("ticket.category.id", cateIds);
 			} else {
 				//si filtre sur catégorie :
 				Category categoryFilter = user.getControlPanelCategoryFilter();
@@ -244,20 +309,33 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	 * @return the condition regarding the managed departments.
 	 */
 	protected String getManagedDepartmentCondition(
+			final List<Department> managedDepartments,
 			final User user,
-			List<Long> depaIdConfidentials) {
+			final List<Long> depaIdConfidentials) {
 		List<Long> departmentsIds = new ArrayList<Long>();
 		List<Long> cateIds = new ArrayList<Long>();
 		
-		for (Department department : getDomainService().getManagedDepartments(user)) {
+		for (Department department : managedDepartments) {
 			//cas d'un dpt confidentiel
 			//on va récupérer uniquement les catégories dont le user est membre 
 			if(department.getSrvConfidential()) {
 				depaIdConfidentials.add(department.getId());
-				
 				List<Category> categories = getDomainService().getMemberCategories(user,department);
 				for (Category category : categories) {
-					cateIds.add(category.getId());
+					//si la catégorie ou un de ces parent est confidentiel
+					if(category.getCategoryConfidential() || (category.getParent()==null ? false : getDomainService().isCategoryParentConfidential(category.getParent(), false)) ) {
+						cateIds.add(category.getId());
+					}
+				}
+				
+				List<Category> categoriesAll = getDomainService().getCategories(department);
+				for (Category category : categoriesAll) {
+					//si la catégorie ou un de ces parent est confidentiel
+					if(category.getCategoryConfidential() || (category.getParent()==null ? false : getDomainService().isCategoryParentConfidential(category.getParent(), false)) ) {
+						continue;
+					} else {
+						cateIds.add(category.getId());
+					}
 				}
 			} else {
 				departmentsIds.add(new Long(department.getId()));
@@ -266,9 +344,13 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		String condition;
 
 		if(cateIds.size() > 0) {
+	        Set<Long> set = new HashSet<Long>() ;
+	        set.addAll(cateIds) ;
+	        ArrayList<Long> distinctCateIds = new ArrayList<Long>(set) ;
+
 			condition = HqlUtils.or(
 					HqlUtils.longIn("ticket.department.id", departmentsIds),
-					HqlUtils.longIn("ticket.category.id", cateIds));
+					HqlUtils.longIn("ticket.category.id", distinctCateIds));
 		} else {
 			condition = HqlUtils.longIn("ticket.department.id", departmentsIds);
 		}
@@ -421,18 +503,38 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 			final Department departmentFilter) {
 		List<Long> categoryIds = new ArrayList<Long>();
 		String condition = null;
-
-		for (Category category : getDomainService().getMemberCategories(user, departmentFilter)) {
-			categoryIds.add(new Long(category.getId()));
-		}
+		
 		if(departmentFilter.getSrvConfidential()) {
+			for (Category category : getDomainService().getMemberCategories(user, departmentFilter)) {
+				//si la catégorie ou tous ces parents ne sont pas confidentiels
+				if(category.getCategoryConfidential() || (category.getParent()==null ? false : getDomainService().isCategoryParentConfidential(category.getParent(), false)) ) {
+					categoryIds.add(category.getId());
+				}
+				List<Category> categoriesAll = getDomainService().getCategories(departmentFilter);
+				for (Category cate : categoriesAll) {
+					//si la catégorie ou tous ces parents ne sont pas confidentiels
+					if(cate.getCategoryConfidential() || (cate.getParent()==null ? false : getDomainService().isCategoryParentConfidential(cate.getParent(), false)) ) {
+						continue;
+					} else {
+						categoryIds.add(cate.getId());
+					}
+				}
+			}
+	        Set<Long> set = new HashSet<Long>() ;
+	        set.addAll(categoryIds) ;
+	        ArrayList<Long> distinctCateIds = new ArrayList<Long>(set) ;
 			condition = HqlUtils.and(
-							HqlUtils.longIn("ticket.category.id", categoryIds),
+							HqlUtils.longIn("ticket.category.id", distinctCateIds),
 							HqlUtils.or(
 									getOwnerCondition(user),
 									getManagedCondition(user)
 						));
 		} else {
+			
+			for (Category category : getDomainService().getMemberCategories(user, departmentFilter)) {
+				categoryIds.add(new Long(category.getId()));
+			}
+
 			condition = HqlUtils.longIn("ticket.category.id", categoryIds);
 		}
 		if (logger.isDebugEnabled()) {
@@ -477,7 +579,7 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		}
 		if (departmentFilter == null) {
 			if(implication.equals("OTHER")) {
-				condition = getManagedDepartmentCondition(userSelected, depaIdConfidentials);
+				condition = getManagedDepartmentCondition(managedDepartments, userSelected, depaIdConfidentials);
 			}			
 			else if(implication.equals("FREE")) {
 				condition = getManagedCategoryCondition(managedDepartments, userSelected);
@@ -505,21 +607,45 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 						List<Category> categories = getDomainService().getMemberCategories(user,departmentFilter);
 						List<Long> cateIds = new ArrayList<Long>();
 						for (Category category : categories) {
-							cateIds.add(category.getId());
+							//cas ou l'on hérite de la catégorie parente ou service
+							if(category.getCategoryConfidential() || (category.getParent()==null ? false : getDomainService().isCategoryParentConfidential(category.getParent(), false)) ) {
+								cateIds.add(category.getId());
+							}
 						}
-						condition = HqlUtils.longIn("ticket.category.id", cateIds);
+						
+						List<Category> categoriesAll = getDomainService().getCategories(departmentFilter);
+						for (Category category : categoriesAll) {
+							//cas ou l'on hérite de la catégorie parente ou service
+							if(category.getCategoryConfidential() || (category.getParent()==null ? false : getDomainService().isCategoryParentConfidential(category.getParent(), false)) ) {
+								continue;
+							} else {
+								cateIds.add(category.getId());
+							}
+						}
+				        Set<Long> set = new HashSet<Long>() ;
+				        set.addAll(cateIds) ;
+				        ArrayList<Long> distinctCateIds = new ArrayList<Long>(set) ;
+
+						condition = HqlUtils.longIn("ticket.category.id", distinctCateIds);
 					} else {
 						condition = HqlUtils.equals("ticket.department.id", departmentFilter.getId());
 					}
 					
 				} else {
 					if(departmentFilter.getSrvConfidential()) {
-						condition = HqlUtils.and(
-										HqlUtils.longIn("ticket.category.id", getCategoryTreeIds(categoryFilter, null)),
-										HqlUtils.or(
-												getOwnerCondition(user),
-												getManagedCondition(user)))
-									;
+						if(categoryFilter.getCategoryConfidential() || (categoryFilter.getParent()==null ? false : getDomainService().isCategoryParentConfidential(categoryFilter.getParent(), false)) ) {
+							condition = HqlUtils.and(
+									HqlUtils.longIn("ticket.category.id", getCategoryTreeIds(categoryFilter, null)),
+									HqlUtils.or(
+											getOwnerCondition(user),
+											getManagedCondition(user)))
+								;
+						} else {
+							condition =	HqlUtils.or(
+											getOwnerCondition(user),
+											getManagedCondition(user))
+								;
+						}
 					} else {
 						condition = HqlUtils.longIn("ticket.category.id", getCategoryTreeIds(categoryFilter, null));
 					}
@@ -642,12 +768,14 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		if (logger.isDebugEnabled()) {
 			logger.debug("managerCondition = " + managerCondition);
 		}
+		//cas des dpt confidentiels
 		if(!depaIdConfidentials.isEmpty()) {
 			managerCondition = HqlUtils.or(
 					managerCondition,
 					HqlUtils.and(
 							getStatusCondition(user),
 							getOwnerCondition(user),
+							getManagerInvolvementCondition(user, selectedManager, implication),
 							getDepartmentConfidentialCondition(depaIdConfidentials)));
 		}
 		if (HqlUtils.isAlwaysFalse(managerCondition)) {
@@ -709,16 +837,7 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		List<Long> cateIds = new ArrayList<Long>();
 
 		for (Department department : visibleDepartments) {
-			//cas d'un dpt confidentiel
-			//on va récupérer uniquement les catégories dont le user est membre 
-			if(department.getSrvConfidential()) {
-				List<Category> categories = getDomainService().getMemberCategories(user,department);
-				for (Category category : categories) {
-					cateIds.add(category.getId());
-				}
-			} else {
-				departmentsIds.add(new Long(department.getId()));
-			}
+			departmentsIds.add(new Long(department.getId()));
 		}
 		condition = HqlUtils.longIn("ticket.department.id", departmentsIds);
 		if (logger.isDebugEnabled()) {

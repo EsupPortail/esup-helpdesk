@@ -1479,6 +1479,17 @@ public class DepartmentsController extends AbstractContextAwareController implem
 
 	/**
 	 * JSF callback.
+	 * @return a Boolean
+	 */
+	public boolean isCategoryParentConfidential() {
+		if(categoryToUpdate.getParent() != null) {
+			return getDomainService().isCategoryParentConfidential(categoryToUpdate.getParent(), false);
+		}
+		return false;
+	}
+
+	/**
+	 * JSF callback.
 	 * @return a String.
 	 */
 	public String deleteCategory() {

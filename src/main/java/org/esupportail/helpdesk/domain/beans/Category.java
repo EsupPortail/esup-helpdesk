@@ -42,7 +42,12 @@ public class Category extends AbstractTicketContainer {
      * True if the members of the category are inherited (from its parent).
      */
     private Boolean inheritMembers;
-    
+
+    /**
+     * To set the category confidential.
+     */
+    private Boolean categoryConfidential;
+
     /**
      * v2 not null stuff.
      */
@@ -67,6 +72,7 @@ public class Category extends AbstractTicketContainer {
     	this.oldDefaultPriorityLevel = 0;
     	this.inheritMembers = Boolean.TRUE;
     	this.inheritFaqLinks = Boolean.TRUE;
+    	this.categoryConfidential = Boolean.FALSE;
     }
 
     /**
@@ -83,6 +89,7 @@ public class Category extends AbstractTicketContainer {
     	this.inheritFaqLinks = c.inheritFaqLinks;
     	this.assignmentAlgorithmState = c.assignmentAlgorithmState;
     	this.addNewTickets = c.addNewTickets;
+    	this.categoryConfidential = c.categoryConfidential;
     }
 
 	/**
@@ -420,6 +427,14 @@ public class Category extends AbstractTicketContainer {
 	 */
 	public void setInheritFaqLinks(final Boolean inheritFaqLinks) {
 		this.inheritFaqLinks = inheritFaqLinks;
+	}
+
+	public Boolean getCategoryConfidential() {
+		return categoryConfidential;
+	}
+
+	public void setCategoryConfidential(Boolean categoryConfidential) {
+		this.categoryConfidential = categoryConfidential;
 	}
 
 }

@@ -27,12 +27,18 @@ public class DepartmentConfiguratorImpl implements DepartmentConfigurator {
     private boolean spentTimeNeeded;
 
     /**
+     * True if the service is confidential.
+     */
+    private boolean srvConfidential;
+    
+    /**
      * Bean constructor.
      */
     public DepartmentConfiguratorImpl() {
 		super();
 		this.enabled = false;
 		this.spentTimeNeeded = false;
+		this.srvConfidential = false;
 	}
     
     /**
@@ -43,6 +49,7 @@ public class DepartmentConfiguratorImpl implements DepartmentConfigurator {
 	public void configure(final Department department) {
     	department.setEnabled(enabled);
     	department.setSpentTimeNeeded(spentTimeNeeded);
+    	department.setSrvConfidential(srvConfidential);
     }
 
 	/**
@@ -57,6 +64,14 @@ public class DepartmentConfiguratorImpl implements DepartmentConfigurator {
 	 */
 	public void setSpentTimeNeeded(final boolean spentTimeNeeded) {
 		this.spentTimeNeeded = spentTimeNeeded;
+	}
+
+	public boolean isSrvConfidential() {
+		return srvConfidential;
+	}
+
+	public void setSrvConfidential(boolean srvConfidential) {
+		this.srvConfidential = srvConfidential;
 	}
 
 }

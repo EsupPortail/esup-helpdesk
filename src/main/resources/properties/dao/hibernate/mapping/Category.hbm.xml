@@ -37,6 +37,7 @@
 		<property name="monitoringEmailAuthType" column="moni_emai_auth_type" />
 		<property name="inheritMonitoring" column="inhe_moni" />
 		<property name="monitoringLevel" column="moni_leve" />
+		<property name="categoryConfidential" column="cate_confi"/>
 		<many-to-one name="icon" column="icon_id" fetch="join"/>
 		<property name="inheritFaqLinks" column="inhe_faq_link" />
 	</class>

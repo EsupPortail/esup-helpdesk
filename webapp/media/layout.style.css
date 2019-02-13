@@ -590,7 +590,7 @@ ul.tabs li.current:hover {
   position: absolute;
   z-index: 1;
   top: 33px;
-  left: 5px;
+  left: -50px;
 }
 
 /*-------------Tickets TAB files---------------------*/

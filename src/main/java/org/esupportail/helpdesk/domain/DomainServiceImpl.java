@@ -2022,6 +2022,19 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		}
 	}
 
+
+	@Override
+	public Boolean isCategoryParentConfidential(Category categoryParent, Boolean isCondifential) {
+		if (categoryParent.getCategoryConfidential()) {
+			return true;
+		} else {
+			if(categoryParent.getParent() != null) {
+				return isCategoryParentConfidential(categoryParent.getParent(), isCondifential);
+			} else {
+				return false;
+			}
+		}
+	}
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getCategoryMembers(
 	 *      org.esupportail.helpdesk.domain.beans.Category)

@@ -174,6 +174,20 @@
                                                     </h:panelGroup>
                                                  </t:htmlTag>
                                             </t:htmlTag>
+                                            <t:htmlTag value="div" styleClass="form-block" rendered="#{not departmentsController.categoryToUpdate.virtual and departmentsController.department.srvConfidential and not departmentsController.categoryParentConfidential}">
+                                                 <t:htmlTag value="div" styleClass="form-item">
+                                                    <e:outputLabel for="categoryConfidential"  value="#{msgs['CATEGORY_EDIT.TEXT.CONFIDENTIAL']}"/>
+                                                    <h:panelGroup>
+                                                        <e:selectBooleanCheckbox id="categoryConfidential" value="#{departmentsController.categoryToUpdate.categoryConfidential}" />
+                                                        <e:italic value=" #{msgs['CATEGORY_EDIT.TEXT.CONFIDENTIAL_HELP']}" />
+                                                    </h:panelGroup>
+                                                 </t:htmlTag>
+                                            </t:htmlTag>
+                                            <t:htmlTag value="div" styleClass="form-block" rendered="#{not departmentsController.categoryToUpdate.virtual and departmentsController.categoryParentConfidential}">
+                                                 <t:htmlTag value="div" styleClass="form-item">
+                                                    <e:outputLabel value="#{msgs['CATEGORY_EDIT.TEXT.PARENT_CONFIDENTIAL']}"/>
+                                                 </t:htmlTag>
+                                            </t:htmlTag>                                                                                        
                                             <t:htmlTag value="div" styleClass="form-block" rendered="#{not departmentsController.categoryToUpdate.virtual and departmentsController.categoryToUpdateHasSubCategories}">
                                                  <t:htmlTag value="div" styleClass="form-item">
                                                     <e:outputLabel for="addNewTickets"  value="#{msgs['CATEGORY_EDIT.TEXT.ADD_NEW_TICKETS']}"/>

@@ -782,6 +782,13 @@ public interface DomainService extends Serializable {
 	 * @return 'true' if user is a member of the category.
 	 */
 	boolean isCategoryMember(Category category, User user);
+	
+	/**
+	 * @param category
+	 * @param isCondifential
+	 * @return 'true' if the category parent is confidential.
+	 */
+	Boolean isCategoryParentConfidential(Category categoryParent, Boolean isCondifential);
 
 	/**
 	 * @param category
