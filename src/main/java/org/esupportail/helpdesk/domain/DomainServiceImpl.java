@@ -5378,7 +5378,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			logger.info("MANAGER ");
 			return false;
 		}
-		if (user.equals(ticket.getOwner())) {
+		if (user.equals(ticket.getOwner()) && user.equals(objectOwner)) {
 			logger.info("getOwner ");
 			return true;
 		}
