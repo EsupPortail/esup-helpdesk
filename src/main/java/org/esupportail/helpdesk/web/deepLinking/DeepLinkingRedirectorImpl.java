@@ -360,21 +360,57 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	 */
 	protected String redirectTicketAdd(final Map<String, String> params) {
 		Department department = null;
+		Category categoryFilter = null;
 		if (params.get(DEPARTMENT_ID_PARAM) != null) {
 			Long departmentId = null;
 			try {
 				departmentId = Long.valueOf(params.get(DEPARTMENT_ID_PARAM));
 			} catch (NumberFormatException e) {
-				addErrorMessageInvalidParameter(DEPARTMENT_ID_PARAM, params.get(DEPARTMENT_ID_PARAM));
+				addWarnMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", departmentId.toString());
+				ticketController.setAddTree(null);
+				ticketController.setAddTargetCategory(null);
+				ticketController.setAddTargetDepartment(null);
+				return "/stylesheets/ticketAdd.jsp";
 			}
 			if (departmentId != null) {
 				try {
 					department = getDomainService().getDepartment(departmentId);
 				} catch (DepartmentNotFoundException e) {
-					addErrorMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", departmentId.toString());
+					addWarnMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", departmentId.toString());
+					ticketController.setAddTree(null);
+					ticketController.setAddTargetCategory(null);
+					ticketController.setAddTargetDepartment(null);
+					return "/stylesheets/ticketAdd.jsp";
 				}
-				// evolution : on passe le département pour filtrer le nodetree sur ce dernier
-				ticketController.setFilteredTree(ticketController.addTreeFiltered(department));
+				//cas d'un filtre sur catégorie
+				if (params.get(CATEGOTY_ID_FILTER_PARAM) != null) {
+					Long categoryIdFilter = null;
+					try {
+						categoryIdFilter = Long.valueOf(params.get(CATEGOTY_ID_FILTER_PARAM));
+					} catch (NumberFormatException e) {
+						addWarnMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", categoryIdFilter.toString());
+						ticketController.setAddTree(null);
+						ticketController.setAddTargetCategory(null);
+						ticketController.setAddTargetDepartment(null);
+						return "/stylesheets/ticketAdd.jsp";
+					}
+					if (categoryIdFilter != null) {
+						try {
+							categoryFilter = getDomainService().getCategory(categoryIdFilter);
+						} catch (CategoryNotFoundException e) {
+							addWarnMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", categoryIdFilter.toString());
+							ticketController.setAddTree(null);
+							ticketController.setAddTargetCategory(null);
+							ticketController.setAddTargetDepartment(null);
+							return "/stylesheets/ticketAdd.jsp";
+						}
+						// evolution : on passe la catégorie pour filtrer le nodetree sur ce dernier
+						ticketController.setFilteredTree(ticketController.addTreeFiltered(department, categoryFilter));
+					}
+				} else {				
+					// evolution : on passe le département pour filtrer le nodetree sur ce dernier
+					ticketController.setFilteredTree(ticketController.addTreeFiltered(department));
+				}
 			}
 		}
 		Category category = null;
@@ -383,7 +419,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 			try {
 				categoryId = Long.valueOf(params.get(CATEGORY_ID_PARAM));
 			} catch (NumberFormatException e) {
-				addErrorMessageInvalidParameter(CATEGORY_ID_PARAM, params.get(CATEGORY_ID_PARAM));
+				addWarnMessage(CATEGORY_ID_PARAM, params.get(CATEGORY_ID_PARAM));
+				ticketController.setAddTree(null);
+				ticketController.setAddTargetCategory(null);
+				ticketController.setAddTargetDepartment(null);
+				return "/stylesheets/ticketAdd.jsp";
 			}
 			if (categoryId != null) {
 				try {
@@ -392,7 +432,11 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 						category = category.getRealCategory();
 					}
 				} catch (CategoryNotFoundException e) {
-					addErrorMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", categoryId.toString());
+					addWarnMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", categoryId.toString());
+					ticketController.setAddTree(null);
+					ticketController.setAddTargetCategory(null);
+					ticketController.setAddTargetDepartment(null);
+					return "/stylesheets/ticketAdd.jsp";
 				}
 			}
 		}

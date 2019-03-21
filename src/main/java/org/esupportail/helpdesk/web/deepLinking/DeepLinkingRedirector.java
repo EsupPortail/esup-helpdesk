@@ -79,6 +79,8 @@ public interface DeepLinkingRedirector extends org.esupportail.commons.web.deepL
 	String VIEW_DEPARTMENT_PAGE_VALUE = "viewDepartment";	
 	/** A parameter name. */
 	String DEPARTMENT_ID_PARAM = "departmentId";
+	/** A parameter name. */
+	String CATEGOTY_ID_FILTER_PARAM = "categoryIdFilter";
 	/** A parameter value. */
 	String ADMINISTRATORS_PAGE_VALUE = "administrators";
 	/** A parameter value. */
