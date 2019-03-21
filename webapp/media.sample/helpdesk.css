@@ -1,0 +1,54 @@
+.userInfo {
+	background-color: #e7d7b7
+}
+
+.actionApplication {
+	border-left-style:solid;
+	border-left-color:#333333;
+	padding: 5px;
+}
+
+.actionManager{
+	border-left-style:solid;
+	border-left-color:#970000;
+	padding: 5px;
+}
+
+.actionOwner {
+	border-left-style:solid;
+	border-left-color:#ff8800;
+	padding: 5px;
+}
+
+.actionInvited {
+	border-left-style:solid;
+	border-left-color:#22bbea;
+	padding: 5px;
+}
+
+.actionUser {
+	border-left-style:solid;
+	border-left-color:#7cb61f;
+	padding: 5px;
+}
+
+.priority1 {
+	color: #0080ff;
+}
+
+.priority2 {
+	color: #004080;
+}
+
+.priority3 {
+	color: #0071B9;
+}
+
+.priority4 {
+	color: #ff8040;
+}
+
+.priority5 {
+	color: #ff0000;
+}
+

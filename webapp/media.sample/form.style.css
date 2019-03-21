@@ -1,0 +1,335 @@
+/* ------------------------------------ *\
+  CONTENTS
+\* ------------------------------------ */
+/**
+ * CONTENTS............You’re reading it!
+ * RESET...............Set our reset defaults
+ * Sous-section........Sous-section de reset
+ * FONT-FACE...........Import brand font files
+ */
+
+.form-item {
+  text-align: left;
+}
+
+.form-item.form-submit {
+  margin-top:10px;
+}
+
+.form-item.display-flex {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.form-item label {
+  display: block;
+  padding-bottom: 5px;
+  font-size: 1.15rem;
+  font-family: Roboto;
+  padding:0.5em 1em 0 0;
+  color: black;
+  font-weight: initial;
+}
+
+
+.xxx:before {
+  content: "\f1ea";
+  font-family: 'Font Awesome 5 Free';
+}
+
+.form-item .input-checkbox input[type="checkbox"] + .checkbox:before {
+  content: "\f0c8";
+  color: #717171;
+}
+
+.form-item .input-checkbox input[type="checkbox"]:checked + .checkbox:before {
+  content: "\f0c8";
+  color: #1093d3;
+}
+
+.form-item .input-checkbox input[type="checkbox"] {
+  visibility: hidden;
+  outline: none;
+  cursor: pointer;
+}
+.form-item .input-checkbox input[type="checkbox"] + .checkbox:before {
+  display: inline-block;
+  font-family: 'Font Awesome 5 Regular';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.5rem;
+}
+.form-item .input-checkbox input[type="checkbox"]:active:not(:disabled) + .checkbox:before {
+  transform: scale3d(0.88, 0.88, 1);
+}
+.form-item .input-checkbox input[type="checkbox"]:disabled + .checkbox:before {
+  color: rgba(0, 0, 0, 0.157) !important;
+}
+
+.form-item .checkbox {
+  float: left;
+  display: inline-block;
+  margin: 0rem -0.5rem 0 0;
+}
+
+.form-item [type="checkbox"],
+label {
+  cursor: pointer;
+}
+
+
+.form-item.form-checkbox label{
+  padding-top: 0.2em;
+}
+
+
+.form-item input[type='submit'],
+.form-item span.cancel,
+.form-item span.button--default,
+.form-item span.button--secondary,
+.form-item span.button--tertiary{
+  border-radius: 4px;
+  border: none;
+  font-size: 1.1rem;
+  min-height: 30px;
+  font-weight: normal;
+  cursor: pointer;
+  padding: 0 15px;
+  background-color: #dddddd;
+  color: #666666;
+  margin:7px;
+}
+
+.form-item input[type='submit']:first-of-type{
+  margin-left: 0;
+}
+
+.form-item input[type='submit']:last-of-type{
+  margin-right: 0;
+}
+
+.form-item input[type='submit']:hover,
+.form-item span.cancel:hover,
+.form-item span.button--default:hover
+{
+  background-color: #c2c2c2;
+}
+
+.form-item span.button--default.no-margin{
+  margin: 0;
+}
+
+.form-item span.button--default,
+.form-item span.cancel,
+.form-item span.button--secondary,
+.form-item span.button--tertiary {
+  padding-top: 3px;
+  padding-bottom: 2px;
+  display: inline-block;
+}
+
+.form-item input[type='submit'].button--primary {
+  background-color: #3EC155;
+  color: #ffffff;
+}
+
+.form-item input[type='submit'].button--primary:hover {
+  background-color: #39B34F;
+}
+
+.form-item input[type='submit'].button--secondary,
+.form-item span.button--secondary,
+.form-item span.button--secondary .portlet-section-text
+{
+  background-color: #1093d3;
+  color: #ffffff;
+}
+
+.form-item input[type='submit'].button--secondary:hover,
+.form-item span.button--secondary:hover,
+.form-item span.button--secondary:hover .portlet-section-text
+{
+  background-color: #0f81ba;
+}
+
+.form-item input[type='submit'].button--secondary.active,
+.form-item span.button--secondary.active
+{
+  background-color: #ffffff;
+  color: #0f81ba;
+  border:solid 1px #1093d3 ;
+  cursor: default;
+}
+
+.form-item input[type='submit'].button--tertiary,
+.form-item span.button--tertiary {
+  background-color: #ffffff;
+  color: #666666;
+  border: solid 1px #b5b5b5;
+}
+
+.form-item input[type='submit'].button--tertiary:hover,
+.form-item span.button--tertiary:hover {
+  background-color: #f9f9f9;
+}
+
+.form-item input[type='text'],
+.form-item input[type='password'] {
+  height: 30px;
+  border-radius: 2px;
+  border: solid 1px #808080;
+  padding: 6px;
+  font-size: 1rem;
+  box-shadow: none;
+  display: block;
+}
+
+.form-item input[type='text']:focus,
+.form-item input[type='password']:focus {
+  border-color: #1093d3;
+}
+
+.form-checkbox input[type='checkbox'],
+.form-checkbox input[type='text'],
+.form-item.form-checkbox select,
+.form-checkbox label {
+  display: inline-block;
+}
+
+.form-select.scrollable select {
+  width: 50%;
+  padding-left: 5px;
+  height: auto;
+  margin-top: 20px
+}
+
+.form-select.scrollable select option {
+  padding: 4px 0px;
+  font-size: 1.1rem;
+}
+
+.form-item select {
+  border: solid 1px #808080;
+  padding: 6px;
+  font-size: 1rem;
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow: none;
+  margin-bottom:5px;
+}
+
+.form-item select option {
+  color: #666666;
+}
+
+fieldset {
+  border: 1px solid #dddddd;
+  padding: 20px;
+  margin: 10px 0;
+}
+
+fieldset.collapsible legend  {
+  cursor: pointer;
+}
+
+.preferences fieldset{
+  padding:12px;
+  margin-bottom: 20px;
+}
+
+fieldset.active {
+  border: 1px solid #1093d3;
+}
+
+.tab-content fieldset{
+  background-color: #f7f7f7;
+}
+
+fieldset legend {
+  font-weight: bold;
+  color: #666666;
+}
+
+fieldset .form-item {
+  padding: 10px 0;
+}
+
+.preferences fieldset .form-item {
+  padding: 0;
+}
+
+.form-category .category-lib {
+  font-size: 1.15rem;
+  border: 1px solid #ccc;
+  padding: 4px;
+  background-color: #efefef;
+}
+
+.form-select.actions {
+  background-color: #ffffff;
+  position: relative;
+}
+
+.form-select .actions-header-inner {
+  border: solid 1px #b5b5b5;
+  padding: 7px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  min-width: 110px;
+}
+
+.form-select .actions-header-inner span {
+  font-size: 0.9rem;
+}
+
+.form-select .actions-list {
+  position: absolute;
+  min-width: 110px;
+  background-color: #ffffff;
+  margin-top: -1px;
+  border: 1px #b5b5b5 solid;
+  text-align: left;
+  box-shadow: 3px 3px 6px #aaa;
+  z-index: 10;
+}
+
+.form-select .actions-list-inner .action-item span {
+  white-space: nowrap;
+  display: block;
+  padding: 5px 8px;
+}
+
+.form-select .actions-list-inner span:hover {
+  background-color: #dbdbdb;
+}
+
+.form-select .action-item {
+  cursor: pointer;
+}
+
+.form-select .action-item.separator {
+  border-top: solid 1px #b5b5b5;
+}
+
+
+ .uploadFiles .form-item {
+  margin: 0;
+}
+
+.uploadFiles {
+  margin: 20px 0;
+}
+
+.uploadedFiles td {
+  padding: 5px 10px;
+}
+
+/* ------------------------------------ *\
+  ==spent time
+\* ------------------------------------ */
+.edit-spent-time .form-block {
+  max-width: 250px;
+}
