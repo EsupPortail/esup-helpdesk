@@ -44,8 +44,8 @@ public class AddByFilterAction extends AbstractAction {
 	public List<Department> evalInternal(final DomainService domainService,
 			@SuppressWarnings("unused") final Result result) {
 
-		List<Department> depts = domainService.getDepartmentsByFilter(filter);
-		for (Department departmentFiltre : depts) {
+		List<Department> departments = new ArrayList<Department>();
+		for (Department departmentFiltre : domainService.getDepartmentsByFilter(filter)) {
 			// on vérifie si le département est déja dans result
 			// on retire toutes les catégories qui sont dans catNonVisible et qui n'ont pas
 			// la propriété CateInvisible
@@ -57,12 +57,12 @@ public class AddByFilterAction extends AbstractAction {
 								departmentResult.getCategoriesNotVisibles().remove(catNonVisibleResult);
 							}
 						}
-						return null;
+						continue;
 					}
 				}
 			}
 			if (departmentFiltre == null) {
-				return null;
+				continue;
 			}
 			//cas ou le service n'est pas encore traité dans les regles,
 			//on va l'ajouter à la liste mais on va exclure les catégories invisibles avant tout
@@ -75,9 +75,9 @@ public class AddByFilterAction extends AbstractAction {
 			if(categoriesNonVisibles.size() != 0) {
 				departmentFiltre.addCategorieNotVisible(categoriesNonVisibles);
 			}
-			depts.add(departmentFiltre);
+			departments.add(departmentFiltre);
 		}
-		return depts;
+		return departments;
 	}
 
 	/**
