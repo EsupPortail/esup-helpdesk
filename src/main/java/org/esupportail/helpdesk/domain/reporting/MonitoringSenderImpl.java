@@ -538,8 +538,8 @@ public class MonitoringSenderImpl extends AbstractAlertSender implements Monitor
 	 * org.esupportail.helpdesk.domain.beans.Ticket)
 	 */
 	@Override
-	public List<User> getMonitoringUsers(final Ticket ticket) {
-		return super.getMonitoringUsers(ticket);
+	public List<User> getMonitoringUsers(final Ticket ticket, final Boolean onlyMandatoryUsers) {
+		return super.getMonitoringUsers(ticket, onlyMandatoryUsers);
 	}
 
 }

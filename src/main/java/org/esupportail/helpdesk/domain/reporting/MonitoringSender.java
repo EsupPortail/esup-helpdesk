@@ -68,6 +68,6 @@ public interface MonitoringSender extends DomainServiceSettable {
 	 * @return the users that monitor a ticket.
 	 * @param ticket
 	 */
-	List<User> getMonitoringUsers(Ticket ticket);
+	List<User> getMonitoringUsers(Ticket ticket, Boolean onlyMandatoryUsers);
 
 }

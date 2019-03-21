@@ -1119,9 +1119,27 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 		if (ticket == null) {
 			return null;
 		}
-		return getDomainService().getMonitoringUsers(ticket);
+		return getDomainService().getMonitoringUsers(ticket, false);
 	}
 
+	/**
+	 * @return the monitoringUsers
+	 */
+	private List<User> getMonitoringUsersMandatory() {
+		if (ticket == null) {
+			return null;
+		}
+		return getDomainService().getMonitoringUsers(ticket, true);
+	}
+	/**
+	 * @return the monitoringUsers
+	 */
+	public boolean	isUserInMonitoringUsersMandatory(){
+		if(getMonitoringUsersMandatory().contains(getCurrentUser())) {
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * @return the monitoringUsersNumber
 	 */

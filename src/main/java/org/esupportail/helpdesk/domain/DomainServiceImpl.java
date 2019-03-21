@@ -3449,8 +3449,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 */
 	@Override
 	@RequestCache
-	public List<User> getMonitoringUsers(final Ticket ticket) {
-		return monitoringSender.getMonitoringUsers(ticket);
+	public List<User> getMonitoringUsers(final Ticket ticket, final Boolean onlyMandatoryUsers) {
+		return monitoringSender.getMonitoringUsers(ticket, onlyMandatoryUsers);
 	}
 
 	/** Eclipse outline delimiter. */
@@ -5575,6 +5575,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		}
 		if (user.getAdmin()) {
 			return true;
+		}
+		//cas d'un gestionnaire d'un autre service mais qui a accès via la visibilité interservice
+		if(department.getVisibilityInterSrv() != null) {
+			for (DepartmentManager departmentManager : getDepartmentManagers(user)) {
+				if(departmentManager.getDepartment().getVisibilityInterSrv().equals(department.getVisibilityInterSrv())) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}

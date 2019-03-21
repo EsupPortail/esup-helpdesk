@@ -559,7 +559,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 		Locale locale = getDomainService().getUserStore().getUserLocale(user);
 		result += getI18nService().getString(
 				"EMAIL.TICKET.COMMON.MONITORING.TITLE", locale);
-		List<User> monitoringUsers = getMonitoringUsers(ticket);
+		List<User> monitoringUsers = getMonitoringUsers(ticket, false);
 		if (monitoringUsers.isEmpty()) {
 			result += "<p>" + getI18nService().getString(
 					"TICKET_VIEW.MONITORING.NO_USER", locale) + "</p>";
@@ -814,7 +814,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 	 * @param ticket
 	 * @return the users that should be warned for a ticket.
 	 */
-	protected List<User> getMonitoringUsers(final Ticket ticket) {
+	protected List<User> getMonitoringUsers(final Ticket ticket, final Boolean onlyMandatoryUsers) {
 		List<User> users = new ArrayList<User>();
 		for (DepartmentManager departmentManager : getDomainService().getDepartmentManagers(ticket.getDepartment())) {
 			if (departmentManager.getUser().getReceiveManagerMonitoring()) {
@@ -853,10 +853,13 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 				//
 			}
 		}
-		for (TicketMonitoring ticketMonitoring : getDomainService().getTicketMonitorings(ticket)) {
-			User monitoringUser = ticketMonitoring.getUser();
-			if (!users.contains(monitoringUser)) {
-				users.add(monitoringUser);
+		//on ne prends pas les utilisateurs qui ont potentiellement été rajoutés à la surveillance du ticket
+		if (! onlyMandatoryUsers) {
+			for (TicketMonitoring ticketMonitoring : getDomainService().getTicketMonitorings(ticket)) {
+				User monitoringUser = ticketMonitoring.getUser();
+				if (!users.contains(monitoringUser)) {
+					users.add(monitoringUser);
+				}
 			}
 		}
 		for (Invitation invitation : getDomainService().getInvitations(ticket)) {

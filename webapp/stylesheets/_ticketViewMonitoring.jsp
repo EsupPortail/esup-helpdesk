@@ -4,6 +4,7 @@
 
         <e:paragraph value="#{msgs['TICKET_VIEW.MONITORING.NO_USER']}"
             rendered="#{empty ticketController.monitoringUsers}" />
+        <e:text value="#{msgs['TICKET_VIEW.MONITORING.PEOPLE']}" />
         <t:htmlTag value="ul" >
         <t:dataList
             id="monitoringData"
@@ -25,11 +26,11 @@
         </t:htmlTag>
 </t:htmlTag>
 
-<t:htmlTag value="div" styleClass="form-block">
+<t:htmlTag value="div" styleClass="form-block" rendered="#{!ticketController.userInMonitoringUsersMandatory}">
     <t:htmlTag value="div" styleClass="form-item">
         	<e:selectBooleanCheckbox value="#{ticketController.userMonitorsTicket}"/>
 
-        	<e:text value="#{msgs['TICKET_VIEW.MONITORING.MONITOR']}" />
+        	<e:text value="#{msgs['TICKET_VIEW.MONITORING.MONITOR']}"/>
         	<e:commandButton styleClass="button--primary"
         		value="#{msgs['_.BUTTON.UPDATE']}"
         		id="updateButton"

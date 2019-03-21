@@ -1889,7 +1889,9 @@ public interface DomainService extends Serializable {
 	 * @param ticket
 	 * @return the users that monitor a ticket.
 	 */
-	List<User> getMonitoringUsers(Ticket ticket);
+	List<User> getMonitoringUsers(Ticket ticket, Boolean onlyMandatoryUsers);
+	
+	
 
 	//////////////////////////////////////////////////////////////
 	// Alert
