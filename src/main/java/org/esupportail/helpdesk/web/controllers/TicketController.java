@@ -3669,6 +3669,9 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		return addTree;
 	}
 	
+	public void setAddTree(TreeModelBase addTree) {
+		this.addTree = addTree;
+	}
 	/**
 	 * @return the addTree
 	 */
@@ -3708,6 +3711,47 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		
 	}
 
+	/**
+	 * @return the addTree
+	 */
+	public TreeModelBase addTreeFiltered(Department department, Category categoryFilterd) {
+		
+		List <Department> departmentsViewable = getDomainService().getTicketViewDepartments(getCurrentUser(), getClient());
+		List<Category> categories = new ArrayList<Category>(); 
+		TreeNode rootNode = null;
+		rootNode = new TreeNodeBase("root", "root", true);
+		Department realDepartment;
+		
+		if (!department.isVirtual()) {
+			realDepartment = department;
+		} else {
+			realDepartment = department.getRealDepartment();
+		}
+		if(departmentsViewable.contains(realDepartment)){
+		   	CategoryNode departmentNode = new CategoryNode(department);
+		   	categories.add(categoryFilterd);
+		   	addFilteredTreeSubCategories(department, departmentNode, categories, departmentsViewable);
+		   	if (departmentNode.getChildCount() > 0) {
+		    	rootNode.getChildren().add(departmentNode);
+		    	rootNode.setLeaf(false);
+		   	}
+		}
+		//ouverture complète de l'arborescence
+		if (rootNode.getChildCount() > 0) {
+			filteredTree = null;
+			filteredTree = new TreeModelBase(rootNode);
+			TreeState treeState = new TreeStateBase();
+			treeState.toggleExpanded("0");
+			
+			List<CategoryNode> nodesToCollapse = rootNode.getChildren();
+			expandAllTree(treeState, nodesToCollapse);
+			
+			filteredTree.setTreeState(treeState);
+		}
+		return filteredTree;
+		
+	}
+	
 	/**
 	 * @return the moveTargetCategory
 	 */

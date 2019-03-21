@@ -571,7 +571,7 @@ public interface DomainService extends Serializable {
 	 * @param user
 	 * @return the departments managed by a user or all the departments if administrator.
 	 */
-	List<Department> getManagedDepartmentsOrAllIfAdmin(User user);
+	List<Department> getManagedDepartmentsOrAllIfAdmin(User user, String departmentFilter);
 
 	/**
 	 * @param user
@@ -1892,7 +1892,6 @@ public interface DomainService extends Serializable {
 	List<User> getMonitoringUsers(Ticket ticket, Boolean onlyMandatoryUsers);
 	
 	
-
 	//////////////////////////////////////////////////////////////
 	// Alert
 	//////////////////////////////////////////////////////////////

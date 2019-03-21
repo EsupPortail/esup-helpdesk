@@ -57,6 +57,25 @@
                                                         <f:param value="#{departmentsController.departmentPaginator.totalItemsCount}" />
                                                     </e:text>
                                         </t:htmlTag>
+                                        <t:htmlTag value="div" styleClass="department-filter">
+	                                        <t:htmlTag value="div" styleClass="block form-block">
+							                    <t:htmlTag value="div" styleClass="form-item">
+							                        <e:outputLabel for="filterDepartment" value="#{msgs['TICKET_ACTION.SEARCH.DEPARTMENT']}" />
+							                        <e:inputText id="filterDepartment"  title="Recherche" value="#{sessionController.departmentFilter}" size="15" onkeypress="if (event.keyCode == 13) { simulateLinkClick('ticketActionForm:filterDepartmentButton'); return false; }" />
+							                    </t:htmlTag>
+							                    <t:htmlTag value="div" styleClass="form-item">
+							                        <e:commandButton id="filterDepartmentButton"
+							                                    styleClass="button--secondary"
+							                                    value="#{msgs['SEARCH.BUTTON.FILTER_CATEGORY']}"
+							                                    action="#{departmentsController.enter}" />
+							                        <e:commandButton id="cancelFilterDepartmentButton"
+							                            style ="visibility: hidden"
+							                            styleClass="button--cancel"
+							                            value="#{msgs['SEARCH.BUTTON.FILTER_CATEGORY.CLEAR']}"
+							                            action="#{departmentsController.resetEnter}" />
+							                    </t:htmlTag>
+								       		</t:htmlTag>
+								        </t:htmlTag>
                                         <t:htmlTag styleClass="form-block items-sort" value="div">
                                                     <t:htmlTag styleClass="form-item" value="div">
                                                         <e:selectOneMenu value="#{departmentsController.departmentPaginator.pageSize}" onchange="javascript:{simulateLinkClick('departmentsForm:data:changeButton');}">
@@ -86,7 +105,7 @@
                                 </f:facet>
 
 
-                                <t:column style="cursor: pointer" onclick="selectDepartment(#{variable});" >
+                                <t:column style="cursor: pointer" onclick="selectDepartment(#{variable});">
                                     <f:facet name="header">
                                          <t:htmlTag value="div" styleClass="column-header">
                                             <e:text value="#{msgs['DEPARTMENTS.TEXT.HEADER.LABEL']}"/>

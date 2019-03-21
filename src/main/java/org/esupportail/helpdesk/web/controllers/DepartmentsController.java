@@ -450,6 +450,20 @@ public class DepartmentsController extends AbstractContextAwareController implem
 		return "navigationDepartments";
 	}
 
+
+	/**
+	 * JSF callback.
+	 * @return a String.
+	 */
+	public String resetEnter() {
+		if (!isPageAuthorized()) {
+			return null;
+		}
+		getSessionController().setDepartmentFilter(null);
+		getSessionController().setShowShortMenu(false);
+		categoryTree = null;
+		return "navigationDepartments";
+	}
 	/**
 	 * Add a priority item.
 	 * @param priorityItems
@@ -905,7 +919,7 @@ public class DepartmentsController extends AbstractContextAwareController implem
 		departmentPaginator.forceReload();
 		return "departmentDeleted";
 	}
-
+	
 	/**
 	 * @return true if the department has virtual departments.
 	 */

@@ -47,7 +47,7 @@ public class ManagedDepartmentPaginator extends AbstractDomainAwareListPaginator
 	 */
 	@Override
 	protected List<Department> getData() {
-		return getDomainService().getManagedDepartmentsOrAllIfAdmin(sessionController.getCurrentUser());
+		return getDomainService().getManagedDepartmentsOrAllIfAdmin(sessionController.getCurrentUser(), sessionController.getDepartmentFilter());
 	} 
 	
 	/**

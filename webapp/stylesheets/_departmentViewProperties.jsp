@@ -150,9 +150,6 @@
 	<e:text
 		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.EXTRA_MONITORING']}" 
 		rendered="#{not departmentsController.department.virtual}" />
-	<e:text
-		value="#{msgs['DEPARTMENT_VIEW.TEXT.PROPERTIES.EXTRA_MONITORING']}" 
-		rendered="#{not departmentsController.department.virtual}" />
 		
 	<h:panelGroup
 		rendered="#{not departmentsController.department.virtual}" >

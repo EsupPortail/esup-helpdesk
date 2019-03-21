@@ -1459,16 +1459,34 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	 */
 	@Override
 	@RequestCache
-	public List<Department> getManagedDepartmentsOrAllIfAdmin(final User user) {
+	public List<Department> getManagedDepartmentsOrAllIfAdmin(final User user, final String departmentFilter) {
 		if (user == null) {
 			return new ArrayList<Department>();
 		}
 		if (user.getAdmin()) {
+			if(departmentFilter != null) {
+				return filterDepartment(getDepartments(), departmentFilter);
+			}
 			return getDepartments();
+		}
+		if(departmentFilter != null) {
+			return filterDepartment(getManagedDepartmentsInternal(user), departmentFilter);
 		}
 		return getManagedDepartmentsInternal(user);
 	}
 
+	
+	private List<Department> filterDepartment(List<Department> departments, final String departmentFilter) {
+
+		List <Department> departmentsFiltered = new ArrayList<Department>();
+		for (Department department : departments) {
+    		if(department.getXlabel().toLowerCase().contains(departmentFilter.toLowerCase()) ||
+    		   department.getLabel().toLowerCase().contains(departmentFilter.toLowerCase())){
+    			departmentsFiltered.add(department);
+    		} 
+		}
+		return departmentsFiltered;
+	}
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#isDepartmentManager(
 	 *      org.esupportail.helpdesk.domain.beans.User)
@@ -5378,7 +5396,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			logger.info("MANAGER ");
 			return false;
 		}
-		if (user.equals(ticket.getOwner())) {
+		if (user.equals(ticket.getOwner()) && user.equals(objectOwner)) {
 			logger.info("getOwner ");
 			return true;
 		}
@@ -7830,5 +7848,4 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	public void setInviteManagerMoveTicket(Boolean inviteManagerMoveTicket) {
 		this.inviteManagerMoveTicket = inviteManagerMoveTicket;
 	}
-
 }
