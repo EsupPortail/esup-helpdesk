@@ -58,10 +58,10 @@
                                                 <t:htmlTag id="spent-time" styleClass="tab-link tab-link-time #{ticketController.userCanChangeSpentTime ? 'current' :''}" value="li" rendered="#{ticketController.userCanChangeSpentTime}">
                                                     <h:outputText value="#{msgs['TICKET_ACTION.TAB.SPENT_TIME_PROMPT.TEXT']} " />
                                                 </t:htmlTag>
-                                                <t:htmlTag id="properties" styleClass="tab-link tab-link-info #{!ticketController.userCanChangeSpentTime ? 'current' :''}"  value="li">
+                                                <t:htmlTag id="properties" styleClass="tab-link tab-link-info #{!ticketController.userCanChangeSpentTime ? 'current' :''}"  value="li" rendered="#{departmentsController.currentUserCanViewDepartments}">
                                                     <h:outputText value="#{msgs['TICKET_ACTION.TAB.GIVE_INFO.PROPERTIES.TEXT']} " />
                                                 </t:htmlTag>
-                                                <t:htmlTag id="history" styleClass="tab-link tab-link-history" value="li">
+                                                <t:htmlTag id="history" styleClass="tab-link tab-link-history #{!departmentsController.currentUserCanViewDepartments && !ticketController.userCanChangeSpentTime? 'current' :''}" value="li">
                                                     <h:outputText value="#{msgs['TICKET_ACTION.TAB.HISTORY.TEXT']} " />
                                                 </t:htmlTag>
                                                 <t:htmlTag id="files" styleClass="tab-link tab-link-files" value="li">
@@ -77,12 +77,12 @@
                                             <%@include file="_ticketEditSpentTime.jsp"%>
                                         </t:htmlTag>
                             </t:htmlTag>
-                            <t:htmlTag id="tab-properties" styleClass="tab-content #{!ticketController.userCanChangeSpentTime ? 'current' :''}" value="div">
+                            <t:htmlTag id="tab-properties" styleClass="tab-content #{!ticketController.userCanChangeSpentTime ? 'current' :''}" value="div" rendered="#{departmentsController.currentUserCanViewDepartments}">
                                         <t:htmlTag value="div" styleClass="form-block">
                                             <%@include file="_ticketActionScope.jsp"%>
                                         </t:htmlTag>
                             </t:htmlTag>
-                            <t:htmlTag id="tab-history" styleClass="tab-content view-ticket_history" value="div">
+                            <t:htmlTag id="tab-history" styleClass="tab-content view-ticket_history #{!departmentsController.currentUserCanViewDepartments && !ticketController.userCanChangeSpentTime ? 'current' :''}" value="div">
                                         <%@include file="_ticketActionHistory.jsp"%>
                             </t:htmlTag>
                             <t:htmlTag id="tab-files" styleClass="tab-content" value="div">

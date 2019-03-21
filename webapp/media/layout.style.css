@@ -278,6 +278,14 @@ ul.tabs li.current:hover {
   margin-top: 20px;
 }
 
+.department-filter .form-block {
+	display: flex;
+    align-items: center;
+}
+.department-filter .form-block .form-item {
+	display: flex;
+	margin-right: 10px;
+}
 @media (min-width: 1200px) {
   .ticket-form,
   .category_choice {
@@ -371,6 +379,8 @@ ul.tabs li.current:hover {
 
 .ticketView .tab-content table tbody td {
   border-bottom: solid thin #c6c6c6;
+}
+.ticketView .tab-content table tbody .oddRow td {
     width: 90%;
 }
 

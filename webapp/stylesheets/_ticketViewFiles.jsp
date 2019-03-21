@@ -65,10 +65,10 @@
                 </f:facet>
                 <t:htmlTag rendered="#{fie.fileInfo.scope == 'DEFAULT'}" value="div">
                     <h:panelGroup rendered="#{not fie.canChangeScope}">
-                         <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.DEFAULT.FULL']}"/>
+                         <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
                     </h:panelGroup>
                     <h:panelGroup  styleClass="action-scope-edit default link" onclick="javascript:{showHideElement('viewTicketForm:fileData:'+#{variable}+':editScope');}" rendered="#{fie.canChangeScope}">
-                        <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.DEFAULT.FULL']}"/>
+                        <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
                     </h:panelGroup>
                 </t:htmlTag>
 

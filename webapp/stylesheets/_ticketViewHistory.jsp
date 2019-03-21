@@ -19,7 +19,7 @@
             </t:htmlTag>
         </t:htmlTag>
 	</t:column>
-	<t:column styleClass="col-main action--scope">
+	<t:column styleClass="col-main action--scope" rendered="#{departmentsController.currentUserCanViewDepartments}">
 		   <f:facet name="header">
 		        <t:htmlTag value="div" >
                     <h:outputText value="#{msgs['DOMAIN.ACTION_SCOPE.COL.HEADER']}"/>
@@ -28,10 +28,10 @@
         <t:htmlTag styleClass="action-inner" value="div">
                                 <t:htmlTag  rendered="#{he.action.scope == 'DEFAULT'}"  value="div" styleClass="action-scope--default">
                                       <h:panelGroup  rendered="#{not he.canChangeScope}">
-                                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.DEFAULT.FULL']}"/>
+                                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
                                       </h:panelGroup>
                                       <h:panelGroup  styleClass="action-scope-edit default link" rendered="#{he.canChangeScope}">
-                                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.DEFAULT.FULL']}"/>
+                                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
                                       </h:panelGroup>
                                 </t:htmlTag>
                                 <t:htmlTag  rendered="#{he.action.scope == 'INVITED'}"  value="div" styleClass="action-scope--invited">

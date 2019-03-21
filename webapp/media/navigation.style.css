@@ -21,7 +21,7 @@
 
 .navigation .portlet-menu-item input,
 .navigation .portlet-menu-item-selected input {
-  width: 95%;
+  width: 100%;
   margin: 2px 0;
   padding: 6px;
   font-size: 1em;

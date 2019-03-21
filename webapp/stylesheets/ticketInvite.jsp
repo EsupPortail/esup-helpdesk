@@ -168,7 +168,9 @@ function addInvitation(select) {
                       <t:htmlTag value="div" id="inviteComment" styleClass="form-block hideme form-body">
                             <t:htmlTag value="div" styleClass="form-item">
                                 <e:outputLabel for="actionMessage" value="#{msgs['TICKET_ACTION.TEXT.INVITE.2']}" />
-                                <fck:editor id="actionMessage"  toolbarSet="actionMessage" />
+                                <fck:editor id="actionMessage" 
+                                			value="#{ticketController.actionMessage}" 
+                                			toolbarSet="actionMessage" />
                             </t:htmlTag>
                             <t:htmlTag value="div" styleClass="form-item display-flex">
                                 <e:commandButton id="actionButton" value="#{msgs['TICKET_ACTION.BUTTON.INVITE']}"

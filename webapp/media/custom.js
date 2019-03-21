@@ -63,6 +63,19 @@ jQuery(function ($) {
         }
     }
 
+
+    //Filter category Form
+    var $FilterInputDpt = $("#departmentsForm\\:data\\:filterDepartment");
+    var $FilterCancelDpt = $("#departmentsForm\\:data\\:cancelFilterDepartmentButton");
+    if ($FilterInputDpt.length > 0) {
+        if ($FilterInputDpt.val().length === 0) {
+            $FilterCancelDpt.css('visibility', 'hidden');
+        }
+        else {
+            $FilterCancelDpt.css('visibility', 'visible');
+        }
+    }
+
     //---------------------------------Active Tab---------------------------------
     var dataStore = window.sessionStorage;
     var activeTab = null;
@@ -365,6 +378,10 @@ jQuery(function ($) {
     });
 
 
+    $(".action-alert-recipient").click(function () {
+   		$('.action-alert-recipient').addClass('hideme');
+    });
+    
     //view alert
     $('.action-show-alert ').click(function () {
         $(this).next().toggleClass("hideme");

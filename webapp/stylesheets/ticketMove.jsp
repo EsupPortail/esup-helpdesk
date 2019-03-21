@@ -219,10 +219,10 @@ function addInvitation(select) {
 
                                 <t:htmlTag styleClass="region extended-properties" value="div" rendered="#{ticketController.moveTargetCategory != null}">
                                             <t:htmlTag styleClass="tabs" value="ul">
-                                                <t:htmlTag id="properties" styleClass="tab-link current" value="li">
+                                                <t:htmlTag id="properties" styleClass="tab-link current" value="li" rendered="#{departmentsController.currentUserCanViewDepartments}">
                                                     <h:outputText value="#{msgs['TICKET_ACTION.TAB.GIVE_INFO.PROPERTIES.TEXT']} " />
                                                 </t:htmlTag>
-                                                <t:htmlTag id="history" styleClass="tab-link " value="li">
+                                                <t:htmlTag id="history" styleClass="tab-link  #{!departmentsController.currentUserCanViewDepartments ? 'current' :''}" value="li">
                                                     <h:outputText value="#{msgs['TICKET_ACTION.TAB.HISTORY.TEXT']} " />
                                                 </t:htmlTag>
                                                 <t:htmlTag id="files" styleClass="tab-link" value="li">
@@ -244,7 +244,7 @@ function addInvitation(select) {
                                             </t:htmlTag>
                                         </t:htmlTag>
                                 </t:htmlTag>
-                                <t:htmlTag id="tab-history" styleClass="tab-content view-ticket_history" value="div" rendered="#{ticketController.moveTargetCategory != null}">
+                                <t:htmlTag id="tab-history" styleClass="tab-content view-ticket_history #{!departmentsController.currentUserCanViewDepartments ? 'current' :''}" value="div" rendered="#{ticketController.moveTargetCategory != null}">
                                         <%@include file="_ticketActionHistory.jsp"%>
                                 </t:htmlTag>
                                 <t:htmlTag id="tab-files" styleClass="tab-content" value="div" rendered="#{ticketController.moveTargetCategory != null}">

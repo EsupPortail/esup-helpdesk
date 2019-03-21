@@ -22,11 +22,11 @@
 		showSubmitPopupImage="#{sessionController.showSubmitPopupImage}" 
 		id="ticketActionForm" rendered="#{ticketController.userCanAdd}" enctype="multipart/form-data" styleClass="ticketActionForm">
 
-		<h:panelGroup rendered="#{not ticketController.showAddHelp and ticketController.addTargetCategory == null and ticketController.addTargetDepartment != null}">
-			   <e:section value="#{msgs['TICKET_ACTION.TITLE.ADD']}"/>
-		</h:panelGroup>
+        <t:htmlTag value="div" styleClass="message ticketView-message">
+           <e:messages/>
+        </t:htmlTag>
 
-        <t:htmlTag value="div" styleClass="category-filter"  rendered="#{not ticketController.showAddHelp and ticketController.addTargetCategory == null and ticketController.addTargetDepartment == null}">
+        <t:htmlTag value="div" styleClass="category-filter"  rendered="#{not ticketController.showAddHelp and ticketController.addTargetCategory == null}">
                 <t:htmlTag value="h1">
                     <t:htmlTag value="span" styleClass="title">
                           <h:outputText value="#{msgs['TICKET_ACTION.TITLE.ADD']}" escape="false" />
@@ -36,7 +36,7 @@
                     </t:htmlTag>
                 </t:htmlTag>
 
-                <t:htmlTag value="div" styleClass="block form-block">
+                <t:htmlTag value="div" styleClass="block form-block" rendered="#{ticketController.addTargetDepartment == null}">
                     <t:htmlTag value="div" styleClass="form-item">
                         <e:outputLabel for="filtreTree" value="#{msgs['TICKET_ACTION.SEARCH.CATEGORY']}" />
                         <e:inputText id="filtreTree"  title="Recherche" value="#{ticketController.cateFilter}" size="15" onkeypress="if (event.keyCode == 13) { simulateLinkClick('ticketActionForm:filterTreeButton'); return false; }" />
@@ -53,20 +53,7 @@
                             action="#{ticketController.refreshAddTree}" />
                     </t:htmlTag>
 			    </t:htmlTag>
-
-			<h:panelGroup>
-				<h:panelGroup style="display:none" onclick="simulateLinkClick('ticketActionForm:cancelButton');" >
-					<e:bold value="#{msgs['_.BUTTON.CANCEL']} " />
-					<t:graphicImage value="/media/images/back.png"
-						alt="#{msgs['_.BUTTON.CANCEL']}" 
-						title="#{msgs['_.BUTTON.CANCEL']}" />
-				</h:panelGroup>
-				<e:commandButton style="display: none" id="cancelButton" action="#{controlPanelController.enter}"
-					value="#{msgs['_.BUTTON.CANCEL']}" immediate="true" />
-			</h:panelGroup>
         </t:htmlTag>
-
-<e:messages />
 
 		<h:panelGroup rendered="#{ticketController.showAddHelp}">
 			<e:paragraph value="#{msgs['TICKET_ACTION.TEXT.ADD.HELP.TOP.1']}" rendered="#{msgs['TICKET_ACTION.TEXT.ADD.HELP.TOP.1'] != ''}" />
@@ -94,54 +81,7 @@
 			</h:panelGroup>
 		</h:panelGroup>
 
-		<h:panelGroup rendered="#{not ticketController.showAddHelp and ticketController.addTargetCategory == null and ticketController.addTargetDepartment != null}">
-			<h:panelGroup
-				rendered="#{ticketController.filteredTree == null}">
-				<e:paragraph value="#{msgs['TICKET_ACTION.TEXT.ADD.NO_TARGET']}" />
-			</h:panelGroup>
-			<h:panelGroup
-				rendered="#{ticketController.filteredTree != null}">
-				<t:tree2  id="tree" value="#{ticketController.filteredTree}"
-					var="node" varNodeToggler="t" clientSideToggle="true"
-					showRootNode="true">
-					<f:facet name="root">
-						<h:panelGroup >
-							<t:graphicImage value="/media/images/root-opened.png" rendered="#{t.nodeExpanded}" />
-							<t:graphicImage value="/media/images/root-closed.png" rendered="#{!t.nodeExpanded}" />
-							<e:italic value=" #{msgs['TICKET_ACTION.TEXT.ADD.ROOT_LABEL']}" />
-						</h:panelGroup>
-					</f:facet>
-					<f:facet name="department">
-						<h:panelGroup>
-							<t:graphicImage value="#{departmentIconUrlProvider[node.department]}" />
-							<e:text value=" #{msgs['TICKET_ACTION.TEXT.ADD.DEPARTMENT_LABEL']}">
-								<f:param value="#{node.department.label}" />
-								<f:param value="#{node.department.xlabel}" />
-							</e:text>
-						</h:panelGroup>
-					</f:facet>
-					<f:facet name="category">
-						<h:panelGroup>
-							<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ticketActionForm:tree:#{node.identifier}:#{node.category.addNewTickets or node.leaf ? 'chooseCategoryButton' : 't2'}');" >
-								<t:graphicImage value="#{categoryIconUrlProvider[node.category]}" />
-								<e:bold value=" #{msgs['TICKET_ACTION.TEXT.ADD.CATEGORY_LABEL']}" >
-									<f:param value="#{node.description}" />
-								</e:bold>
-							</h:panelGroup>
-							<e:commandButton id="chooseCategoryButton" style="display: none" value="->"
-								action="#{ticketController.addChooseCategory}"
-								rendered="#{node.category.addNewTickets or node.leaf}" >
-								<t:updateActionListener value="#{node.department}"
-									property="#{ticketController.addTargetDepartment}" />
-								<t:updateActionListener value="#{node.category}"
-									property="#{ticketController.addTargetCategory}" />
-							</e:commandButton>
-						</h:panelGroup>
-					</f:facet>
-				</t:tree2>
-			</h:panelGroup>
-		</h:panelGroup>
-		
+	
 		<t:htmlTag value="div" styleClass="category_choice" rendered="#{not ticketController.showAddHelp and ticketController.addTargetCategory == null and ticketController.addTargetDepartment == null}">
 			<h:panelGroup
 				rendered="#{ticketController.addTree == null}">
@@ -180,7 +120,46 @@
 				</t:tree2>
 			</t:htmlTag>
 		</t:htmlTag>
-				
+
+		<t:htmlTag value="div" styleClass="category_choice" rendered="#{not ticketController.showAddHelp and ticketController.addTargetCategory == null and ticketController.addTargetDepartment != null}">
+			<h:panelGroup
+				rendered="#{ticketController.filteredTree == null}">
+				<e:paragraph value="#{msgs['TICKET_ACTION.TEXT.ADD.NO_TARGET']}" />
+			</h:panelGroup>
+			<t:htmlTag value="div" rendered="#{ticketController.filteredTree != null}" styleClass="treeview">
+				<t:tree2  id="tree" value="#{ticketController.filteredTree}"
+					var="node" varNodeToggler="t" clientSideToggle="true"
+					showRootNode="false">
+					<f:facet name="root">
+						<h:panelGroup >
+							<e:italic value=" #{msgs['TICKET_ACTION.TEXT.ADD.ROOT_LABEL']}" />
+						</h:panelGroup>
+					</f:facet>
+					<f:facet name="department">
+						<h:panelGroup styleClass="department leaf" onclick="simulateLinkClick('ticketActionForm:tree:#{node.identifier}:t2');">
+							<e:text value=" #{node.department.xlabel}">
+							</e:text>
+						</h:panelGroup>
+					</f:facet>
+					<f:facet name="category">
+						<h:panelGroup styleClass="category leaf #{node.category.addNewTickets or node.leaf ? 'last' : 'parent'}" onclick="simulateLinkClick('ticketActionForm:tree:#{node.identifier}:#{node.category.addNewTickets or node.leaf ? 'chooseCategoryButton' : 't2'}');" >
+							<e:text value=" #{msgs['TICKET_ACTION.TEXT.ADD.CATEGORY_LABEL']}" >
+									<f:param value="#{node.description}" />
+							</e:text>
+							<e:commandButton id="chooseCategoryButton" style="display:none" value="->"
+								action="#{ticketController.addChooseCategory}"
+								rendered="#{node.category.addNewTickets or node.leaf}" >
+								<t:updateActionListener value="#{node.department}"
+									property="#{ticketController.addTargetDepartment}" />
+								<t:updateActionListener value="#{node.category}"
+									property="#{ticketController.addTargetCategory}" />
+							</e:commandButton>
+						</h:panelGroup>
+					</f:facet>
+				</t:tree2>
+			</t:htmlTag>
+		</t:htmlTag>
+						
 		<t:htmlTag value="div" styleClass="ticket-form" rendered="#{not ticketController.showAddHelp and ticketController.addTargetCategory != null}">
 
 			<t:htmlTag value="div" styleClass="form-block form-header">
@@ -200,7 +179,7 @@
                         <h:outputText value="#{msgs['TICKET_ACTION.TEXT.ADD.TARGET_CATEGORY']} " />
                    </t:htmlTag>
                    <t:htmlTag value="span" styleClass="category-lib">
-                        <h:outputText value="#{ticketController.addTargetDepartment.label} - #{ticketController.addTargetCategory.label}" />
+                        <h:outputText value="#{ticketController.addTargetDepartment.label} - #{ticketController.addTargetCategory.xlabel}" />
                    </t:htmlTag>
                 </t:htmlTag>
 			 </t:htmlTag>
