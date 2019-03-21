@@ -315,7 +315,7 @@ public class PageTag extends UIComponentBodyTag {
 				}
 				responseWriter.startElement("meta", null);
 				responseWriter.writeAttribute("http-equiv", "X-UA-Compatible", null);
-				responseWriter.writeAttribute("content", "IE=7", null);
+				responseWriter.writeAttribute("content", "IE=edge", null);
 				responseWriter.endElement("meta");
 			}
 			if (logger.isDebugEnabled()) {

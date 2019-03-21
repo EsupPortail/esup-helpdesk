@@ -363,10 +363,10 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	private Boolean freeTicket;
 
     /**
-     * The string of the searched categories.
+     * The string of the searched categorie.
      */
     private String cateFilter;
-    
+
     /**
      * The string of the searched categories.
      */    
@@ -1627,6 +1627,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	 */
 	@SuppressWarnings("unchecked")
 	protected void addMoveTreeSubCategories(
+			Department department,
 			final CategoryNode categoryNode,
 			final List<Category> subCategories,
 			final List <Department> departmentsViewable) {
@@ -1643,7 +1644,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
     		//et on vérifie que la catégorie n'est pas dans la black list
     		if(departmentsViewable.indexOf(realSubCategory.getDepartment()) >= 0){
 	    		Department dept = departmentsViewable.get(departmentsViewable.indexOf(realSubCategory.getDepartment()));
-	    		if(dept.getCategoriesNotVisibles() != null && dept.getCategoriesNotVisibles().contains(subCategory)){
+	    		if(department.getCategoriesNotVisibles() != null && department.getCategoriesNotVisibles().contains(subCategory)){
 	    			continue;
 	    		}
     		}
@@ -1655,7 +1656,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	        	CategoryNode subCategoryNode = new CategoryNode(realSubCategory, subCategory.getXlabel());
             	categoryNode.getChildren().add(subCategoryNode);
         		categoryNode.setLeaf(false);
-        		addMoveTreeSubCategories(subCategoryNode, subSubCategories, departmentsViewable);
+        		addMoveTreeSubCategories(department, subCategoryNode, subSubCategories, departmentsViewable);
 	    	}
 		}
 	}
@@ -1667,6 +1668,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	 */
 	@SuppressWarnings("unchecked")
 	protected void addFilteredTreeSubCategories(
+			Department department,
 			final CategoryNode categoryNode,
 			final List<Category> subCategories,
 			final List <Department> departmentsViewable) {
@@ -1681,15 +1683,10 @@ public class TicketController extends TicketControllerStateHolder implements Lda
     		//on vérifie que la catégorie est visible 
     		//pour cela on récupère le déparement de la liste construite avec les visibilité
     		//et on vérifie que la catégorie n'est pas dans la black list
-    		logger.info("realSubCategory.getDepartment() : " + realSubCategory.getDepartment());
-    		logger.info("departmentsViewable.indexOf(realSubCategory.getDepartment()) : " + departmentsViewable.indexOf(realSubCategory.getDepartment()));
     		if(departmentsViewable.indexOf(realSubCategory.getDepartment()) >= 0){
 	    		Department dept = departmentsViewable.get(departmentsViewable.indexOf(realSubCategory.getDepartment()));
 	    		if (dept != null){
-		    		if(dept.getCategoriesNotVisibles() != null && dept.getCategoriesNotVisibles().contains(subCategory)){
-			    		logger.info("dept.getCategoriesNotVisibles().size() : " + dept.getCategoriesNotVisibles().size());
-		    			logger.info(("TicketController : categorie Not Visible : " + subCategory));
-		    			
+		    		if(department.getCategoriesNotVisibles() != null && department.getCategoriesNotVisibles().contains(subCategory)){
 		    			continue;
 		    		}
 	    		}
@@ -1702,7 +1699,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	        	CategoryNode subCategoryNode = new CategoryNode(realSubCategory, subCategory.getXlabel());
             	categoryNode.getChildren().add(subCategoryNode);
         		categoryNode.setLeaf(false);
-        		addFilteredTreeSubCategories(subCategoryNode, subSubCategories, departmentsViewable);
+        		addFilteredTreeSubCategories(department, subCategoryNode, subSubCategories, departmentsViewable);
 	    	}
 		}
 	}
@@ -1734,7 +1731,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 			}
 			if(departmentsViewable.contains(realDepartment)){
 		    	CategoryNode departmentNode = new CategoryNode(department);
-		    	addMoveTreeSubCategories(departmentNode, getRootCategories(realDepartment), departmentsViewable);
+		    	addMoveTreeSubCategories(department, departmentNode, getRootCategories(realDepartment), departmentsViewable);
 		    	if (departmentNode.getChildCount() > 0) {
 			    	rootNode.getChildren().add(departmentNode);
 			    	rootNode.setLeaf(false);
@@ -2731,11 +2728,10 @@ public class TicketController extends TicketControllerStateHolder implements Lda
     		//et on vérifie que la catégorie n'est pas dans la black list
     		if(departmentsViewable.indexOf(realSubCategory.getDepartment()) >= 0){
 	    		Department dept = departmentsViewable.get(departmentsViewable.indexOf(realSubCategory.getDepartment()));
-	    		if(dept.getCategoriesNotVisibles() != null && dept.getCategoriesNotVisibles().contains(subCategory)){
+	    		if(creationDepartment.getCategoriesNotVisibles() != null && creationDepartment.getCategoriesNotVisibles().contains(subCategory)){
 	    			continue;
 	    		}
     		}
-    		
     		if ((!realSubCategory.getHideToExternalUsers()
     				|| !getDomainService().getUserStore().isApplicationUser(getCurrentUser()))
     				&& realSubCategory.getDepartment().isEnabled()
@@ -2778,7 +2774,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
     		//et on vérifie que la catégorie n'est pas dans la black list
     		if(departmentsViewable.indexOf(realSubCategory.getDepartment()) >= 0){
 	    		Department dept = departmentsViewable.get(departmentsViewable.indexOf(realSubCategory.getDepartment()));
-	    		if(dept.getCategoriesNotVisibles() != null && dept.getCategoriesNotVisibles().contains(subCategory)){
+	    		if(creationDepartment.getCategoriesNotVisibles() != null && creationDepartment.getCategoriesNotVisibles().contains(subCategory)){
 	    			continue;
 	    		}
     		}
@@ -3690,7 +3686,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		}
 		if(departmentsViewable.contains(realDepartment)){
 		   	CategoryNode departmentNode = new CategoryNode(department);
-		   	addFilteredTreeSubCategories(departmentNode, getRootCategories(realDepartment), departmentsViewable);
+		   	addFilteredTreeSubCategories(department, departmentNode, getRootCategories(realDepartment), departmentsViewable);
 		   	if (departmentNode.getChildCount() > 0) {
 		    	rootNode.getChildren().add(departmentNode);
 		    	rootNode.setLeaf(false);

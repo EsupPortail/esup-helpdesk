@@ -73,6 +73,9 @@ public class AddByLabelAction extends AbstractAction {
 		//on va l'ajouter à la liste mais on va exclure les catégories invisibles avant tout
 		List <Category> categoriesNonVisibles = new ArrayList<Category>();
 		for(Category cate : domainService.getCategories(department)) {
+			if(cate.getRealCategory() != null) {
+				checkRealCateRules(cate.getRealCategory(), categoriesNonVisibles, domainService);
+			}
 			if(cate.getCateInvisible()) {
 				categoriesNonVisibles.add(cate);
 			}
@@ -82,6 +85,15 @@ public class AddByLabelAction extends AbstractAction {
 		}
 		departments.add(department);
 		return departments;
+	}
+
+	private List <Category> checkRealCateRules(Category category, List <Category> categoriesNonVisibles, final DomainService domainService){
+		for(Category cate : domainService.getCategories(category.getDepartment())) {
+			if(cate.getCateInvisible()) {
+				categoriesNonVisibles.add(cate);
+			}
+		}
+		return categoriesNonVisibles;
 	}
 
 	/**
