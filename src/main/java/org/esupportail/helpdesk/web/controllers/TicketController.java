@@ -774,9 +774,37 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		if (BACK_PAGE_STATISTICS.equals(backPage)) {
 			return "navigationStatistics";
 		}
+		enter();
 		return "navigationControlPanel";
 	}
 
+	private void enter() {
+		User currentUser = getCurrentUser();
+		if (currentUser.getControlPanelPageSize() <= 0) {
+			currentUser.setControlPanelPageSize(paginator.getDefaultPageSize());
+		}
+		if (currentUser.getControlPanelUserInterface()) {
+			if (currentUser.getControlPanelUserDepartmentFilter() != null) {
+				if (!getDomainService().isDepartmentVisibleForTicketView(
+						currentUser, currentUser.getControlPanelUserDepartmentFilter(),
+						getSessionController().getClient())) {
+					currentUser.setControlPanelUserDepartmentFilter(null);
+				}
+			}
+		} else {
+			if (currentUser.getControlPanelManagerDepartmentFilter() != null) {
+				 if (!getDomainService().isDepartmentManager(
+						currentUser.getControlPanelManagerDepartmentFilter(), currentUser)) {
+					currentUser.setControlPanelManagerDepartmentFilter(null);
+				}
+			}
+		}
+		getDomainService().updateUser(getCurrentUser());
+		paginator.setPageSize(getCurrentUser().getControlPanelPageSize());
+//		refreshColumnOrderer();
+		paginator.forceReload();
+	}
+	
 	/**
 	 * Limit the scope of the action depending on the user's role.
 	 */
@@ -1647,6 +1675,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	    		if(department.getCategoriesNotVisibles() != null && department.getCategoriesNotVisibles().contains(subCategory)){
 	    			continue;
 	    		}
+
     		}
     		
 			List<Category> subSubCategories = getSubCategories(realSubCategory);
@@ -3672,6 +3701,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	public void setAddTree(TreeModelBase addTree) {
 		this.addTree = addTree;
 	}
+
 	/**
 	 * @return the addTree
 	 */
@@ -4247,4 +4277,5 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	public void setCategoryMoveMembers(String categoryMoveMembers) {
 		this.categoryMoveMembers = categoryMoveMembers;
 	}
+
 }
