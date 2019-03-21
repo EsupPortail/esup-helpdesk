@@ -10,6 +10,7 @@ import org.esupportail.commons.services.logging.Logger;
 import org.esupportail.commons.services.logging.LoggerImpl;
 import org.esupportail.commons.utils.Assert;
 import org.esupportail.commons.utils.ContextUtils;
+import org.esupportail.helpdesk.domain.ControlPanel;
 import org.esupportail.helpdesk.domain.beans.User;
 import org.esupportail.helpdesk.web.controllers.AbstractDomainAwareBean;
 
@@ -83,6 +84,11 @@ public class AuthenticatorImpl extends AbstractDomainAwareBean implements Authen
 		}
 		if (AuthUtils.CAS.equals(authInfo.getType())) {
 			User user = getUserStore().getOrCreateCasUser(authInfo.getId(), true);
+			if(user.getControlPanelUserInterface()) {
+				user.setControlPanelUserDepartmentFilter(null);
+				user.setControlPanelUserInvolvementFilter(ControlPanel.USER_INVOLVEMENT_FILTER_OWNER_OR_INVITED);
+				user.setControlPanelUserStatusFilter(ControlPanel.STATUS_FILTER_ANY);
+			}
 			storeToSession(authInfo, user);
 			return user;
 		}
