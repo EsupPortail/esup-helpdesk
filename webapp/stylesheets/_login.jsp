@@ -9,13 +9,16 @@
 		<e:form id="casLoginForm">
 			<h:panelGroup  onclick="simulateLinkClick('casLoginForm:loginButton');" >
 			    <t:htmlTag value="h1">
-			        <h:outputText value="#{msgs['SESSION.LOGIN.CAS.TEXT.3']}" escape="false" />
+					<e:text value="#{msgs['SESSION.LOGIN.CAS.TEXT.3']}" >
+                    	<f:param value="#{sessionController.institutionName}" />
+                    </e:text>
 			    </t:htmlTag>
 			    <t:htmlTag value="i" styleClass="fas fa-sign-out-alt"/>
-                <e:text value="#{msgs['SESSION.LOGIN.CAS.TEXT.4']}"/>
-			</h:panelGroup>
+                <e:text value="#{msgs['SESSION.LOGIN.CAS.TEXT.4']}" >
+                	<f:param value="#{sessionController.institutionName}" />
+            	</e:text>
+            	</h:panelGroup>
 			<e:commandButton id="loginButton" style="display: none"
-				value="#{msgs['SESSION.LOGIN.CAS.LOGIN_BUTTON']}"
 				action="#{sessionController.casLogin}" />
 			<e:text value="#{msgs['SESSION.LOGIN.CAS.TEXT.1']}" />
 			<e:text value="#{msgs['SESSION.LOGIN.CAS.TEXT.2']}" />

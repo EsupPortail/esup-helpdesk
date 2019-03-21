@@ -1,7 +1,7 @@
 <%@include file="_include.jsp"%>
 <t:htmlTag value="div" styleClass="region">
     <t:htmlTag value="div" styleClass="logo">
-        <t:graphicImage value="/media/images/amu-helpdesk.png" alt="ACCUEIL" title="ACCUEIL" />
+        <t:graphicImage value="/media/images/logo-header-large.png" alt="ACCUEIL" title="ACCUEIL" />
     </t:htmlTag>
     <t:htmlTag value="div">
         <t:htmlTag value="div" styleClass="current-user">

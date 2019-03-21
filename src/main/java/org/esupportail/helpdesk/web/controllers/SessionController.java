@@ -132,8 +132,33 @@ public class SessionController extends AbstractDomainAwareBean {
 	 * Url de l'ENT.
 	 */
 	private String urlEnt;
-	
 
+	/**
+	 * nom établissement.
+	 */
+	private String institutionName;
+
+	/**
+	 * titre en pied de page.
+	 */
+	private String footerTitle;
+
+	/**
+	 * url de l'aide pour les utilisateurs.
+	 */
+	private String helpUserUrl;
+
+	/**
+	 * url de l'aide pour les gestionnaires.
+	 */
+	private String helpManagerUrl;
+
+	
+    /**
+     * The string of the searched department.
+     */
+    private String	departmentFilter;
+    
 	/**
 	 * Constructor.
 	 */
@@ -146,6 +171,8 @@ public class SessionController extends AbstractDomainAwareBean {
 		state = NORMAL_STATE;
 		displayName = null;
 		loginParams = null;
+		helpUserUrl = null;
+		helpManagerUrl = null;
 		showShortMenu = false;
 	}
 
@@ -160,6 +187,8 @@ public class SessionController extends AbstractDomainAwareBean {
 		Assert.notNull(this.authenticator, "property authenticator of class "
 				+ this.getClass().getName() + " can not be null");
 		Assert.notNull(this.passwordSender, "property passwordSender of class "
+				+ this.getClass().getName() + " can not be null");
+		Assert.notNull(this.institutionName, "property institution name of class "
 				+ this.getClass().getName() + " can not be null");
 	}
 
@@ -904,6 +933,46 @@ public class SessionController extends AbstractDomainAwareBean {
 
 	public void setUrlEnt(String urlEnt) {
 		this.urlEnt = urlEnt;
+	}
+
+	public String getInstitutionName() {
+		return institutionName;
+	}
+
+	public void setInstitutionName(String institutionName) {
+		this.institutionName = institutionName;
+	}
+
+	public String getFooterTitle() {
+		return footerTitle;
+	}
+
+	public void setFooterTitle(String footerTitle) {
+		this.footerTitle = footerTitle;
+	}
+	
+	public String getDepartmentFilter() {
+		return departmentFilter;
+	}
+
+	public void setDepartmentFilter(String departmentFilter) {
+		this.departmentFilter = departmentFilter;
+	}
+
+	public String getHelpUserUrl() {
+		return helpUserUrl;
+	}
+
+	public void setHelpUserUrl(String helpUserUrl) {
+		this.helpUserUrl = helpUserUrl;
+	}
+
+	public String getHelpManagerUrl() {
+		return helpManagerUrl;
+	}
+
+	public void setHelpManagerUrl(String helpManagerUrl) {
+		this.helpManagerUrl = helpManagerUrl;
 	}
 
 }

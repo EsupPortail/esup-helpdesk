@@ -11,7 +11,9 @@
     	     <h:outputText value="#{msgs['SESSION.CREATE_ACCOUNT.TITLE']}" escape="false" />
         </t:htmlTag>
         <t:htmlTag value="div" styleClass="form-block">
-            <e:paragraph value="#{msgs['SESSION.CREATE_ACCOUNT.TOP']}" />
+            <e:paragraph value="#{msgs['SESSION.CREATE_ACCOUNT.TOP']}" >
+            	<f:param value="#{sessionController.institutionName}" />
+			</e:paragraph>            	
             <t:htmlTag value="div" styleClass="form-item">
                 <e:outputLabel for="email"
                     value="#{msgs['SESSION.CREATE_ACCOUNT.EMAIL_PROMPT']}" />

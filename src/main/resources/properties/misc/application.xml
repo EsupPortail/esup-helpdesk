@@ -45,7 +45,7 @@
 	    		The update of the application (3 for version 1.2.3).
 	    	</description>
     	</property>
-    	<property name="copyright" value="Copyright  2004-2011 ESUP-Portail consortium" >
+    	<property name="copyright" value="Copyright  2004-2019 ESUP-Portail consortium" >
 	    	<description>
 	    		The copyright.
 	    	</description>
@@ -55,7 +55,7 @@
 	    		The vendor.
 	    	</description>
     	</property>
-    	<property name="latestVersionBaseUrl" value="http://sourcesup.cru.fr/esup-helpdesk" >
+    	<property name="latestVersionBaseUrl" value="https://github.com/EsupPortail/esup-helpdesk" >
 	    	<description>
 	    		The base URL where the latest version number should be found.
 	    	</description>

@@ -56,6 +56,18 @@
 		<property name="urlEnt" value="${ent.url}">
 			<description>The CAS logout URL.</description>
 		</property>
+		<property name="institutionName" value="${institution.name}">
+			<description>The institution name.</description>
+		</property>
+		<property name="footerTitle" value="${footer.title}">
+			<description>The footer title.</description>
+		</property>
+		<property name="helpUserUrl" value="${help.user.url}">
+			<description>The url of the user help.</description>
+		</property>
+		<property name="helpManagerUrl" value="${help.manager.url}">
+			<description>The url of the manager help.</description>
+		</property>
 		<property name="passwordSender" ref="passwordSender" />
 		<property name="timeZone" value="${timezone}" />
 	</bean>

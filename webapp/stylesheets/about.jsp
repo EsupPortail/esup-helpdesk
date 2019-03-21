@@ -16,16 +16,26 @@
                                             <t:htmlTag value="span" styleClass="title">
                                                   <h:outputText value="#{msgs['ABOUT.TITLE']}" escape="false" />
                                             </t:htmlTag>
-                                            <t:htmlTag value="span" styleClass="subtitle title">
+                                            <t:htmlTag value="span" styleClass="title">
                                                 <h:outputText value=" #{applicationService.name}" escape="false" />
                                             </t:htmlTag>
                                         </t:htmlTag>
                               </t:htmlTag>
 
-                <e:paragraph value="#{msgs['ABOUT.TEXT.SUMMARY']}">
-                    <f:param value="#{applicationService.name}" />
+                <e:paragraph >
+                	<h:outputText value=" #{applicationService.name}" escape="false" />
+                	<h:outputText value="#{msgs['ABOUT.TEXT.SUMMARY']}" escape="false" />
+                	<h:outputText value="#{msgs['ABOUT.TEXT.ESUP.URL']}" escape="false" />
                 </e:paragraph>
+                
+                
 
+
+                <e:ul rendered="#{sessionController.helpUserUrl != null || sessionController.helpManagerUrl != null}">
+                    <h:outputText value="<a href=&quot; #{sessionController.helpUserUrl} &quot; target=&quot;true&quot;>Aide utilisateur</a>" escape="false" /><br/>
+                    <h:outputText rendered="#{controlPanelController.manager}" value="<a href=&quot; #{sessionController.helpManagerUrl} &quot; target=&quot;true&quot;>Aide gestionnaire</a>" escape="false" />
+                </e:ul>
+                
                 <e:paragraph value="#{msgs['ABOUT.TEXT.AUTHORS']}">
                     <f:param value="#{applicationService.name}" />
                 </e:paragraph>
@@ -33,21 +43,23 @@
                     <e:li value="#{msgs['ABOUT.TEXT.AUTHORS.PA']}" />
                     <e:li value="#{msgs['ABOUT.TEXT.AUTHORS.AB']}" />
                 </e:ul>
-
+                
+                <e:paragraph value="#{msgs['ABOUT.TEXT.MAINTAINER']}">
+                    <f:param value="#{applicationService.name}" />
+                </e:paragraph>
+                <e:ul>
+					<e:li value="#{msgs['ABOUT.TEXT.MAINTAINER.DP']}" />
+                    <e:li value="#{msgs['ABOUT.TEXT.MAINTAINER.SR']}" />
+                </e:ul>
                 <e:subSection value="#{msgs['ABOUT.SUBTITLE.COPYRIGHT']}" />
+                
                 <e:paragraph value="#{msgs['ABOUT.TEXT.COPYRIGHT']}">
                     <f:param value="#{applicationService.name}" />
                     <f:param value="#{applicationService.version}" />
                     <f:param value="#{applicationService.copyright}" />
                 </e:paragraph>
 
-                <e:subSection value="#{msgs['ABOUT.SUBTITLE.MORE_INFORMATION']}">
-                    <f:param value="#{applicationService.name}" />
-                </e:subSection>
-                <e:ul>
-                    <e:li escape="false" value="#{msgs['ABOUT.TEXT.MORE_INFORMATION.ESUP_PORTAIL']}" />
-                </e:ul>
-                    </t:htmlTag>
+              </t:htmlTag>
             </t:htmlTag>
             </t:htmlTag>
                 <t:htmlTag value="footer" styleClass="footer">
