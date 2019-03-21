@@ -379,6 +379,8 @@ ul.tabs li.current:hover {
 
 .ticketView .tab-content table tbody td {
   border-bottom: solid thin #c6c6c6;
+}
+.ticketView .tab-content table tbody .oddRow td {
     width: 90%;
 }
 
