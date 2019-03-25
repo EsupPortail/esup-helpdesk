@@ -292,14 +292,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	private boolean tryConvertMaillToCasUser;
 
 	/**
-	 * pattern of mail to convert to cas user.
-	 */
-	private String mailToConvertPattern;
-
-	/**
 	 * indicator for manager invited.
 	 */
 	private Boolean inviteManagerMoveTicket;
+	
+	/**
+	 * indicator for manager invited.
+	 */
+	private Boolean checkVisiCateVirtual;
 	
 	/**
 	 * Bean constructor.
@@ -380,10 +380,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		faqReporter.setDomainService(this);
 		Assert.notNull(this.tryConvertMaillToCasUser,
 				"property tryConvertMaillToCasUser of class " + this.getClass().getName() + " can not be null");
-		Assert.notNull(this.mailToConvertPattern,
-				"property mailToConvertPattern of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(this.inviteManagerMoveTicket,
 				"property inviteManagerMoveTicket of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(this.checkVisiCateVirtual,
+				"property checkVisiCateVirtual of class " + this.getClass().getName() + " can not be null");
+		
 	}
 
 	/** Eclipse outline delimiter. */
@@ -6538,14 +6539,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		}
 		Action newAction = new Action(actionOwner, ticket, ActionType.INVITE, ticket.getStatus(), actionScope,
 				actionMessage);
-		// on force le user cas si l'invité est de type @univ-amu.fr
-		
     	if(tryConvertMaillToCasUser) {
-    		if(mailToConvertPattern.length() != 0) {
-    			if (invitedUser.getDisplayName().contains(mailToConvertPattern)) {
-    				invitedUser = userStore.getUserWithEmail(invitedUser.getDisplayName());
-    			}
-    		}
+   			if (invitedUser.getDisplayName().contains("@")) {
+   				invitedUser = userStore.getUserWithEmail(invitedUser.getDisplayName());
+   			}
 		}
 		newAction.setInvitedUser(invitedUser);
 		addAction(newAction);
@@ -7833,19 +7830,19 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		this.tryConvertMaillToCasUser = tryConvertMaillToCasUser;
 	}
 
-	public String getMailToConvertPattern() {
-		return mailToConvertPattern;
-	}
-
-	public void setMailToConvertPattern(String mailToConvertPattern) {
-		this.mailToConvertPattern = mailToConvertPattern;
-	}
-
 	public Boolean getInviteManagerMoveTicket() {
 		return inviteManagerMoveTicket;
 	}
 
 	public void setInviteManagerMoveTicket(Boolean inviteManagerMoveTicket) {
 		this.inviteManagerMoveTicket = inviteManagerMoveTicket;
+	}
+	
+	public Boolean getCheckVisiCateVirtual() {
+		return checkVisiCateVirtual;
+	}
+
+	public void setCheckVisiCateVirtual(Boolean checkVisiCateVirtual) {
+		this.checkVisiCateVirtual = checkVisiCateVirtual;
 	}
 }
