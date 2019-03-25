@@ -1,4 +1,4 @@
-# 
+#
 # /properties/config.properties
 #
 ##############################################################
@@ -936,8 +936,6 @@ webService.authorizedClientNames=127.0.0.1,193.51.63.219,139.124.243.77,139.124.
 
 # Pour activer ou non la conversion des mails en uid CAS
 auth.tryConvertMaillToCasUser=true
-# On converti uniquement le mails qui correspondent au pattern suivant
-auth.mailToConvertPattern=@univ.fr
 
 # Pour activer ou non l'invitation automatique du gestionnaire lors de la prise en charge du ticket par un nouveau gestionnaire
 conf.inviteManagerMoveTicket=true
@@ -952,3 +950,7 @@ footer.title=xxx Universit\u00E9 - DOSI
 # si renseignée, affichage dans l'onglet AIDE de liens vers une doc utilisateur et gestionnaire
 help.user.url=https://univ.fr/aide-utilisateur
 help.manager.url=https://univ.fr/aide-gestionnaire
+
+
+# Pour activer ou non le controle la visibilité de la catégorie redirigée
+ckeck.visi.cat.virtual=false

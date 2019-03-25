@@ -99,11 +99,6 @@ public class UserStoreImpl extends AbstractUserStore implements InitializingBean
 	private boolean tryConvertMaillToCasUser;
 
 	/**
-	 * pattern of mail to convert to cas user.
-	 */
-	private String mailToConvertPattern;
-
-	/**
 	 * The auth cookie expiry.
 	 */
 	private int authCookieExpiry = DEFAULT_AUTH_COOKIE_EXPIRY;
@@ -533,10 +528,8 @@ public class UserStoreImpl extends AbstractUserStore implements InitializingBean
                 return getOrCreateCasUser(realId, false);
             } catch (UserNotFoundException e) {
             	if(tryConvertMaillToCasUser) {
-            		if(mailToConvertPattern.length() != 0) {
-            			if (realId.contains(mailToConvertPattern)) {
-            				return getUserWithEmail(realId);
-            			}
+           			if (realId.contains("@")) {
+           				return getUserWithEmail(realId);
             		}
             	}
             }
@@ -850,15 +843,6 @@ public class UserStoreImpl extends AbstractUserStore implements InitializingBean
 	 */
 	public void setSpecificAuthAllowed(final boolean specificAuthAllowed) {
 		this.specificAuthAllowed = specificAuthAllowed;
-	}
-
-
-	public String getMailToConvertPattern() {
-		return mailToConvertPattern;
-	}
-
-	public void setMailToConvertPattern(String mailToConvertPattern) {
-		this.mailToConvertPattern = mailToConvertPattern;
 	}
 
 	public void setTryConvertMaillToCasUser(boolean tryConvertMaillToCasUser) {

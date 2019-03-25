@@ -43,8 +43,9 @@
 		<property name="ticketReporter" ref="ticketReporter" />
 		<property name="faqReporter" ref="faqReporter" />
 		<property name="tryConvertMaillToCasUser" value="${auth.tryConvertMaillToCasUser}" />
-		<property name="mailToConvertPattern" value="${auth.mailToConvertPattern}" />
 		<property name="inviteManagerMoveTicket" value="${conf.inviteManagerMoveTicket}" />
+		<property name="checkVisiCateVirtual" value="${ckeck.visi.cat.virtual}" />
+		
 	</bean>
 
 	<bean id="ticketExtractor"
