@@ -45,41 +45,59 @@ public class AddByFilterAction extends AbstractAction {
 			@SuppressWarnings("unused") final Result result) {
 
 		List<Department> departments = new ArrayList<Department>();
-		for (Department departmentFiltre : domainService.getDepartmentsByFilter(filter)) {
-			// on vérifie si le département est déja dans result
+		for (Department department : domainService.getDepartmentsByFilter(filter)) {		// on vérifie si le département est déja dans result
 			// on retire toutes les catégories qui sont dans catNonVisible et qui n'ont pas
 			// la propriété CateInvisible
+			List<Category> categoryToRemove = new ArrayList<Category>();
 			for (Department departmentResult : result.getDepartments()) {
-				if (departmentResult != null && departmentFiltre != null) {
-					if (departmentResult.getLabel().equals(departmentFiltre.getLabel())) {
+				if (departmentResult != null && department != null) {
+					if (departmentResult.getLabel().equals(department.getLabel())) {
 						for (Category catNonVisibleResult : departmentResult.getCategoriesNotVisibles()) {
 							if (!catNonVisibleResult.getCateInvisible()) {
-								departmentResult.getCategoriesNotVisibles().remove(catNonVisibleResult);
+								categoryToRemove.add(catNonVisibleResult);
 							}
 						}
-						continue;
+						if(!categoryToRemove.isEmpty()) {
+							departmentResult.getCategoriesNotVisibles().removeAll(categoryToRemove);
+						}
+						return null;
 					}
 				}
 			}
-			if (departmentFiltre == null) {
-				continue;
+			if (department == null) {
+				return null;
 			}
 			//cas ou le service n'est pas encore traité dans les regles,
 			//on va l'ajouter à la liste mais on va exclure les catégories invisibles avant tout
 			List <Category> categoriesNonVisibles = new ArrayList<Category>();
-			for(Category cate : domainService.getCategories(departmentFiltre)) {
+			for(Category cate : domainService.getCategories(department)) {
+				if(cate.getRealCategory() != null) {
+					checkRealCateRules(cate.getRealCategory(), categoriesNonVisibles, domainService);
+				}
 				if(cate.getCateInvisible()) {
 					categoriesNonVisibles.add(cate);
 				}
 			}
 			if(categoriesNonVisibles.size() != 0) {
-				departmentFiltre.addCategorieNotVisible(categoriesNonVisibles);
+				department.addCategorieNotVisible(categoriesNonVisibles);
 			}
-			departments.add(departmentFiltre);
+			departments.add(department);
 		}
 		return departments;
 	}
 
+	
+	private List <Category> checkRealCateRules(Category category, List <Category> categoriesNonVisibles, final DomainService domainService){
+		for(Category cate : domainService.getCategories(category.getDepartment())) {
+			if(cate.getCateInvisible()) {
+				categoriesNonVisibles.add(cate);
+			}
+		}
+		return categoriesNonVisibles;
+	}
+	
+	
+	
 	/**
 	 * @see org.esupportail.helpdesk.domain.departmentSelection.actions.AbstractAction#compile()
 	 */
