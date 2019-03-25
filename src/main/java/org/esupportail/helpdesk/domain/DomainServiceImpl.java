@@ -302,6 +302,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	private Boolean inviteManagerMoveTicket;
 	
 	/**
+	 * indicator for manager invited.
+	 */
+	private Boolean checkVisiCateVirtual;
+	
+	/**
 	 * Bean constructor.
 	 */
 	public DomainServiceImpl() {
@@ -384,6 +389,9 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 				"property mailToConvertPattern of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(this.inviteManagerMoveTicket,
 				"property inviteManagerMoveTicket of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(this.checkVisiCateVirtual,
+				"property checkVisiCateVirtual of class " + this.getClass().getName() + " can not be null");
+		
 	}
 
 	/** Eclipse outline delimiter. */
@@ -7822,5 +7830,12 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	public void setInviteManagerMoveTicket(Boolean inviteManagerMoveTicket) {
 		this.inviteManagerMoveTicket = inviteManagerMoveTicket;
 	}
+	
+	public Boolean getCheckVisiCateVirtual() {
+		return checkVisiCateVirtual;
+	}
 
+	public void setCheckVisiCateVirtual(Boolean checkVisiCateVirtual) {
+		this.checkVisiCateVirtual = checkVisiCateVirtual;
+	}
 }

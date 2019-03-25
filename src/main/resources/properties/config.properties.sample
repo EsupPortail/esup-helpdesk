@@ -1,0 +1,958 @@
+#
+# /properties/config.properties
+#
+##############################################################
+# INSTALL
+##############################################################
+#-------------------------------------------------------------
+# FOLDERS
+#-------------------------------------------------------------
+#
+# The upload folder is used to store the files attached to tickets.
+# - In clustered environment, this folder must be shared by all the
+#   servers and the system user that runs the application must have
+#   read/write access to it.
+# - The system user that runs the ant expiring task must have read/write
+#   access to this folder.
+# E.g.: /mnt/helpdesk/upload.
+#
+uploadedFiles.path=/home/upload/helpdeskv3
+#
+# The path where the v2 application was storing the uploaded files, used
+# by ant target upgrade. The server that runs the ant target upgrade must
+# have r/w access to this path.
+# Required for the migration from v2 to v3.
+#
+uploadedFiles.v2Path=/home/upload/helpdesk
+#
+# The indexing folder is used to store the indexing data.
+# - In clustered environment, this folder must be shared by all the
+#   servers and the system user that runs the application must have read
+#   access to it.
+# - The system user that runs the ant indexing tasks must have read/write
+#   access to this folder.
+# E.g.: /mnt/helpdesk/index.
+#
+indexing.path=/home/upload/helpdeskv3/index
+#
+# The lock folder is used to insure that ant tasks do not run concurrently.
+# - In clustered environment, this folder does not need to be shared by
+#   all the servers.
+# - The system user that runs the ant tasks must have read/write access to
+#   this folder.
+# E.g.: /usr/local/helpdesk/lock.
+#
+lock.path=/tmp
+#
+# The cache folder is used by EhCache to cache data on the filesystem.
+# - In clustered environment, this folder must not be shared by all the
+#   servers. The system user that runs the application must have read/write
+#   access to this folder.
+# - The system user that runs the ant tasks must also have read/write
+#   access to this folder.
+# E.g.: /tmp/helpdesk-cache.
+#
+cache.path=/tmp/esup-helpdesk
+#-------------------------------------------------------------
+# STATIC RESOURCES
+#-------------------------------------------------------------
+#
+# The path to media files for servlet deployments, defaults to ../media.
+#
+#mediaPath.servlet=/esup-helpdesk/media
+#
+# The path to media files for portlet deployments.
+# the first part is the name of the (Tomcat) context of the application,
+# defaults to /esup-helpdesk/media.
+#
+mediaPath.portlet=/esup-helpdesk/media
+#-------------------------------------------------------------
+# URLS
+#-------------------------------------------------------------
+#
+# The name of the bean used to generate URLs. Set this property to
+# servletUrlGenerator for servlet deployment and uportalUrlGenerator
+# for uPortal portlet deployments.
+#
+urlGeneration.bean=servletUrlGenerator
+app.servletUrl=https://univ.fr/esup-helpdesk
+#urlGeneration.bean=uportalUrlGenerator
+#
+# The login URL of the CAS server, required.
+# E.g.: https://cas.domain.edu/login?service=%s
+#
+#urlGeneration.casLoginUrl=https://univ.fr/cas/login?service=%s
+urlGeneration.casLoginUrl=https://univ.fr/cas/login?service=%s
+#
+# The servlet login URL of the application for local users, required.
+# E.g.: http://helpdesk.domain.edu/stylesheets/cas.faces
+#
+urlGeneration.servletLoginUrl=https://univ.fr/esup-helpdesk/stylesheets/cas.faces
+#
+# The servlet login URL of the application for outside users, required.
+# E.g.: http://helpdesk.domain.edu/stylesheets/welcome.faces
+#
+urlGeneration.servletGuestUrl=https://univ.fr/esup-helpdesk/stylesheets/welcome.faces
+#
+# The portlet login URL of the application for local users, required.
+# E.g.: http://portal.domain.edu/Login
+#
+urlGeneration.uportalLoginUrl=https://univ.fr/uPortal/Login
+#
+# The portlet guest URL of the application for outside users, required.
+# E.g.: http://portal.domain.edu/Guest
+#
+urlGeneration.uportalGuestUrl=https://univ.fr/uPortal/Guest
+#
+# The functional name of the portlet in uPortal, required for uPortal deployments.
+# Defaults to esup-helpdesk.
+#
+urlGeneration.uportalFunctionnalName=esup-helpdesk
+##############################################################
+# LOGS
+##############################################################
+#
+# The main log level, defaults to WARN.
+# Set to TRACE, DEBUG, INFO, WARN, ERROR or FATAL.
+#
+log.level=WARN
+#
+# The destination of logs, defaults to file.
+# Set to 'stdout' to print logs on the console or 'file' to print to a file.
+#
+log.output=R
+#
+# The log4j pattern used, defaults to %d %p [%c] - %m%n.
+#
+log.pattern=helpdesk %d %p [%c] - %m%n
+#-------------------------------------------------------------
+# FILE OUTPUT
+#-------------------------------------------------------------
+#
+# The name of the output file, used when log.output is set to file.
+# Defaults to esup-helpdesk.log.
+#
+log.file=/home/esup/tomcat/logs/esup-helpdesk.log
+#
+# The max size of the output file, used when log.output is set to file.
+# Defaults to 5MB.
+#
+log.maxFileSize=20
+#
+# The max number of backups, defaults to 3.
+#
+log.maxBackupIndex=1
+#-------------------------------------------------------------
+# EXCEPTION HANDLING
+#-------------------------------------------------------------
+#
+# The log level, defaults to ERROR.
+#
+exceptionHandling.logLevel=WARN
+#
+# The email address to which exception reports are sent,
+# defaults to bugs@domain.edu.
+#
+exceptionHandling.email=
+#
+# By default, exception reports are also automatically sent to the
+# developpers (helpdesk-bugs@esup-portail.org). Help in improving
+# esup-helpdesk by sending us your exception reports!
+#
+#exceptionHandling.doNotSendExceptionReportsToDevelopers=false
+##############################################################
+# DATABASE
+##############################################################
+#-------------------------------------------------------------
+# HIBERNATE
+#-------------------------------------------------------------
+#
+# The class of the driver to use (defaults to com.mysql.jdbc.Driver).
+#
+hibernate.connection.driver_class=com.mysql.jdbc.Driver
+#
+# The Hibernate dialect to use (defaults to org.hibernate.dialect.MySQLInnoDBDialect).
+#
+hibernate.dialect=org.hibernate.dialect.MySQLInnoDBDialect
+#-------------------------------------------------------------
+# JDBC
+#-------------------------------------------------------------
+#
+# The JDBC URL to use. Defaults to jdbc:mysql://localhost/helpdesk.
+#
+hibernate.connection.jdbc.url=jdbc:mysql://127.0.0.1/helpdeskv3
+#
+# The credentials to connect to the database.
+#
+hibernate.connection.jdbc.username=xxx
+hibernate.connection.jdbc.password=xxx
+#
+# JDBC advanced configuration.
+# These parameters should be changed by experts only.
+#
+hibernate.jdbcTemplateBeanName=jdbcHibernateTemplate
+hibernate.jdbcSessionFactoryBeanName=jdbcSessionFactory
+hibernate.jdbcUpgradeSessionFactoryBeanName=jdbcUpgradeSessionFactory
+#-------------------------------------------------------------
+# JNDI
+#-------------------------------------------------------------
+#
+# By default, esup-helpdesk uses JNDI for database accesses from web requests.
+# Set this property to false to prevent the application from relying on a data
+# source (defaults to true).
+#
+hibernate.useJndi=true
+#
+# The name of the data source (defined at Tomcat-level, defaults to jdbc/esup-helpdesk).
+#
+hibernate.connection.jndi.datasource=jdbc/helpdesk
+#
+# JNDI advanced configuration.
+# These parameters should be changed by experts only.
+#
+hibernate.jndiTemplateBeanName=jndiHibernateTemplate
+hibernate.jndiSessionFactoryBeanName=jndiSessionFactory
+hibernate.jndiUpgradeSessionFactoryBeanName=jndiUpgradeSessionFactory
+##############################################################
+# AUTHENTICATION
+##############################################################
+#
+# The URL of the CAS server (e.g. https://cas.domain.edu).
+# Required for quick-start and servlet installations.
+#
+#cas.url=https://univ.fr/cas
+cas.url=https://univ.fr/cas
+#
+# The name of the portal attribute used to identify the current user,
+# used by portlet installations only. Defaults to uid.
+#
+auth.portal.uidAttribute=uid
+auth.useCas=true
+##############################################################
+# LDAP
+##############################################################
+#
+# Set this property to false not to use LDAP (defaults to true)
+#
+ldap.use=true
+#-------------------------------------------------------------
+# CONNECTION
+#-------------------------------------------------------------
+#
+# The URL of the LDAP server (required, e.g. ldap://ldap.domain.edu:389).
+#
+ldap.url2=ldap://ldap1.univ.fr:389
+ldap.url1=ldap://ldap2.univ.fr:389
+#
+# The credentials to bind to the LDAP directory, leave empty
+# for an anonymous connection (by default).
+#
+ldap.userName=cn=helpdesk,ou=system,dc=univ,dc=fr
+ldap.password=xxx
+
+#
+# The connection timeout in milliseconds (defaults to 5000).
+#
+ldap.connectTimeout=5000
+#
+# The base used to search users (required, e.g. dc=domain,dc=edu).
+#
+ldap.base=dc=univ,dc=fr
+#
+# The DN sub-path to search users (defaults to ou=people).
+#
+ldap.dnSubPath=ou=people
+#-------------------------------------------------------------
+# ATTRIBUTES
+#-------------------------------------------------------------
+#
+# The exhaustive list of the attributes retrieved (defaults to cn,displayName,employeeType,department,homeDirectory,mail).
+#
+ldap.attributes=displayName,mail,supannEmpCorps,supannEntiteAffectation,amuDateFin,amuStatut,supannEmpid,amuCampus,amuComposante,amuSite,eduPersonAffiliation,memberOf
+
+ldap.attributesNotPersist=telephoneNumber
+#
+# The attribute that holds the unique identifier (defaults to uid).
+#
+#ldap.uidAttribute=uid
+#
+# The attribute that holds the identity (defaults to displayName).
+#
+#ldap.displayNameAttribute=displayName
+#
+# The attribute that holds the email (defaults to mail).
+#
+ldap.emailAttribute=mail
+
+ldap.filterDate=amudatevalidation
+ldap.filterEdupersonaffiliation=edupersonaffiliation
+ldap.filterEdupersonaffiliationValues=employee,researcher,student,faculty
+s
+# The attribute that holds the email aliases (defaults to alias).
+# Email aliases are used to change the owner of tickets when the tickets have
+# been created with email accounts and make the correspondence between user ids
+# and emails when feeding the helpdesk with an IMAP account.
+#
+#ldap.emailAliasAttribute=alias
+#-------------------------------------------------------------
+# SEARCHES
+#-------------------------------------------------------------
+#
+# The attribute that will be used by LDAP searches (defaults to cn).
+# By default, searching for the string smith will result in requesting the
+# LDAP directory with the filter cn=*smith*.
+#
+ldap.searchAttribute=sn
+#
+# The attributes displayed when LDAP searches return several results,
+# used to differentiate the users (defaults to cn,displayName,employeeType,department).
+#
+ldap.searchDisplayedAttributes=displayName,amuMail,supannEntiteAffectation,amuCampus,amuComposante,amuSite,amuStatut,amuDateFin,supannEmpid,eduPersonAffiliation,memberOf
+#-------------------------------------------------------------
+# TEST
+#-------------------------------------------------------------
+#
+# The filter used by the ant target test-ldap (defaults to cn=*smith*).
+# By default, searching for the string smith will result in requesting the
+# LDAP directory with the filter cn=*smith*.
+#
+ldap.testFilter=uid=xxx
+##############################################################
+# PORTAL
+##############################################################
+#
+# esup-helpdesk can request uPortal through a web service to retrieve
+# user attributes and group memberships. This information can be used by
+# the application to know the users' profiles. For more information please
+# refer to the esup-portal-ws project (http://www.ja-sig.org/wiki/x/sQGF).
+#
+#-------------------------------------------------------------
+# CONNECTION
+#-------------------------------------------------------------
+#
+# If you do not have a portal or do not want to request the portal information,
+# you can safely ignore the properties below.
+#
+#
+# The URL of the portal web service (defaults to http://portal.domain.edu/services/UportalService).
+#
+portal.webServiceUrl=http://127.0.0.1:8081/uPortal/services/UportalService
+#-------------------------------------------------------------
+# TEST
+#-------------------------------------------------------------
+#
+# The properties below are used by the ant target test-portal.
+#
+#
+# The test user (defaults to smith).
+#
+portal.testUser=xxx
+#
+# The test group ID (defaults to local.0).
+#
+#portal.testGroupId=local.0
+#
+# The test group name (defaults to Everyone).
+#
+portal.testGroupName=all_users
+##############################################################
+# SMTP
+##############################################################
+#
+# The name or the bean used to send emails.(defaults to smtpService).
+# Set to voidSmtpService not to send any email.
+#
+#smtp.bean=smtpService
+#-------------------------------------------------------------
+# CONNECTION
+#-------------------------------------------------------------
+#
+# The host name or IP address of the SMTP server used to send emails
+# (defaults to localhost).
+#
+smtp.host=localhost
+#
+# The port the SMTP server is running on (defaults to 25).
+#
+smtp.port=25
+#
+# The credentials used to connect to the SMTP server. Set empty
+# to use an anonymous connection (by default).
+#
+#smtp.user=
+#smtp.password=
+#-------------------------------------------------------------
+# FORMATTING
+#-------------------------------------------------------------
+#
+# The charset used when sending emails.
+#
+#smtp.charset=utf-8
+#
+# The properties below are used to build the From: header
+# of the outgoing emails (default to helpdesk@domain.edu
+#  and ESUP-Portail Helpdesk.
+#
+smtp.fromEmail=esup-helpdesk@univ.fr
+smtp.fromName=Support
+#-------------------------------------------------------------
+# INTERCEPTION
+#-------------------------------------------------------------
+#
+# Set this property to true to intercept all the outgoing emails (recommended
+# when testing) and to false in production.
+#
+smtp.interceptAll=false
+#
+# The properties below are used to build the address
+# that intercepts all the outgoing emails.
+#
+#smtp.interceptEmail=xxx@univ.fr
+#smtp.interceptName=Maintainer
+#
+# The (comma-separated) addresses that are never intercepted.
+#
+#smtp.notInterceptedAddresses=x
+#-------------------------------------------------------------
+# TEST
+#-------------------------------------------------------------
+#
+# The properties below are used to build the address
+# used by the ant task test-smtp.
+#
+smtp.testEmail=xxx@univ.fr
+smtp.testName=Maintainer
+##############################################################
+# TICKETS
+##############################################################
+#-------------------------------------------------------------
+# PRIORITIES
+#-------------------------------------------------------------
+#
+# The lowest priority level.
+#
+#minPriority=1
+#
+# The highest priority level.
+#
+#maxPriority=5
+#
+# The default priority of tickets. This value is set as the default
+# ticket priority for newly created departments. The priority can
+# be changed any when at department, category or ticket-level.
+# Allowed values are integers from 1 (lowest) to 5 (highest).
+#
+defaultTicketPriorityLevel=3
+
+ticketCommentModification = true
+#-------------------------------------------------------------
+# VISIBILITY
+#-------------------------------------------------------------
+#
+# The default visibility of tickets. This value is set as the default
+# ticket visibility for newly created departments. The visibility can
+# be changed any when at department, category, ticket and even action-level.
+# Allowed values are:
+# - PUBLIC:       anybody can view the ticket
+# - PRIVATE:      nobody but the managers and the ticket owner can view the ticket
+# - SUBJECT_ONLY: same as PRIVATE, but the ticket will still apear on the control panel.
+#
+defaultTicketScope=SUBJECT_ONLY
+#-------------------------------------------------------------
+# ORIGINS
+#-------------------------------------------------------------
+#
+# The ticket origins.
+#
+#origins=WEB,EMAIL,PHONE,OTHER
+#
+# The origin of the tickets created through the web interface.
+#
+#webOrigin=WEB
+#
+# The origin of the tickets created by email feeding.
+#
+#emailOrigin=EMAIL
+#-------------------------------------------------------------
+# ASSIGNMENT
+#-------------------------------------------------------------
+#
+# The default assignment algorithm. This value is set as the default
+# assignment algorithm for newly created departments. The algorithms can
+# be changed any when at department or category-level. Allowed values are:
+# - nobody: do not assign
+# - first: assign to the first manager available in the category
+# - random: randomly assign to the available managers of the category
+# - cyclical: cyclically assign to the available managers of the category
+#
+defaultAssignmentAlgorithmName=nobody
+#-------------------------------------------------------------
+# EXPIRATION
+#-------------------------------------------------------------
+#
+# When a ticket is closed by the managers and the closure is not approved by
+# the ticket owner, the ticket automatically expires after some time thanks
+# to the ant task expire-tickets.
+#
+#
+# The property below sets the time after when tickets expire.
+# Allowed units are d (day) and m (month), defaults to 1m).
+#
+#expiration.timeLimit=1m
+#-------------------------------------------------------------
+# ARCHIVING
+#-------------------------------------------------------------
+#
+# When a ticket is closed/approved or expires, it is automatically archived
+# after some time thanks to the ant task archive-tickets.
+#
+#
+# The property below sets the time after when tickets are archived.
+# Allowed units are h (hour), d (day) and m (month), defaults to 1m).
+#
+archiving.timeLimit=2m
+#-------------------------------------------------------------
+# INDEXING
+#-------------------------------------------------------------
+#
+# The properties below are used by the ant task test-index.
+#
+#indexing.testUserId=xxx
+#indexing.testTokens=firefox explorer
+##############################################################
+# USERS
+##############################################################
+#-------------------------------------------------------------
+# FIRST ADMINISTRATOR
+#-------------------------------------------------------------
+#
+# The id of the first administrator can be a local user id
+# (e.g. paubry) or an email address (e.g. pascal.aubry@univ-rennes1.fr).
+# This property is used by the ant target init-data.
+#
+init.firstAdministratorId=xxx
+#-------------------------------------------------------------
+# USER FORMATTING
+#-------------------------------------------------------------
+#
+# The properties below are used to set the way the users are displayed.
+#
+#
+# Set this property to true to print both the display name and the id.
+# If left to false (by default), only the display name will be printed.
+#
+userFormat.printId=true
+#
+# Set the length to truncate display names (defaults to 40).
+# If set to 0, display names will never be truncated.
+#
+#userFormat.displayNameMaxLength=40
+#
+# Set the length to truncate ids (defaults to 40, used
+# only when userFormat.printId is set to true).
+# If set to 0, ids will never be truncated.
+#
+#userFormat.idMaxLength=40
+#-------------------------------------------------------------
+# USER INFO
+#-------------------------------------------------------------
+#
+# The web interface allows the managers to see the users' profile; the
+# properties below define what information will be printed.
+#
+#
+# Set this property to false not to print a short message when
+# the user is an administrator of the application (defaults to false).
+#
+#userInfo.showAdministrator=true
+#
+# Set this property to false not to print the departments that are managed
+# by the user (defaults to true).
+#
+userInfo.showManagedDepartments=false
+#
+# Set this property to false not to print the departments seen by
+# the user at ticket creation (defaults to true).
+#
+userInfo.showTicketCreationDepartments=false
+#
+# Set this property to true to print the departments seen by the
+# user on the control panel and the search interface (defaults to
+# false).
+#
+#userInfo.showTicketViewDepartments=false
+#
+# Set this property to true to print the departments for which the
+# user will see the FAQ (defaults to false).
+#
+#userInfo.showFaqViewDepartments=false
+#
+# Set this property to false not to print the User's LDAP
+# attributes (defaults to true).
+#
+#userInfo.showLdapAttributes=false
+#
+# The LDAP attributes printed, must be a subset of ldap.attributes.
+# Leave this property empty to print all the attributes (by default).
+#
+userInfo.ldapAttributes=supannEntiteAffectation,amuSite,eduPersonAffiliation
+#
+# The user id used by the ant target test-user-info.
+#
+userInfo.testUserId=xxx
+##############################################################
+# DEPARTMENTS
+##############################################################
+#
+# The properties below are used to configure the departments when they
+# are created. These properties can be changed anywhen.
+#
+#
+# By default, departments are disabled (until they are properly
+# configured and enabled by hand). Set to true to make departments
+# enabled immediatly.
+#
+#departmentConfigurator.enabled=false
+#
+# By default, managers are not forced to complete the time spent on
+# the tickets when they close the tickets. Set to true to force the
+# completion of the time spent.
+#
+departmentConfigurator.spentTimeNeeded=true
+##############################################################
+# CATEGORIES
+##############################################################
+#
+# The properties below are used to configure the categories when they
+# are created. These properties can be changed anywhen.
+#
+#
+# By default, categories inherit the members of their parent category
+# (or the department) at their creation. Set to false not to inherit
+# the members.
+#
+#categoryConfigurator.inheritMembers=true
+##############################################################
+# MANAGERS
+##############################################################
+#
+# The properties below are used to configure the managers when they
+# are created. These properties can be changed anywhen.
+#
+#
+# Set to true to make managers available.
+#
+#departmentManagerConfigurator.available=true
+#
+# Set to true to allow managers to edit the properties of the department.
+#
+#departmentManagerConfigurator.manageProperties=false
+#
+# Set to true to allow managers to manage the other managers.
+#
+#departmentManagerConfigurator.manageManagers=false
+#
+# Set to true to allow managers to manage the categories of the department.
+#
+#departmentManagerConfigurator.manageCategories=true
+#
+# Set to true to allow managers to edit the FAQ.
+#
+#departmentManagerConfigurator.manageFaq=true
+#
+# Set to true to allow managers to assign tickets to other managers.
+#
+#departmentManagerConfigurator.assignTicket=true
+#
+# Set to true to allow managers to move tickets to other departments.
+#
+#departmentManagerConfigurator.modifyTicketDepartment=true
+#
+# Set to true to allow managers to refuse tickets.
+#
+#departmentManagerConfigurator.refuseTicket=true
+#
+# Set to true to allow managers to reopen any ticket (even the
+# tickets they do not manage).
+#
+#departmentManagerConfigurator.reopenAllTickets=true
+#
+# Set to true to allow managers to take charge of already assigned tickets.
+#
+#departmentManagerConfigurator.takeAlreadyAssignedTicket=true
+#
+# Set to true to allow managers to set their own availability.
+#
+#departmentManagerConfigurator.setOwnAvailability=false
+#
+# The initial rate of managers. This property (0 to 100) is not used by the
+# application itself but it may be used by custom assignment algorithms.
+#
+#departmentManagerConfigurator.rate=100
+#
+# The three properties below set the way managers monitor tickets.
+# Allowed values are :
+# - ALWAYS:   receive an alert for any event
+# - CREATION: receive an laert on ticket creation only
+# - NEVER:    never receive alerts
+#
+#
+# The way managers monitor managed tickets.
+#
+#departmentManagerConfigurator.ticketMonitoringManaged=Always
+#
+# The way managers monitor tickets of member categories.
+#
+#departmentManagerConfigurator.ticketMonitoringCategory=Creation
+#
+# The way managers monitor any ticket.
+#
+#departmentManagerConfigurator.ticketMonitoringAny=Never
+#
+# The type of the daily reports received. Allowed values are:
+# - MCFO:    managed tickets, tickets of member categories, free tickets, other tickets
+# - MFCO:    managed tickets, free tickets, tickets of member categories, other tickets
+# - MCF:     managed tickets, tickets of member categories, free tickets
+# - MFC:     managed tickets, free tickets, tickets of member categories
+# - MC:      managed tickets, tickets of member categories
+# - MF:      managed tickets, free tickets
+# - M:       managed tickets
+# - [empty]: no report
+#
+#departmentManagerConfigurator.reportType=MCF
+#
+# The time (hour) when the first report is sent (two reports per day allowed).
+# -1 means no report.
+#
+#departmentManagerConfigurator.reportTime1=8
+#
+# The time (hour) when the second report is sent.
+#
+#departmentManagerConfigurator.reportTime2=-1
+#
+# Set this property to true to send reports even on the week-end.
+#
+#departmentManagerConfigurator.reportWeekend=false
+##############################################################
+# COMPUTERS
+##############################################################
+#
+# When printing computers, it is possible to automatically add links
+# to an inventory application. In the current version, the following
+# values are suported:
+# - null: no URL
+# - glpi: links to the GLPI application
+# - glpiThroughCas: links to the GLPI application after a CAS authentication.
+#
+#
+# The property below is used to set which URLs are used for new
+# departments. This value can be changed any when for each department.
+# Defaults to null.
+#
+#defaultComputerUrlBuilderName=null
+#
+# The GLPI URL pattern, in which %s will be replaced by the FQDN of the
+# computers.
+# Defaults to http://glpi.domain.edu/front/computer.php?contains[0]=%s&field[0]=1&sort=1&deleted=N&start=0.
+#
+#computerUrl.glpiPattern=http://glpi.domain.edu/front/computer.php?contains[0]=%s&field[0]=1&sort=1&deleted=N&start=0
+#
+# The CAS service URL, used by GLPI through CAS.
+#
+computerUrl.casServiceUrl=https://univ.fr/cas/?service=%s
+##############################################################
+# FAQ
+##############################################################
+#
+# FAQ visibility are:
+# - ALL:           Any user, event not authenticated
+# - AUTHENTICATED: The authenticated users
+# - DEPARTMENT:    Users for whom the department of the FAQ is visible
+# - MANAGER:       The managers of the department of the FAQ
+#
+#
+# The property below sets default visibility of FAQ. This value is set as the
+# default FAQ visibility for newly created FAQ. The visibility can be changed
+# any when at department, FAQ part or question-level.
+# Defaults to DEPARTMENT.
+#
+#defaultFaqScope=DEPARTMENT
+##############################################################
+# WEB INTERFACE
+##############################################################
+#-------------------------------------------------------------
+# LOCALIZATION
+#-------------------------------------------------------------
+#
+# The timezone, defaults to Europe/Paris.
+#
+#timezone=Europe/Paris
+#
+# The locale, defaults to en.
+#
+locale=fr
+#
+# The encoding, defaults to ISO-8859-1.
+#
+encoding=UTF-8
+#-------------------------------------------------------------
+# CONTROL PANEL
+#-------------------------------------------------------------
+#
+# The length to truncate the ticket subjects, defaults to 50.
+#
+#controlPanel.subjectMaxLength=50
+#
+# The available refresh delays in minutes, defaults to 1,2,5.
+#
+#controlPanel.refreshDelays=1,2,5
+#-------------------------------------------------------------
+# HISTORY
+#-------------------------------------------------------------
+#
+# The max number of history items stored for each user, defaults to 50.
+#
+#controlPanel.historyMaxLength=50
+#-------------------------------------------------------------
+# WINDOW TITLE
+#-------------------------------------------------------------
+#
+# The window title is available for quick-start and servlet
+# installations only (the portal renders its own window title).
+#
+#
+# The i18n key used for the window title. If set empty, the property title
+# below is used.
+#
+#titleI18nKey=WINDOW.TITLE
+#
+# The title of the window, used only when the property titleI18nKey is
+# set empty. If both properties a re set empty, a default title is used.
+#
+#title=
+##############################################################
+# FEED
+##############################################################
+#-------------------------------------------------------------
+# IMAP
+#-------------------------------------------------------------
+#
+# The database can be fed with tickets created by periodically
+# reading IMAP accounts The properties below are used to configure
+# one IMAP reader, called by the ant task feed.
+#
+#
+# Set this property to true to use IMAP feeding.
+#
+#feed.imap.use=false
+#
+# The address to which emails are sent (e.g. support@domain.edu).
+#
+#feed.imap.address=
+#
+# The FQDN or IP address of the IMAP server (e.g. imap.domain.edu).
+#
+#feed.imap.server=
+#
+# The credentials used to connect to the IMAP server.
+#
+#feed.imap.account=
+#feed.imap.password=
+#
+# The folder to read, defaults to INBOX.
+#
+#feed.imap.folder=INBOX
+#
+# The id of the target category, required.
+#
+#feed.imap.categoryId=1
+#
+# The name of the bean used to filter spam. Set to nullSpamFilter not to
+# filter SPAM, or to subjectStartsWithSpamFilter, subjectContainsSpamFilter
+# or subjectRegexpSpamFilter. Defaults to false.
+#
+#feed.imap.spamFilterBean=nullSpamFilter
+#
+# The pattern used to filter SPAM, defaults to [SPAM].
+#
+#feed.imap.spamFilterPattern=[SPAM]
+#
+# Set this property to true to delete SPAM without creating tickets,.
+# defaults to false.
+#
+#feed.imap.deleteSpam=false
+#
+# The id of the target category for SPAM, required when not deleting SPAM.
+#
+#feed.imap.spamCategoryId=1
+#-------------------------------------------------------------
+# REPLY-TO (EXPERIMENTAL)
+#-------------------------------------------------------------
+#
+# Users can be allowed to respond to the emails received by the application
+# in order to add comments to the corresponding tickets. The properties
+# below are used to connect to the IMAP account that receives the
+# users' responses.
+#
+#
+# WARNING: THIS FEATURE IS STILL EXPERIMENTAL, USE AT YOUR OWN RISKS!
+#
+#
+# Set this property to true to use reply-to fonctionalities.
+#
+replyTo.use=false
+#
+# The FQDN or IP address of the IMAP server (e.g. imap.domain.edu).
+#
+#replyTo.server=
+#
+# The credentials used to connect to the IMAP server.
+#
+#replyTo.account=
+#replyTo.password=
+#
+# The folder to read, defaults to INBOX.
+#
+#replyTo.folder=INBOX
+#
+# The email domain, used to build the MessageID headers of the emails
+# sent by the application, defaults to domain.edu.
+#
+#replyTo.domain=domain.edu
+#
+# The salt used to build the MessageID headers of the emails sent by
+# the application, required when using the reply-to feature.
+#
+#replyTo.salt=1239702799184
+#-------------------------------------------------------------
+# WEB SERVICES
+#-------------------------------------------------------------
+#
+# Various operations can also be performed from remote clients thanks
+# to a web service. The property below sets the clients that are allowed
+# to use the web service (e.g. host1.domain.edu,host2.domain.edu).
+#
+webService.authorizedClientNames=127.0.0.1,193.51.63.219,139.124.243.77,139.124.244.77,10.193.1.64
+
+# Pour activer ou non la conversion des mails en uid CAS
+auth.tryConvertMaillToCasUser=true
+# On converti uniquement le mails qui correspondent au pattern suivant
+auth.mailToConvertPattern=@univ.fr
+
+# Pour activer ou non l'invitation automatique du gestionnaire lors de la prise en charge du ticket par un nouveau gestionnaire
+conf.inviteManagerMoveTicket=true
+
+# Lien sur l'ENT de l'université, présent en entête de l'application
+ent.url=https://univ.fr
+
+# Données de l'univeristé affichées dans divers endroits de l'application
+institution.name=Universitu00E9 xxx
+footer.title=xxx Universit\u00E9 - DOSI
+
+# si renseignée, affichage dans l'onglet AIDE de liens vers une doc utilisateur et gestionnaire
+help.user.url=https://univ.fr/aide-utilisateur
+help.manager.url=https://univ.fr/aide-gestionnaire
+
+
+# Pour activer ou non le controle la visibilité de la catégorie redirigée
+ckeck.visi.cat.virtual=false
