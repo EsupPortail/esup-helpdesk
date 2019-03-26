@@ -241,8 +241,10 @@ ldap.use=true
 #
 # The URL of the LDAP server (required, e.g. ldap://ldap.domain.edu:389).
 #
-ldap.url2=ldap://ldap1.univ.fr:389
-ldap.url1=ldap://ldap2.univ.fr:389
+ldap.url=ldap://ldap.univ.fr:389
+# To define multiple ldap, uncomment the relative section in properties/ldap/ldap.xml too
+#ldap.url2=ldap://ldap1.univ.fr:389
+#ldap.url1=ldap://ldap2.univ.fr:389
 #
 # The credentials to bind to the LDAP directory, leave empty
 # for an anonymous connection (by default).
