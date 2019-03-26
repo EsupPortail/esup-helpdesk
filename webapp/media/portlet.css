@@ -1,523 +1,366 @@
-
-/* PLT.C.2 Fonts */
-.portlet-font {}
-.portlet-font-dim {color:#999;}
-
-/* PLT.C.3 Messages */
-.portlet-msg-status,
-.portlet-msg-info,
-.portlet-msg-error,
-.portlet-msg-alert,
-.portlet-msg-success {padding:1em 1em 1em 3em; border:2px solid #ccc; color:#666; background:#ddd url(images/information.png) 1em 1em no-repeat;}
-.portlet-msg-status {}
-.portlet-msg-info { border:1px solid #b80000; color:#333; background:#fff url(images/information.png) 1em 1em no-repeat;}
-.portlet-msg-error { border:1px solid #9aa248; color:#b80000; background:#e3e8af url(images/stop.png) 1em 1em no-repeat; }
-.portlet-msg-alert { border:1px solid #9aa248; color:#b80000; background:#e3e8af url(images/error.png) 1em 1em no-repeat;}
-.portlet-msg-success { border:1px solid #b80000; color:#333; background:#fff url(images/tick.png) 1em 1em no-repeat; }
-
-/* PLT.C.4 Sections */
-.portlet-section-header {padding-bottom:0.2em; border:none; font-weight: bold;}
-.portlet-section-body {padding:0;margin:0.5em}
-.portlet-section-alternate {background-color:#eee;}
-.portlet-section-selected {background:#efefef;}
-.portlet-section-subheader {	background-color:transparent; color:#800104; font-size:13px; font-weight:bold; margin:1em 0; padding:0;}
-.portlet-section-footer { color:#666; font-size:.8em; border-top:1px solid #ccf; padding:5px 0 0 0; text-align:left; margin:10px 0 0 0;}
-.portlet-section-text {font-family: Verdana,Arial; color:#666; }
-
-/* PLT.C.5 Forms */
-.portlet-form-label {}
-.portlet-form-input-field {}
-.portlet .portlet-button-group .portlet-button,
-.portlet .portlet-button,
-.portlet-form-button {padding:0.1em .7em; background:#f4f7e1 url(images/button_bkd_flat.png) top left repeat-x; border:1px solid #666; color:#970000; font-size:85%; font-weight:bold;}
-.portlet .portlet-button:hover,
-.portlet a.portlet-button:hover,
-.portlet .portlet-button:hover,
-.portlet-form-button:hover { background:#EEE; background-image:none; cursor:pointer;}
-.portlet a.portlet-form-button,
-.portlet a.portlet-form-button:hover,
-.portlet a.portlet-form-button:visited { color:#ffffff; font-weight:bold; text-decoration: none; padding:0.2em 1em; }
-.portlet-icon-label {}
-.portlet-dlg-icon-label {}
-.portlet-form-field-label {}
-.portlet-form-field {}
-
-/* PLT.C.6 Menus */
-/*.portlet-menu {background-color: #e2e8e7;margin: 0;vertical-align: bottom;text-align: left;padding:2;}*/
-.portlet-menu {background-color: #0071b9;margin: 0;vertical-align: bottom;text-align: left;padding:2;}
-.portlet-menu-item {border-spacing: 0; color: #800104; display: inline;font-weight: bold;}
-.portlet-menu-item-selected {font-weight:bold;}
-.portlet-menu-item-hover {background-color:#ffffcc; color:#000;}
-.portlet-menu-item-hover-selected {}
-.portlet-menu-cascade-item {}
-.portlet-menu-cascade-item-selected {}
-.portlet-menu-description {}
-.portlet-menu-caption {}
-
-
-.portlet-menu-item-selected
-{
-	border-spacing: 2px 0;
-	display: inline;
+	/*##  Section 10.6.1 Links (Anchor) - defined by uPortal CSS  ##*/
+	
+	/*##  Section 10.6.2 Fonts  ##*/
+	
+a {
+	text-decoration : none;
+	font-size: 12px;
+	color : #192A89;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
 }
-.portlet-menu-item-selected input
-{
-	background: transparent;
-	border-style: none;
-	color: #800104;
-	cursor: pointer;
-	display: inline;
+
+a:visited {
+	color : #192A89;
+}
+
+a:hover {
+	color : #FF6600;
+	text-decoration: underline;
+}	
+	
+.portlet-font {
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}  /*  uPortal equivalent style =3D  "uportal-text "  */
+
+.portlet-font-dim {
+	color: Gray;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
+
+	/*##  Section 10.6.3 Messages  ##*/
+	
+.portlet-msg-status {
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-style: italic;
+}  /*  uPortal equivalent style =3D  " uportal-channel-warning"  */
+
+.portlet-msg-info {
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}  /*  uPortal equivalent style =3D  " uportal-channel-warning"  */
+
+.portlet-msg-error {
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #ff0000;
+	text-decoration: underline;
 	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " uportal-channel-error"  */
+
+.portlet-msg-alert {
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #993333;
+}  /*  uPortal equivalent style =3D  " uportal-channel-warning"  */
+
+.portlet-msg-success {
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #339933;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " uportal-channel-warning"  */
+
+	/*##  Section 10.6.4 Sections ##*/
+.portlet-section-header {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #192A89;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " uportal-channel-title"  */
+
+.portlet-section-body {
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}  /*  uPortal equivalent style =3D  " uportal-text"  */
+
+.portlet-section-alternate {
+	color: #666666;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+} /*  uPortal equivalent style =3D  " uportal-channel-table-row-odd"  */
+
+.portlet-section-selected {
+	background: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: White;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
+
+.portlet-section-subheader {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #192A89;
+}  /*  uPortal equivalent style =3D  " uportal-channel-subtitle"  */
+
+.portlet-section-footer {
+	color: #192A89;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	text-align:center;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
+
+.portlet-section-text {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: justify;
+}  /*  uPortal equivalent style =3D  "uportal-text-small "  */
+
+.portlet-section-text-bold {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: justify;
+	font-weight: bold;
+}
+
+/*##  Section 10.6.5 Tables ##*/
+.portlet-table-header {
+	background-color: #b7ddb4;
+	color: #993333;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: left;
+	width: auto;
+	padding-left: 0.5em; 
+	padding-right: 0.5em;
+}/*  uPortal equivalent style =3D  " uportal-channel-table-header with =
+class uportal-background-light"  */
+
+.portlet-table-body {
+	background-color: #FFFFFF;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}  /*  uPortal equivalent style =3D  " uportal-channel-table-row-even =
+with class uportal-background-content"  */
+
+.portlet-table-alternate {
+	vertical-align: top;
+	background-color: #e8f2fe;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}/*  uPortal equivalent style =3D  " uportal-channel-table-row-odd with =
+class uportal-background-light"  */
+
+.portlet-table-selected {
+	background-color: #FFCCCC;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}  /*  uPortal equivalent style =3D  " uportal-channel-table-row-even =
+with class uportal-background-selected"  */
+
+.portlet-table-subheader {
+	color: #999999;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
+
+.portlet-table-footer {
+	background: #FEC98D;
+	background-color: #b7ddb4;
+	color: #993333;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
+
+.portlet-table-text {
+	vertical-align: top;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
+
+.portlet-table-text-bold {
+	font-weight: bold;
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+/*##  Section 10.6.5 Tables ##*/
+.portlet-form-label {
+	width: 10em;
+	text-align: right;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " uportal-label"  */
+
+.portlet-form-input-field {
+	width: auto;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background: #ecf6ed;
+}  /*  uPortal equivalent style =3D  " uportal-input-text"  */
+
+.portlet-form-button {
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background: #FDEFEF;
+}  /*  uPortal equivalent style =3D  "uportal-button "  */
+
+.portlet-icon-label {
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background: #CCCC99;
+}  /*  uPortal equivalent style =3D  " uportal-button"  */
+
+.portlet-dlg-icon-label {
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background: #CCCC99;
+}  /*  uPortal equivalent style =3D  " uportal-button"  */
+
+.portlet-form-field-label {
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " uportal-label"  */
+
+.portlet-form-field {
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
+
+	/*##  Section 10.6.7 Menus ##*/
+.portlet-menu {
+	/*background: #b7ddb4;*/
+	background-image: url("../media/images/banner.jpg");
+	background-repeat: no-repeat;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	vertical-align : bottom;
+
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
+.portlet-menu-item {
+	display: inline;
+	border-spacing: 0;
+	color: #192A89;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
+
+
+.portlet-menu-item input {
+	display: inline;
 	margin: 5px 10px;
 	padding: 5px;
-	color:white;
-	font-family:verdana;
+	color: #192A89;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	background-color: transparent;
+	border-style : none;
+	cursor: pointer;
 }
 
-/*====================================*/
-/* Fluid Skinning System Extensions */
-/*====================================*/
-.fl-widget.portlet {background:transparent; border:none;}
-.fl-widget.portlet .fl-widget-titlebar h2 {font-size:110%; margin-bottom:0.2em; color:#7cb61f;}
-.focused .fl-widget.portlet .fl-widget-titlebar h2 {font-size:110%;}
-.fl-widget-content.portlet-body {padding:0 0.1em;}
-
-h2 {margin-bottom:0.2em;}
-/*====================================*/
-/* uPortal Portlet Extensions */
-/*====================================*/
-.portlet {}
-
-/* Views */
-.fl-widget.portlet .portlet-views .fl-widget-titlebar h2 {margin:0.5em 0 0.2em 0;}
-.fl-widget.portlet .portlet-views .fl-tab-content {padding:1em; border:1px solid #4070A1; border-top:none;}
-
-
-/* Title */
-.portlet .portlet-title h3 {margin:0 0 2em 0; padding-top:0.4em; font-size:110%; border-top:2px solid #ccc;}
-
-
-/* Toolbar */
-.portlet .portlet-toolbar {margin-bottom:1em; padding:0.5em 0; background:#f4f7e1; border-top:0.2em solid #ccc;}
-.portlet .portlet-toolbar ul {margin:0; padding:0; overflow:hidden; }
-.portlet .portlet-toolbar ul li {list-style-type:none; float:left; display:inline; padding:0 5px; margin-left:-5px;}
-.portlet .portlet-toolbar ul a {display:block; margin-right:5px; padding:0.2em 1em; border:1px solid #ccc; text-decoration:none;}
-.portlet .portlet-toolbar ul a:hover {background-color:#EEE; border-color:#336699;}
-
-
-/* Messages */
-.portlet-msg-status h2,
-.portlet-msg-info h2,
-.portlet-msg-error h2,
-.portlet-msg-alert h2,
-.portlet-msg-success h2 {margin:0; color:#666;}
-.portlet-msg-status h3,
-.portlet-msg-info h3,
-.portlet-msg-error h3,
-.portlet-msg-alert h3,
-.portlet-msg-success h3 {margin:0; color:#666;}
-
-/* Notes */
-.porlet .portlet-note {}
-
-/* Sections */
-.portlet .portlet-section {margin-bottom:1em;}
-.portlet h3.portlet-section-header {margin:0; padding-top:1em;color: #999999; font-weight: bold;}
-.portlet .portlet-section-note {}
-.portlet .portlet-section-options {padding:0.3em 0em; background-color:#fff; font-size:85%; text-align:right;}
-.portlet .portlet-section-options .view-filter {text-align:left;}
-.portlet .portlet-section-options > a {padding:0.1em 0.5em;}
-.portlet .portlet-section-options a {text-decoration:none; color:#666; border-bottom:1px solid #ddd;}
-.portlet .portlet-section-options a:hover {text-decoration:none; background-color:#dfefff; color:#000;}
-
-/* Headings */
-.portlet .portlet-heading-selections,
-.portlet .portlet-heading-search,
-.portlet .portlet-heading-browse {padding-bottom:0.3em; padding-left:20px; background:transparent url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/accept.png) 0 0 no-repeat; color:#000; font-size:120%}
-.portlet .portlet-heading-selections {background-image:url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/accept.png);}
-.portlet .portlet-heading-search {background-image:url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/magnifier.png);}
-.portlet .portlet-heading-browse {background-image:url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/chart_organisation.png);}
-.portlet .portlet-heading-browse {margin-top:2em;}
-
-/* 2 Panel */
-.portlet .portlet-2panel {border:2px solid #336699;}
-.portlet .portlet-2panel .portlet-panel-left {background-color:#e2e8e7;}
-.portlet .portlet-2panel .portlet-panel-right {background-color:#fff;}
-
-/* Buttons */
-/*
-.portlet .portlet-button {margin:0 5px; padding:0.3em 2em; border-width:1px; border-style:solid; background:#336699 url(../common/images/button_bkd_flat.png) top left repeat-x; border-color:#000; color:#fff; font-weight:bold;}
-.portlet a.portlet-button {display:block; float:left; color:#fff; text-decoration:none;}
-.portlet .portlet-button-group {padding:1em 0; border-top:0.2em solid #ccc;}
-.portlet .portlet-button-group .portlet-button {background-color:#F0F0F0; border-color:#000; color:#000;}
-.portlet .portlet-button-group .portlet-button-primary {background-color:#336699; color:#fff;}
-.portlet .portlet-button-group a.portlet-button {color:#000;}
-.portlet .portlet-button-group a.portlet-button-primary {color:#fff;}
-.portlet .portlet-button:hover {background-color:#7a9e0d;}
-.portlet .portlet-button:hover,
-.portlet a.portlet-button:hover {color:#fff;}
-.portlet .portlet-button:hover {cursor:pointer;}
-*/
-
-/* Forms */
-.portlet fieldset {border: 1px solid #ccc; padding:0.5em 1em;}
-.portlet legend {margin-bottom:1em; font-size:85%; color:#ccc;}
-.portlet-form-box {width:400px; padding:1em; background-color:#eee; border:1px solid #ccc;}
-.portlet-form-box form {margin:0;}
-.portlet-form-box form table {}
-.portlet-form-box form table td {padding:0; border:none;}
-.portlet-form-box form table td.label {padding-right:3px; text-align:right; width:100px; font-size:11px; vertical-align:top; padding-top:5px;}
-.portlet-form-box form .field-container {display:inline-block; padding:1px; position:relative; width:auto;}
-.portlet-form-box form select,
-.portlet-form-box form .inputtext {padding:3px; font-size:11px; font-family:"lucida grande",tahoma,verdana,arial,sans-serif; border:1px solid #BDC7D8; border-color:#96A6C5; margin-top:2px;}
-.portlet-form-box form .inputtext,
-.portlet-form-box form .inputpassword {width:206px;}
-.portlet-form-box form .inputdate,
-.portlet-form-box form .inputtime {width:94px;}
-.portlet-form-box form .inputtime {margin-left:4px;}
-.portlet-form-box form .portlet-button-group {margin:0 0 0 105px;}
-.portlet-form-box form .portlet-button-group .portlet-button {padding:0.3em 1em; font-size:11px; font-family:"lucida grande",tahoma,verdana,arial,sans-serif;}
-
-/* Tables */
-/* Normal data table styles */
-.up td {border:none !important;}
-th {padding:0; border-color:#336699; background-color:#e2e8e7; color:#666;}
-th {padding:0; border-color:#336699; background-color:#0071b9; color:white;}
-#controlPanelForm .portlet-table-header .portlet-section-text {color:white;}
-#controlPanelForm .portlet-table-header  a {color:white;}
-/* Add the "purpose-layout" class to any table you are using for layout purposes. */
-.portlet table.purpose-layout,
-.portlet table.purpose-layout th,
-.portlet table.purpose-layout td {border:none; background-color:transparent;}
-
-/* Overflow box */
-.portlet .fl-overflow {width: 185px; height: 300px; border: 2px solid #dfdfdf; margin: 0 1em 1em 0; padding: 0.31em; overflow-x:auto; overflow-y:scroll;}
-.portlet .fl-overflow li {background:#ffffff;}
-.portlet .fl-overflow li:hover {background:#b2b4bf;}
-.portlet .fl-overflow li a {color:#000000; text-decoration:none;}
-.portlet .fl-overflow li a:active {color:#000000;}
-.portlet .fl-overflow li a:visited {color:#000000;}
-.portlet .fl-overflow li a:hover {color:#000000;}
-.portlet .fl-overflow li.portal-section-subheader {font-weight: bold;}
-
-/* Pager */
-.portlet .view-pager ul {margin:0; padding:0;}
-.portlet .fl-pager .fl-pager-ui li { list-style-type:none; display:inline-block; margin-right:0.5em; }
-.fl-pager caption {padding:.63em 0em; margin-bottom:0em;}
-.fl-pager th {cursor:pointer;}
-.fl-pager th a {color:#3d80b3; text-decoration:none;}
-.fl-pager th a:hover {color:#2694e8; text-decoration:none;}
-.fl-pager-controls {padding:.69em .69em;}
-.flc-pager-links a {color:#666666; text-decoration:none; vertical-align:middle;}
-.flc-pager-links a:hover {color:#333333;}
-
-/* Selection Basket */
-.portlet .portlet-selection {padding-right:2em;}
-.portlet .portlet-selection-basket {margin-left:20px; border:1px solid #4070A1; min-height:15em;}
-.portlet .portlet-selection-basket ul {margin:1em}
-.portlet .portlet-selection-basket li {list-style:none;}
-.portlet .portlet-selection-basket a {display:block; padding:0.3em 20px; background:transparent url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/tick.png) 0 50% no-repeat; color:#009900;}
-.portlet .portlet-selection-basket a:hover {background-color:#FFFFCC; color:#336699; background-image:url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/delete.png)}
-.portlet .portlet-selection .portlet-button-group {margin-left:20px;}
-
-/* Search */
-.portlet .portlet-search form {margin-left:20px;}
-
-/* Content Browser */
-.portlet .portlet-browse .fl-tab-content {margin-left:20px; padding:0; border:1px solid #ccc;}
-.portlet .portlet-browse h5 {padding-top:0.1em; padding-left:30px; font-size:200%; font-weight:normal;}
-.portlet .portlet-browse .selected {background-color:#D1F0E0}
-.portlet .portlet-browse .selected h5 {background:transparent url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/tick.png) 10px 50% no-repeat; color:#009900;}
-.portlet .portlet-browse-header {padding:0.5em 1em; border-bottom:2px solid #ccc;}
-.portlet .portlet-browse-header .fl-text-align-right {padding-top:0.7em;}
-.portlet a.portlet-browse-select {padding:0.2em 1em 0.2em 2em;  background:#fff url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/add.png) 0.3em 50% no-repeat; border:1px solid #336699; color:#336699; text-decoration:none;}
-.portlet a.portlet-browse-select:hover {background-color:#7a9e0d; color:#fff;}
-.portlet .selected a.portlet-browse-select {background-image:url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/delete.png); border-color:#333; color:#333;}
-.portlet .selected a.portlet-browse-select:hover {background-color:#ffeeee; border-color:#cc0000;}
-.portlet .portlet-browse-breadcrumb span {padding:0.5em 0; color:#999;}
-.portlet .portlet-browse-breadcrumb a {font-weight:normal; color:#666; text-decoration:none;}
-.portlet .portlet-browse-breadcrumb a:hover {color:#000; text-decoration:underline;}
-.portlet .portlet-browse-body {padding:0.5em 1em 1em 1em;}
-.portlet .portlet-browse h7 {font-weight:bold; margin:1em 0 0.3em 0;}
-
-/* Members */
-.portlet ul.group-member,
-.portlet ul.person-member,
-.portlet ul.category-member {margin:0;}
-.portlet .group-member li,
-.portlet .person-member li,
-.portlet .category-member li {list-style:none;}
-.portlet .group-member a,
-.portlet .person-member a,
-.portlet .category-member a {display:block; padding:0.2em 0 0.2em 20px; background-position:0 50%; background-repeat:no-repeat;}
-.portlet .group-member a {background-image:url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/folder.png)}
-.portlet .person-member a {background-image:url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/vcard.png)}
-.portlet .category-member a {background-image:url(/ResourceServingWebapp/rs/famfamfam/silk/1.3/tag_orange.png)}
-.portlet .group-member a:hover,
-.portlet .person-member a:hover,
-.portlet .category-member a:hover {background-color:#FFFFCC; color:#336699;}
-
-/*====================================*/
-/* Specific Portlets */
-/*====================================*/
-/* Style definitions for structures and elements unique to a specific portlet. */
-
-/* Groups Manager Channel */
-.portlet .groupmgr-two-pane {border:2px solid #336699;}
-.portlet .groupmgr-left-pane {padding:1em; background-color:#e2e8e7;}
-.portlet .groupmgr-right-pane {padding:1em 2em; background-color:#fff;}
-
-/* CSyndFeed Channel - RSS */
-.portlet .news-source p {border-bottom:1px solid #ccc;}
-.portlet .news-item-title {}
-.portlet .news-item-excerpt {font-size:85%; color:#666;}
-
-.portlet .portlet-body td {border:none !important;}
-
-/* ?? */
-* html input.portlet-form-button, * html input.uportal-button{
-	padding:0;
-	margin:0px;
-}
-
-.portlet li
-{
-	color: #B53514;
-	font-family: Verdana, Arial, Geneva, Helvetica, sans-serif;
-	font-size: 11px;
-	font-style: normal;
-	font-variant: normal;
-	font-weight: normal;
-	line-height: normal;
-	margin-bottom: 0px;
-	margin-left: 20px;
-	margin-right: 0px;
-	margin-top: 3px;
-	text-align: left;
+.portlet-menu-item a {
+	
+	display: table-cell;
+	display: inline;
+	margin: 5px 10px;
+	padding: 5px;
 	text-decoration: none;
-	text-transform: none;
-}
-.portlet ul
-{
-	border-left-width: 12px;
-	color: #B53514;
-/*	list-style-image: url(../controls/puce_ul.gif);*/
-	margin-bottom: 5px;
-	margin-left: 0px;
-	margin-right: 15px;
-	margin-top: 0px;
-	padding-left: 5px;
-	padding-right: 0px;
+	color: #993333;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
-.portlet, .portlet p {
-	color: #65635C;
-
-}
-.portlet a {
-	color : #65625C;
-	text-decoration:underline;
+.portlet-menu-item a:hover {
+	
 }
 
-.portlet a:visited {
-    color : #A30413;
-    text-decoration : underline;
+.portlet-menu-item-selected {
+	display: inline;
+	border-spacing: 2px 0;
+}
+.portlet-menu-item-selected input {
+	
+	display: inline;
+	margin: 5px 10px;
+	padding: 5px;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #990000;
+	background: transparent;
+	border-style : none;
+	cursor: pointer;
+
+}
+.portlet-menu-item-selected a{
+	display: table-cell;
+	display: inline;
+	margin: 5px 10px;
+	padding: 5px;
+	text-decoration: none;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: white;
 }
 
-.portlet a:hover {
-	color : #A30413;
-    text-decoration : underline;
-}
-table { font-size: 13px; font-family: Verdana, Arial, Helvetica, sans-serif;}
-/*Ajouts dom helpdesk #C3D9E0*/
-.portlet-table-header .portlet-table-body .portlet-table-text-bold .portlet-table-text .portlet-table-footer .portlet-table-alternate .portlet-table-subheader .portlet-table-selected {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; }
-/*
-.portlet-table-header { background-color: #C3D9E0; color: #993333; font-weight: bold; text-align: left; width: auto; padding: 0em; }
-.portlet-table-body { background-color: #FFFFFF; color: Black;  }
-.portlet-table-footer { background: #FEC98D; background-color: #C3D9E0; color: #993333;}
-.portlet-table-text-bold { font-weight: bold; line-height:0.3em;}
-*/
-.portlet-table-text { vertical-align: top; color: Black;line-height:1.7em;}
-.portlet-table-text span[id^='viewTicketForm'] { line-height:1.3em;}
-.portlet-table-selected { background-color: #0071B9;line-height:1.7em;}
-/*tbody[id^='searchForm'] .portlet-table-selected .portlet-section-text{color:white};*/
-.portlet-table-selected .portlet-section-text{color:white;}
-.portlet-table-header .portlet-section-text{color:white;}
-.portlet-table-selected span[id^='viewTicketForm']  { line-height:1.3em;}
-.portlet-table-selected .priority3 {color:white;}
-/*.portlet-table-alternate { background-color: #e8f2fe;line-height:1.7em;}*/
-.portlet-table-alternate { line-height:1.7em;}
-tbody[id^='ldapResultsForm'] tr:hover .portlet-table-selected {color:white;}
-/*tbody[id$='tbody_element'] .portlet-table-text { line-height:3em;}
-a { text-decoration : none; color : #192A89; }
-a:visited { color : #192A89; }
-a:hover { color : #FF6600; text-decoration: underline; }
-*/
-input[id$='logout']{display:none}
+.portlet-menu-item-hover {
+	background: #666633;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
 
-th.uportal-channel-subtitle {
-	border:1px solid #9aa248;
-	background-color:#F4EFE8;
-}
+.portlet-menu-item-hover-selected {
+	background: #666633;
+	color: white;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
 
+.portlet-menu-cascade-item {
+	background: #CCCC99;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
 
-#portal-page-body ul li { /* needs to be more specific in order not to affect navigation uls */
-	margin:0;
-	padding:0;
-  	line-height:1.66em; /* 1.6em messes up .toolbar ul li in FF */
-	}
+.portlet-menu-cascade-item-selected {
+	background: #666633;
+	color: White;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
 
-#portal-page-body dl dt {
-	margin:0;
-	padding:.3em 0 0 0;
-	}
+.portlet-menu-description {
+	background: #CCCC99;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: italic;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */
 
-#portal-page-body dl dd {
-	margin:0;
-	padding:.5em;
-	}
-td.colLeftMax span .portlet-section-text {font-style:italic;color:#888}
-.portlet-menu-item input {border-bottom:none;background-color:white;border-color:white;font-family:verdana;font-size:12px;cursor:pointer;}
-
-/*******************************************************************
-  @import url('https://fonts.googleapis.com/css?family=Open+Sans');
-*********************************************************************/
-/* cyrillic-ext */
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWJ0bbck.woff2) format('woff2');
-  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
-}
-/* cyrillic */
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFUZ0bbck.woff2) format('woff2');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-}
-/* greek-ext */
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWZ0bbck.woff2) format('woff2');
-  unicode-range: U+1F00-1FFF;
-}
-/* greek */
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFVp0bbck.woff2) format('woff2');
-  unicode-range: U+0370-03FF;
-}
-/* vietnamese */
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWp0bbck.woff2) format('woff2');
-  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
-}
-/* latin-ext */
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFW50bbck.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFVZ0b.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-/************************************/
-  body {
-    font-family: Verdana,'Open Sans',Lustria,Verdana,sans-serif;
-  }
-
-  .portal .block {
-    border-radius: 4px;
-  }
-
-  .portal .block:hover {
-    background-color: #E5E5E5;
-  }
-
-  .portlet-menu {
-    background-color: #ECECEC;
-    border: none;
-    margin: 0;
-    padding: 4px;
-  }
-
-
-  .portlet-menu-item, .portlet-menu-item-selected {
-    padding: 2px;
-  }
-
-  .portlet-menu li input {
-    background-color: white;
-    border: 1px solid #cdcdcd;
-    border-radius: 4px;
-    color: #0071B9;
-    margin: 2px;
-    padding: 6px 12px;
-  }
-
-  .portlet-menu li input:hover {
-    background-color: #E5E5E5;
-    color: black;
-  }
-
-  .portlet-menu-item-selected input {
-    background-color: #0071B9 !important;
-    border-color: #0071B9 !important;
-    color: white !important;
-    font-weight: normal !important;
-  }
-
-  .portlet-form-input-field {
-    border: 1px solid grey;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    display: inline-block;
-    padding: 6px 12px;
-  }
-
-	.portlet-footer-menu {
-		display: none;
-	}
-
-  .portlet-table-header .portlet-section-text {
-    color: white !important;
-  }
-
-  .portlet-table-selected .portlet-section-text {
-    color: white !important;
-  }
-
-  .dashboard-header thead {
-    background-color: none;
-  }
-
-  .dashboard-header thead th {
-    background-color: inherit;
-    border-bottom: 1px solid #cdcdcd;
-  }
-
-  .dashboard-header .portlet-section-text {
-    color: black !important;
-  }
-
-  #controlPanelForm\:data\:tbody_element tr.portlet-table-text td, #controlPanelForm\:data\:tbody_element tr.portlet-table-alternate td, #controlPanelForm\:data\:tbody_element tr.portlet-table-selected td {
-  border-top: 1px solid #cdcdcd;
-}
-.style3{color:black;}
+.portlet-menu-caption {
+	background: #CCCC99;
+	color: Black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}  /*  uPortal equivalent style =3D  " no current equivalent"  */

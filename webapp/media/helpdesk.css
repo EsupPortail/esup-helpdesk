@@ -4,32 +4,27 @@
 
 .actionApplication {
 	border-left-style:solid;
-	border-left-color:#333333;
-	padding: 5px;
+	border-left-color:grey;
 }
 
 .actionManager{
 	border-left-style:solid;
-	border-left-color:#970000;
-	padding: 5px;
+	border-left-color:red;
 }
 
 .actionOwner {
 	border-left-style:solid;
-	border-left-color:#ff8800;
-	padding: 5px;
+	border-left-color:orange;
 }
 
 .actionInvited {
 	border-left-style:solid;
-	border-left-color:#22bbea;
-	padding: 5px;
+	border-left-color:blue;
 }
 
 .actionUser {
 	border-left-style:solid;
-	border-left-color:#7cb61f;
-	padding: 5px;
+	border-left-color:green;
 }
 
 .priority1 {
@@ -41,7 +36,7 @@
 }
 
 .priority3 {
-	color: #0071B9;
+	color: #008080;
 }
 
 .priority4 {
