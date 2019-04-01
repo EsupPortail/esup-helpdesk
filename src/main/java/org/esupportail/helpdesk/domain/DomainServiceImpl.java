@@ -29,7 +29,6 @@ import org.esupportail.commons.services.logging.Logger;
 import org.esupportail.commons.services.logging.LoggerImpl;
 import org.esupportail.commons.utils.Assert;
 import org.esupportail.commons.utils.FileUtils;
-import org.esupportail.helpdesk.batch.Batch;
 import org.esupportail.helpdesk.dao.DaoService;
 import org.esupportail.helpdesk.domain.assignment.AssignmentAlgorithm;
 import org.esupportail.helpdesk.domain.assignment.AssignmentAlgorithmStore;
@@ -754,16 +753,6 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		return email != null && email.contains("@");
 	}
 
-	public boolean isFormatEmailValid (String email) {
-		   boolean result = true;
-		   try {
-		      InternetAddress emailAddr = new InternetAddress(email);
-		      emailAddr.validate();
-		   } catch (AddressException ex) {
-		      result = false;
-		   }
-		   return result;
-	};
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#transformEntitiesCreatedWithEmail(
 	 *      org.esupportail.helpdesk.domain.beans.User)
@@ -6540,9 +6529,9 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		Action newAction = new Action(actionOwner, ticket, ActionType.INVITE, ticket.getStatus(), actionScope,
 				actionMessage);
     	if(tryConvertMaillToCasUser) {
-   			if (invitedUser.getDisplayName().contains("@")) {
-   				invitedUser = userStore.getUserWithEmail(invitedUser.getDisplayName());
-   			}
+    		if (invitedUser.getDisplayName().contains("@")) {
+    			invitedUser = userStore.getUserWithEmail(invitedUser.getDisplayName());
+    		}
 		}
 		newAction.setInvitedUser(invitedUser);
 		addAction(newAction);

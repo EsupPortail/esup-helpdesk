@@ -17,6 +17,8 @@ import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.exceptions.UserNotFoundException;
 import org.esupportail.commons.services.authentication.AuthUtils;
 import org.esupportail.commons.services.i18n.I18nService;
+import org.esupportail.commons.services.logging.Logger;
+import org.esupportail.commons.services.logging.LoggerImpl;
 import org.esupportail.commons.utils.Assert;
 import org.esupportail.helpdesk.dao.DaoService;
 import org.esupportail.helpdesk.domain.beans.User;
@@ -42,6 +44,11 @@ public class UserStoreImpl extends AbstractUserStore implements InitializingBean
 	 * The name of the auth cookie.
 	 */
 	private static final String DEFAULT_AUTH_COOKIE_NAME = "esup-helpdesk-auth";
+
+	/**
+	 * A logger.
+	 */
+	private final Logger logger = new LoggerImpl(getClass());
 
 	/**
 	 * {@link DaoService}.
@@ -625,34 +632,68 @@ public class UserStoreImpl extends AbstractUserStore implements InitializingBean
 	 */
 	@Override
 	public User getUserWithEmail(final String email) {
-		if (isShibbolethAuthAllowed()) {
-			User user = shibbolethUserManager.getUserWithEmail(email);
-			if (user != null) {
-				return user;
+		
+		if(isEmail(email)) {
+			if(!isFormatEmailValid(email)){
+				logger.info("adress email format invalid : " + email);
+				throw new UserNotFoundException(
+						"email [" + email + "] as bad format");
 			}
 		}
-		if (isCasAuthAllowed()) {
-			String userId = casUserManager.getUserIdWithEmail(email);
-			if (userId != null) {
-				return getOrCreateCasUser(userId, false);
+	   try {
+			InternetAddress emailAddr = new InternetAddress(email);
+		   
+			if (isShibbolethAuthAllowed()) {
+				User user = shibbolethUserManager.getUserWithEmail(emailAddr.getAddress());
+				if (user != null) {
+					return user;
+				}
 			}
-		}
-		if (isSpecificAuthAllowed()) {
-			String userId = specificUserManager.getUserIdWithEmail(email);
-			if (userId != null) {
-				return getOrCreateSpecificUser(userId, false);
+			if (isCasAuthAllowed()) {
+				String userId = casUserManager.getUserIdWithEmail(emailAddr.getAddress());
+				if (userId != null) {
+					return getOrCreateCasUser(userId, false);
+				}
 			}
-		}
-		if (isApplicationAuthAllowed()) {
-			try {
-				return getExistingApplicationUser(email);
-			} catch (UserNotFoundException e) {
-				return this.createApplicationUser(email, null, null);
+			if (isSpecificAuthAllowed()) {
+				String userId = specificUserManager.getUserIdWithEmail(emailAddr.getAddress());
+				if (userId != null) {
+					return getOrCreateSpecificUser(userId, false);
+				}
 			}
-		}
+			if (isApplicationAuthAllowed()) {
+				try {
+					return getExistingApplicationUser(emailAddr.getAddress());
+				} catch (UserNotFoundException e) {
+					return this.createApplicationUser(emailAddr.getAddress(), null, null);
+				}
+			}
+	   } catch (AddressException ex) {
+			logger.info("adress email Error : " + email);
+			logger.info("Exception : " + ex);
+			return null;
+	   }
 		return null;
 	}
 
+	/**
+	 * @param email
+	 * @return true if the given email is valid.
+	 */
+	public boolean isEmail(final String email) {
+		return email != null && email.contains("@");
+	}
+
+	public boolean isFormatEmailValid (String email) {
+		   boolean result = true;
+		   try {
+		      InternetAddress emailAddr = new InternetAddress(email);
+		      emailAddr.validate();
+		   } catch (AddressException ex) {
+		      result = false;
+		   }
+		   return result;
+	};
 	/**
 	 * Eclipse delimiter.
 	 */
@@ -848,5 +889,5 @@ public class UserStoreImpl extends AbstractUserStore implements InitializingBean
 	public void setTryConvertMaillToCasUser(boolean tryConvertMaillToCasUser) {
 		this.tryConvertMaillToCasUser = tryConvertMaillToCasUser;
 	}
-	
+
 }

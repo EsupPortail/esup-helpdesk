@@ -232,12 +232,6 @@ public interface DomainService extends Serializable {
 	 */
 	boolean isEmail(String email);
 
-	/**
-	 * check if email valid
-	 * @param email
-	 */
-	boolean isFormatEmailValid (String email);
-
 	//////////////////////////////////////////////////////////////
 	// Department
 	//////////////////////////////////////////////////////////////
