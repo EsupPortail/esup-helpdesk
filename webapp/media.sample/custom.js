@@ -84,7 +84,7 @@ jQuery(function ($) {
     try {
         activeTab = dataStore.getItem(wrapper_id);
 
-        if (activeTab) {
+        if (activeTab && wrapper_id !="#ticketView") {
             if ($(activeTab).length) {
                 if ($(activeTab).parent().hasClass('without-state') == false) {
                     $('.tabs .tab-link').removeClass('current');
