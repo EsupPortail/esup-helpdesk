@@ -22,3 +22,5 @@ mise à jour de la base de donnée avec lancement de la commande : ant upgrade
 initialisation des nouvelles colonnes avec lancement des commandes en base de donnée contenues dans le fichier : src/main/resources/properties/dao/hibernate/updateBase-v3tov4.sql
 
 compilation et deploiement des sources avec lancement de la commande : ant clean deploy
+
+Vous pouvez retrouver cette procédure (plus détaillée) sur la [https://www.esup-portail.org/wiki/x/B4CIKg](page dédiée dans le wiki ESUP Helpdesk).
