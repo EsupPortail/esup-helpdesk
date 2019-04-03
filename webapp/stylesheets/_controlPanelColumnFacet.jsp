@@ -121,24 +121,24 @@
             <h:panelGroup rendered="#{controlPanelController.editColumns && (controlPanelController.columnsOrderer[columnIndex] == 'CREATION_DATE' or controlPanelController.columnsOrderer[columnIndex] == 'CREATION_DATE_TIME')}" >
                 <e:text value="#{msgs['CONTROL_PANEL.HEADER.CREATION_DATE']}" styleClass="column-label column-numeric"/>
             </h:panelGroup>
-            <h:panelGroup rendered="#{controlPanelController.columnsOrderer[columnIndex] == 'CREATION_DATE' or controlPanelController.columnsOrderer[columnIndex] == 'CREATION_DATE_TIME'}" styleClass="#{(controlPanelController.firstOrderPartSpec == '+id'  or controlPanelController.firstOrderPartSpec == '-id') ? 'selected' : 'not-selected'}">
+            <h:panelGroup rendered="#{controlPanelController.columnsOrderer[columnIndex] == 'CREATION_DATE' or controlPanelController.columnsOrderer[columnIndex] == 'CREATION_DATE_TIME'}" styleClass="#{(controlPanelController.firstOrderPartSpec == '+creationDate'  or controlPanelController.firstOrderPartSpec == '-creationDate') ? 'selected' : 'not-selected'}">
                 <h:panelGroup rendered="#{not controlPanelController.editColumns}" >
                     <e:text value="#{msgs['CONTROL_PANEL.HEADER.CREATION_DATE']}" styleClass="column-label column-numeric" style="cursor:pointer"
-                    onclick="#{controlPanelController.firstOrderPartSpec != '+id'} ? buttonClick('controlPanelForm:data:idAscSortButton'): buttonClick('controlPanelForm:data:idDescSortButton');" />
-                    <h:panelGroup rendered="#{controlPanelController.firstOrderPartSpec == '+id'}" >
+                    onclick="#{controlPanelController.firstOrderPartSpec != '+creationDate'} ? buttonClick('controlPanelForm:data:creationDateAscSortButton'): buttonClick('controlPanelForm:data:creationDateDescSortButton');" />
+                    <h:panelGroup rendered="#{controlPanelController.firstOrderPartSpec == '+creationDate'}" >
                         <t:htmlTag value="i" styleClass="fas fa-sort-numeric-down"/>
                     </h:panelGroup>
-                    <h:panelGroup rendered="#{controlPanelController.firstOrderPartSpec == '-id'}" >
+                    <h:panelGroup rendered="#{controlPanelController.firstOrderPartSpec == '-creationDate'}" >
                         <t:htmlTag value="i" styleClass="fas fa-sort-numeric-up"/>
                     </h:panelGroup>
                 </h:panelGroup>
             </h:panelGroup>
 
 
-            <h:panelGroup rendered="#{controlPanelController.editColumns && controlPanelController.columnsOrderer[columnIndex] == 'CHANGE_DATE'}" >
+            <h:panelGroup rendered="#{controlPanelController.editColumns && (controlPanelController.columnsOrderer[columnIndex] == 'CHANGE_DATE' or controlPanelController.columnsOrderer[columnIndex] == 'CHANGE_DATE_TIME')}" >
                 <e:text value="#{msgs['CONTROL_PANEL.HEADER.CHANGE_DATE']}" styleClass="column-label column-numeric"/>
             </h:panelGroup>
-            <h:panelGroup rendered="#{controlPanelController.columnsOrderer[columnIndex] == 'CHANGE_DATE'}" styleClass="#{(controlPanelController.firstOrderPartSpec == '+lastActionDate'  or controlPanelController.firstOrderPartSpec == '-lastActionDate') ? 'selected' : 'not-selected'}">
+            <h:panelGroup rendered="#{controlPanelController.columnsOrderer[columnIndex] == 'CHANGE_DATE' or controlPanelController.columnsOrderer[columnIndex] == 'CHANGE_DATE_TIME'}" styleClass="#{(controlPanelController.firstOrderPartSpec == '+lastActionDate'  or controlPanelController.firstOrderPartSpec == '-lastActionDate') ? 'selected' : 'not-selected'}">
                 <h:panelGroup rendered="#{not controlPanelController.editColumns}" >
                     <e:text value="#{msgs['CONTROL_PANEL.HEADER.CHANGE_DATE']}" styleClass="column-label column-numeric" style="cursor:pointer"
                     onclick="#{controlPanelController.firstOrderPartSpec != '+lastActionDate'} ? buttonClick('controlPanelForm:data:lastActionDateAscSortButton'): buttonClick('controlPanelForm:data:lastActionDateDescSortButton');" />
