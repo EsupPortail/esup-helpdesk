@@ -5685,7 +5685,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		}
 		try {
 			DepartmentManager departmentManager = getDepartmentManager(department, user);
-			return departmentManager.getManageResponses();
+			return true;
 		} catch (DepartmentManagerNotFoundException e) {
 			return false;
 		}

@@ -107,7 +107,7 @@
 
                                                         <t:htmlTag value="div"  styleClass="response-content hideme">
                                                             <h:outputText  value="#{response.message}" escape="false" />
-                                                            <t:htmlTag value="div" styleClass="form-item display-flex" rendered="#{responsesController.userCanManageGlobalResponses}">
+                                                            <t:htmlTag value="div" styleClass="form-item display-flex">
                                                                 <e:commandButton
                                                                     id="editResponseButton" styleClass="button--secondary"
                                                                     value="#{msgs['RESPONSES.MESSAGE.EDIT']}"
@@ -125,7 +125,7 @@
                                                     </t:htmlTag>
                                                 </t:htmlTag>
                                             </t:dataList>
-                                            <t:htmlTag value="div" styleClass="form-item" rendered="#{responsesController.userCanManageGlobalResponses}">
+                                            <t:htmlTag value="div" styleClass="form-item">
                                                  <e:commandButton id="addResponseButton" styleClass="button--secondary"
                                                     value="#{msgs['RESPONSES.BUTTON.ADD_USER_RESPONSE']}"
                                                     action="#{responsesController.addUserResponse}" />
