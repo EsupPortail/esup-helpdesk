@@ -67,7 +67,10 @@
                                                 </t:htmlTag>
                                             </t:htmlTag>
                                 </t:htmlTag>
-                                <t:htmlTag id="tab-properties" styleClass="tab-content current" value="div" rendered="#{departmentsController.currentUserCanViewDepartments}">
+                                <t:htmlTag id="tab-history" styleClass="tab-content current view-ticket_history" value="div">
+                                        <%@include file="_ticketActionHistory.jsp"%>
+                                </t:htmlTag>                                
+                                <t:htmlTag id="tab-properties" styleClass="tab-content" value="div" rendered="#{departmentsController.currentUserCanViewDepartments}">
                                         <t:htmlTag value="div" styleClass="form-block">
                                             <%@include file="_ticketActionScope.jsp"%>
                                             <t:htmlTag value="div" styleClass="form-item form-checkbox" rendered="#{ticketController.userCanSetNoAlert}" >
@@ -76,9 +79,6 @@
                                                 <e:outputLabel for="noAlert" value=" #{msgs['TICKET_ACTION.TEXT.NO_NOTIFICATION']}"/>
                                             </t:htmlTag>
                                         </t:htmlTag>
-                                </t:htmlTag>
-                                <t:htmlTag id="tab-history" styleClass="tab-content view-ticket_history #{!departmentsController.currentUserCanViewDepartments ? 'current' :''}" value="div">
-                                        <%@include file="_ticketActionHistory.jsp"%>
                                 </t:htmlTag>
                                 <t:htmlTag id="tab-files" styleClass="tab-content" value="div">
                                         <%@include file="_ticketActionTabUpload.jsp"%>
