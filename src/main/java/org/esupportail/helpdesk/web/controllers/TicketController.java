@@ -2098,7 +2098,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	public String doUpdateInformation(){
 		
 		boolean updated = updateTicket();
-		logger.info("doUpdateInformation : scope " + actionToUpdate.getScope());
+		logger.debug("doUpdateInformation : scope " + actionToUpdate.getScope());
 		if (updated) {
 			actionMessage = null;
 			return "view";

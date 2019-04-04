@@ -5371,34 +5371,26 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	public boolean userCanChangeActionOrFileInfoScope(final User user, final Ticket ticket, final String objectScope,
 			final User objectOwner) {
 		if (user == null) {
-			logger.info("user null ");
 			return false;
 		}
 		if (user.equals(ticket.getManager())) {
-			logger.info("getManager ");
 			return true;
 		}
 		if (!ticket.isOpened()) {
-			logger.info("isOpened ");
 			return false;
 		}
 		if (ActionScope.MANAGER.equals(objectScope)) {
-			logger.info("MANAGER ");
 			return false;
 		}
 		if (user.equals(ticket.getOwner()) && user.equals(objectOwner)) {
-			logger.info("getOwner ");
 			return true;
 		}
 		if (ActionScope.OWNER.equals(objectScope)) {
-			logger.info("OWNER ");
 			return false;
 		}
 		if (!isInvited(user, ticket)) {
-			logger.info("isInvited ");
 			return false;
 		}
-		logger.info("user.equals(objectOwner) " + user.equals(objectOwner));
 		return user.equals(objectOwner);
 	}
 
@@ -5410,7 +5402,6 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	@Override
 	@RequestCache
 	public boolean userCanChangeActionScope(final User user, final Action action) {
-		logger.info("userCanChangeActionScope : scope " + action.getScope());
 		return userCanChangeActionOrFileInfoScope(user, action.getTicket(), action.getScope(), action.getUser());
 	}
 
