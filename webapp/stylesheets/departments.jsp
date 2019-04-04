@@ -46,8 +46,7 @@
                                 var="department" rowIndexVar="variable" border="0"
                                 style="width: 100%" cellspacing="0" cellpadding="0"
                                 rowClasses="oddRow,evenRow" rowId="#{department.id}"
-                                styleClass="dashboard"
-                                rendered="#{not empty departmentsController.departmentPaginator.visibleItems}">
+                                styleClass="dashboard">
                                 <f:facet name="header">
                                     <t:htmlTag styleClass="dashboard-header-wrapper header-wrapper" value="div">
                                         <t:htmlTag styleClass="items-count" value="div" rendered="#{not empty departmentsController.departmentPaginator.visibleItems}">
