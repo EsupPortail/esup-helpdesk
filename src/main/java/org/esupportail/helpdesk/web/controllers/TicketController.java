@@ -2901,6 +2901,74 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 			final CategoryNode categoryNode,
 			final List<Category> subCategories,
 			final List <Department> departmentsViewable,
+			final Long cateId,
+			boolean matchFiltre) {
+		for (Category subCategory : subCategories) {
+    		Category realSubCategory = subCategory;
+    		while (realSubCategory.isVirtual()) {
+    			realSubCategory = realSubCategory.getRealCategory();
+    		}
+
+    		//on vérifie que la catégorie est visible 
+    		//pour cela on récupère le déparement de la liste construite avec les visibilité
+    		//et on vérifie que la catégorie n'est pas dans la black list
+    		if(departmentsViewable.indexOf(realSubCategory.getDepartment()) >= 0){
+	    		Department dept = departmentsViewable.get(departmentsViewable.indexOf(realSubCategory.getDepartment()));
+	    		if(creationDepartment.getCategoriesNotVisibles() != null && creationDepartment.getCategoriesNotVisibles().contains(subCategory)){
+	    			continue;
+	    		}
+    		}
+    		
+    		if ((!realSubCategory.getHideToExternalUsers()
+    				|| !getDomainService().getUserStore().isApplicationUser(getCurrentUser()))
+    				&& realSubCategory.getDepartment().isEnabled()) {
+    			if(getDomainService().getCheckVisiCateVirtual()) {
+    				if(!departmentsViewable.contains(realSubCategory.getDepartment())){
+    					continue;
+    				}
+    			}
+	        	CategoryNode subCategoryNode = new CategoryNode(creationDepartment, realSubCategory, subCategory.getXlabel());
+	        	categoryNode.getChildren().add(subCategoryNode);
+	    		categoryNode.setLeaf(false);
+	    		
+	    		if(cateId.equals(subCategory.getId()) || matchFiltre){
+	    			matchFiltre = true;
+	    		}
+	    		addAddTreeSubCategories(
+	    				creationDepartment, subCategoryNode,
+	    				getSubCategories(realSubCategory),
+	    				departmentsViewable, 
+	    				cateId,
+	    				matchFiltre);
+
+		    	//on supprime la catégorie si son id ne correspond pas au filtre
+		    	if(!cateId.equals(subCategory.getId()) && subCategoryNode.getChildCount() < 1 && !matchFiltre){
+		    		categoryNode.getChildren().remove(subCategoryNode);
+		    	}
+		    	//on repasse l'indicateur de match à flase si on est remonté au niveau de la catégorie qui a matché 
+		    	
+	    		if(cateId.equals(subCategory.getId())){
+	    			matchFiltre = false;
+	    		}		    	
+	    	}
+
+		}
+	}
+	
+	/**
+	 * Add sub categories to the add tree.
+	 * @param creationDepartment
+	 * @param categoryNode
+	 * @param subCategories
+	 * @param departmentsViewable
+	 * @param filter
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addAddTreeSubCategories(
+			final Department creationDepartment,
+			final CategoryNode categoryNode,
+			final List<Category> subCategories,
+			final List <Department> departmentsViewable,
 			final String filter,
 			boolean matchFiltre) {
 		for (Category subCategory : subCategories) {
@@ -2977,6 +3045,85 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 			    	rootNode.getChildren().add(departmentNode);
 			    	rootNode.setLeaf(false);
 		    	}
+			}
+		}
+		return rootNode;
+	}
+
+	/**
+	 * @return the root node of the add tree.
+	 */
+	@SuppressWarnings("unchecked")
+	public TreeNode buildRootAddNodeForDepartment(Long departmentId) {
+		TreeNode rootNode = new TreeNodeBase("root", "root", true);
+		
+		List <Department> departmentsViewable = getDomainService().getTicketViewDepartments(getCurrentUser(), getClient());
+		List<Department> dpts = getDomainService().getTicketCreationDepartments(getCurrentUser(), getClient());
+		for (Department department : getDomainService().getTicketCreationDepartments(
+				getCurrentUser(), getClient())) {
+			if(departmentId.equals(department.getId())) {
+				Department realDepartment;
+				if (department.isVirtual()) {
+					realDepartment = department.getRealDepartment();
+				} else {
+					realDepartment = department;
+				}
+				if ((!realDepartment.getHideToExternalUsers()
+						|| !getDomainService().getUserStore().isApplicationUser(getCurrentUser()))
+						&& departmentsViewable.contains(realDepartment)) {
+			    	CategoryNode departmentNode = new CategoryNode(department);
+			    	addAddTreeSubCategories(
+			    			department, departmentNode,
+			    			getRootCategories(realDepartment),
+			    			departmentsViewable);
+			    	if (departmentNode.getChildCount() > 0) {
+				    	rootNode.getChildren().add(departmentNode);
+				    	rootNode.setLeaf(false);
+			    	}
+				}
+			}
+		}
+		return rootNode;
+	}
+
+	/**
+	 * @return the root node of the add tree.
+	 */
+	@SuppressWarnings("unchecked")
+	public TreeNode buildRootAddNodeForCategory(Long categoryId) {
+		TreeNode rootNode = new TreeNodeBase("root", "root", true);
+		
+		
+		Category category = getDomainService().getCategory(categoryId);
+		if(category != null) {
+			Long departmentId = category.getDepartment().getId();
+			
+			List <Department> departmentsViewable = getDomainService().getTicketViewDepartments(getCurrentUser(), getClient());
+			List<Department> dpts = getDomainService().getTicketCreationDepartments(getCurrentUser(), getClient());
+			for (Department department : getDomainService().getTicketCreationDepartments(
+					getCurrentUser(), getClient())) {
+				if(departmentId.equals(department.getId())) {
+					Department realDepartment;
+					if (department.isVirtual()) {
+						realDepartment = department.getRealDepartment();
+					} else {
+						realDepartment = department;
+					}
+					if ((!realDepartment.getHideToExternalUsers()
+							|| !getDomainService().getUserStore().isApplicationUser(getCurrentUser()))
+							&& departmentsViewable.contains(realDepartment)) {
+				    	CategoryNode departmentNode = new CategoryNode(department);
+				    	boolean matchFiltre = false;
+				    	addAddTreeSubCategories(
+				    			department, departmentNode,
+				    			getRootCategories(realDepartment),
+				    			departmentsViewable, categoryId, matchFiltre);
+				    	if (departmentNode.getChildCount() > 0) {
+					    	rootNode.getChildren().add(departmentNode);
+					    	rootNode.setLeaf(false);
+				    	}
+					}
+				}
 			}
 		}
 		return rootNode;
@@ -3074,7 +3221,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 			moveTree.setTreeState(treeState);
 		}
 	}
-	private void expandAllTree(TreeState treeState, List<CategoryNode> nodesToCollapse){
+	public void expandAllTree(TreeState treeState, List<CategoryNode> nodesToCollapse){
 		for (Object child : nodesToCollapse) {
 			CategoryNode node = (CategoryNode) child;
 			treeState.toggleExpanded(node.getIdentifier());
@@ -3808,86 +3955,6 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		this.addTree = addTree;
 	}
 
-	/**
-	 * @return the addTree
-	 */
-	public TreeModelBase addTreeFiltered(Department department) {
-		
-		List <Department> departmentsViewable = getDomainService().getTicketViewDepartments(getCurrentUser(), getClient());
-		TreeNode rootNode = null;
-		rootNode = new TreeNodeBase("root", "root", true);
-		Department realDepartment;
-		
-		if (!department.isVirtual()) {
-			realDepartment = department;
-		} else {
-			realDepartment = department.getRealDepartment();
-		}
-		if(departmentsViewable.contains(realDepartment)){
-		   	CategoryNode departmentNode = new CategoryNode(department);
-		   	addFilteredTreeSubCategories(department, departmentNode, getRootCategories(realDepartment), departmentsViewable);
-		   	if (departmentNode.getChildCount() > 0) {
-		    	rootNode.getChildren().add(departmentNode);
-		    	rootNode.setLeaf(false);
-		   	}
-		}
-		//ouverture complète de l'arborescence
-		if (rootNode.getChildCount() > 0) {
-			filteredTree = null;
-			filteredTree = new TreeModelBase(rootNode);
-			TreeState treeState = new TreeStateBase();
-			treeState.toggleExpanded("0");
-			
-			List<CategoryNode> nodesToCollapse = rootNode.getChildren();
-			expandAllTree(treeState, nodesToCollapse);
-			
-			filteredTree.setTreeState(treeState);
-		}
-		return filteredTree;
-		
-	}
-
-	/**
-	 * @return the addTree
-	 */
-	public TreeModelBase addTreeFiltered(Department department, Category categoryFilterd) {
-		
-		List <Department> departmentsViewable = getDomainService().getTicketViewDepartments(getCurrentUser(), getClient());
-		List<Category> categories = new ArrayList<Category>(); 
-		TreeNode rootNode = null;
-		rootNode = new TreeNodeBase("root", "root", true);
-		Department realDepartment;
-		
-		if (!department.isVirtual()) {
-			realDepartment = department;
-		} else {
-			realDepartment = department.getRealDepartment();
-		}
-		if(departmentsViewable.contains(realDepartment)){
-		   	CategoryNode departmentNode = new CategoryNode(department);
-		   	categories.add(categoryFilterd);
-		   	addFilteredTreeSubCategories(department, departmentNode, categories, departmentsViewable);
-		   	if (departmentNode.getChildCount() > 0) {
-		    	rootNode.getChildren().add(departmentNode);
-		    	rootNode.setLeaf(false);
-		   	}
-		}
-		//ouverture complète de l'arborescence
-		if (rootNode.getChildCount() > 0) {
-			filteredTree = null;
-			filteredTree = new TreeModelBase(rootNode);
-			TreeState treeState = new TreeStateBase();
-			treeState.toggleExpanded("0");
-			
-			List<CategoryNode> nodesToCollapse = rootNode.getChildren();
-			expandAllTree(treeState, nodesToCollapse);
-			
-			filteredTree.setTreeState(treeState);
-		}
-		return filteredTree;
-		
-	}
-	
 	/**
 	 * @return the moveTargetCategory
 	 */

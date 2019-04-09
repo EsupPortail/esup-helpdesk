@@ -3,11 +3,16 @@
  */
 package org.esupportail.helpdesk.web.deepLinking;
 
+import java.util.List;
 import java.util.Map;
 
+import org.apache.myfaces.custom.tree2.TreeNode;
+import org.apache.myfaces.custom.tree2.TreeState;
+import org.apache.myfaces.custom.tree2.TreeStateBase;
 import org.esupportail.commons.services.logging.Logger;
 import org.esupportail.commons.services.logging.LoggerImpl;
 import org.esupportail.commons.utils.Assert;
+import org.esupportail.commons.web.beans.TreeModelBase;
 import org.esupportail.commons.web.deepLinking.AbstractDeepLinkingRedirector;
 import org.esupportail.helpdesk.domain.DomainService;
 import org.esupportail.helpdesk.domain.beans.ArchivedTicket;
@@ -21,6 +26,7 @@ import org.esupportail.helpdesk.exceptions.CategoryNotFoundException;
 import org.esupportail.helpdesk.exceptions.DepartmentNotFoundException;
 import org.esupportail.helpdesk.exceptions.FaqNotFoundException;
 import org.esupportail.helpdesk.exceptions.TicketNotFoundException;
+import org.esupportail.helpdesk.web.beans.CategoryNode;
 import org.esupportail.helpdesk.web.controllers.AdministratorsController;
 import org.esupportail.helpdesk.web.controllers.ArchivedTicketController;
 import org.esupportail.helpdesk.web.controllers.BookmarksController;
@@ -361,12 +367,14 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	protected String redirectTicketAdd(final Map<String, String> params) {
 		Department department = null;
 		Category categoryFilter = null;
+		TreeModelBase addTree = null;
+
 		if (params.get(DEPARTMENT_ID_PARAM) != null) {
 			Long departmentId = null;
 			try {
 				departmentId = Long.valueOf(params.get(DEPARTMENT_ID_PARAM));
 			} catch (NumberFormatException e) {
-				addWarnMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", departmentId.toString());
+				addWarnMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", params.get(DEPARTMENT_ID_PARAM));
 				ticketController.setAddTree(null);
 				ticketController.setAddTargetCategory(null);
 				ticketController.setAddTargetDepartment(null);
@@ -376,50 +384,33 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 				try {
 					department = getDomainService().getDepartment(departmentId);
 				} catch (DepartmentNotFoundException e) {
-					addWarnMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", departmentId.toString());
+					addWarnMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", params.get(DEPARTMENT_ID_PARAM));
 					ticketController.setAddTree(null);
 					ticketController.setAddTargetCategory(null);
 					ticketController.setAddTargetDepartment(null);
 					return "/stylesheets/ticketAdd.jsp";
 				}
-				//cas d'un filtre sur catégorie
-				if (params.get(CATEGOTY_ID_FILTER_PARAM) != null) {
-					Long categoryIdFilter = null;
-					try {
-						categoryIdFilter = Long.valueOf(params.get(CATEGOTY_ID_FILTER_PARAM));
-					} catch (NumberFormatException e) {
-						addWarnMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", categoryIdFilter.toString());
-						ticketController.setAddTree(null);
-						ticketController.setAddTargetCategory(null);
-						ticketController.setAddTargetDepartment(null);
-						return "/stylesheets/ticketAdd.jsp";
-					}
-					if (categoryIdFilter != null) {
-						try {
-							categoryFilter = getDomainService().getCategory(categoryIdFilter);
-						} catch (CategoryNotFoundException e) {
-							addWarnMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", categoryIdFilter.toString());
-							ticketController.setAddTree(null);
-							ticketController.setAddTargetCategory(null);
-							ticketController.setAddTargetDepartment(null);
-							return "/stylesheets/ticketAdd.jsp";
-						}
-						// evolution : on passe la catégorie pour filtrer le nodetree sur ce dernier
-						ticketController.setFilteredTree(ticketController.addTreeFiltered(department, categoryFilter));
-					}
-				} else {				
-					// evolution : on passe le département pour filtrer le nodetree sur ce dernier
-					ticketController.setFilteredTree(ticketController.addTreeFiltered(department));
+
+				TreeNode rootNode = ticketController.buildRootAddNodeForDepartment(departmentId);
+
+				//ouverture complète de l'arborescence
+				if (rootNode.getChildCount() > 0) {
+					addTree = new TreeModelBase(rootNode);
+					TreeState treeState = new TreeStateBase();
+					treeState.toggleExpanded("0");
+					
+					List<CategoryNode> nodesToCollapse = rootNode.getChildren();
+					ticketController.expandAllTree(treeState, nodesToCollapse);
+					addTree.setTreeState(treeState);
+					ticketController.setAddTree(addTree);
 				}
 			}
-		}
-		Category category = null;
-		if (params.get(CATEGORY_ID_PARAM) != null) {
+		} else if (params.get(CATEGORY_ID_PARAM) != null) {
 			Long categoryId = null;
 			try {
 				categoryId = Long.valueOf(params.get(CATEGORY_ID_PARAM));
 			} catch (NumberFormatException e) {
-				addWarnMessage(CATEGORY_ID_PARAM, params.get(CATEGORY_ID_PARAM));
+				addWarnMessage(null,  "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", params.get(CATEGORY_ID_PARAM));
 				ticketController.setAddTree(null);
 				ticketController.setAddTargetCategory(null);
 				ticketController.setAddTargetDepartment(null);
@@ -427,33 +418,27 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 			}
 			if (categoryId != null) {
 				try {
-					category = getDomainService().getCategory(categoryId);
-					if (category.isVirtual()) {
-						category = category.getRealCategory();
-					}
+					categoryFilter = getDomainService().getCategory(categoryId);
 				} catch (CategoryNotFoundException e) {
-					addWarnMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", categoryId.toString());
+					addWarnMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", params.get(CATEGORY_ID_PARAM));
 					ticketController.setAddTree(null);
 					ticketController.setAddTargetCategory(null);
 					ticketController.setAddTargetDepartment(null);
 					return "/stylesheets/ticketAdd.jsp";
 				}
-			}
-		}
-		if (!ticketController.isUserCanAdd()) {
-			addAuthenticationRequiredErrorMessage();
-		} else {
-			ticketController.add();
-			if (category != null) {
-				if (department == null) {
-					department = category.getDepartment();
+				
+				TreeNode rootNode = ticketController.buildRootAddNodeForCategory(categoryId);
+				//ouverture complète de l'arborescence
+				if (rootNode.getChildCount() > 0) {
+					addTree = new TreeModelBase(rootNode);
+					TreeState treeState = new TreeStateBase();
+					treeState.toggleExpanded("0");
+					
+					List<CategoryNode> nodesToCollapse = rootNode.getChildren();
+					ticketController.expandAllTree(treeState, nodesToCollapse);
+					addTree.setTreeState(treeState);
+					ticketController.setAddTree(addTree);
 				}
-				ticketController.setAddTargetCategory(category);
-				ticketController.setAddTargetDepartment(category.getDepartment());
-				ticketController.addChooseCategory();
-			}
-			if (params.get(DEPARTMENT_ID_PARAM) != null) {
-				ticketController.setAddTargetDepartment(department);
 			}
 		}
 		return "/stylesheets/ticketAdd.jsp";
@@ -786,7 +771,6 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 	/**
 	 * @see org.esupportail.commons.web.deepLinking.DeepLinkingRedirector#redirect(java.util.Map)
 	 */
-	@Override
 	public String redirect(final Map<String, String> params) {
 		sessionController.resetSessionLocale();
 		if (sessionController.getCurrentUser() == null) {
