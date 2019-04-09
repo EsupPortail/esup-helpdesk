@@ -53,11 +53,11 @@
                                 </t:htmlTag>
                                 <t:htmlTag styleClass="region extended-properties" value="div">
                                             <t:htmlTag styleClass="tabs" value="ul">
-                                                <t:htmlTag id="properties" styleClass="tab-link current" value="li" rendered="#{departmentsController.currentUserCanViewDepartments}">
-                                                    <h:outputText value="#{msgs['TICKET_ACTION.TAB.GIVE_INFO.PROPERTIES.TEXT']} " />
-                                                </t:htmlTag>
-                                                <t:htmlTag id="history" styleClass="tab-link #{!departmentsController.currentUserCanViewDepartments ? 'current' :''}" value="li">
+                                                <t:htmlTag id="history" styleClass="tab-link current" value="li">
                                                     <h:outputText value="#{msgs['TICKET_ACTION.TAB.HISTORY.TEXT']} " />
+                                                </t:htmlTag>
+                                                <t:htmlTag id="properties" styleClass="tab-link" value="li" rendered="#{departmentsController.currentUserCanViewDepartments}">
+                                                    <h:outputText value="#{msgs['TICKET_ACTION.TAB.GIVE_INFO.PROPERTIES.TEXT']} " />
                                                 </t:htmlTag>
                                                 <t:htmlTag id="files" styleClass="tab-link" value="li">
                                                     <h:outputText value="#{msgs['TICKET_ACTION.TAB.FILES.TEXT']} " />

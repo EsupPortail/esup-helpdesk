@@ -42,6 +42,12 @@
 <e:commandButton id="priorityDescSortButton" value="^" action="changeSortOrder" style="display: none" >
 	<t:updateActionListener value="-priority" property="#{controlPanelController.firstOrderPartSpec}" />
 </e:commandButton>
+<e:commandButton id="creationDateAscSortButton" value="v" action="changeSortOrder" style="display: none" >
+	<t:updateActionListener value="+creationDate" property="#{controlPanelController.firstOrderPartSpec}" />
+</e:commandButton>
+<e:commandButton id="creationDateDescSortButton" value="^" action="changeSortOrder" style="display: none" >
+	<t:updateActionListener value="-creationDate" property="#{controlPanelController.firstOrderPartSpec}" />
+</e:commandButton>
 <e:commandButton id="lastActionDateAscSortButton" value="v" action="changeSortOrder" style="display: none" >
 	<t:updateActionListener value="+lastActionDate" property="#{controlPanelController.firstOrderPartSpec}" />
 </e:commandButton>

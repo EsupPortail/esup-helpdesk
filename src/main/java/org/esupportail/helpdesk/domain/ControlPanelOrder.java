@@ -29,6 +29,8 @@ public class ControlPanelOrder implements Serializable {
 	/** An order part name. */
 	public static final String PRIORITY = "priority";
 	/** An order part name. */
+	public static final String CREATION_DATE = "creationDate";
+	/** An order part name. */
 	public static final String LAST_ACTION_DATE = "lastActionDate";
 	/** An order part name. */
 	public static final String OWNER = "owner";
@@ -51,6 +53,7 @@ public class ControlPanelOrder implements Serializable {
 		LABEL,
 		STATUS,
 		PRIORITY,
+		CREATION_DATE,
 		LAST_ACTION_DATE,
 		OWNER,
 		MANAGER

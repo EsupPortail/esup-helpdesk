@@ -711,6 +711,8 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 				orderBy = "ticket.creationDepartment.label";
 			} else if (ControlPanelOrder.LABEL.equals(orderPart.getName())) {
 				orderBy = "ticket.label";
+			} else if (ControlPanelOrder.CREATION_DATE.equals(orderPart.getName())) {
+				orderBy = "ticket.creationDate";
 			} else if (ControlPanelOrder.LAST_ACTION_DATE.equals(orderPart.getName())) {
 				orderBy = "ticket.lastActionDate";
 			} else if (ControlPanelOrder.MANAGER.equals(orderPart.getName())) {
