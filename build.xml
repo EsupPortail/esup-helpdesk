@@ -95,7 +95,7 @@
 
 	<target name="stop" depends="commons-stop-tomcat" description="Stop the application" />
 
-	<property name="log4j.indexing-config" value="${basedir}/properties/logging/log4j-indexing.properties" />
+	<property name="log4j.indexing-config" value="${props.dir}/logging/log4j-indexing.properties" />
 	<target name="check-indexing-config" depends="compile-batch,check-batch-config" >
 		<if>
 			<not>
@@ -140,7 +140,7 @@
 	    </java>
 	</target>
 
-	<property name="log4j.archiving-config" value="${basedir}/properties/logging/log4j-archiving.properties" />
+	<property name="log4j.archiving-config" value="${props.dir}/logging/log4j-archiving.properties" />
 	<target name="check-archiving-config" depends="compile-batch,check-batch-config" >
 		<if>
 			<not>
@@ -166,7 +166,7 @@
 	    </java>
 	</target>
 
-	<property name="log4j.feeding-config" value="${basedir}/properties/logging/log4j-feeding.properties" />
+	<property name="log4j.feeding-config" value="${props.dir}/logging/log4j-feeding.properties" />
 	<target name="check-feeding-config" >
 		<if>
 			<not>
@@ -185,7 +185,7 @@
 	    </java>
 	</target>
 
-	<property name="log4j.expiration-config" value="${basedir}/properties/logging/log4j-expiration.properties" />
+	<property name="log4j.expiration-config" value="${props.dir}/logging/log4j-expiration.properties" />
 	<target name="check-expiration-config" depends="compile-batch,check-batch-config" >
 		<if>
 			<not>
@@ -227,7 +227,7 @@
 	    </java>
 	</target>
 
-	<property name="log4j.recall-config" value="${basedir}/properties/logging/log4j-recall.properties" />
+	<property name="log4j.recall-config" value="${props.dir}/logging/log4j-recall.properties" />
 	<target name="check-recall-config" depends="compile-batch,check-batch-config" >
 		<if>
 			<not>
@@ -268,7 +268,7 @@
 		<fail message="target unlock-compute-statistics is obsolete" />
 	</target>
 
-	<property name="log4j.reporting-config" value="${basedir}/properties/logging/log4j-reporting.properties" />
+	<property name="log4j.reporting-config" value="${props.dir}/logging/log4j-reporting.properties" />
 	<target name="check-reporting-config" >
 		<if>
 			<not>
