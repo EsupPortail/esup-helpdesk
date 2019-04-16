@@ -510,6 +510,7 @@ jQuery(function ($) {
             if (($.cookie('invite-user-select') != 'null')) {
                 $(this).addClass("hideme");
                 $("#ticketActionForm\\:inviteComment").removeClass('hideme');
+                $("#ticketActionForm\\:inviteHistory").removeClass('hideme');
                 $("#ticketActionForm\\:ldapUid-label").removeClass('hideme');
             }
         });
@@ -527,6 +528,7 @@ jQuery(function ($) {
         $("#ticketActionForm\\:inviteTree").addClass('hideme');
         $("#ticketActionForm\\:about-uids").addClass('hideme');
         $("#ticketActionForm\\:inviteComment").addClass('hideme');
+        $("#ticketActionForm\\:inviteHistory").addClass('hideme');
         $("#ticketActionForm\\:ldapUid-label").addClass('hideme');
         $("#ticketActionForm\\:ldap-search-button").removeClass('hideme');
         $.cookie('invite-user-select', null);
@@ -540,6 +542,7 @@ jQuery(function ($) {
         $("#ticketActionForm\\:inviteTree").addClass('hideme');
         $("#ticketActionForm\\:about-uids").toggleClass('hideme');
         $("#ticketActionForm\\:inviteComment").removeClass('hideme');
+        $("#ticketActionForm\\:inviteHistory").removeClass('hideme');
         $("#ticketActionForm\\:ldapUid-label").removeClass('hideme');
         $("#ticketActionForm\\:ldap-search-button").addClass('hideme');
         $.cookie('invite-user-select', null);
@@ -551,6 +554,7 @@ jQuery(function ($) {
         $("#ticketActionForm\\:recentInvitationList").addClass('hideme');
         $("#ticketActionForm\\:about-uids").addClass('hideme');
         $("#ticketActionForm\\:inviteComment").addClass('hideme');
+        $("#ticketActionForm\\:inviteHistory").addClass('hideme');
         $("#ticketActionForm\\:ldapUid-label").removeClass('hideme');
         $("#ticketActionForm\\:ldap-search-button").addClass('hideme');
         $.cookie('invite-user-select', null);
@@ -568,6 +572,7 @@ jQuery(function ($) {
         $("#ticketActionForm\\:inviteTree").addClass('hideme');
         $("#ticketActionForm\\:about-uids").addClass('hideme');
         $("#ticketActionForm\\:inviteComment").addClass('hideme');
+        $("#ticketActionForm\\:inviteHistory").addClass('hideme');
         $("#ticketActionForm\\:ldapUid-label").removeClass('hideme');
         $("#ticketActionForm\\:ldap-search-button").addClass('hideme');
         $.cookie('invite-user-select', null);
@@ -601,6 +606,7 @@ jQuery(function ($) {
             case 'show':
                 $("#ticketActionForm\\:ldapUid").parent().parent().removeClass('hideme');
                 $("#ticketActionForm\\:inviteComment").removeClass('hideme');
+                $("#ticketActionForm\\:inviteHistory").removeClass('hideme');
                 break;
             case 'clear':
                 $("#ticketActionForm\\:ldapUid").val('');
@@ -608,6 +614,7 @@ jQuery(function ($) {
             case 'show clear':
                 $("#ticketActionForm\\:ldapUid").parent().parent().removeClass('hideme');
                 $("#ticketActionForm\\:inviteComment").removeClass('hideme');
+                $("#ticketActionForm\\:inviteHistory").removeClass('hideme');
 
                 $("#ticketActionForm\\:ldapUid").val('');
                 break;

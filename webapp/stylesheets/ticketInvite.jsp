@@ -172,13 +172,13 @@ function addInvitation(select) {
                                 			value="#{ticketController.actionMessage}" 
                                 			toolbarSet="actionMessage" />
                             </t:htmlTag>
+  
                             <t:htmlTag value="div" styleClass="form-item display-flex">
                                 <e:commandButton id="actionButton" value="#{msgs['TICKET_ACTION.BUTTON.INVITE']}"
                                         action="#{ticketController.doInvite}"
                                         styleClass="button--primary"/>
                                 <%@include file="_ticketActionCancel.jsp"%>
                             </t:htmlTag>
-
                       </t:htmlTag>
 
                  </t:htmlTag>
@@ -186,20 +186,30 @@ function addInvitation(select) {
 
 		</t:htmlTag>
 
+        <t:htmlTag value="div" id="inviteHistory" styleClass="form-block hideme form-body">
+	        <t:htmlTag styleClass="region extended-properties current" value="div">
+	                  <t:htmlTag styleClass="tabs" value="ul">
+	                      <t:htmlTag id="history" styleClass="tab-link current" value="li">
+	                          <h:outputText value="#{msgs['TICKET_ACTION.TAB.HISTORY.TEXT']} " />
+	                      </t:htmlTag>
+	                  </t:htmlTag>
+	        </t:htmlTag>                            
+	        <t:htmlTag id="tab-history" styleClass="tab-content view-ticket_history current" value="div">
+	                  <%@include file="_ticketActionHistory.jsp"%>
+	        </t:htmlTag> 
+	    </t:htmlTag> 
 
+    </e:form>
 
-	                    </e:form>
+    <%@include file="_ticketActionJavascript.jsp"%>
+   </t:htmlTag>
+  </t:htmlTag>
+ </t:htmlTag>
+ <t:htmlTag value="footer" styleClass="footer">
+     <%@include file="_footer.jsp"%>
+ </t:htmlTag>
 
-	                    <%@include file="_ticketActionJavascript.jsp"%>
-                    </t:htmlTag>
-            </t:htmlTag>
-            </t:htmlTag>
-
-                <t:htmlTag value="footer" styleClass="footer">
-                        <%@include file="_footer.jsp"%>
-                </t:htmlTag>
-
-        </t:htmlTag>
+</t:htmlTag>
 
 
 </e:page>
