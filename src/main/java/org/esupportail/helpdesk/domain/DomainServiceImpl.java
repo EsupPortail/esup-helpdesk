@@ -14,9 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
 import org.apache.axis.utils.StringUtils;
 import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.aop.monitor.Monitor;
@@ -301,6 +298,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	private Boolean checkVisiCateVirtual;
 	
 	/**
+	 * indicator to restrict email to the manager when auto assign.
+	 */
+	private Boolean sendEmailManagerAutoAssign;
+	
+	/**
 	 * Bean constructor.
 	 */
 	public DomainServiceImpl() {
@@ -383,6 +385,8 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 				"property inviteManagerMoveTicket of class " + this.getClass().getName() + " can not be null");
 		Assert.notNull(this.checkVisiCateVirtual,
 				"property checkVisiCateVirtual of class " + this.getClass().getName() + " can not be null");
+		Assert.notNull(this.sendEmailManagerAutoAssign,
+				"property sendEmailManagerAutoAssign of class " + this.getClass().getName() + " can not be null");
 		
 	}
 
@@ -7825,4 +7829,13 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 	public void setCheckVisiCateVirtual(Boolean checkVisiCateVirtual) {
 		this.checkVisiCateVirtual = checkVisiCateVirtual;
 	}
+	
+	public Boolean getSendEmailManagerAutoAssign() {
+		return sendEmailManagerAutoAssign;
+	}
+
+	public void setSendEmailManagerAutoAssign(Boolean sendEmailManagerAutoAssign) {
+		this.sendEmailManagerAutoAssign = sendEmailManagerAutoAssign;
+	}
+
 }

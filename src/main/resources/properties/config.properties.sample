@@ -953,4 +953,6 @@ help.manager.url=https://univ.fr/aide-gestionnaire
 
 
 # Pour activer ou non le controle la visibilité de la catégorie redirigée
-ckeck.visi.cat.virtual=false
+check.visi.cat.virtual=false
+# envoi d'email uniquement au manager du ticket lors d'une assignation automatique
+send.email.manager.only.automatic.assign=false

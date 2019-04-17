@@ -45,6 +45,7 @@
 		<property name="tryConvertMaillToCasUser" value="${auth.tryConvertMaillToCasUser}" />
 		<property name="inviteManagerMoveTicket" value="${conf.inviteManagerMoveTicket}" />
 		<property name="checkVisiCateVirtual" value="${check.visi.cat.virtual}" />
+		<property name="sendEmailManagerAutoAssign" value="${send.email.manager.only.automatic.assign}" />
 		
 	</bean>
 

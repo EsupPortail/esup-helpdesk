@@ -189,6 +189,8 @@ public class MonitoringSenderImpl extends AbstractAlertSender implements Monitor
 			final boolean expiration) {
 		List<User> users = new ArrayList<User>();
 		List<Action> theActions = new ArrayList<Action>();
+		Boolean restrictAssign = getDomainService().getSendEmailManagerAutoAssign();
+		
 		long now = System.currentTimeMillis();
 		for (Action action : actions) {
 			if (action != null) {
@@ -309,77 +311,85 @@ public class MonitoringSenderImpl extends AbstractAlertSender implements Monitor
 			logger.debug("sending alerts for ticket #" + ticket.getId()
 					+ " (createLikeAction=" + createLikeAction + ")...");
 		}
-		Department departmentBefore = ticket.getDepartment();
-		for (Action action : theActions) {
-			if (action.getDepartmentBefore() != null) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("action.getDepartmentBefore()=["
-							+ action.getDepartmentBefore().getLabel() + "]");
+		if(restrictAssign && !assignAction) {
+			Department departmentBefore = ticket.getDepartment();
+			for (Action action : theActions) {
+				if (action.getDepartmentBefore() != null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("action.getDepartmentBefore()=["
+								+ action.getDepartmentBefore().getLabel() + "]");
+					}
+					departmentBefore = action.getDepartmentBefore();
+					ticketMonitoringAddDepartmentManagers(users, author, departmentBefore, false);
+					break;
 				}
-				departmentBefore = action.getDepartmentBefore();
-				ticketMonitoringAddDepartmentManagers(users, author, departmentBefore, false);
-				break;
 			}
-		}
-		departmentBefore = ticket.getDepartment();
-		for (Action action : theActions) {
-			if (action.getDepartmentBefore() != null) {
-				departmentBefore = action.getDepartmentBefore();
-			}
-			if (action.getCategoryBefore() != null) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("action.getCategoryBefore()=["
-							+ action.getCategoryBefore().getLabel() + "]");
+			departmentBefore = ticket.getDepartment();
+			for (Action action : theActions) {
+				if (action.getDepartmentBefore() != null) {
+					departmentBefore = action.getDepartmentBefore();
 				}
-				ticketMonitoringAddCategoryMembers(users, author, action.getCategoryBefore(), false);
+				if (action.getCategoryBefore() != null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("action.getCategoryBefore()=["
+								+ action.getCategoryBefore().getLabel() + "]");
+					}
+					ticketMonitoringAddCategoryMembers(users, author, action.getCategoryBefore(), false);
+				}
+				if (action.getManagerBefore() != null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("action.getManagerBefore()=["
+								+ action.getManagerBefore().getRealId() + "]");
+					}
+					try {
+						ticketMonitoringAddTicketManager(
+								users, author,
+								getDomainService().getDepartmentManager(
+										departmentBefore, action.getManagerBefore()),
+								false);
+					} catch (DepartmentManagerNotFoundException e) {
+						// do nothing
+					}
+				}
+				User owner = action.getTicketOwnerBefore();
+				if (owner != null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("action.getTicketOwnerBefore()=["
+								+ owner.getRealId() + "]");
+					}
+					if (owner.getOwnerMonitoring()) {
+						ticketMonitoringAddUser(users, author, owner);
+					}
+				}
 			}
-			if (action.getManagerBefore() != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("ticket.getDepartment()=[" + ticket.getDepartment().getLabel() + "]");
+			}
+			ticketMonitoringAddDepartmentManagers(users, author, ticket.getDepartment(), createLikeAction);
+			if (logger.isDebugEnabled()) {
+				logger.debug("ticket.getCategory()=[" + ticket.getCategory().getLabel() + "]");
+			}
+			ticketMonitoringAddCategoryMembers(users, author, ticket.getCategory(), createLikeAction);
+			if (ticket.getManager() != null) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("action.getManagerBefore()=["
-							+ action.getManagerBefore().getRealId() + "]");
+					logger.debug("ticket.getManager()=[" + ticket.getManager().getRealId() + "]");
 				}
 				try {
 					ticketMonitoringAddTicketManager(
 							users, author,
-							getDomainService().getDepartmentManager(
-									departmentBefore, action.getManagerBefore()),
-							false);
+							getDomainService().getDepartmentManager(ticket.getDepartment(), ticket.getManager()),
+							createLikeAction);
 				} catch (DepartmentManagerNotFoundException e) {
-					// do nothing
-				}
-			}
-			User owner = action.getTicketOwnerBefore();
-			if (owner != null) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("action.getTicketOwnerBefore()=["
-							+ owner.getRealId() + "]");
-				}
-				if (owner.getOwnerMonitoring()) {
-					ticketMonitoringAddUser(users, author, owner);
+					// nothing to do, the user is not managing the department any more
+					// but he is still marked as in charge of the ticket
 				}
 			}
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("ticket.getDepartment()=[" + ticket.getDepartment().getLabel() + "]");
-		}
-		ticketMonitoringAddDepartmentManagers(users, author, ticket.getDepartment(), createLikeAction);
-		if (logger.isDebugEnabled()) {
-			logger.debug("ticket.getCategory()=[" + ticket.getCategory().getLabel() + "]");
-		}
-		ticketMonitoringAddCategoryMembers(users, author, ticket.getCategory(), createLikeAction);
-		if (ticket.getManager() != null) {
+		if(restrictAssign && assignAction) {
+			users.add(ticket.getManager());
 			if (logger.isDebugEnabled()) {
 				logger.debug("ticket.getManager()=[" + ticket.getManager().getRealId() + "]");
-			}
-			try {
-				ticketMonitoringAddTicketManager(
-						users, author,
-						getDomainService().getDepartmentManager(ticket.getDepartment(), ticket.getManager()),
-						createLikeAction);
-			} catch (DepartmentManagerNotFoundException e) {
-				// nothing to do, the user is not managing the department any more
-				// but he is still marked as in charge of the ticket
-			}
+			}		
 		}
 		for (Invitation invitation : getDomainService().getInvitations(ticket)) {
 			User invitedUser = invitation.getUser();
@@ -401,10 +411,13 @@ public class MonitoringSenderImpl extends AbstractAlertSender implements Monitor
 				ticketMonitoringAddUser(users, author, bookmarkUser);
 			}
 		}
-		for (TicketMonitoring ticketMonitoring : getDomainService().getTicketMonitorings(ticket)) {
-			User monitoringUser = ticketMonitoring.getUser();
-			if (getDomainService().userCanViewTicket(monitoringUser, null, ticket)) {
-				ticketMonitoringAddUser(users, author, monitoringUser);
+		if(!assignAction) {
+
+			for (TicketMonitoring ticketMonitoring : getDomainService().getTicketMonitorings(ticket)) {
+				User monitoringUser = ticketMonitoring.getUser();
+				if (getDomainService().userCanViewTicket(monitoringUser, null, ticket)) {
+					ticketMonitoringAddUser(users, author, monitoringUser);
+				}
 			}
 		}
 		User owner = ticket.getOwner();

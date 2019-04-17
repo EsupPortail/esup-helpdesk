@@ -2309,6 +2309,7 @@ public interface DomainService extends Serializable {
 	Boolean getInviteManagerMoveTicket();
 
 	Boolean getCheckVisiCateVirtual();
+	Boolean getSendEmailManagerAutoAssign();
 
 	//////////////////////////////////////////////////////////////
 	// FaqLink
