@@ -1,0 +1,10 @@
+/target/
+/src/main/resources/properties/config.properties
+/build-commons.xml
+/build.properties
+/pom.xml
+/webapp/media
+src/main/resources/properties/logging
+/.classpath
+/.project
+/.settings/
