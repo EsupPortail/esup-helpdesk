@@ -289,7 +289,9 @@ ldap.emailAttribute=mail
 ldap.filterDate=amudatevalidation
 ldap.filterEdupersonaffiliation=edupersonaffiliation
 ldap.filterEdupersonaffiliationValues=employee,researcher,student,faculty
-s
+# The fields above generate this ldap search filter :
+# ((&(|(cn=*my_search*)(uid=*my_search*))(amudatevalidation=*)(|(eduPersonAffiliation=*employee*)(eduPersonAffiliation=*researcher*)(eduPersonAffiliation=*student*)(eduPersonAffiliation=*faculty*))))
+
 # The attribute that holds the email aliases (defaults to alias).
 # Email aliases are used to change the owner of tickets when the tickets have
 # been created with email accounts and make the correspondence between user ids

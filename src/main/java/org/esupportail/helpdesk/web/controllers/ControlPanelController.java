@@ -421,7 +421,9 @@ public class ControlPanelController extends AbstractContextAwareController {
 					new SelectItem(manager.getUser(), manager.getUser().getDisplayName()));
 			}
 		} else {
-			//cas ou le service = Tous : on alimente la liste des gestionnaires de tous les services ou l'on est gestionnaire 
+			//cas ou le service = Tous : on alimente la liste des gestionnaires de tous les services ou l'on est gestionnaire
+			managerInvolvementItems.add(
+					new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
 			List<DepartmentManager> departments = getDomainService().getDepartmentManagers(getCurrentUser());
 			if (departments != null) {
 				for (DepartmentManager depaManager : departments) {
@@ -434,6 +436,7 @@ public class ControlPanelController extends AbstractContextAwareController {
 					managerInvolvementItems.add(
 							new SelectItem(manager.getUser(), manager.getUser().getDisplayName()));
 				}
+
 			}
 		}
 		return managerInvolvementItems;
