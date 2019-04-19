@@ -188,6 +188,14 @@ public class ControlPanelController extends AbstractContextAwareController {
 					currentUser.setControlPanelManagerDepartmentFilter(null);
 				}
 			}
+			if((getCurrentUser().getControlPanelManagerManagerFilter() == null) && 
+					(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
+					|| 
+					getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED))
+				){
+				panelPaginator.setSelectedManager(getCurrentUser());
+			}
+
 		}
 		getDomainService().updateUser(getCurrentUser());
 		paginator.setPageSize(getCurrentUser().getControlPanelPageSize());
@@ -424,6 +432,12 @@ public class ControlPanelController extends AbstractContextAwareController {
 			//cas ou le service = Tous : on alimente la liste des gestionnaires de tous les services ou l'on est gestionnaire 
 			List<DepartmentManager> departments = getDomainService().getDepartmentManagers(getCurrentUser());
 			if (departments != null) {
+				if(!getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) && 
+						   !getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)){
+							   managerInvolvementItems.add(
+									new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
+						   
+				} 
 				for (DepartmentManager depaManager : departments) {
 					for (DepartmentManager manager : getDomainService().getDepartmentManagers(depaManager.getDepartment())) {
 						listeDepartmentManagerTriee.add(manager);
