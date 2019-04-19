@@ -477,6 +477,9 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 			if(implication.equals("FREE")){
 				condition = getFreeCondition();
 			}
+			if(implication.equals("INVITE")){
+				condition = HqlUtils.alwaysTrue();
+			}
 		} else {
 			//cas Implication = Tous tickets
 			if (selectedManager != null) {
@@ -484,7 +487,9 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 						getManagedCondition(selectedManager),
 						getFreeCondition());
 			} else {
-				condition = HqlUtils.alwaysTrue();
+				condition = HqlUtils.or(
+						getAllManagedCondition(),
+						getFreeCondition());
 			}
 		}
 		if (logger.isDebugEnabled()) {
@@ -628,7 +633,20 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 
 						condition = HqlUtils.longIn("ticket.category.id", distinctCateIds);
 					} else {
-						condition = HqlUtils.equals("ticket.department.id", departmentFilter.getId());
+						if(implication.equals("FREE")) {
+							List<Category> categories = getDomainService().getMemberCategories(user,departmentFilter);
+							List<Long> cateIds = new ArrayList<Long>();
+							for (Category category : categories) {
+								cateIds.add(category.getId());
+							}
+							condition = getManagedDepartmentCondition(managedDepartments, userSelected, depaIdConfidentials);
+							condition =	HqlUtils.and(
+									HqlUtils.longIn("ticket.category.id", cateIds),
+									HqlUtils.equals("ticket.department.id", departmentFilter.getId()));
+						}						
+						else {
+							condition = HqlUtils.equals("ticket.department.id", departmentFilter.getId());
+						}
 					}
 					
 				} else {
@@ -647,7 +665,21 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 								;
 						}
 					} else {
-						condition = HqlUtils.longIn("ticket.category.id", getCategoryTreeIds(categoryFilter, null));
+						if(implication.equals("FREE")) {
+							//on récupère les id de la categorie filtre et ses enfants
+							List<Long> FilterCatAndsubCatIds = getCategoryTreeIds(categoryFilter, null);
+							List<Category> categories = getDomainService().getMemberCategories(user,departmentFilter);
+							List<Long> cateIds = new ArrayList<Long>();
+							//si la cate filtre et enfants sont des catégorie membres de l'utilisateur, on les prend en compte 
+							for (Category category : categories) {
+								if(FilterCatAndsubCatIds.contains(category.getId())){
+									cateIds.add(category.getId());
+								}
+							}
+							condition =	HqlUtils.longIn("ticket.category.id", cateIds);
+						} else {
+							condition = HqlUtils.longIn("ticket.category.id", getCategoryTreeIds(categoryFilter, null));
+						}
 					}
 				}
 			}
