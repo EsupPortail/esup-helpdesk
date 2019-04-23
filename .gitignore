@@ -3,3 +3,4 @@ src/main/resources/properties/config.properties
 utils/lib/
 utils/tomcat/
 
+/target/
