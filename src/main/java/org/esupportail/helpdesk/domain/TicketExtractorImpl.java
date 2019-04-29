@@ -375,6 +375,78 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 		return condition;
 	}
 
+
+	/**
+	 * @return true if the user can see the ticket.
+	 */
+	protected String getManagerVisiblilityTicketCondition(User user,User selectedManager) {
+		//si gestionnaire = "-", on exclu tout les tickets privés sauf ceux de l'utilisateur
+		List <Long> dptIdnotManaged= new ArrayList<Long>();
+		List <Long> dptIdManaged= new ArrayList<Long>();
+		
+		//on constitue la liste des départements qui ne sont pas gérés par l'utilisateur
+		List<Department> selectedManagedDepartments = getDomainService().getManagedDepartments(selectedManager);
+		List<Department> userManagedDepartments = getDomainService().getManagedDepartments(user);
+		selectedManagedDepartments.removeAll(userManagedDepartments);
+		for (Department department : selectedManagedDepartments) {
+			dptIdnotManaged.add(department.getId());
+		}
+		for (Department department : userManagedDepartments) {
+			dptIdManaged.add(department.getId());
+		}
+		String condition = null;
+		if(!dptIdnotManaged.isEmpty()) {
+			condition = HqlUtils.or(
+					HqlUtils.and(
+						HqlUtils.not(
+							HqlUtils.equals(
+									"ticket.effectiveScope",
+									HqlUtils.quote(TicketScope.PRIVATE))),
+							HqlUtils.longIn("ticket.department.id", dptIdnotManaged)),
+					HqlUtils.longIn("ticket.department.id", dptIdManaged));
+		} else {
+			condition = HqlUtils.alwaysTrue();
+		}
+
+		return condition;
+	}
+	
+
+	/**
+	 * @return true if the user can see the ticket.
+	 */
+	protected String getManagerVisiblilityTicketCondition(User user) {
+		List <Long> dptIdManaged= new ArrayList<Long>();
+		
+		List<Department> userManagedDepartments = getDomainService().getManagedDepartments(user);
+
+		for (Department department : userManagedDepartments) {
+			dptIdManaged.add(department.getId());
+		}
+		String condition = null;
+			condition = HqlUtils.and(
+							HqlUtils.not(
+								HqlUtils.equals(
+										"ticket.effectiveScope",
+										HqlUtils.quote(TicketScope.PRIVATE))),
+							HqlUtils.longIn("ticket.department.id", dptIdManaged));
+
+		return condition;
+	}
+	
+	/**
+	 * @return true if the user can see the ticket.
+	 */
+	protected String getManagerVisiblilityTicketCondition(String scope) {
+		String condition = null;
+			condition = HqlUtils.not(
+							HqlUtils.equals(
+									"ticket.effectiveScope",
+									HqlUtils.quote(scope)));
+
+		return condition;
+	}
+	
 	/**
 	 * @return true if the user can read the ticket.
 	 */
@@ -785,17 +857,37 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 			return null;
 		}
 		if(!implication.equals("INVITE")){
-			managerCondition = HqlUtils.and(
-					getStatusCondition(user),
-					getManagerInvolvementCondition(user, selectedManager, implication),
-					getManagerVisibleTicketCondition(user, selectedManager!=null?selectedManager:user, implication, depaIdConfidentials));
+			if(selectedManager!=null) {
+				managerCondition = HqlUtils.and(
+						getStatusCondition(user),
+						getManagerInvolvementCondition(user, selectedManager, implication),
+						getManagerVisibleTicketCondition(user, selectedManager, implication, depaIdConfidentials),
+						user.equals(selectedManager)? HqlUtils.alwaysTrue() : getManagerVisiblilityTicketCondition(user, selectedManager));
+			} else {
+				//cas du gestionnaire = '-'
+				managerCondition = HqlUtils.and(
+								getStatusCondition(user),
+								getManagerInvolvementCondition(user, selectedManager, implication),
+								getManagerVisibleTicketCondition(user, user, implication, depaIdConfidentials));
+			
+			}
 		} 
 		if(implication.equals("INVITE")){
-			managerCondition = HqlUtils.and(HqlUtils.and(
-					getStatusCondition(user),
-					getManagerVisibleTicketCondition(user, selectedManager!=null?selectedManager:user, implication, depaIdConfidentials)),
-					getInvitedCondition(selectedManager!=null?selectedManager:user));
-			
+			if(selectedManager!=null) {
+				managerCondition = HqlUtils.and(HqlUtils.and(
+						getStatusCondition(user),
+						getManagerVisibleTicketCondition(user, selectedManager, implication, depaIdConfidentials)),
+						getInvitedCondition(selectedManager),
+						user.equals(selectedManager)? HqlUtils.alwaysTrue() : getManagerVisiblilityTicketCondition(user, selectedManager));
+			} else {
+				//cas du gestionnaire = '-'
+				managerCondition = HqlUtils.and(HqlUtils.and(
+						getStatusCondition(user),
+						getManagerVisibleTicketCondition(user, selectedManager, implication, depaIdConfidentials)),
+						getInvitedCondition(selectedManager));
+
+			}
+				
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("managerCondition = " + managerCondition);

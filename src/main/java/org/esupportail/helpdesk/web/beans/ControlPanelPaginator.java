@@ -94,7 +94,10 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 		String queryStringInvitation = null;
 		String queryStringLibre = null;
 
-
+		//on récupère le user manager stocké au niveau du user courant
+		if((selectedManager == null) && getCurrentUser().getControlPanelManagerManagerFilter() != null){
+			selectedManager = domainService.getUserStore().getExistingUserFromId(getCurrentUser().getControlPanelManagerManagerFilter());
+		}
 		//cas ou l'on passe a 'Implication = ...libres...', il faut gérer le cas de 'Gestionnaire = Tous' qui n'est plus proposé dans la liste
 		//dans ce cas on force le currentUser
 		if((selectedManager == null) && 
