@@ -865,18 +865,10 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 						user.equals(selectedManager)? HqlUtils.alwaysTrue() : getManagerVisiblilityTicketCondition(user, selectedManager));
 			} else {
 				//cas du gestionnaire = '-'
-				managerCondition = HqlUtils.or(
-						//récupération des tickets de tous les gestionnaires sauf les privés
-						HqlUtils.and(
+				managerCondition = HqlUtils.and(
 								getStatusCondition(user),
 								getManagerInvolvementCondition(user, selectedManager, implication),
-								getManagerVisibleTicketCondition(user, user, implication, depaIdConfidentials),
-								getManagerVisiblilityTicketCondition(TicketScope.PRIVATE)),
-						//récupération des tickets privés de l'utilisateur
-						HqlUtils.and(
-								getStatusCondition(user),
-								getManagerInvolvementCondition(user, selectedManager, implication),
-								getManagerVisibleTicketCondition(user, user, implication, depaIdConfidentials)));
+								getManagerVisibleTicketCondition(user, user, implication, depaIdConfidentials));
 			
 			}
 		} 
@@ -885,21 +877,15 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 				managerCondition = HqlUtils.and(HqlUtils.and(
 						getStatusCondition(user),
 						getManagerVisibleTicketCondition(user, selectedManager, implication, depaIdConfidentials)),
-						getInvitedCondition(selectedManager));
+						getInvitedCondition(selectedManager),
+						user.equals(selectedManager)? HqlUtils.alwaysTrue() : getManagerVisiblilityTicketCondition(user, selectedManager));
 			} else {
 				//cas du gestionnaire = '-'
-				managerCondition = HqlUtils.or(
-						//récupération des tickets de tous les gestionnaires sauf les privés
-						managerCondition = HqlUtils.and(HqlUtils.and(
-								getStatusCondition(user),
-								getManagerVisibleTicketCondition(user, user, implication, depaIdConfidentials)),
-								getInvitedCondition(user),
-								getManagerVisiblilityTicketCondition(TicketScope.PRIVATE)),
-						//récupération des tickets privés de l'utilisateur
-						managerCondition = HqlUtils.and(
-								getStatusCondition(user),
-								getManagerVisibleTicketCondition(user, user, implication, depaIdConfidentials)),
-								getInvitedCondition(user));
+				managerCondition = HqlUtils.and(HqlUtils.and(
+						getStatusCondition(user),
+						getManagerVisibleTicketCondition(user, selectedManager, implication, depaIdConfidentials)),
+						getInvitedCondition(selectedManager));
+
 			}
 				
 		}
