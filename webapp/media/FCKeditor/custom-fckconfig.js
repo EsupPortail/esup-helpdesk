@@ -1,6 +1,10 @@
 FCKConfig.ToolbarSets["actionMessage"] = [
-	['Bold','Italic','TextColor','OrderedList','UnorderedList'],['Link','Unlink'],['PasteWord','Table','Smiley']
-
+	['Undo','Redo'],
+	['Cut','Copy','Paste','PasteText'],
+	['FontFormat', 'Bold','Italic','Underline','StrikeThrough','-','Subscript','Superscript','TextColor','-','RemoveFormat'],
+	['OrderedList','UnorderedList','-','Outdent','Indent'],
+	['Link','Unlink'],
+	['SpecialChar','Smiley','-','FitWindow','Source']
 ] ;
 
 FCKConfig.ToolbarSets["faqContent"] = [
