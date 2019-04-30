@@ -188,6 +188,7 @@ public class ControlPanelController extends AbstractContextAwareController {
 					currentUser.setControlPanelManagerDepartmentFilter(null);
 				}
 			}
+
 			if((getCurrentUser().getControlPanelManagerManagerFilter() == null) && 
 					(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
 					|| 
