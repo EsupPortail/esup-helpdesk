@@ -52,6 +52,7 @@ import org.esupportail.helpdesk.exceptions.TicketNotFoundException;
 import org.esupportail.helpdesk.web.beans.AbstractFirstLastNode;
 import org.esupportail.helpdesk.web.beans.ActionScopeI18nKeyProvider;
 import org.esupportail.helpdesk.web.beans.CategoryNode;
+import org.esupportail.helpdesk.web.beans.ControlPanelColumnOrderer;
 import org.esupportail.helpdesk.web.beans.ControlPanelEntry;
 import org.esupportail.helpdesk.web.beans.FaqNode;
 import org.esupportail.helpdesk.web.beans.FaqTreeModel;
@@ -371,7 +372,18 @@ public class TicketController extends TicketControllerStateHolder implements Lda
      * The string of the searched categories.
      */    
     private String categoryMoveMembers;
-     
+
+    /**
+     * The columns orderer.
+     */
+    private ControlPanelColumnOrderer columnsOrderer;
+
+    /**
+     * The items for missing columns.
+     */
+    private List<SelectItem> addColumnItems;
+
+
 	/**
 	 * Bean constructor.
 	 */
@@ -774,37 +786,9 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		if (BACK_PAGE_STATISTICS.equals(backPage)) {
 			return "navigationStatistics";
 		}
-		enter();
 		return "navigationControlPanel";
 	}
 
-	private void enter() {
-		User currentUser = getCurrentUser();
-		if (currentUser.getControlPanelPageSize() <= 0) {
-			currentUser.setControlPanelPageSize(paginator.getDefaultPageSize());
-		}
-		if (currentUser.getControlPanelUserInterface()) {
-			if (currentUser.getControlPanelUserDepartmentFilter() != null) {
-				if (!getDomainService().isDepartmentVisibleForTicketView(
-						currentUser, currentUser.getControlPanelUserDepartmentFilter(),
-						getSessionController().getClient())) {
-					currentUser.setControlPanelUserDepartmentFilter(null);
-				}
-			}
-		} else {
-			if (currentUser.getControlPanelManagerDepartmentFilter() != null) {
-				 if (!getDomainService().isDepartmentManager(
-						currentUser.getControlPanelManagerDepartmentFilter(), currentUser)) {
-					currentUser.setControlPanelManagerDepartmentFilter(null);
-				}
-			}
-		}
-		getDomainService().updateUser(getCurrentUser());
-		paginator.setPageSize(getCurrentUser().getControlPanelPageSize());
-//		refreshColumnOrderer();
-		paginator.forceReload();
-	}
-	
 	/**
 	 * Limit the scope of the action depending on the user's role.
 	 */

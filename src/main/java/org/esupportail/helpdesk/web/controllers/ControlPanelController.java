@@ -209,6 +209,14 @@ public class ControlPanelController extends AbstractContextAwareController {
 	 * JSF callback.
 	 * @return a String.
 	 */
+	public String back() {
+		enter();
+		return ticketController.back();
+	}
+	/**
+	 * JSF callback.
+	 * @return a String.
+	 */
 	public String doTakeAndClose() {
 		enter();
 		return ticketController.doTakeAndClose();
