@@ -668,11 +668,19 @@ jQuery(function ($) {
     }
 
     //Copy CAS ticket adress to clip board
-
     $(".view-ticket_secondary_properties .copy").click(function () {
         var $temp = $("<input>");
         $("body").append($temp);
         $temp.val($("#viewTicketForm\\:ticketLink").text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+    });
+
+    //Copy CAS ticket adress to clip board
+    $(".footer .copy").click(function () {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(this).find('a').attr('href')).select();
         document.execCommand("copy");
         $temp.remove();
     });

@@ -61,7 +61,9 @@
 
 	</t:htmlTag>
 	<t:htmlTag value="footer" styleClass="footer">
-	    <%@include file="_footer.jsp"%>
+	    <t:aliasBean alias="#{controller}" value="#{welcomeController}" >
+		    <%@include file="_footer.jsp"%>
+		</t:aliasBean>
 	</t:htmlTag>
 	</t:htmlTag>
 </e:page>

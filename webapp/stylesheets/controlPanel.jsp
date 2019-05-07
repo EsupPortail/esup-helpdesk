@@ -540,7 +540,9 @@
 
 	    </t:htmlTag>
         <t:htmlTag value="footer" styleClass="footer">
-            <%@include file="_footer.jsp"%>
+           	<t:aliasBean alias="#{controller}" value="#{controlPanelController}" >
+			    <%@include file="_footer.jsp"%>
+			</t:aliasBean>
         </t:htmlTag>
 	</t:htmlTag>
 </e:page>
