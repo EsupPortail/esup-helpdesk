@@ -203,7 +203,14 @@
                                       value="#{msgs['CONTROL_PANEL.BUTTON.FILTER']}" >
                                   </e:commandButton>
                          </t:htmlTag>
-
+ 				         <t:htmlTag value="div" styleClass="form-block add-ticket-btn">
+				            <t:htmlTag value="div" styleClass="form-item">
+				                <e:commandButton  id="addTicketButtonControlPanel"
+				                            styleClass="button--secondary"
+				                            action="#{ticketController.add}"
+				                            value="#{msgs['CONTROL_PANEL.BUTTON.ADD_TICKET']}" />
+				             </t:htmlTag>
+				          </t:htmlTag>                         
                     </t:htmlTag>
 
 

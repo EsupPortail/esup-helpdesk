@@ -408,7 +408,7 @@ ul.tabs li.current:hover {
   margin-bottom: 10px;
 }
 
-.dashboard-filter .form-item {
+.dashboard-filter > .form-item {
   margin-right: 20px;
 }
 

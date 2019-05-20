@@ -292,7 +292,9 @@ hr {
   border-radius: 4px;
   padding: 4px;
 }
-
+.dashboard-filter .add-ticket-btn {
+    margin-left: auto
+}
 .controlPanel-title {
   display: flex;
   align-items: center;
