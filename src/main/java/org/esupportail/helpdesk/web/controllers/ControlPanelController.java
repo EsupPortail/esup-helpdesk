@@ -28,6 +28,7 @@ import org.esupportail.helpdesk.exceptions.TicketNotFoundException;
 import org.esupportail.helpdesk.web.beans.ControlPanelColumnOrderer;
 import org.esupportail.helpdesk.web.beans.ControlPanelEntry;
 import org.esupportail.helpdesk.web.beans.ControlPanelPaginator;
+import org.esupportail.helpdesk.web.beans.ControlPanelSubjectTruncator;
 
 /**
  * The control panel controller.
@@ -78,6 +79,11 @@ public class ControlPanelController extends AbstractContextAwareController {
      * The paginator.
      */    
     private ControlPanelPaginator panelPaginator;
+    
+    /**
+     * The SubjectTruncator.
+     */    
+    private ControlPanelSubjectTruncator controlPanelSubjectTruncator;
     
 	/**
      * True for the column edit mode.
@@ -777,6 +783,10 @@ public class ControlPanelController extends AbstractContextAwareController {
 		paginator.forceReload();
 	}
 
+	
+	public int getMaxSizeLabel(){
+		return controlPanelSubjectTruncator.getMaxLength();
+	}
 	/**
 	 * @return a permanent link to the page for application users.
 	 */
@@ -917,5 +927,13 @@ public class ControlPanelController extends AbstractContextAwareController {
 
 	public void setPanelPaginator(ControlPanelPaginator panelPaginator) {
 		this.panelPaginator = panelPaginator;
+	}
+
+	public ControlPanelSubjectTruncator getControlPanelSubjectTruncator() {
+		return controlPanelSubjectTruncator;
+	}
+
+	public void setControlPanelSubjectTruncator(ControlPanelSubjectTruncator controlPanelSubjectTruncator) {
+		this.controlPanelSubjectTruncator = controlPanelSubjectTruncator;
 	}
 }

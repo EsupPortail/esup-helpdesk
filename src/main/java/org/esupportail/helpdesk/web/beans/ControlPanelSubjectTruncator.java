@@ -125,7 +125,7 @@ implements InitializingBean {
 	/**
 	 * @return the maxLength
 	 */
-	protected int getMaxLength() {
+	public int getMaxLength() {
 		return maxLength;
 	}
 

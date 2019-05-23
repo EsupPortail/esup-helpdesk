@@ -3,6 +3,7 @@
  */
 package org.esupportail.helpdesk.domain.beans;
 
+import java.awt.Label;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -63,6 +64,11 @@ public abstract class AbstractTicket implements Serializable {
 	 * The label of the ticket.
 	 */
 	private String label;
+
+	/**
+	 * The label of the ticket.
+	 */
+	private int sizeLabel;
 
 	/**
 	 * Level of priority.
@@ -727,6 +733,14 @@ public abstract class AbstractTicket implements Serializable {
 
 	public void setAnonymous(boolean anonymous) {
 		this.anonymous = anonymous;
+	}
+
+	public int getSizeLabel() {
+		return label.length();
+	}
+
+	public void setSizeLabel(int sizeLabel) {
+		this.sizeLabel = sizeLabel;
 	}
 
 }

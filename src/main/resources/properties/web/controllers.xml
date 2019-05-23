@@ -234,6 +234,7 @@
 		<property name="panelPaginator" ref="controlPanelPaginator" />
 		<property name="ticketController" ref="ticketController" />
 		<property name="archivedTicketController" ref="archivedTicketController" />
+		<property name="controlPanelSubjectTruncator" ref="controlPanelSubjectTruncator" />
 	</bean>
 
 	<bean id="controlPanelPaginator"

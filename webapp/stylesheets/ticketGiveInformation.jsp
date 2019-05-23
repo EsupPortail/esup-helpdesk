@@ -33,6 +33,11 @@
                                             </t:htmlTag>
                                         </t:htmlTag>
                                     </t:htmlTag>
+                                    <t:htmlTag value="div" styleClass="region view-ticket_title">
+                                    <t:htmlTag styleClass="region-inner" value="div">
+                                         <t:htmlTag value="h1"><h:outputText value="#{ticketController.ticket.label}"/> </t:htmlTag>
+                                    </t:htmlTag>
+                                </t:htmlTag>
                                     <t:htmlTag value="div" styleClass="form-block form-body">
                                         <t:htmlTag value="div" styleClass="form-item">
                                                 <fck:editor

@@ -23,9 +23,14 @@
 		value="#{cpe.ticket.category.label} " />
 	<h:outputText 
 		styleClass="#{! cpe.ticket.opened ? 'ticket-closed' : ''} #{cpe.ticket.opened && !cpe.ticket.postponed ? priorityStyleClassProvider[cpe.ticket.effectivePriorityLevel] : ''}"
+		style="font-weight: #{cpe.viewed ? 'normal' : 'bold'};" title="#{cpe.ticket.label}"
+		rendered="#{controlPanelController.columnsOrderer[columnIndex] == 'LABEL' && cpe.ticket.sizeLabel > (controlPanelController.maxSizeLabel +1)}"
+		value="#{controlPanelSubjectTruncator[cpe.ticket.label]}" />
+	<h:outputText 
+		styleClass="#{! cpe.ticket.opened ? 'ticket-closed' : ''} #{cpe.ticket.opened && !cpe.ticket.postponed ? priorityStyleClassProvider[cpe.ticket.effectivePriorityLevel] : ''}"
 		style="font-weight: #{cpe.viewed ? 'normal' : 'bold'};"
-		rendered="#{controlPanelController.columnsOrderer[columnIndex] == 'LABEL'}"
-		value="#{controlPanelSubjectTruncator[cpe.ticket.label]} " />
+		rendered="#{controlPanelController.columnsOrderer[columnIndex] == 'LABEL' && cpe.ticket.sizeLabel < controlPanelController.maxSizeLabel }"
+		value="#{controlPanelSubjectTruncator[cpe.ticket.label]}" />
 	<h:outputText 
 		styleClass="ticket-status #{! cpe.ticket.opened ? 'ticket-closed' : 'ticket-open'} #{cpe.ticket.postponed ? 'ticket-postponed' : ''} #{cpe.ticket.opened && !cpe.ticket.postponed ? priorityStyleClassProvider[cpe.ticket.effectivePriorityLevel] : ''}"
 		style="font-weight: #{cpe.viewed ? 'normal' : 'bold'};"
