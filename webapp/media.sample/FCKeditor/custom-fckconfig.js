@@ -1,5 +1,5 @@
 FCKConfig.ToolbarSets["actionMessage"] = [
-	['Bold','Italic','TextColor','OrderedList','UnorderedList'],['Link','Unlink'],['PasteWord','Table','Smiley']
+	['Bold','Italic','TextColor','Underline', 'OrderedList','UnorderedList'],['Link','Unlink'],['PasteWord','Table','Smiley']
 
 ] ;
 
