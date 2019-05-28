@@ -5,7 +5,8 @@ package org.esupportail.helpdesk.domain.userFormatting;
 
 import java.util.Locale;
 
-import org.esupportail.helpdesk.domain.beans.Action;
+import org.esupportail.helpdesk.domain.DomainService;
+import org.esupportail.helpdesk.domain.beans.Ticket;
 import org.esupportail.helpdesk.domain.beans.User;
 
 /**
@@ -19,6 +20,6 @@ public interface UserFormattingService {
 	 * @param locale 
 	 * @return a formatted and i18nez string.
 	 */
-	String format(User user, boolean anonymous, Locale locale, User currentUser);
+	String format(DomainService domainService, Ticket ticket, User user, Boolean anonymous, Locale locale, User currentUser);
 
 }

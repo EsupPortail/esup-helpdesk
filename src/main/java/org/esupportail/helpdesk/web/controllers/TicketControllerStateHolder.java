@@ -474,7 +474,7 @@ public abstract class TicketControllerStateHolder extends AbstractContextAwareCo
 		if (ticket == null) {
 			return null;
 		}
-		String signature = userFormattingService.format(getCurrentUser(), getTicket().getAnonymous(), getLocale(), getCurrentUser());
+		String signature = userFormattingService.format(getDomainService(), getTicket(), getCurrentUser(), getTicket().getAnonymous(), getLocale(), getCurrentUser());
 		List<ResponseEntry> responseEntries = new ArrayList<ResponseEntry>();
 		for (Response response : getDomainService().getUserResponses(getCurrentUser())) {
 			responseEntries.add(new ResponseEntry(response, signature));

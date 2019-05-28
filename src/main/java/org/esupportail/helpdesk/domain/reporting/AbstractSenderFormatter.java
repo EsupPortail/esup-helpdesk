@@ -318,7 +318,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 		for (Action action : getDomainService().getActions(ticket)) {
 			String trClass = alternateColor ? "odd" : "even";
 			String actionTitle = StringUtils.escapeHtml(
-					actionI18nTitleFormatter.getActionTitle(action, locale, null));
+					actionI18nTitleFormatter.getActionTitle(getDomainService(), action, locale, null));
 			String message = "";
 			if (org.springframework.util.StringUtils.hasText(action.getMessage())) {
 				if (action.getUser() == null) {
@@ -351,14 +351,14 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 		Locale locale = getDomainService().getUserStore().getUserLocale(user);
 		String owner = "<strong>" + getI18nService().getString(
 				"TICKET_VIEW.PROPERTIES.USER", locale,
-				StringUtils.escapeHtml(userFormattingService.format(ticket.getOwner(), false,locale, null)))
+				StringUtils.escapeHtml(userFormattingService.format(getDomainService(), ticket, ticket.getOwner(), false,locale, null)))
 				+ "</strong>";
 		String manager;
 		if (ticket.getManager() != null) {
 			manager = "<strong>" + getI18nService().getString(
 					"TICKET_VIEW.PROPERTIES.USER", locale,
 					StringUtils.escapeHtml(
-							userFormattingService.format(ticket.getManager(), false, locale, null)))
+							userFormattingService.format(getDomainService(), ticket, ticket.getManager(), false, locale, null)))
 					+ "</strong>";
 		} else {
 			manager = "<em>" + getI18nService().getString(
@@ -484,7 +484,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 				if (fileInfo.getUser() != null) {
 					userString = getI18nService().getString(
 							"TICKET_VIEW.FILES.USER", locale,
-							userFormattingService.format(fileInfo.getUser(), false, locale, null));
+							userFormattingService.format(getDomainService(),ticket, fileInfo.getUser(), false, locale, null));
 				} else {
 					userString = getI18nService().getString(
 							"TICKET_VIEW.FILES.APPLICATION", locale);
@@ -535,7 +535,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 				}
 				String userString = getI18nService().getString(
 							"TICKET_VIEW.INVITATIONS.INVITED_USER", locale,
-							userFormattingService.format(invitation.getUser(), false, locale, null));
+							userFormattingService.format(getDomainService(), ticket, invitation.getUser(), false, locale, null));
 				result += getI18nService().getString(
 						"EMAIL.TICKET.COMMON.INVITATIONS.ENTRY", locale,
 						trClass, userString);
@@ -576,7 +576,7 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 				}
 				String userString = getI18nService().getString(
 							"TICKET_VIEW.MONITORING.USER", locale,
-							userFormattingService.format(monitoringUser, false, locale, null));
+							userFormattingService.format(getDomainService(), ticket, monitoringUser, false, locale, null));
 				result += getI18nService().getString(
 						"EMAIL.TICKET.COMMON.MONITORING.ENTRY", locale,
 						trClass, userString);
@@ -924,7 +924,6 @@ public class AbstractSenderFormatter extends AbstractSender implements DomainSer
 	 * @see org.esupportail.helpdesk.domain.reporting.DomainServiceSettable#setDomainService(
 	 * org.esupportail.helpdesk.domain.DomainService)
 	 */
-	@Override
 	public void setDomainService(final DomainService domainService) {
 		this.domainService = domainService;
 	}

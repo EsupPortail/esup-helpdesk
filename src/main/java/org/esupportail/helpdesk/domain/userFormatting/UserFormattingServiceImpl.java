@@ -9,11 +9,9 @@ import java.util.Locale;
 import org.esupportail.commons.aop.cache.RequestCache;
 import org.esupportail.commons.services.i18n.I18nService;
 import org.esupportail.commons.utils.Assert;
-import org.esupportail.helpdesk.dao.DaoService;
-import org.esupportail.helpdesk.domain.beans.Action;
+import org.esupportail.helpdesk.domain.DomainService;
+import org.esupportail.helpdesk.domain.beans.Ticket;
 import org.esupportail.helpdesk.domain.beans.User;
-import org.esupportail.helpdesk.web.controllers.SessionController;
-import org.esupportail.helpdesk.web.controllers.TicketController;
 import org.springframework.beans.factory.InitializingBean;
 
 /** 
@@ -48,16 +46,6 @@ implements Serializable, InitializingBean, UserFormattingService {
 	private I18nService i18nService;
 	
 	/**
-	 * The daoService service.
-	 */
-	private DaoService daoService;
-	
-	/**
-	 * The session controller.
-	 */
-	private SessionController sessionController;
-	
-	/**
 	 * Bean constructor.
 	 */
 	public UserFormattingServiceImpl() {
@@ -67,7 +55,6 @@ implements Serializable, InitializingBean, UserFormattingService {
 	/**
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
-	@Override
 	public void afterPropertiesSet() {
 		Assert.notNull(i18nService, 
 				"property i18nService of class " + this.getClass().getName() 
@@ -123,18 +110,22 @@ implements Serializable, InitializingBean, UserFormattingService {
 	 * @see org.esupportail.helpdesk.domain.userFormatting.UserFormattingService#format(
 	 * org.esupportail.helpdesk.domain.beans.User, java.util.Locale)
 	 */
-	@Override
 	@RequestCache
 	public String format(
+			DomainService domainService,
+			final Ticket ticket,
 			final User user, 
-			final boolean anonymous,
+			final Boolean anonymous,
 			final Locale locale,
 			final User currentUser) {
 		if (user == null) {
 			return null;
 		}
+		
 		//si le ticket est anonyme et que le user n'est pas manager
-		if( currentUser != null && !currentUser.equals(user) && anonymous && daoService.getDepartmentManagers(currentUser).isEmpty()){
+		if( currentUser != null && !currentUser.equals(user) 
+			&& anonymous && ticket!= null && domainService!= null 
+			&& !domainService.isDepartmentManager(ticket.getDepartment() , currentUser)){
 			return i18nService.getString(
 					"USER.DISPLAY_NAME", locale, 
 					i18nService.getString("USER.ANONYMOUS"));
@@ -207,33 +198,4 @@ implements Serializable, InitializingBean, UserFormattingService {
 		this.idMaxLength = idMaxLength;
 	}
 
-	/**
-	 * @return the daoService
-	 */
-	protected DaoService getDaoService() {
-		return daoService;
-	}
-
-	/**
-	 * @param daoService the daoService to set
-	 */
-	public void setDaoService(final DaoService daoService) {
-		this.daoService = daoService;
-	}
-
-	/**
-	 * @param sessionController the sessionController to set
-	 */
-	public void setSessionController(final SessionController sessionController) {
-		this.sessionController = sessionController;
-	}
-
-	/**
-	 * @return the current user.
-	 */
-	public User getCurrentUser() {
-		return sessionController.getCurrentUser();
-	}
-
 }
-

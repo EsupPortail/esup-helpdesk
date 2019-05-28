@@ -41,7 +41,7 @@ public class InvitationSenderImpl extends AbstractAlertSender implements Invitat
 		String ticketUrl = getUrlBuilder().getTicketViewUrl(invitedUser.getAuthType(), ticket.getId());
 		String htmlHeader = getI18nService().getString(
 				"EMAIL.TICKET.INVITATION.HEADER", locale,
-				getUserFormattingService().format(author, false, locale, null),
+				getUserFormattingService().format(getDomainService(), ticket, author, false, locale, null),
 				ticket.getId(), ticketUrl);
 		return ticketMonitoringSendAlert(null, AuthUtils.NONE, invitedUser, ticket, subject, htmlHeader, "");
 	}

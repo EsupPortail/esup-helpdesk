@@ -157,7 +157,7 @@
                                             <%@include file="_ticketViewFiles.jsp"%>
                                         </t:htmlTag>
 
-                                         <t:htmlTag id="tab-invitations" styleClass="view-ticket_invitations tab-content" value="div" rendered="#{ticketController.userCanInvite}">
+                                         <t:htmlTag id="tab-invitations" styleClass="view-ticket_invitations tab-content" value="div" >
                                              <%@include file="_ticketViewInvitations.jsp"%>
                                          </t:htmlTag>
 

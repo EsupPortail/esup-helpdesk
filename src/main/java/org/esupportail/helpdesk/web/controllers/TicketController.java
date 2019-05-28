@@ -3851,7 +3851,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		if (!users.isEmpty()) {
 			result.add(new SelectItem("", getString("TICKET_ACTION.TEXT.INVITE.CHOOSE_RECENT")));
 			for (User user : users) {
-				result.add(new SelectItem(user.getRealId(), getUserFormattingService().format(user, getTicket().getAnonymous(), getLocale(), getCurrentUser())));
+				result.add(new SelectItem(user.getRealId(), getUserFormattingService().format(getDomainService(), getTicket(), user, getTicket().getAnonymous(), getLocale(), getCurrentUser())));
 			}
 		}
 		return result;

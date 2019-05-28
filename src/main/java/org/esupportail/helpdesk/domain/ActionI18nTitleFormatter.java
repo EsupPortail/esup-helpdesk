@@ -19,7 +19,7 @@ public interface ActionI18nTitleFormatter extends Serializable {
 	 * @param locale 
 	 * @return the i18n title of an action. 
 	 */
-	String getActionTitle(Action action, Locale locale, User user);
+	String getActionTitle(DomainService domainService, Action action, Locale locale, User user);
 
 }
 

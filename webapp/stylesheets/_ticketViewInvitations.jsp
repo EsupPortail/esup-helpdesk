@@ -4,6 +4,7 @@
 <t:htmlTag value="div" id="inviteComment" styleClass="form-block">
 	<e:paragraph value="#{msgs['TICKET_VIEW.INVITATIONS.NO_INVITATION']}"
 		rendered="#{empty ticketController.invitations}" />
+
 	<e:dataTable width="100%" columnClasses="colLeftNowrap,colRight" 
 		id="invitationData" rowIndexVar="index"
 		styleClass="invite_array"
@@ -15,10 +16,10 @@
 			<e:text value="#{msgs['TICKET_VIEW.INVITATIONS.INVITED_USER']}" rendered="#{!ticketController.ticket.anonymous}" >
 				<f:param value="#{userFormatter[invitation.user]}" />
 			</e:text>
-			<e:text value="#{msgs['TICKET_VIEW.INVITATIONS.INVITED_USER']}" rendered="#{ticketController.ticket.anonymous && controlPanelController.manager}">
+			<e:text value="#{msgs['TICKET_VIEW.INVITATIONS.INVITED_USER']}" rendered="#{ticketController.ticket.anonymous && controlPanelController.managerDpt}">
 				<f:param value="#{userFormatter[invitation.user]}" />
 			</e:text>
-			<e:text value="#{msgs['TICKET_VIEW.INVITATIONS.INVITED_USER']}" rendered="#{ticketController.ticket.anonymous && !controlPanelController.manager}" >
+			<e:text value="#{msgs['TICKET_VIEW.INVITATIONS.INVITED_USER']}" rendered="#{ticketController.ticket.anonymous && !controlPanelController.managerDpt}" >
 				<f:param value="#{msgs['USER.ANONYMOUS']}" />
 			</e:text>
 		</t:column>

@@ -15,10 +15,10 @@
                 <e:text value="#{msgs['TICKET_VIEW.MONITORING.USER']}" rendered="#{!ticketController.ticket.anonymous}" >
                     <f:param value="#{userFormatter[user]}" />
                 </e:text>
-                <e:text value="#{msgs['TICKET_VIEW.MONITORING.USER']}" rendered="#{ticketController.ticket.anonymous && controlPanelController.manager}" >
+                <e:text value="#{msgs['TICKET_VIEW.MONITORING.USER']}" rendered="#{ticketController.ticket.anonymous && controlPanelController.managerDpt}" >
                     <f:param value="#{userFormatter[user]}" />
                 </e:text>
-                <e:text value="#{msgs['TICKET_VIEW.MONITORING.USER']}" rendered="#{ticketController.ticket.anonymous && !controlPanelController.manager}" >
+                <e:text value="#{msgs['TICKET_VIEW.MONITORING.USER']}" rendered="#{ticketController.ticket.anonymous && !controlPanelController.managerDpt}" >
                     <f:param value="#{msgs['USER.ANONYMOUS']}" />
                 </e:text>
             </t:htmlTag>

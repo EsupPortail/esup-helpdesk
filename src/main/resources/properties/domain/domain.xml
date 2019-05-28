@@ -81,7 +81,6 @@
 		lazy-init="true"
     	> 
 		<description>A bean used to format users.</description>
-		<property name="daoService" ref="daoService" />
 		<property name="i18nService" ref="i18nService" />
 		<property name="printId" value="${userFormat.printId}" />
 		<property name="displayNameMaxLength" value="${userFormat.displayNameMaxLength}" />

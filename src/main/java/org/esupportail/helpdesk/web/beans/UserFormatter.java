@@ -65,7 +65,7 @@ implements InitializingBean {
 		if (!(o instanceof User)) {
 			return null;
 		}
-		return userFormattingService.format((User) o, false, sessionController.getLocale(), sessionController.getCurrentUser());
+		return userFormattingService.format(null, null, (User) o, false, sessionController.getLocale(), sessionController.getCurrentUser());
 	}
 
 	/**

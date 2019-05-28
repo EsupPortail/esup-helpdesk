@@ -284,10 +284,10 @@
 					<e:text value=" #{msgs['TICKET_VIEW.PROPERTIES.USER']} " rendered="#{!ticketController.ticket.anonymous}">
 						<f:param value="#{userFormatter[ticketController.ticket.manager]}" />
 					</e:text>
-					<e:text value=" #{msgs['TICKET_VIEW.PROPERTIES.USER']} " rendered="#{ticketController.ticket.anonymous && controlPanelController.manager}">
+					<e:text value=" #{msgs['TICKET_VIEW.PROPERTIES.USER']} " rendered="#{ticketController.ticket.anonymous && controlPanelController.managerDpt}">
 						<f:param value="#{userFormatter[ticketController.ticket.manager]}" />
 					</e:text>
-					<e:text value=" #{msgs['TICKET_VIEW.PROPERTIES.USER']} " rendered="#{ticketController.ticket.anonymous && !controlPanelController.manager}">
+					<e:text value=" #{msgs['TICKET_VIEW.PROPERTIES.USER']} " rendered="#{ticketController.ticket.anonymous && !controlPanelController.managerDpt}">
 						<f:param value="#{msgs['USER.ANONYMOUS']}" />
 					</e:text>
 				</h:panelGroup>

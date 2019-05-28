@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import org.esupportail.commons.utils.Assert;
 import org.esupportail.helpdesk.domain.ActionI18nTitleFormatter;
+import org.esupportail.helpdesk.domain.DomainService;
 import org.esupportail.helpdesk.domain.beans.Action;
 import org.esupportail.helpdesk.web.controllers.SessionController;
 import org.springframework.beans.factory.InitializingBean;
@@ -33,6 +34,12 @@ extends HashMap<String, String> implements InitializingBean {
 	private SessionController sessionController;
 	
 	/**
+	 * The session controller.
+	 */
+	private DomainService domainService;
+	
+	
+	/**
 	 * Bean constructor.
 	 */
 	public ActionI18nTitleProvider() {
@@ -57,7 +64,7 @@ extends HashMap<String, String> implements InitializingBean {
 	 */
 	@Override
 	public String get(final Object action) {
-		return actionI18nTitleFormatter.getActionTitle((Action) action, sessionController.getLocale(), sessionController.getCurrentUser());
+		return actionI18nTitleFormatter.getActionTitle(domainService, (Action) action, sessionController.getLocale(), sessionController.getCurrentUser());
 	}
 
 	/**
@@ -87,6 +94,10 @@ extends HashMap<String, String> implements InitializingBean {
 	 */
 	public void setSessionController(final SessionController sessionController) {
 		this.sessionController = sessionController;
+	}
+
+	public void setDomainService(DomainService domainService) {
+		this.domainService = domainService;
 	}
 	
 }

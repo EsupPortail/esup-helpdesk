@@ -84,6 +84,7 @@
 		<description>
 			A bean to get i18n keys for ticket monitoring.
 		</description>
+		<property name="domainService" ref="domainService" />
 		<property name="sessionController" ref="sessionController" />
 		<property name="actionI18nTitleFormatter" ref="actionI18nTitleFormatter" />
 	</bean>

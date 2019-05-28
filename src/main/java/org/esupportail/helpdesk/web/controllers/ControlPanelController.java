@@ -168,6 +168,13 @@ public class ControlPanelController extends AbstractContextAwareController {
 	}
 
 	/**
+	 * @return the userDepartmentItems
+	 */
+	public boolean isManagerDpt() {
+		return getDomainService().isDepartmentManager(ticketController.getTicket().getDepartment() , getCurrentUser());
+	}
+
+	/**
 	 * JSF callback.
 	 * @return A String.
 	 */

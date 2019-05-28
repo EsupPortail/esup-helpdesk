@@ -162,7 +162,7 @@ public class FaqReporterImpl extends AbstractSenderFormatter implements FaqRepor
 			}
 			String author = null;
 			if (event.getAuthor() != null) {
-				author = getUserFormattingService().format(event.getAuthor(), false, locale, null);
+				author = getUserFormattingService().format(null, null, event.getAuthor(), false, locale, null);
 			}
 			content += "<li>" + getI18nService().getString(
 					i18nKey, locale,
