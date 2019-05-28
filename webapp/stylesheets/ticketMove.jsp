@@ -130,15 +130,17 @@ function addInvitation(select) {
 											</h:panelGroup>
 										</f:facet>
 										<f:facet name="category">
-											<h:panelGroup styleClass="category leaf #{node.category.addNewTickets or node.leaf ? 'last' : 'parent'}" onclick="simulateLinkClick('ticketActionForm:tree:#{node.identifier}:#{node.leaf ? 'chooseCategoryButton' : 't2'}');" >
+											<h:panelGroup styleClass="category leaf #{node.category.addNewTickets or node.leaf ? 'last' : 'parent'}" onclick="simulateLinkClick('ticketActionForm:tree:#{node.identifier}:#{node.category.addNewTickets or node.leaf ? 'chooseCategoryButton' : 't2'}');" >
 												<e:text value=" #{msgs['TICKET_ACTION.TEXT.ADD.CATEGORY_LABEL']}" >
 														<f:param value="#{node.description}" />
 												</e:text>
 												<e:commandButton id="chooseCategoryButton" style="display:none" value="->"
 													action="continue"
-													rendered="#{node.leaf}" >
+													rendered="#{node.category.addNewTickets or node.leaf}" >
+													<t:updateActionListener value="#{node.department}"
+														property="#{ticketController.moveTargetDepartment}" />
 													<t:updateActionListener value="#{node.category}"
-														property="#{ticketController.moveTargetCategory}" />
+														property="#{ticketController.moveTargetCategory}" />														
 												</e:commandButton>
 											</h:panelGroup>
 										</f:facet>
