@@ -83,6 +83,8 @@ function addInvitation(select) {
 									<f:param value="#{ticketController.moveTargetCategory.label}" />
 									<t:updateActionListener value="#{node.category}"
 										property="#{ticketController.moveTargetCategory}" />
+									<t:updateActionListener value="#{node.department}"
+										property="#{ticketController.moveTargetDepartment}" />										
 								</e:commandButton>
 							</h:panelGroup>
 							<e:italic value=" #{msgs['TICKET_ACTION.TEXT.MOVE.CATEGORY_LABEL']}" 
