@@ -203,6 +203,11 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	private Category moveTargetCategory;
 
 	/**
+	 * The target department used when moving tickets.
+	 */
+	private Department moveTargetDepartment;
+
+	/**
 	 * The target category used when adding tickets.
 	 */
 	private Category addTargetCategory;
@@ -1872,6 +1877,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	 */
 	public String resetMoveTargetCategory() {
 		setMoveTargetCategory(null);
+		setMoveTargetDepartment(null);
 		return "continue";
 	}
 
@@ -4361,5 +4367,13 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 
 	public void setCategoryMoveMembers(String categoryMoveMembers) {
 		this.categoryMoveMembers = categoryMoveMembers;
+	}
+
+	public Department getMoveTargetDepartment() {
+		return moveTargetDepartment;
+	}
+
+	public void setMoveTargetDepartment(Department moveTargetDepartment) {
+		this.moveTargetDepartment = moveTargetDepartment;
 	}
 }
