@@ -68,19 +68,15 @@ function addInvitation(select) {
 					<f:facet name="category">
 						<h:panelGroup>
 							<t:graphicImage value="#{categoryIconUrlProvider[node.category]}" />
-							<h:panelGroup rendered="#{node.category != ticketController.ticket.category}" >
-								<h:panelGroup 
-									style="cursor: pointer" 
-									onclick="simulateLinkClick('ticketActionForm:tree:#{node.identifier}:actionButton');" >
+							<h:panelGroup rendered="#{node.category.addNewTickets or node.leaf}" >
+								<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('ticketActionForm:tree:#{node.identifier}:#{node.category.addNewTickets or node.leaf ? 'chooseCategoryButton' : 't2'}');" >
 									<e:bold value=" #{msgs['TICKET_ACTION.TEXT.MOVE.CATEGORY_LABEL']}" >
 										<f:param value="#{node.category.xlabel}" />
 									</e:bold>
 								</h:panelGroup>
 								<e:commandButton 
-									id="actionButton" style="display: none"
-									value="->" action="continue" >
-									<f:param value="#{ticketController.moveTargetCategory.department.label}" />
-									<f:param value="#{ticketController.moveTargetCategory.label}" />
+									id="chooseCategoryButton" style="display: none"
+									value="->" action="continue">
 									<t:updateActionListener value="#{node.category}"
 										property="#{ticketController.moveTargetCategory}" />
 									<t:updateActionListener value="#{node.department}"
@@ -88,7 +84,7 @@ function addInvitation(select) {
 								</e:commandButton>
 							</h:panelGroup>
 							<e:italic value=" #{msgs['TICKET_ACTION.TEXT.MOVE.CATEGORY_LABEL']}" 
-								rendered="#{node.category == ticketController.ticket.category}" >
+								rendered="#{!node.category.addNewTickets or !node.leaf}" >
 								<f:param value="#{node.category.xlabel}" />
 							</e:italic>
 						</h:panelGroup>
