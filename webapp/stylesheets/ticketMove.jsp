@@ -135,7 +135,7 @@ function addInvitation(select) {
 														<f:param value="#{node.description}" />
 												</e:text>
 												<e:commandButton id="chooseCategoryButton" style="display:none" value="->"
-													action="continue"
+													action="#{ticketController.moveChooseCategory}"
 													rendered="#{node.category.addNewTickets or node.leaf}" >
 													<t:updateActionListener value="#{node.department}"
 														property="#{ticketController.moveTargetDepartment}" />
@@ -232,6 +232,9 @@ function addInvitation(select) {
                                                 </t:htmlTag>
                                                 <t:htmlTag id="responses" styleClass="tab-link " value="li" rendered="#{ticketController.userCanUseCannedResponses and not empty ticketController.responseItems}">
                                                     <h:outputText value="#{msgs['TICKET_ACTION.TAB.RESPONSES.TEXT']} " />
+                                                </t:htmlTag>                                                
+                                                <t:htmlTag id="faqs" styleClass="tab-link " value="li" rendered="#{not empty ticketController.moveFaqTree}">
+                                                    <h:outputText value="#{msgs['FAQS.TITLE']} " />
                                                 </t:htmlTag>
                                             </t:htmlTag>
                                 </t:htmlTag>
@@ -254,6 +257,9 @@ function addInvitation(select) {
                                 </t:htmlTag>
                                 <t:htmlTag id="tab-responses" styleClass="tab-content" value="div" rendered="#{ticketController.moveTargetCategory != null}">
                                         <%@include file="_ticketActionResponses.jsp"%>
+                                </t:htmlTag>                                
+                                <t:htmlTag id="tab-faqs" styleClass="tab-content" value="div" rendered="#{not empty ticketController.moveFaqTree}">
+                                        <%@include file="_ticketActionFaqs.jsp"%>
                                 </t:htmlTag>
 
                             <h:panelGroup rendered="#{ticketController.moveTargetCategory != null}" >

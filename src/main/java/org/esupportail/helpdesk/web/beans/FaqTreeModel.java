@@ -44,7 +44,7 @@ public class FaqTreeModel extends TransientTreeModelBase {
 				return node;
 			}
 		}
-		return null;
+		return rootNode;
 	}
 	
 	/**

@@ -49,25 +49,25 @@
 
                                       <t:htmlTag styleClass="region" value="div">
                                         <t:htmlTag styleClass="tabs" value="ul">
-                                            <t:htmlTag id="departemnt-managers" styleClass="tab-link current" value="li">
+                                            <t:htmlTag id="department-managers" styleClass="tab-link current" value="li">
                                                 <h:outputText value="#{msgs['DEPARTMENT_VIEW.HEADER.MANAGERS']} " />
                                             </t:htmlTag>
-                                            <t:htmlTag id="departemnt-properties" styleClass="tab-link " value="li">
+                                            <t:htmlTag id="department-properties" styleClass="tab-link " value="li">
                                                  <h:outputText value="#{msgs['DEPARTMENT_VIEW.HEADER.PROPERTIES']} " />
                                             </t:htmlTag>
-                                             <t:htmlTag id="departemnt-invitations" styleClass="tab-link" value="li">
+                                             <t:htmlTag id="department-invitations" styleClass="tab-link" value="li">
                                                   <h:outputText value="#{msgs['DEPARTMENT_VIEW.HEADER.INVITATIONS']} " />
                                              </t:htmlTag>
-                                            <t:htmlTag id="departemnt-categories" styleClass="tab-link" value="li">
+                                            <t:htmlTag id="department-categories" styleClass="tab-link" value="li">
                                                  <h:outputText value="#{msgs['DEPARTMENT_VIEW.HEADER.CATEGORIES']} " />
                                             </t:htmlTag>
-                                            <t:htmlTag id="departemnt-faq-links" styleClass="tab-link" value="li">
+                                            <t:htmlTag id="department-faq-links" styleClass="tab-link" value="li">
                                                  <h:outputText value="#{msgs['DEPARTMENT_VIEW.HEADER.FAQ_LINKS']} " />
                                             </t:htmlTag>
-                                            <t:htmlTag id="departemnt-redirections" styleClass="tab-link" value="li">
+                                            <t:htmlTag id="department-redirections" styleClass="tab-link" value="li">
                                                  <h:outputText value="#{msgs['DEPARTMENT_VIEW.HEADER.REDIRECTIONS']} " />
                                             </t:htmlTag>
-                                            <t:htmlTag id="departemnt-delete" value="li" rendered="#{departmentsController.currentUserCanDeleteDepartment}">
+                                            <t:htmlTag id="department-delete" value="li" rendered="#{departmentsController.currentUserCanDeleteDepartment}">
                                                  <t:htmlTag value="div" styleClass="form-item">
                                                     <e:commandButton  id="deleteButton" action="#{departmentsController.deleteDepartment}"
                                                         value="#{msgs['DEPARTMENT_VIEW.BUTTON.DELETE_DEPARTMENT']}" immediate="true" />
@@ -75,22 +75,29 @@
                                             </t:htmlTag>
                                         </t:htmlTag>
                                       </t:htmlTag>
-                                      <t:htmlTag id="tab-departemnt-managers" styleClass="tab-content current" value="div">
+                                      <t:htmlTag id="tab-department-managers" styleClass="tab-content current" value="div">
                                               <%@include file="_departmentViewManagers.jsp"%>
                                       </t:htmlTag>
-                                      <t:htmlTag id="tab-departemnt-properties" styleClass="tab-content" value="div">
+                                      <t:htmlTag id="tab-department-properties" styleClass="tab-content" value="div">
                                               <%@include file="_departmentViewProperties.jsp"%>
                                       </t:htmlTag>
-                                      <t:htmlTag id="tab-departemnt-invitations" styleClass="tab-content" value="div">
+                                      <t:htmlTag id="tab-department-invitations" styleClass="tab-content" value="div">
                                               <%@include file="_departmentViewInvitations.jsp"%>
                                       </t:htmlTag>
-                                      <t:htmlTag id="tab-departemnt-categories" styleClass="tab-content" value="div">
+                                      <t:htmlTag id="tab-department-categories" styleClass="tab-content" value="div">
                                               <%@include file="_departmentViewCategories.jsp"%>
                                       </t:htmlTag>
-                                      <t:htmlTag id="tab-departemnt-faq-links" styleClass="tab-content" value="div">
+                                      <t:htmlTag id="tab-department-faq-links" styleClass="tab-content" value="div">
                                               <%@include file="_departmentViewFaqLinks.jsp"%>
+                                              <t:htmlTag value="div" styleClass="form-block form-submit" rendered="#{departmentsController.currentUserCanEditDepartmentFaqs}">
+											     <t:htmlTag value="div" styleClass="form-item" >
+														<e:commandButton id="editFaqsDptButton" action="#{departmentsController.editDepartmentFaqLinks}"
+														    styleClass="button--secondary"
+															value="#{msgs['DEPARTMENT_VIEW.BUTTON.EDIT_FAQ']}"/>
+											     </t:htmlTag>
+											  </t:htmlTag>
                                       </t:htmlTag>
-                                      <t:htmlTag id="tab-departemnt-redirections" styleClass="tab-content" value="div">
+                                      <t:htmlTag id="tab-department-redirections" styleClass="tab-content" value="div">
                                         <t:htmlTag value="div" styleClass="region">
                                             <e:bold value=" #{msgs['DEPARTMENTS.TEXT.REDIRECTION.LISTE']}">
                                                 <f:param value="#{departmentsController.department.label}" />

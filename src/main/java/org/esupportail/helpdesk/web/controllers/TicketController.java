@@ -224,6 +224,11 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	private FaqTreeModel addFaqTree;
 
 	/**
+	 * The tree for the FAQ links used when adding tickets.
+	 */
+	private FaqTreeModel moveFaqTree;
+
+	/**
 	 * True to show the help page when entering a ticket.
 	 */
 	private boolean showAddHelp;
@@ -411,6 +416,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		addTree = null;
 		cateFilter = null;
 		addFaqTree = null;
+		moveFaqTree = null;
 		uploadedFile = null;
 		fileInfoToDownload = null;
 		actionToUpdate = null;
@@ -3266,6 +3272,29 @@ public class TicketController extends TicketControllerStateHolder implements Lda
     }
 
 	/**
+	 * Add a FAQ to the add FAQ tree.
+	 * @param parentNode
+	 * @param faq
+	 * @param visibleDepartments
+	 */
+	@SuppressWarnings("unchecked")
+	protected void moveAddFaqTree(
+			final FaqNode parentNode,
+			final Faq faq,
+			final List<Department> visibleDepartments) {
+		if (!getDomainService().userCanViewFaq(getCurrentUser(), faq, visibleDepartments)) {
+			return;
+		}
+    	FaqNode faqNode = new FaqNode(faq);
+    	for (Faq subFaq : getDomainService().getSubFaqs(faq)) {
+			moveAddFaqTree(faqNode, subFaq, visibleDepartments);
+		}
+		AbstractFirstLastNode.markFirstAndLastChildNodes(faqNode);
+		parentNode.getChildren().add(faqNode);
+		parentNode.setLeaf(false);
+    }
+
+	/**
 	 * Refresh the tree of the FAQ links.
 	 */
 	protected void refreshAddFaqTree() {
@@ -3285,6 +3314,27 @@ public class TicketController extends TicketControllerStateHolder implements Lda
     	}
     	AbstractFirstLastNode.markFirstAndLastChildNodes(rootNode);
 		addFaqTree = new FaqTreeModel(rootNode);
+	}
+	/**
+	 * Refresh the tree of the FAQ links.
+	 */
+	protected void refreshMoveFaqTree() {
+		moveFaqTree = null;
+		List<FaqLink> faqLinks = getDomainService().getEffectiveFaqLinks(moveTargetCategory);
+		if (faqLinks.isEmpty()) {
+			return;
+		}
+    	FaqNode rootNode = new FaqNode();
+		List<Department> visibleDepartments = getDomainService().getFaqViewDepartments(
+				getCurrentUser(), getClient());
+		for (FaqLink faqLink : faqLinks) {
+			moveAddFaqTree(rootNode, faqLink.getFaq(), visibleDepartments);
+		}
+    	if (rootNode.getChildCount() == 0) {
+    		return;
+    	}
+    	AbstractFirstLastNode.markFirstAndLastChildNodes(rootNode);
+    	moveFaqTree = new FaqTreeModel(rootNode);
 	}
 
 	/**
@@ -3307,6 +3357,14 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		actionMessage = addTargetCategory.getEffectiveDefaultTicketMessage();
 		noAlert = false;
 		refreshAddFaqTree();
+		return "continue";
+	}
+	/**
+	 * JSF callback.
+	 * @return a String.
+	 */
+	public String moveChooseCategory() {
+		refreshMoveFaqTree();
 		return "continue";
 	}
 
@@ -4446,6 +4504,10 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 
 	public void setMoveTargetDepartment(Department moveTargetDepartment) {
 		this.moveTargetDepartment = moveTargetDepartment;
+	}
+
+	public FaqTreeModel getMoveFaqTree() {
+		return moveFaqTree;
 	}
 
 }

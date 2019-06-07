@@ -174,6 +174,17 @@ public class PreferencesController extends AbstractContextAwareController {
 		}
 		return user.getAdmin() || getDomainService().isDepartmentManager(user);
 	}
+	
+	/**
+	 * @return true if the current user is an administrator.
+	 */
+	public boolean isUserAdmin() {
+		User user = getCurrentUser();
+		if (user == null) {
+			return false;
+		}
+		return user.getAdmin();
+	}
 
 	/**
 	 * @return the localeItems

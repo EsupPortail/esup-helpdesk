@@ -1344,7 +1344,11 @@ implements DaoService {
 			final Faq parent,
 			final int i) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(Faq.class);
-		if (parent == null) {
+		if (parent == null && department == null) {
+			criteria.add(Restrictions.isNull(PARENT_ATTRIBUTE));
+			criteria.add(Restrictions.isNull(DEPARTMENT_ATTRIBUTE));
+		}
+		else if (parent == null && department != null) {
 			criteria.add(Restrictions.isNull(PARENT_ATTRIBUTE));
 			criteria.add(Restrictions.eq(DEPARTMENT_ATTRIBUTE, department));
 		} else {

@@ -25,14 +25,13 @@
                                 <t:htmlTag value="div" styleClass="controlPanel-title">
                                         <t:htmlTag value="h1">
                                             <t:htmlTag value="span" styleClass="title">
-                                                  <h:outputText value="#{msgs['FAQS.TITLE']}" escape="false" rendered="#{not faqsController.userCanEdit}" />
-                                                  <h:outputText value="#{msgs['FAQS.TITLE.VIEW']}" escape="false" rendered="#{faqsController.userCanEdit and not faqsController.editInterface }" />
-                                                  <h:outputText value="#{msgs['FAQS.TITLE.EDIT']}" escape="false" rendered="#{faqsController.userCanEdit and faqsController.editInterface }" />
+                                                  <h:outputText value="#{msgs['FAQS.TITLE']}" escape="false" rendered="#{ not faqsController.editInterface }" />
+                                                  <h:outputText value="#{msgs['FAQS.TITLE.EDIT']}" escape="false" rendered="#{ preferencesController.userAdmin && faqsController.editInterface}" />
                                             </t:htmlTag>
 
                                         </t:htmlTag>
 
-                                    <t:htmlTag styleClass="dashboard-toggle" value="div" rendered="#{faqsController.userCanEdit}">
+                                    <t:htmlTag styleClass="dashboard-toggle" value="div" rendered="#{ preferencesController.userAdmin }">
                                         <h:panelGroup rendered="#{not faqsController.editInterface}">
                                             <h:panelGroup style="cursor: pointer"
                                                 onclick="selectChange('faqsForm:interface','true')">
@@ -67,7 +66,6 @@
                                 <e:text escape="false" value="&nbsp;" style="width: 20px" />
                                 <h:panelGroup style="display:block">
                                     <%@include file="_faqRoot.jsp"%>
-                                    <%@include file="_faqDepartment.jsp"%>
                                     <%@include file="_faq.jsp"%>
                                     <%@include file="_faqSubFaqs.jsp"%>
                                 </h:panelGroup>

@@ -85,6 +85,11 @@ public class FaqsController extends AbstractContextAwareController {
 	private boolean editInterface;
 
 	/**
+	 * True for the edit interface.
+	 */
+	private boolean editInterfaceDpt;
+
+	/**
 	 * True if the current user can edit the current item.
 	 */
 	private boolean userCanEdit;
@@ -93,7 +98,12 @@ public class FaqsController extends AbstractContextAwareController {
 	 * The target department.
 	 */
 	private Department targetDepartment;
-
+	
+//	/**
+//	 * The target departmentsController.
+//	 */
+//	private DepartmentsController departmentsController;
+//
 	/**
 	 * The target FAQ.
 	 */
@@ -125,7 +135,9 @@ public class FaqsController extends AbstractContextAwareController {
 		department = null;
 		faq = null;
 		subFaqs = null;
+		faqToUpdate = null;
 		editInterface = false;
+		editInterfaceDpt = false;
 	}
 
 	/**
@@ -159,6 +171,7 @@ public class FaqsController extends AbstractContextAwareController {
 		if (!isPageAuthorized()) {
 			return null;
 		}
+		reset();
 		updateInterface();
 		return "navigationFaqs";
 	}
@@ -341,20 +354,20 @@ public class FaqsController extends AbstractContextAwareController {
 			final FaqNode parentNode,
 			final List<Faq> faqs) {
     	for (Faq theFaq : faqs) {
-    		if (userCanViewFaq(theFaq)) {
-	        	FaqNode faqNode = new FaqNode(theFaq);
-	        	addViewTreeFaqs(
-	        			faqNode,
-	        			getDomainService().getSubFaqs(theFaq));
-	    		if (faqNode.getChildCount() > 0) {
-	        		((FaqNode) faqNode.getChildren().get(0)).setFirst(true);
-	        		((FaqNode) faqNode.getChildren().get(
-	        				faqNode.getChildCount() - 1)).setLast(true);
-	    		}
-	    		parentNode.getChildren().add(faqNode);
-        		parentNode.setLeaf(false);
+        	FaqNode faqNode = new FaqNode(theFaq);
+        	addViewTreeFaqs(
+        			faqNode,
+        			getDomainService().getSubFaqs(theFaq));
+    		if (faqNode.getChildCount() > 0) {
+        		((FaqNode) faqNode.getChildren().get(0)).setFirst(true);
+        		((FaqNode) faqNode.getChildren().get(
+        				faqNode.getChildCount() - 1)).setLast(true);
     		}
+    		parentNode.getChildren().add(faqNode);
+    		parentNode.setLeaf(false);
     	}
+    	AbstractFirstLastNode.markFirstAndLastChildNodes(parentNode);
+
     }
 
 	/**
@@ -364,29 +377,46 @@ public class FaqsController extends AbstractContextAwareController {
 	protected FaqNode buildRootViewNode() {
     	FaqNode rootNode = new FaqNode();
     	addViewTreeFaqs(rootNode, getDomainService().getRootFaqs());
-    	for (Department theDepartment : getDomainService().getEnabledDepartments()) {
-    		if (editInterface) {
-	        	FaqNode departmentNode = new FaqNode(theDepartment);
-	        	addViewTreeFaqs(
-	        			departmentNode,
-	        			getDomainService().getRootFaqs(theDepartment));
-	        	departmentNode.markFirstAndLastChildNodes();
-	    		if (departmentNode.getChildCount() > 0
-	    				|| (editInterface && getDomainService().userCanEditDepartmentFaqs(
-	    						getCurrentUser(), theDepartment))) {
-	            	rootNode.getChildren().add(departmentNode);
-	        		rootNode.setLeaf(false);
-	    		}
-    		} else {
-	        	addViewTreeFaqs(
-	        			rootNode,
-	        			getDomainService().getRootFaqs(theDepartment));
-    		}
-    	}
+//    	for (Department theDepartment : getDomainService().getEnabledDepartments()) {
+//    		if (editInterface) {
+//	        	FaqNode departmentNode = new FaqNode(theDepartment);
+//	        	addViewTreeFaqs(
+//	        			departmentNode,
+//	        			getDomainService().getRootFaqs(theDepartment));
+//	        	departmentNode.markFirstAndLastChildNodes();
+//	    		if (departmentNode.getChildCount() > 0
+//	    				|| (editInterface && getDomainService().userCanEditDepartmentFaqs(
+//	    						getCurrentUser(), theDepartment))) {
+//	            	rootNode.getChildren().add(departmentNode);
+//	        		rootNode.setLeaf(false);
+//	    		}
+//    		} else {
+//	        	addViewTreeFaqs(
+//	        			rootNode,
+//	        			getDomainService().getRootFaqs(theDepartment));
+//    		}
+//    	}
     	rootNode.markFirstAndLastChildNodes();
     	return rootNode;
     }
 
+
+	/**
+	 * @return the root node.
+	 */
+    @SuppressWarnings("unchecked")
+	public FaqTreeModel getViewTreeDpt(Department department) {
+    	FaqNode rootNode = new FaqNode(department);
+		this.department = department;
+		setDepartmentInternal(department);
+		addViewTreeFaqs(rootNode, getDomainService().getRootFaqs(department));
+		userCanEdit = getDomainService().userCanEditDepartmentFaqs(
+				getCurrentUser(), department);
+    	rootNode.markFirstAndLastChildNodes();
+    	viewTree = new FaqTreeModel(rootNode);
+		return viewTree;
+    }
+    
 	/**
 	 * JSF callback.
 	 */
@@ -440,20 +470,20 @@ public class FaqsController extends AbstractContextAwareController {
     	if (getDomainService().userCanEditRootFaqs(getCurrentUser())) {
     		addMoveTreeFaqs(rootNode, faqToMove, getDomainService().getRootFaqs());
     	}
-    	for (Department theDepartment : getDomainService().getEnabledDepartments()) {
-        	if (getDomainService().userCanEditDepartmentFaqs(getCurrentUser(), theDepartment)) {
-	        	FaqNode departmentNode = new FaqNode(theDepartment);
-	        	addMoveTreeFaqs(
-	        			departmentNode,
-	        			faqToMove,
-	        			getDomainService().getRootFaqs(theDepartment));
-	    		AbstractFirstLastNode.markFirstAndLastChildNodes(departmentNode);
-	    		if (departmentNode.getChildCount() > 0 || showEmptyDepartments) {
-		           	rootNode.getChildren().add(departmentNode);
-		       		rootNode.setLeaf(false);
-	    		}
-        	}
-    	}
+//    	for (Department theDepartment : getDomainService().getEnabledDepartments()) {
+//        	if (getDomainService().userCanEditDepartmentFaqs(getCurrentUser(), theDepartment)) {
+//	        	FaqNode departmentNode = new FaqNode(theDepartment);
+//	        	addMoveTreeFaqs(
+//	        			departmentNode,
+//	        			faqToMove,
+//	        			getDomainService().getRootFaqs(theDepartment));
+//	    		AbstractFirstLastNode.markFirstAndLastChildNodes(departmentNode);
+//	    		if (departmentNode.getChildCount() > 0 || showEmptyDepartments) {
+//		           	rootNode.getChildren().add(departmentNode);
+//		       		rootNode.setLeaf(false);
+//	    		}
+//        	}
+//    	}
 		AbstractFirstLastNode.markFirstAndLastChildNodes(rootNode);
     	return rootNode;
     }
@@ -480,7 +510,11 @@ public class FaqsController extends AbstractContextAwareController {
 		if (logger.isDebugEnabled()) {
 			logger.debug("updateInterface()...");
 		}
-		refreshViewTree();
+		if(getDepartment() != null) {
+			getViewTreeDpt(getDepartment());
+		} else {
+			refreshViewTree();
+		}
 		if (faq != null) {
 			setFaq(faq);
 		} else if (department != null) {
@@ -527,18 +561,33 @@ public class FaqsController extends AbstractContextAwareController {
 	 */
 	public void addFaq() {
 		Faq newFaq = new Faq();
-		if (faq != null) {
-			newFaq.setParent(faq);
-			newFaq.setDepartment(faq.getDepartment());
-		} else {
-			newFaq.setParent(null);
-			newFaq.setDepartment(department);
-		}
 		newFaq.setLabel(getString("FAQS.TEXT.NEW_FAQ_LABEL"));
 		newFaq.setScope(FaqScope.DEFAULT);
-		getDomainService().addFaq(newFaq);
-		updateInterface();
+		
+		if (faq != null) {
+			newFaq.setParent(faq);
+			if(faq.getDepartment() != null) {
+				newFaq.setDepartment(faq.getDepartment());
+				getDomainService().addFaq(newFaq);
+				getViewTreeDpt(faq.getDepartment());
+			} else {
+				getDomainService().addFaq(newFaq);
+				updateInterface();
+			}
+		} else 
+			if (department != null) {
+			newFaq.setParent(null);
+			newFaq.setDepartment(department);
+			getDomainService().addFaq(newFaq);
+			getViewTreeDpt(department);
+		} else {
+			getDomainService().addFaq(newFaq);
+			updateInterface();
+		}
+
+	//	this.faq = newFaq;
 		setFaq(newFaq);
+		setFaqToUpdate(newFaq);
 		getDomainService().addFaqEvent(FaqEvent.create(getCurrentUser(), newFaq));
 	}
 
@@ -560,9 +609,27 @@ public class FaqsController extends AbstractContextAwareController {
 	/**
 	 * JSF callback.
 	 */
+	public void updateFaq(Department department) {
+		if (!StringUtils.hasText(faqToUpdate.getLabel())) {
+			addErrorMessage(null, "FAQS.MESSAGE.ENTER_TITLE");
+			return;
+		}
+		faqToUpdate.setLastUpdateNow();
+		getDomainService().updateFaq(faqToUpdate);
+		getViewTreeDpt(department);
+		setFaq(faqToUpdate);
+		getDomainService().addFaqEvent(FaqEvent.update(getCurrentUser(), faqToUpdate));
+	}
+	/**
+	 * JSF callback.
+	 */
 	public void deleteFaq() {
 		getDomainService().deleteFaq(faqToUpdate);
-		refreshViewTree();
+		if(faqToUpdate.getDepartment() != null){
+			getViewTreeDpt(faqToUpdate.getDepartment());
+		} else {
+			refreshViewTree();
+		}
 		if (faqToUpdate.getParent() != null) {
 			setFaq(faqToUpdate.getParent());
 		} else if (faqToUpdate.getDepartment() != null) {
@@ -573,6 +640,10 @@ public class FaqsController extends AbstractContextAwareController {
 		getDomainService().addFaqEvent(FaqEvent.delete(getCurrentUser(), faqToUpdate));
 	}
 
+	public String back() {
+		setEditInterfaceDpt(false);
+		return "back";
+	}
 	/**
 	 * JSF callback.
 	 * @return a String.
@@ -580,6 +651,16 @@ public class FaqsController extends AbstractContextAwareController {
 	public String moveFaq() {
 		refreshMoveTree(true, faqToUpdate);
 		return "moveFaq";
+	}
+	
+	/**
+	 * JSF callback.
+	 */
+	public String moveFaq(Department department) {
+		moveTree = getViewTreeDpt(department);
+		targetFaq = null;
+		targetDepartment = null;
+		return "moveFaqDpt";
 	}
 
 	/**
@@ -606,6 +687,27 @@ public class FaqsController extends AbstractContextAwareController {
 		return "faqMoved";
 	}
 
+	/**
+	 * JSF callback.
+	 * @return a String.
+	 */
+	public String doMoveFaqDpt() {
+		//si on ne pointe pas sur la racine du service
+		if(targetFaq != null) {
+			if(faqToUpdate.getId() == targetFaq.getId()) {
+				addErrorMessage(null, "FAQS.MESSAGE.MOVE_CAT_REFUSED", faqToUpdate.getLabel());
+				return "faqMovedDpt";
+			}
+		}
+		getDomainService().moveFaq(faqToUpdate, faqToUpdate.getDepartment(), targetFaq);
+		getViewTreeDpt(faqToUpdate.getDepartment());
+		getDomainService().addFaqEvent(
+				FaqEvent.moveFrom(getCurrentUser(), faqToUpdate, faqToUpdate.getDepartment()));
+		getDomainService().addFaqEvent(
+				FaqEvent.moveTo(getCurrentUser(), faqToUpdate, faqToUpdate.getDepartment()));
+		return "faqMovedDpt";
+	}
+	
 	/**
 	 * JSF callback.
 	 */
@@ -641,7 +743,7 @@ public class FaqsController extends AbstractContextAwareController {
 	 */
 	protected void setRootInternal() {
 		faq = null;
-		this.department = null;
+//		this.department = null;
 		defaultFaqScopeI18nSuffix = null;
 		setSubFaqs(filterSubFaqs(getDomainService().getRootFaqs()));
 		userCanEdit = getDomainService().userCanEditRootFaqs(getCurrentUser());
@@ -799,10 +901,24 @@ public class FaqsController extends AbstractContextAwareController {
 	}
 
 	/**
+	 * @return the editInterface
+	 */
+	public boolean isEditInterfaceDpt() {
+		return editInterfaceDpt;
+	}
+
+	/**
 	 * @param editInterface the editInterface to set
 	 */
 	public void setEditInterface(final boolean editInterface) {
 		this.editInterface = editInterface;
+	}
+
+	/**
+	 * @param editInterface the editInterface to set
+	 */
+	public void setEditInterfaceDpt(final boolean editInterfaceDpt) {
+		this.editInterfaceDpt = editInterfaceDpt;
 	}
 
 	/**

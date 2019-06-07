@@ -16,7 +16,7 @@
                                 freezeScreenOnSubmit="#{sessionController.freezeScreenOnSubmit}"
                                 showSubmitPopupText="#{sessionController.showSubmitPopupText}"
                                 showSubmitPopupImage="#{sessionController.showSubmitPopupImage}"
-                                id="departmentFaqLinksForm">
+                                id="departmentViewForm">
                                       <t:htmlTag value="div" styleClass="message">
                                             <e:messages/>
                                       </t:htmlTag>
@@ -35,7 +35,7 @@
 
                                       <t:htmlTag value="div" styleClass="form-block form-header">
                                             <t:htmlTag value="div" styleClass="form-item">
-                                                <e:commandButton id="cancelButton" action="back" value="#{msgs['CATEGORIES.BUTTON.BACK']}" immediate="true" />
+                                                <e:commandButton id="cancelButton" action="#{faqsController.back}" value="#{msgs['CATEGORIES.BUTTON.BACK']}" immediate="true" />
                                             </t:htmlTag>
                                       </t:htmlTag>
 
@@ -45,62 +45,7 @@
                                            </t:htmlTag>
                                       </t:htmlTag>
 
-                                      <t:htmlTag value="div" styleClass="form-block current-faq-links-list" rendered="#{not empty departmentsController.faqLinks}" >
-                                            <t:htmlTag value="div" styleClass="form-item" >
-                                                <e:dataTable
-                                                    id="faqLinkData" rowIndexVar="variable"
-                                                    value="#{departmentsController.faqLinks}"
-                                                    var="faqLink" border="0" cellspacing="0"
-                                                    cellpadding="0">
-                                                    <t:column>
-                                                         <h:panelGroup>
-                                                             <e:text value="- #{faqLink.faq.label}" />
-                                                         </h:panelGroup>
-                                                    </t:column>
-                                                    <t:column style="cursor: pointer">
-                                                       <h:panelGroup onclick="buttonClick('departmentFaqLinksForm:faqLinkData:#{variable}:deleteButton');" >
-                                                            <t:htmlTag value="i" styleClass="fas fa-trash-alt fa-2x"/>
-                                                        </h:panelGroup>
-                                                        <e:commandButton id="deleteButton" value="-" style="display: none"
-                                                            action="#{departmentsController.deleteDepartmentFaqLink}" >
-                                                            <t:updateActionListener value="#{faqLink}"
-                                                                property="#{departmentsController.faqLinkToDelete}" />
-                                                        </e:commandButton>
-                                                    </t:column>
-                                                </e:dataTable>
-                                           </t:htmlTag>
-                                      </t:htmlTag>
-                                      <t:htmlTag value="div" styleClass="form-block treeview readonly-style">
-                                                <t:htmlTag value="div" styleClass="form-item" >
-                                                    <t:tree2 id="tree" value="#{departmentsController.faqTree}"
-                                                        var="node" varNodeToggler="t" clientSideToggle="true"
-                                                        showRootNode="true" >
-                                                        <f:facet name="root">
-                                                            <h:panelGroup>
-                                                                    <e:text value=" #{msgs['DEPARTMENT_FAQ_LINKS.TEXT.TREE_ROOT_LABEL']}" />
-                                                            </h:panelGroup>
-                                                        </f:facet>
-                                                        <f:facet name="department">
-                                                            <h:panelGroup>
-                                                                    <e:text value=" #{node.department.label}" />
-                                                            </h:panelGroup>
-                                                        </f:facet>
-                                                        <f:facet name="faq">
-                                                            <h:panelGroup>
-                                                                <h:panelGroup style="cursor: pointer; white-space: nowrap"
-                                                                    onclick="simulateLinkClick('departmentFaqLinksForm:tree:#{node.identifier}:selectFaq');return false;">
-                                                                    <e:text value=" #{node.faq.label}" styleClass="link"/>
-                                                                </h:panelGroup>
-                                                                <e:commandButton
-                                                                    value="->" id="selectFaq" style="display: none"
-                                                                    action="#{departmentsController.addDepartmentFaqLink}" >
-                                                                    <t:updateActionListener value="#{node.faq}" property="#{departmentsController.faqToLink}" />
-                                                                </e:commandButton>
-                                                            </h:panelGroup>
-                                                        </f:facet>
-                                                    </t:tree2>
-                                               </t:htmlTag>
-                                      </t:htmlTag>
+									  <%@include file="_departmentViewFaqLinks.jsp"%>
                             </e:form>
                     </t:htmlTag>
             </t:htmlTag>

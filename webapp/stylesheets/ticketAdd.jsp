@@ -296,7 +296,7 @@
 
             <h:panelGroup rendered="#{ticketController.addFaqTree != null}" >
             <t:htmlTag value="div" styleClass="form-block form-faqlinks">
-                <t:htmlTag id="ticketFaqs" value="div" styleClass=" block accordion accordion-plus">
+                <t:htmlTag id="ticketFaqs" value="div" styleClass=" block accordion accordion-minus">
                     <t:htmlTag value="h2">
                           <t:htmlTag value="span"><h:outputText value="#{msgs['TICKET_ACTION.TEXT.ADD.FAQ_LINKS']}" escape="false" /></t:htmlTag>
                           <t:htmlTag value="i" styleClass="fas fa-chevron-down"/>

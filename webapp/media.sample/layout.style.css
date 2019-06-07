@@ -160,6 +160,14 @@
   cursor: pointer;
 }
 
+.form-faqlinks .block.accordion h2 {
+  background-color: #1093d3;
+}
+
+.form-faqlinks .block.accordion h2 > span {
+  color: #ffffff;
+}
+
 .block.accordion h2 > span {
   font-size: 1.2rem;
 }

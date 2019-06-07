@@ -130,6 +130,7 @@
 		<property name="departmentPaginator" ref="departmentPaginator" />
 		<property name="departmentManagerPaginator" ref="departmentManagerPaginator" />
 		<property name="departmentInvitationPaginator" ref="departmentInvitationPaginator" />
+		<property name="faqsController" ref="faqsController" />
 	</bean>
 
 	<bean id="departmentPaginator"
@@ -368,6 +369,7 @@
     	> 
 		<description>A bean to manage the utilities.</description>
 		<property name="departmentSelector" ref="departmentSelector" />
+		
 	</bean>
 
 	<bean id="responsesController"

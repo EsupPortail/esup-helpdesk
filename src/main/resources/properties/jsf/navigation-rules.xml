@@ -167,6 +167,7 @@
 			<from-outcome>editDepartmentFaqLinks</from-outcome>
 			<to-view-id>/stylesheets/departmentFaqLinks.jsp</to-view-id>
 		</navigation-case>
+		
 	</navigation-rule>
 
 	<navigation-rule>
@@ -980,6 +981,14 @@
 	</navigation-rule>
 
 	<navigation-rule>
+		<from-view-id>/stylesheets/departmentFaqLinks.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>moveFaqDpt</from-outcome>
+			<to-view-id>/stylesheets/faqMoveDpt.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
 		<from-view-id>/stylesheets/bookmarks.jsp</from-view-id>
 		<navigation-case>
 			<from-outcome>viewTicket</from-outcome>
@@ -1000,6 +1009,18 @@
 		<navigation-case>
 			<from-outcome>cancel</from-outcome>
 			<to-view-id>/stylesheets/faqs.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/stylesheets/faqMoveDpt.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>faqMovedDpt</from-outcome>
+			<to-view-id>/stylesheets/departmentFaqLinks.jsp</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>cancel</from-outcome>
+			<to-view-id>/stylesheets/departmentFaqLinks.jsp</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 

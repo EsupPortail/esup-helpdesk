@@ -245,11 +245,6 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	private List<DepartmentManager> inheritedMembers;
 
 	/**
-	 * The inherited category members.
-	 */
-	private List<DepartmentManager> departmentManagers;
-
-	/**
 	 * The user to add as a category member.
 	 */
 	private User memberToAdd;
@@ -349,6 +344,31 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	 */
 	private List<Department> deleteTargetDepartments;
 
+	
+	private FaqsController faqsController;
+
+	/**
+	 * The current FAQ.
+	 */
+	private Faq faq;
+
+	/**
+	 * The FAQ to update.
+	 */
+	private Faq faqToUpdate;
+
+	/**
+	 * The sub FAQs of the current element.
+	 */
+	private List<Faq> subFaqs;
+
+
+	/**
+	 * The default FAQ scope i18n key suffix of the current element.
+	 */
+	private String defaultFaqScopeI18nSuffix;
+
+
 	/**
 	 * Bean constructor.
 	 */
@@ -394,7 +414,6 @@ public class DepartmentsController extends AbstractContextAwareController implem
 		members = null;
 		notMembers = null;
 		inheritedMembers = null;
-		departmentManagers = null;
 		memberToAdd = null;
 		memberToDelete = null;
 		memberToMove = null;
@@ -445,6 +464,7 @@ public class DepartmentsController extends AbstractContextAwareController implem
 		if (!isPageAuthorized()) {
 			return null;
 		}
+		getFaqsController().reset();
 		getSessionController().setShowShortMenu(false);
 		categoryTree = null;
 		return "navigationDepartments";
@@ -733,6 +753,16 @@ public class DepartmentsController extends AbstractContextAwareController implem
 		return getDomainService().userCanEditDepartmentProperties(getCurrentUser(), department);
 	}
 
+
+	/**
+	 * @return true if the current user can edit the department properties
+	 */
+	@RequestCache
+	public boolean isCurrentUserCanEditDepartmentFaqs() {
+		return getDomainService().userCanEditDepartmentFaqs(getCurrentUser(), department);
+	}
+
+	
 	/**
 	 * @return true if the current user can edit the department managers
 	 */
@@ -2017,26 +2047,14 @@ public class DepartmentsController extends AbstractContextAwareController implem
 			final FaqNode parentNode,
 			final List<Faq> faqs) {
     	for (Faq faq : faqs) {
-    		boolean alreadyLinked = false;
-    		for (FaqLink faqLink : faqLinks) {
-    			if (faq.equals(faqLink.getFaq())) {
-    				alreadyLinked = true;
-    				break;
-    			}
-    		}
-    		if (alreadyLinked) {
-    			continue;
-    		}
-    		if (userCanViewFaq(faq)) {
-	        	FaqNode faqNode = new FaqNode(faq);
-	        	addTreeFaqs(
-	        			faqNode,
-	        			getDomainService().getSubFaqs(faq));
-	        	AbstractFirstLastNode.markFirstAndLastChildNodes(faqNode);
-	    		parentNode.getChildren().add(faqNode);
-        		parentNode.setLeaf(false);
-    		}
+        	FaqNode faqNode = new FaqNode(faq);
+        	addTreeFaqs(
+        			faqNode,
+        			getDomainService().getSubFaqs(faq));
+    		parentNode.getChildren().add(faqNode);
+    		parentNode.setLeaf(false);
 		}
+    	AbstractFirstLastNode.markFirstAndLastChildNodes(parentNode);
     }
 
 	/**
@@ -2045,18 +2063,16 @@ public class DepartmentsController extends AbstractContextAwareController implem
     @SuppressWarnings("unchecked")
 	protected FaqNode buildRootFaqNode() {
     	FaqNode rootNode = new FaqNode();
-    	addTreeFaqs(rootNode, getDomainService().getRootFaqs());
-    	for (Department theDepartment : getDomainService().getEnabledDepartments()) {
-        	FaqNode departmentNode = new FaqNode(theDepartment);
-        	addTreeFaqs(
-        			departmentNode,
-        			getDomainService().getRootFaqs(theDepartment));
-    		if (departmentNode.getChildCount() > 0) {
-            	rootNode.getChildren().add(departmentNode);
-        		rootNode.setLeaf(false);
-    		}
-    	}
-    	AbstractFirstLastNode.markFirstAndLastChildNodes(rootNode);
+    	addTreeFaqs(rootNode, getDomainService().getRootFaqs(getDepartment()));
+//    	FaqNode departmentNode = new FaqNode(getDepartment());
+//    	addTreeFaqs(
+//    			departmentNode,
+//    			getDomainService().getRootFaqs(getDepartment()));
+//		if (departmentNode.getChildCount() > 0) {
+//        	rootNode.getChildren().add(departmentNode);
+//    		rootNode.setLeaf(false);
+//		}
+//    	AbstractFirstLastNode.markFirstAndLastChildNodes(rootNode);
     	return rootNode;
     }
 
@@ -2064,15 +2080,16 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	 * Refresh the faq tree for the category to update.
 	 */
 	protected void refreshFaqTree() {
+		
 		TreeState treeState = null;
 		if (faqTree != null) {
 			treeState = faqTree.getTreeState();
 		}
-		FaqNode rootNode = buildRootFaqNode();
-		faqTree = new FaqTreeModel(rootNode);
+		faqTree = new FaqTreeModel(buildRootFaqNode());
 		if (treeState != null) {
 			faqTree.setTreeState(treeState);
 		}
+		
 	}
 
 	/**
@@ -2226,7 +2243,7 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	 * @return a String.
 	 */
 	public String editDepartmentFaqLinks() {
-		refreshDepartmentFaqLinks();
+		faqsController.setEditInterfaceDpt(true);
 		return "editDepartmentFaqLinks";
 	}
 
@@ -2392,7 +2409,6 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	/**
 	 * @see org.esupportail.commons.web.controllers.LdapSearchCaller#getLdapUid()
 	 */
-	@Override
 	public String getLdapUid() {
 		return ldapUid;
 	}
@@ -2400,7 +2416,6 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	/**
 	 * @see org.esupportail.commons.web.controllers.LdapSearchCaller#setLdapUid(java.lang.String)
 	 */
-	@Override
 	public void setLdapUid(final String ldapUid) {
 		this.ldapUid = StringUtils.nullIfEmpty(ldapUid);
 	}
@@ -2412,6 +2427,7 @@ public class DepartmentsController extends AbstractContextAwareController implem
 		this.department = department;
 		departmentManagerPaginator.setCurrentPage(0);
 		departmentInvitationPaginator.setCurrentPage(0);
+		faqsController.setEditInterfaceDpt(false);
 		if (department == null) {
 			ticketsNumber = 0;
 			archivedTicketsNumber = 0;
@@ -2419,11 +2435,20 @@ public class DepartmentsController extends AbstractContextAwareController implem
 			ticketsNumber = getDomainService().getTicketsNumber(department);
 			archivedTicketsNumber = getDomainService().getArchivedTicketsNumber(department);
 			refreshCategoryTree();
+			faqsController.getViewTreeDpt(department);
 		}
 		departmentManagerPaginator.setDepartment(department);
 		departmentInvitationPaginator.setDepartment(department);
 	}
 
+	public void updateFaq() {
+		faqsController.updateFaq(getDepartment());
+	}
+	
+	public String moveFaqDpt() {
+		return faqsController.moveFaq(getDepartment());
+	}
+	
 	/**
 	 * @return the department
 	 */
@@ -2792,6 +2817,34 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	 */
 	protected void setDeleteTargetDepartments(final List<Department> deleteTargetDepartments) {
 		this.deleteTargetDepartments = deleteTargetDepartments;
+	}
+
+	public FaqsController getFaqsController() {
+		return faqsController;
+	}
+
+	public void setFaqsController(FaqsController faqsController) {
+		this.faqsController = faqsController;
+	}
+
+	public Faq getFaqToUpdate() {
+		return faqToUpdate;
+	}
+
+	public void setFaqToUpdate(Faq faqToUpdate) {
+		this.faqToUpdate = faqToUpdate;
+	}
+
+	public String getDefaultFaqScopeI18nSuffix() {
+		return defaultFaqScopeI18nSuffix;
+	}
+
+	public void setDefaultFaqScopeI18nSuffix(String defaultFaqScopeI18nSuffix) {
+		this.defaultFaqScopeI18nSuffix = defaultFaqScopeI18nSuffix;
+	}
+
+	protected void setSubFaqs(final List<Faq> subFaqs) {
+		this.subFaqs = subFaqs;
 	}
 
 }
