@@ -447,7 +447,6 @@ public class ControlPanelController extends AbstractContextAwareController {
 					managerInvolvementItems.add(
 							new SelectItem(manager.getUser(), manager.getUser().getDisplayName()));
 				}
-
 			}
 		}
 		return managerInvolvementItems;
