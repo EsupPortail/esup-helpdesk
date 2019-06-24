@@ -112,13 +112,16 @@
 			base ou=people,dc=esup-portail,dc=edu, with scope "sub". See
 			http://ldaptemplate.sourceforge.net.
 		</description>
-      <property name="urls">
+		<!-- To use multiple ldap comment the following line and uncomment next block
+				 Parameters are avalaible in properties/config.properties -->
+		<property name="url" value="${ldap.url}"/>
+      <!--property name="urls">
          <description>The LDAP URL of the directory.</description>
          <list>
             <value>${ldap.url1}</value>
             <value>${ldap.url2}</value>
          </list>
-      </property>
+      </property-->
 
 		<property name="userName" value="${ldap.userName}">
 			<description>
