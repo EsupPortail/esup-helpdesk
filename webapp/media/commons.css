@@ -104,7 +104,7 @@ div.paginator div.navigation {
 	float:left;
 	text-align:center;
 	width:55%;
-	/*utilisé dans le cas où ce div serait vide : permet de conserver sa taille*/
+	/*utilisÃ© dans le cas oÃ¹ ce div serait vide : permet de conserver sa taille*/
 	border:1px solid transparent;
 }
 

@@ -238,8 +238,8 @@ with class uportal-background-selected"  */
 
 	/*##  Section 10.6.7 Menus ##*/
 .portlet-menu {
-	background: #ddbb00;
-	/*background-image: url("../media/images/banner.jpg");*/
+	/*background: #b7ddb4;*/
+	background-image: url("../media/images/banner.jpg");
 	background-repeat: no-repeat;
 	margin: 0;
 	padding: 0;
@@ -364,8 +364,3 @@ with class uportal-background-selected"  */
 	font-size: 12px;
 	font-weight: bold;
 }  /*  uPortal equivalent style =3D  " no current equivalent"  */
-
-.portlet-footer-menu {
-	background-color: #DDBB00;
-	text-align: center;
-}

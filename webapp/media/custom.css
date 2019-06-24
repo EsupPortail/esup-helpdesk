@@ -1,9 +1,50 @@
-body{
-	background-color:#FFFFFF;
+.portlet-menu {
+  background-repeat: repeat;
+  color: #fff;
 }
-.portlet-table-header {
-        background-color: #A5B8D3;
+
+.portlet-menu-item-selected input {
+  color: #fff;
 }
+
+.portlet-menu-item input {
+  color: #f18e00;
+}
+
+.portlet-section-header, .portlet-section-subheader {
+  color: #a81817;
+}
+
+.portlet-section-body {
+  background-color:  #FFF3F3;
+}
+
+.portlet-form-input-field {
+  background-color: #FCFFFF;
+}
+
+a, a:visited { 
+  color: #a81817;
+}
+
+#controlPanelForm tr td {
+  padding-top: 2px;
+}
+
+.portlet-table-header, 
 .portlet-table-footer {
-        background-color: #A5B8D3;
+  background-color: #D76F30;
+}
+
+.portlet-table-header span.portlet-section-text, 
+.portlet-table-footer span.portlet-section-text {
+  color: #ffffff;
+}
+
+.portlet-table-alternate {
+  background-color: #f1ede6;
+}
+
+.portlet-table-selected {
+  background-color: #f1dcbd;
 }
