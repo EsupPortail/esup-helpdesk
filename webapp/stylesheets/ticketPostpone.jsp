@@ -108,6 +108,7 @@
                      value="#{ticketController.noAlert}" />
                   <e:text value=" #{msgs['TICKET_ACTION.TEXT.NO_ALERT']} " />
                </h:panelGroup>
+               <%@include file="_ticketActionPreviewButton.jsp"%>
 					<%@include file="_ticketActionPreviewButton.jsp"%>
 				</h:panelGroup>
 			</e:panelGrid>
