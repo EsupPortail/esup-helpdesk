@@ -241,8 +241,10 @@ ldap.use=true
 #
 # The URL of the LDAP server (required, e.g. ldap://ldap.domain.edu:389).
 #
-ldap.url2=ldap://ldap1.univ.fr:389
-ldap.url1=ldap://ldap2.univ.fr:389
+ldap.url=ldap://ldap.univ.fr:389
+# To define multiple ldap, uncomment the relative section in properties/ldap/ldap.xml too
+#ldap.url1=ldap://ldap1.univ.fr:389
+#ldap.url2=ldap://ldap2.univ.fr:389
 #
 # The credentials to bind to the LDAP directory, leave empty
 # for an anonymous connection (by default).
@@ -287,7 +289,9 @@ ldap.emailAttribute=mail
 ldap.filterDate=amudatevalidation
 ldap.filterEdupersonaffiliation=edupersonaffiliation
 ldap.filterEdupersonaffiliationValues=employee,researcher,student,faculty
-s
+# The fields above generate this ldap search filter :
+# ((&(|(cn=*my_search*)(uid=*my_search*))(amudatevalidation=*)(|(eduPersonAffiliation=*employee*)(eduPersonAffiliation=*researcher*)(eduPersonAffiliation=*student*)(eduPersonAffiliation=*faculty*))))
+
 # The attribute that holds the email aliases (defaults to alias).
 # Email aliases are used to change the owner of tickets when the tickets have
 # been created with email accounts and make the correspondence between user ids

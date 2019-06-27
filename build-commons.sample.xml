@@ -1,20 +1,12 @@
 <project name="esup-commons" default="commons-error" basedir=".">
 
-	<fail message="ERROR: Ant 1.7 is required (found: ${ant.version})">
-		<condition>
-			<not>
-				<contains string="${ant.version}" substring="1.9" />
-			</not>
-		</condition>
-	</fail>
-
 	<property name="commons.version" value="1.3.13" />
     <!--
     before sourcesup.cru.fr update
     <property name="commons.repository.path-prefix" value="http://sourcesup.cru.fr/cgi/viewvc.cgi/tags/${commons.version}/esup-commons" />
     <property name="commons.repository.path-suffix" value="?root=esup-commons&amp;view=co" />
     -->
-    <property name="commons.repository.path-prefix" value="http://subversion.cru.fr/esup-commons/tags/${commons.version}/esup-commons" />
+    <property name="commons.repository.path-prefix" value="http://subversion.renater.fr/esup-commons/tags/${commons.version}/esup-commons" />
     <property name="commons.repository.path-suffix" value="" />
 	<property name="commons.repository.libs" value="
 		activation-1.0.2.jar
@@ -113,7 +105,7 @@
 	<property name="src.dir" value="${basedir}/src/main/java"/>
 	<property name="lib.dir" value="${webapp.dir}/WEB-INF/lib"/>
 	<property name="media.dir" value="${webapp.dir}/media"/>
-	<property name="props.dir" value="${basedir}/properties"/>
+	<property name="props.dir" value="${basedir}/src/main/resources/properties"/>
 	<property name="build.dir" value="${basedir}/build"/>
 	<property name="build.classes" value="${build.dir}/WEB-INF/classes"/>
 	<property name="app.config" value="${basedir}/version.properties"/>

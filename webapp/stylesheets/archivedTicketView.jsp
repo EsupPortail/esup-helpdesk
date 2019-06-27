@@ -37,9 +37,13 @@
                                     <t:htmlTag styleClass="region-inner" value="div">
                                         <t:htmlTag value="div">
                                             <t:htmlTag value="div">
-                                                <t:htmlTag value="span" styleClass="ticket-prefix"><h:outputText value="#{msgs['TICKET_VIEW.TITLE.PREFIX']}"/> </t:htmlTag>
-                                                <t:htmlTag value="span" styleClass="ticket-number"><h:outputText  value="#{archivedTicketController.archivedTicket.ticketId} "/> </t:htmlTag>
-                                            </t:htmlTag>
+                                                <t:htmlTag value="h1">
+                                                	<h:outputText value="#{msgs['TICKET_VIEW.TITLE.PREFIX']}"/>
+                                                	<h:outputText  value="#{archivedTicketController.archivedTicket.ticketId} "/>
+                                                	<h:outputText  value=" : "/>
+                                            		<h:outputText value="#{archivedTicketController.archivedTicket.label}"/>   
+					        </t:htmlTag>
+					    </t:htmlTag>
                                             <t:htmlTag value="div">
                                                 <t:htmlTag id="ticket-actions" styleClass="form-item form-select actions" value="div">
                                                     <t:htmlTag styleClass="actions-header" value="div">
@@ -60,11 +64,11 @@
                                     </t:htmlTag>
                                 </t:htmlTag>
 
-                                <t:htmlTag value="div" styleClass="region view-ticket_title">
+                                <%--t:htmlTag value="div" styleClass="region view-ticket_title">
                                     <t:htmlTag styleClass="region-inner" value="div">
                                          <t:htmlTag value="h1"><h:outputText value="#{archivedTicketController.archivedTicket.label}"/> </t:htmlTag>
                                     </t:htmlTag>
-                                </t:htmlTag>
+                                </t:htmlTag--%>
 
 
                                  <t:htmlTag styleClass="region view-ticket_main-properties" value="div">

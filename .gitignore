@@ -8,3 +8,4 @@ src/main/resources/properties/logging
 /.classpath
 /.project
 /.settings/
+build/
