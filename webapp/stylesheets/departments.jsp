@@ -60,7 +60,7 @@
 	                                        <t:htmlTag value="div" styleClass="block form-block">
 							                    <t:htmlTag value="div" styleClass="form-item">
 							                        <e:outputLabel for="filterDepartment" value="#{msgs['TICKET_ACTION.SEARCH.DEPARTMENT']}" />
-							                        <e:inputText id="filterDepartment"  title="Recherche" value="#{sessionController.departmentFilter}" size="15" onkeypress="if (event.keyCode == 13) { simulateLinkClick('ticketActionForm:filterDepartmentButton'); return false; }" />
+							                        <e:inputText id="filterDepartment"  title="Recherche" value="#{sessionController.departmentFilter}" size="15" onkeypress="if (event.keyCode == 13) { simulateLinkClick('departmentsForm:data:filterDepartmentButton'); return false; }" />
 							                    </t:htmlTag>
 							                    <t:htmlTag value="div" styleClass="form-item">
 							                        <e:commandButton id="filterDepartmentButton"
