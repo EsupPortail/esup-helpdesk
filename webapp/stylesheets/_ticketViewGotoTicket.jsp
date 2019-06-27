@@ -2,7 +2,7 @@
         <t:htmlTag value="div" styleClass="form-block form-goto-ticket">
             <t:htmlTag value="div" styleClass="form-item">
                 <e:inputText id="ticketNumber" value="#{controlPanelController.ticketNumberString}" size="7"
-                    onkeypress="if (event.keyCode == 13) { buttonClick('viewTicketForm:gotoTicketButton'); return false; }" />
+                    onkeypress="if (event.keyCode == 13) { buttonClick('controlPanelForm:gotoTicketButton'); buttonClick('viewTicketForm:gotoTicketButton'); return false; }" />
              </t:htmlTag>
             <t:htmlTag value="div" styleClass="form-item">
                 <e:commandButton  id="gotoTicketButton"

@@ -63,6 +63,7 @@
                                                     <t:htmlTag value="div" styleClass="user-properties">
                                                         <t:htmlTag value="div" styleClass="user--status"/>
                                                         <t:htmlTag value="div" styleClass="user--composante"/>
+                                                        <t:htmlTag value="div" styleClass="user--service"/>
                                                     </t:htmlTag>
                                                 </t:htmlTag>
                                                 <t:htmlTag value="div" styleClass="form-item">

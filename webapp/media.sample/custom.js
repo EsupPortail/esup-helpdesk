@@ -240,6 +240,9 @@ jQuery(function ($) {
                 $(this).prop("value", $ticketNumberValue);
             }
         });
+        $(this).click(function () {
+        	$(this).prop("value", "");
+        });
     });
 
 
@@ -623,13 +626,6 @@ jQuery(function ($) {
     }
 
     //LDAP search result
-
-
-/*    $('.search-result-data .user-select').click(function (e) {
-        $.cookie('invite-user-select', "true");
-    });*/
-
-
     $(".ldap-search-result .user-data ").each(function () {
         $data = $(this).text().replace(/[\r\n]+(?=[^\r\n])/g, '').split("|");
         $displayName = $data[searchStringInArray("displayName", $data)].match(/{(.*)}/).pop();
@@ -641,23 +637,24 @@ jQuery(function ($) {
             $composante = "nc";
         }
 
-
         try {
-            $eduPersonAffiliation = $data[searchStringInArray("eduPersonAffiliation", $data)].match(/{(.*)}/).pop();
-            if ($eduPersonAffiliation.indexOf("student") > 0) {
-                $eduPersonAffiliation = "Etudiant";
-            } else if ($eduPersonAffiliation.indexOf("alumn") > 0) {
-                $eduPersonAffiliation = "Alumni";
-            } else {
-                $eduPersonAffiliation = "Personnel";
-            }
+            $service = $data[searchStringInArray("supannEntiteAffectationPrincipale", $data)].match(/{(.*)}/).pop();
         } catch (error) {
-            $userStatus = "nc";
+        	$service = "nc";
+        }        
+        try {
+            $eduPersonAffiliation = $data[searchStringInArray("eduPersonPrimaryAffiliation", $data)].match(/{(.*)}/).pop();
+        } catch (error) {
+        	$eduPersonAffiliation = "nc";
         }
+        
+        
         $(this).next().find(".user--display-name").text($displayName);
         $(this).next().find(".user--status").html("<span>Statut : " + $eduPersonAffiliation + "</span>");
-        $(this).next().find(".user--composante").html("<span>Composante : " + $composante.toUpperCase() + "</span>");
-
+        $(this).next().find(".user--service").html("<span>Service : " + $service + "</span>");
+	    if($composante != "nc" ) {
+	        $(this).next().find(".user--composante").html("<span>Composante : " + $composante.toUpperCase() + "</span>");
+	    }
     });
 
     function searchStringInArray(str, strArray) {
