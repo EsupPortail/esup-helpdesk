@@ -595,7 +595,7 @@ userInfo.showTicketCreationDepartments=false
 # The LDAP attributes printed, must be a subset of ldap.attributes.
 # Leave this property empty to print all the attributes (by default).
 #
-userInfo.ldapAttributes=supannEntiteAffectation,amuSite,eduPersonAffiliation
+userInfo.ldapAttributes=supannEntiteAffectation,amuSite,eduPersonPrimaryAffiliation
 #
 # The user id used by the ant target test-user-info.
 #

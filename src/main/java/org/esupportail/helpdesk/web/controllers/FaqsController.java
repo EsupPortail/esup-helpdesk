@@ -60,6 +60,11 @@ public class FaqsController extends AbstractContextAwareController {
 	private Faq faq;
 
 	/**
+	 * The current FAQ.
+	 */
+	private Faq faqAllDpt;
+
+	/**
 	 * The FAQ to update.
 	 */
 	private Faq faqToUpdate;
@@ -73,6 +78,11 @@ public class FaqsController extends AbstractContextAwareController {
 	 * The tree model for FAQs.
 	 */
 	private FaqTreeModel viewTree;
+
+	/**
+	 * The tree model for FAQs.
+	 */
+	private FaqTreeModel viewTreeAllDpt;
 
 	/**
 	 * The tree model to move FAQs.
@@ -99,11 +109,6 @@ public class FaqsController extends AbstractContextAwareController {
 	 */
 	private Department targetDepartment;
 	
-//	/**
-//	 * The target departmentsController.
-//	 */
-//	private DepartmentsController departmentsController;
-//
 	/**
 	 * The target FAQ.
 	 */
@@ -377,34 +382,53 @@ public class FaqsController extends AbstractContextAwareController {
 	protected FaqNode buildRootViewNode() {
     	FaqNode rootNode = new FaqNode();
     	addViewTreeFaqs(rootNode, getDomainService().getRootFaqs());
-//    	for (Department theDepartment : getDomainService().getEnabledDepartments()) {
-//    		if (editInterface) {
-//	        	FaqNode departmentNode = new FaqNode(theDepartment);
-//	        	addViewTreeFaqs(
-//	        			departmentNode,
-//	        			getDomainService().getRootFaqs(theDepartment));
-//	        	departmentNode.markFirstAndLastChildNodes();
-//	    		if (departmentNode.getChildCount() > 0
-//	    				|| (editInterface && getDomainService().userCanEditDepartmentFaqs(
-//	    						getCurrentUser(), theDepartment))) {
-//	            	rootNode.getChildren().add(departmentNode);
-//	        		rootNode.setLeaf(false);
-//	    		}
-//    		} else {
-//	        	addViewTreeFaqs(
-//	        			rootNode,
-//	        			getDomainService().getRootFaqs(theDepartment));
-//    		}
-//    	}
     	rootNode.markFirstAndLastChildNodes();
     	return rootNode;
     }
 
-
 	/**
 	 * @return the root node.
 	 */
-    @SuppressWarnings("unchecked")
+    public FaqTreeModel viewTreeForCurrentUser() {
+		List<Department> visibleDepartments = getDomainService().getFaqViewDepartments(
+				getCurrentUser(), null);
+    	FaqNode rootNode = new FaqNode();
+    	for (Department department : getDomainService().getEnabledDepartments()) {
+        	FaqNode departmentNode = new FaqNode(department);
+        	addFaqTreeFaqs(
+        			departmentNode,
+        			getDomainService().getRootFaqs(department),
+        			visibleDepartments);
+    		if (departmentNode.getChildCount() > 0) {
+            	rootNode.getChildren().add(departmentNode);
+        		rootNode.setLeaf(false);
+    		}
+    	}
+    	if (rootNode.getChildCount() == 0) {
+    		return null;
+    	}
+    	AbstractFirstLastNode.markFirstAndLastChildNodes(rootNode);
+    	return new FaqTreeModel(rootNode);
+    }
+    
+	protected void addFaqTreeFaqs(
+			final FaqNode parentNode,
+			final List<Faq> faqs,
+			final List<Department> visibleDepartments) {
+		for (Faq faq : faqs) {
+			if (getDomainService().userCanViewFaq(
+					getCurrentUser(), faq, visibleDepartments)) {
+				FaqNode faqNode = new FaqNode(faq);
+				addFaqTreeFaqs(faqNode, getDomainService().getSubFaqs(faq), visibleDepartments);
+				AbstractFirstLastNode.markFirstAndLastChildNodes(faqNode);
+				parentNode.getChildren().add(faqNode);
+				parentNode.setLeaf(false);
+			}
+		}
+	}
+	/**
+	 * @return the root node.
+	 */
 	public FaqTreeModel getViewTreeDpt(Department department) {
     	FaqNode rootNode = new FaqNode(department);
 		this.department = department;
@@ -470,20 +494,6 @@ public class FaqsController extends AbstractContextAwareController {
     	if (getDomainService().userCanEditRootFaqs(getCurrentUser())) {
     		addMoveTreeFaqs(rootNode, faqToMove, getDomainService().getRootFaqs());
     	}
-//    	for (Department theDepartment : getDomainService().getEnabledDepartments()) {
-//        	if (getDomainService().userCanEditDepartmentFaqs(getCurrentUser(), theDepartment)) {
-//	        	FaqNode departmentNode = new FaqNode(theDepartment);
-//	        	addMoveTreeFaqs(
-//	        			departmentNode,
-//	        			faqToMove,
-//	        			getDomainService().getRootFaqs(theDepartment));
-//	    		AbstractFirstLastNode.markFirstAndLastChildNodes(departmentNode);
-//	    		if (departmentNode.getChildCount() > 0 || showEmptyDepartments) {
-//		           	rootNode.getChildren().add(departmentNode);
-//		       		rootNode.setLeaf(false);
-//	    		}
-//        	}
-//    	}
 		AbstractFirstLastNode.markFirstAndLastChildNodes(rootNode);
     	return rootNode;
     }
@@ -514,6 +524,7 @@ public class FaqsController extends AbstractContextAwareController {
 			getViewTreeDpt(getDepartment());
 		} else {
 			refreshViewTree();
+			viewTreeAllDpt = viewTreeForCurrentUser();
 		}
 		if (faq != null) {
 			setFaq(faq);
@@ -812,6 +823,32 @@ public class FaqsController extends AbstractContextAwareController {
 	}
 
 	/**
+	 * @param node
+	 */
+	public void setNodeAllDpt(final FaqNode node) {
+		if (node.getFaq() != null) {
+			setFaqInternalAllDpt(node.getFaq());
+		} else if (node.getDepartment() != null) {
+			setDepartmentInternal(node.getDepartment());
+		} else {
+			setRootInternal();
+		}
+		viewTreeAllDpt.setActiveNode(node.getIdentifier());
+		viewTreeAllDpt.getTreeState().setSelected(node.getIdentifier());
+	}
+
+	/**
+	 * @param theFaq the faq to set
+	 */
+	protected void setFaqInternalAllDpt(final Faq theFaq) {
+		setRootInternal();
+		faqAllDpt = theFaq;
+		setFaqToUpdate(faqAllDpt);
+		defaultFaqScopeI18nSuffix = getFaqDefaultFaqScopeI18nSuffix(faqAllDpt);
+		setSubFaqs(filterSubFaqs(getDomainService().getSubFaqs(faqAllDpt)));
+	}
+
+	/**
 	 */
 	public void setRoot() {
 		setNode(viewTree.getRootNode());
@@ -856,6 +893,13 @@ public class FaqsController extends AbstractContextAwareController {
 	 */
 	public Faq getFaq() {
 		return faq;
+	}
+	
+	/**
+	 * @return the faq
+	 */
+	public Faq getFaqAllDpt() {
+		return faqAllDpt;
 	}
 
 	/**
@@ -976,6 +1020,14 @@ public class FaqsController extends AbstractContextAwareController {
 	public void setTargetFaq(final Faq targetFaq) {
 		this.targetFaq = targetFaq;
 		this.targetDepartment = targetFaq.getDepartment();
+	}
+
+	public FaqTreeModel getViewTreeAllDpt() {
+		return viewTreeAllDpt;
+	}
+
+	public void setViewTreeAllDpt(FaqTreeModel viewTreeAllDpt) {
+		this.viewTreeAllDpt = viewTreeAllDpt;
 	}
 
 }

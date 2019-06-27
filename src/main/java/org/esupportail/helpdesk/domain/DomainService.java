@@ -2317,9 +2317,27 @@ public interface DomainService extends Serializable {
 
 	/**
 	 * @param department
+	 * @return all the faq links of a category parent.
+	 */
+	List<FaqLink> getFaqLinksParent(Category category);
+
+	/**
+	 * @param department
 	 * @return all the faq links of a department.
 	 */
 	List<FaqLink> getFaqLinks(Department department);
+
+	/**
+	 * @param department
+	 * @return all the faq links of a department.
+	 */
+	Boolean isFaqLinksDepartment(Category category);
+
+	/**
+	 * @param department
+	 * @return all the faq links of a department.
+	 */
+	List<Faq> getFaqsDepartment(Department department);
 
 	/**
 	 * @param category

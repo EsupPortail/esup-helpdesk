@@ -4617,7 +4617,21 @@ implements DaoService {
 		criteria.addOrder(Order.asc(ORDER_ATTRIBUTE));
 		return getHibernateTemplate().findByCriteria(criteria);
 	}
-
+	
+	/**
+	 * @see org.esupportail.helpdesk.dao.DaoService#getFaqLinks(org.esupportail.helpdesk.domain.beans.Department)
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	@RequestCache
+	public List<Faq> getFaqsDepartment(final Department department) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Faq.class);
+		criteria.add(Restrictions.eq(DEPARTMENT_ATTRIBUTE, department));
+		criteria.add(Restrictions.isNull(PARENT_ATTRIBUTE));
+		criteria.addOrder(Order.asc(ORDER_ATTRIBUTE));
+		return getHibernateTemplate().findByCriteria(criteria);
+	}
+	
 	/**
 	 * @see org.esupportail.helpdesk.dao.DaoService#getFaqLinks(org.esupportail.helpdesk.domain.beans.Category)
 	 */

@@ -265,9 +265,19 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	private List<FaqLink> faqLinks;
 
 	/**
+	 * The FAQ links.
+	 */
+	private List<FaqLink> faqLinksParent;
+
+	/**
 	 * The inherited FAQ links.
 	 */
 	private List<FaqLink> inheritedFaqLinks;
+
+	/**
+	 * The inherited FAQ links.
+	 */
+	private List<FaqLink> inheritedFaqDepartmentLinks;
 
 	/**
 	 * The FAQ to add as a link.
@@ -288,6 +298,12 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	 * The tree model for FAQs.
 	 */
 	private FaqTreeModel faqTree;
+	
+
+	/**
+	 * The tree model for FAQs.
+	 */
+	private FaqTreeModel viewTreeDpt;
 
 	/**
 	 * True to use the assignment algorithm after having deleted a category member or a department manager.
@@ -2231,6 +2247,21 @@ public class DepartmentsController extends AbstractContextAwareController implem
 	}
 
 	/**
+	 * @return the members of the current department.
+	 */
+	public List<Faq> getDepartmentFaqs() {
+		return getDomainService().getFaqsDepartment(department);
+	}
+
+	/**
+	 * @return the members of the current department.
+	 */
+	public List<FaqLink> getCategoryParentFaqs() {
+		return getDomainService().getFaqLinks(categoryToUpdate.getParent());
+	}
+
+	
+	/**
 	 * Refresh the faq links of the department.
 	 */
 	protected void refreshDepartmentFaqLinks() {
@@ -2435,7 +2466,7 @@ public class DepartmentsController extends AbstractContextAwareController implem
 			ticketsNumber = getDomainService().getTicketsNumber(department);
 			archivedTicketsNumber = getDomainService().getArchivedTicketsNumber(department);
 			refreshCategoryTree();
-			faqsController.getViewTreeDpt(department);
+			setViewTreeDpt(faqsController.getViewTreeDpt(department));
 		}
 		departmentManagerPaginator.setDepartment(department);
 		departmentInvitationPaginator.setDepartment(department);
@@ -2845,6 +2876,33 @@ public class DepartmentsController extends AbstractContextAwareController implem
 
 	protected void setSubFaqs(final List<Faq> subFaqs) {
 		this.subFaqs = subFaqs;
+	}
+
+	public FaqTreeModel getViewTreeDpt() {
+		return viewTreeDpt;
+	}
+
+	public void setViewTreeDpt(FaqTreeModel viewTreeDpt) {
+		this.viewTreeDpt = viewTreeDpt;
+	}
+
+	public List<FaqLink> getInheritedFaqDepartmentLinks() {
+		return inheritedFaqDepartmentLinks;
+	}
+
+	public void setInheritedFaqDepartmentLinks(List<FaqLink> inheritedFaqDepartmentLinks) {
+		this.inheritedFaqDepartmentLinks = inheritedFaqDepartmentLinks;
+	}
+
+	public Boolean getIsFaqLinksDepartment() {
+		return getDomainService().isFaqLinksDepartment(categoryToUpdate.getParent());
+	}
+
+	public void setFaqLinksParent(List<FaqLink> faqLinksParent) {
+		this.faqLinksParent = faqLinksParent;
+	}
+	public List<FaqLink> getFaqLinksParent() {
+		return getDomainService().getFaqLinksParent(categoryToUpdate.getParent());
 	}
 
 }

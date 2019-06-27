@@ -1,7 +1,7 @@
 <%@include file="_include.jsp"%>
 <%@ taglib prefix="fck" uri="http://www.fck-faces.org/fck-faces"%>
 <e:page stringsVar="msgs" menuItem="faqs" authorized="#{faqsController.pageAuthorized}" locale="#{sessionController.locale}" >
-	   <t:htmlTag id="page-wrapper" value="div" styleClass="page-wrapper">
+	   <t:htmlTag id="faqView" value="div" styleClass="faqView">
            <t:htmlTag id="header" value="header" styleClass="header">
                 <%@include file="_header.jsp"%>
             </t:htmlTag>
@@ -25,7 +25,7 @@
                                 <t:htmlTag value="div" styleClass="controlPanel-title">
                                         <t:htmlTag value="h1">
                                             <t:htmlTag value="span" styleClass="title">
-                                                  <h:outputText value="#{msgs['FAQS.TITLE']}" escape="false" rendered="#{ not faqsController.editInterface }" />
+                                                  <h:outputText value="#{msgs['FAQS.TITLE.VIEW']}" escape="false" rendered="#{ not faqsController.editInterface }" />
                                                   <h:outputText value="#{msgs['FAQS.TITLE.EDIT']}" escape="false" rendered="#{ preferencesController.userAdmin && faqsController.editInterface}" />
                                             </t:htmlTag>
 
@@ -57,19 +57,50 @@
                                 </t:htmlTag>
                               </t:htmlTag>
 
-
-                            <e:panelGrid columns="3" columnClasses="colLeft,colCenter,colLeftMax" width="100%"  >
-                                <h:panelGroup >
-                                    <t:graphicImage value="/media/images/trans.png" height="1" width="400" />
-                                    <%@include file="_faqsTree.jsp"%>
-                                </h:panelGroup>
-                                <e:text escape="false" value="&nbsp;" style="width: 20px" />
-                                <h:panelGroup style="display:block">
-                                    <%@include file="_faqRoot.jsp"%>
-                                    <%@include file="_faq.jsp"%>
-                                    <%@include file="_faqSubFaqs.jsp"%>
-                                </h:panelGroup>
-                            </e:panelGrid>
+							<t:htmlTag value="fieldset">
+                                <t:htmlTag value="legend">
+                                    <t:htmlTag value="span" >
+                                        <h:outputText value="#{msgs['FAQS.TITLE.VIEW_GENERAL_FAQS']}"/>
+                                    </t:htmlTag>
+                                </t:htmlTag>
+                                <t:htmlTag value="div" styleClass="form-item form-checkbox">
+		                            <e:panelGrid columns="3" columnClasses="colLeft,colCenter,colLeftMax" width="100%"  >
+		                                <h:panelGroup >
+		                                    <t:graphicImage value="/media/images/trans.png" height="1" width="400" />
+		                                    <%@include file="_faqsTree.jsp"%>
+		                                </h:panelGroup>
+		                                <e:text escape="false" value="&nbsp;" style="width: 20px" />
+		                                <h:panelGroup style="display:block">
+		                                    <%@include file="_faqRoot.jsp"%>
+		                                    <%@include file="_faq.jsp"%>
+		                                    <%@include file="_faqSubFaqs.jsp"%>
+		                                </h:panelGroup>
+		                            </e:panelGrid>
+	    	                    </t:htmlTag>
+                           </t:htmlTag>                            
+                            
+							<t:htmlTag value="fieldset" rendered="#{not faqsController.editInterface}">
+                                <t:htmlTag value="legend">
+                                    <t:htmlTag value="span" >
+                                        <h:outputText value="#{msgs['FAQS.TITLE.VIEW_DEPARTMENTS_FAQS']}"/>
+                                    </t:htmlTag>
+                                </t:htmlTag>
+                                <t:htmlTag value="div" styleClass="form-item form-checkbox">
+ 	                               <e:panelGrid columns="3" columnClasses="colLeft,colCenter,colLeftMax" width="100%"  >
+		                                <h:panelGroup>
+		                                    <t:graphicImage value="/media/images/trans.png" height="1" width="400" />
+			    	                        <%@include file="_faqsTreeAllDpt.jsp"%>
+			    	                    </h:panelGroup>
+		    	                 		<e:text escape="false" value="&nbsp;" style="width: 20px" />
+			                        	<h:panelGroup style="display:block">
+				                        <h:panelGroup styleClass="faq" rendered="#{faqsController.faqAllDpt != null}" >
+												<e:subSection styleClass="faq-header" value="#{faqsController.faqAllDpt.label}" />
+												<e:text escape="false" value="#{faqsController.faqAllDpt.content}"/>
+											</h:panelGroup>
+				                        </h:panelGroup>
+                                	</e:panelGrid>
+	    	                    </t:htmlTag>
+                           </t:htmlTag>
                         </e:form>
                    </t:htmlTag>
                 </t:htmlTag>

@@ -1450,6 +1450,12 @@ public interface DaoService extends Serializable {
 	List<FaqLink> getFaqLinks(Department department);
 
 	/**
+	 * @param department
+	 * @return all the faq links of a department.
+	 */
+	List<Faq> getFaqsDepartment(Department department);
+
+	/**
 	 * @param category
 	 * @return all the faq links of a category.
 	 */

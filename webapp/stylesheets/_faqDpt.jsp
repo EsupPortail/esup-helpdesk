@@ -11,13 +11,6 @@
 			value="#{faqsController.faqToUpdate.content}" 
 			toolbarSet="faqContent" />
 		<e:outputLabel for="faqScope" value="#{msgs['FAQS.TEXT.SCOPE_PROMPT']} " />
-		<e:selectOneMenu id="faqScope" 
-			value="#{faqsController.faqToUpdate.scope}" >
-			<f:selectItems value="#{faqsController.scopeItems}" />
-		</e:selectOneMenu>
-		<e:italic value=" #{msgs['FAQS.TEXT.DEFAULT_FAQ_SCOPE_HELP']}" >
-			<f:param value="#{msgs[faqScopeI18nKeyProvider[faqsController.defaultFaqScopeI18nSuffix]]}" />
-		</e:italic>
 		<e:panelGrid columns="3" columnClasses="colLeftNowrap,colCenterNowrap,colCenterNowrap" width="100%">
 			<h:panelGroup>
 				<h:panelGroup style="cursor: pointer" onclick="simulateLinkClick('departmentViewForm:updateFaqButton');" >

@@ -39,13 +39,27 @@
                                             </t:htmlTag>
                                       </t:htmlTag>
 
-                                      <t:htmlTag value="div" styleClass="form-block" rendered="#{empty departmentsController.faqLinks}">
+                                      <t:htmlTag value="div" styleClass="form-block" rendered="#{empty faqsController.viewTree}">
                                             <t:htmlTag value="div" styleClass="form-item" >
                                                        <e:paragraph value="#{msgs['DEPARTMENT_FAQ_LINKS.TEXT.NO_FAQ_LINK']}" />
                                            </t:htmlTag>
                                       </t:htmlTag>
 
 									  <%@include file="_departmentViewFaqLinks.jsp"%>
+		   <h:panelGroup rendered="#{faqsController.userCanEdit and faqsController.editInterfaceDpt}" > 
+				<h:panelGroup style="cursor: pointer" 
+					onclick="simulateLinkClick('departmentViewForm:addFaqButton');" >
+					<e:bold value="#{msgs['FAQS.BUTTON.ADD_FAQ']} " /> 
+					<t:graphicImage value="/media/images/add.png" 
+						alt="#{msgs['FAQS.BUTTON.ADD_FAQ']}" 
+						title="#{msgs['FAQS.BUTTON.ADD_FAQ']}" 
+						/>
+				</h:panelGroup>
+	               <e:commandButton 
+	                   id="addFaqButton" style="display: none"
+	                   value="#{msgs['FAQS.BUTTON.ADD_FAQ']}" 
+	                   action="#{faqsController.addFaq}" />
+		   </h:panelGroup>									  
                             </e:form>
                     </t:htmlTag>
             </t:htmlTag>

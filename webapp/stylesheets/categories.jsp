@@ -330,32 +330,48 @@
 
                                                 </h:panelGroup>
                                                 <h:panelGroup rendered="#{departmentsController.categoriesAction == 'FAQ_LINKS'}" >
-                                                    <h:panelGroup rendered="#{not node.category.inheritFaqLinks}">
-                                                        <h:panelGroup
-                                                            style="cursor: pointer"
-                                                            onclick="showHideElement('categoriesForm:tree:#{node.identifier}:faqLinks');"
-                                                            rendered="#{node.faqLinksNumber != 0}" >
-                                                            <e:bold value=" #{msgs['CATEGORIES.TEXT.FAQ_LINKS_NUMBER']}">
-                                                                <f:param value="#{node.faqLinksNumber}" />
-                                                            </e:bold>
-                                                            <t:graphicImage value="/media/images/show.png" />
-                                                        </h:panelGroup>
-                                                        <e:bold rendered="#{node.faqLinksNumber == 0}"
-                                                            value=" #{msgs['CATEGORIES.TEXT.NO_FAQ_LINK']}" />
+                                                    <h:panelGroup rendered="#{node.category.parent == null}">
+	                                                    <h:panelGroup rendered="#{node.category.inheritFaqLinks}">
+	                                                    	<e:text styleClass="no-members" value=" #{msgs['FAQS.TEXT.DEPARTMENT_LINK']}" />
+	                                                    </h:panelGroup>
+	                                                    <h:panelGroup rendered="#{not node.category.inheritFaqLinks}">
+	                                                    	<e:text styleClass="no-members" rendered="#{node.faqLinksNumber == 0}" value=" #{msgs['FAQS.TEXT.NO_LINK']}" />
+	                                                        <h:panelGroup
+	                                                            style="cursor: pointer"
+	                                                            onclick="showHideElement('categoriesForm:tree:#{node.identifier}:faqLinks');"
+	                                                            rendered="#{node.faqLinksNumber != 0}" >
+	                                                            <e:text styleClass="link" value=" #{msgs['CATEGORIES.TEXT.FAQ_LINKS_NUMBER']}">
+	                                                                <f:param value="#{node.faqLinksNumber}" />
+	                                                            </e:text>                                                            
+	                                                        </h:panelGroup>
+	                                                    </h:panelGroup>
+                                                    </h:panelGroup> 
+                                                    <h:panelGroup rendered="#{node.category.parent != null}">
+	                                                    <h:panelGroup rendered="#{node.category.inheritFaqLinks}">
+	                                                    	<e:text styleClass="no-members" value=" #{msgs['FAQS.TEXT.PARENT_CATEGORY_LINK']}" />
+	                                                    </h:panelGroup>
+	                                                    <h:panelGroup rendered="#{not node.category.inheritFaqLinks}">
+	                                                    	<e:text styleClass="no-members" rendered="#{node.faqLinksNumber == 0}" value=" #{msgs['FAQS.TEXT.NO_LINK']}" />
+	                                                        <h:panelGroup
+	                                                            style="cursor: pointer"
+	                                                            onclick="showHideElement('categoriesForm:tree:#{node.identifier}:faqLinks');"
+	                                                            rendered="#{node.faqLinksNumber != 0}" >
+	                                                            <e:text styleClass="link" value=" #{msgs['CATEGORIES.TEXT.FAQ_LINKS_NUMBER']}">
+	                                                                <f:param value="#{node.faqLinksNumber}" />
+	                                                            </e:text>                                                            
+	                                                        </h:panelGroup>
+	                                                    </h:panelGroup>
                                                     </h:panelGroup>
-                                                    <h:panelGroup rendered="#{departmentsController.currentUserCanManageDepartmentCategories}" >
-                                                        <e:bold value=" " />
-                                                        <t:graphicImage value="/media/images/faq-links.png"
-                                                            alt="#{msgs['CATEGORIES.ALT.EDIT_FAQ_LINKS']}"
-                                                            title="#{msgs['CATEGORIES.ALT.EDIT_FAQ_LINKS']}"
-                                                            style="cursor: pointer"
-                                                            onclick="simulateLinkClick('categoriesForm:tree:#{node.identifier}:editFaqLinksButton');" />
-                                                        <e:commandButton value="#{msgs['CATEGORIES.BUTTON.EDIT_FAQ_LINKS']}"
-                                                            id="editFaqLinksButton" style="display: none"
+                                                    <h:panelGroup styleClass="action" rendered="#{departmentsController.currentUserCanManageDepartmentCategories}" >
+                                                    
+                                                        <t:htmlTag value="span" styleClass="form-item form-submit">
+                                                        <e:commandButton value="#{msgs['FAQS.ALT.EDIT_LINKS']}"
+                                                            id="editFaqMembersButton"
                                                             action="#{departmentsController.editCategoryFaqLinks}" >
                                                             <t:updateActionListener value="#{node.category}"
                                                                 property="#{departmentsController.categoryToUpdate}" />
                                                         </e:commandButton>
+                                                        </t:htmlTag>
                                                     </h:panelGroup>
                                                     <h:panelGroup id="faqLinks"
                                                         rendered="#{not node.category.inheritFaqLinks and node.faqLinksNumber != 0}"

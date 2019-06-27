@@ -4191,13 +4191,87 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqLinks(
+	 *      org.esupportail.helpdesk.domain.beans.Department)
+	 */
+	@Override
+	public List<Faq> getFaqsDepartment(final Department department) {
+		return daoService.getFaqsDepartment(department);
+	}
+	
+	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqLinks(
 	 *      org.esupportail.helpdesk.domain.beans.Category)
 	 */
 	@Override
 	public List<FaqLink> getFaqLinks(final Category category) {
 		return daoService.getFaqLinks(category);
 	}
+	
+	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqLinks(
+	 *      org.esupportail.helpdesk.domain.beans.Category)
+	 */
+	public Boolean isFaqLinksDepartment(final Category category) {
+		if(category != null) {
+			//cas d'une catégorie directement sous le service
+			if(category.getParent() == null) {
+				//catégorie hérite des faqs du service
+				if(category.getInheritFaqLinks()) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			//cas d'une sous catégorie
+			} else {
+				//catégorie hérite des faqs de la catégorie parents
+				if(category.getInheritFaqLinks()) {
+					return this.isFaqLinksDepartment(category.getParent());
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
+	/**
+	 * @see org.esupportail.helpdesk.domain.DomainService#getFaqLinks(
+	 *      org.esupportail.helpdesk.domain.beans.Category)
+	 */
+	@Override
+	public List<FaqLink> getFaqLinksParent(final Category category) {
+		if(category != null) {
+			//cas d'une catégorie directement sous le service
+			if(category.getParent() == null) {
+				//catégorie hérite des faqs du service
+				if(category.getInheritFaqLinks()) {
+					List<FaqLink> faqLinks = new ArrayList<FaqLink>();
+					List<Faq> faqs = daoService.getFaqsDepartment(category.getDepartment());
+					for (Faq faq : faqs) {
+						FaqLink faqLink = new FaqLink(category.getDepartment(), faq);
+						faqLinks.add(faqLink);
+					}
+					return faqLinks;
+				}
+				else {
+					return daoService.getFaqLinks(category);
+				}
+			//cas d'une sous catégorie
+			} else {
+				//catégorie hérite des faqs de la catégorie parents
+				if(category.getInheritFaqLinks()) {
+					return this.getFaqLinksParent(category.getParent());
+				}
+				else {
+					return daoService.getFaqLinks(category);
+				}
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * @see org.esupportail.helpdesk.domain.DomainService#addFaqLink(
 	 *      org.esupportail.helpdesk.domain.beans.FaqLink)
@@ -4337,7 +4411,11 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (category.getParent() != null) {
 			return getEffectiveFaqLinks(category.getParent());
 		}
-		return getFaqLinks(category.getDepartment());
+		//cas d'une catégorie qui hérite des faqs du service
+		if (category.getInheritFaqLinks()) {
+			return getFaqLinksParent(category);
+		}
+		return getFaqLinks(category);
 	}
 
 	/**
