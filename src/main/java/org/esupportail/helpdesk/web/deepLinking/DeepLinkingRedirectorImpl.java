@@ -374,10 +374,8 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 			try {
 				departmentId = Long.valueOf(params.get(DEPARTMENT_ID_PARAM));
 			} catch (NumberFormatException e) {
-				addWarnMessage(null, "DEEP_LINKS.MESSAGE.DEPARTMENT_NOT_FOUND", params.get(DEPARTMENT_ID_PARAM));
-				ticketController.setAddTree(null);
-				ticketController.setAddTargetCategory(null);
-				ticketController.setAddTargetDepartment(null);
+				//on affiche l'arborescence complète
+				ticketController.refreshAddTree();
 				return "/stylesheets/ticketAdd.jsp";
 			}
 			if (departmentId != null) {
@@ -410,11 +408,9 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 			try {
 				categoryId = Long.valueOf(params.get(CATEGORY_ID_PARAM));
 			} catch (NumberFormatException e) {
-				addWarnMessage(null,  "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", params.get(CATEGORY_ID_PARAM));
-				ticketController.setAddTree(null);
-				ticketController.setAddTargetCategory(null);
-				ticketController.setAddTargetDepartment(null);
-				return "/stylesheets/ticketAdd.jsp";
+				//on affiche l'arborescence complète
+				ticketController.refreshAddTree();
+				return "/stylesheets/ticketAdd.jsp";				
 			}
 			if (categoryId != null) {
 				try {
@@ -427,17 +423,43 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 					return "/stylesheets/ticketAdd.jsp";
 				}
 				
-				TreeNode rootNode = ticketController.buildRootAddNodeForCategory(categoryId);
-				//ouverture complète de l'arborescence
-				if (rootNode.getChildCount() > 0) {
-					addTree = new TreeModelBase(rootNode);
-					TreeState treeState = new TreeStateBase();
-					treeState.toggleExpanded("0");
-					
-					List<CategoryNode> nodesToCollapse = rootNode.getChildren();
-					ticketController.expandAllTree(treeState, nodesToCollapse);
-					addTree.setTreeState(treeState);
-					ticketController.setAddTree(addTree);
+				if (categoryFilter.isVirtual()) {
+					try {
+						categoryFilter = categoryFilter.getRealCategory();
+					} catch (CategoryNotFoundException e) {
+						addWarnMessage(null, "DEEP_LINKS.MESSAGE.CATEGORY_NOT_FOUND", params.get(CATEGORY_ID_PARAM));
+						ticketController.setAddTree(null);
+						ticketController.setAddTargetCategory(null);
+						ticketController.setAddTargetDepartment(null);
+						return "/stylesheets/ticketAdd.jsp";
+					}
+				}
+				//si la catégorie n'a pas d'enfant, on affiche la création du ticket étape 2/2 
+				if(domainService.getSubCategories(categoryFilter).isEmpty() || categoryFilter.getAddNewTickets()) {
+					if (!ticketController.isUserCanAdd()) {
+						addAuthenticationRequiredErrorMessage();
+					} else {
+						ticketController.add();
+						department = categoryFilter.getDepartment();
+						ticketController.setAddTargetCategory(categoryFilter);
+						ticketController.setAddTargetDepartment(categoryFilter.getDepartment());
+						ticketController.addChooseCategory();
+						ticketController.setAddTargetDepartment(department);
+					}
+				//sinon on affiche l'arborescence
+				} else {
+					TreeNode rootNode = ticketController.buildRootAddNodeForCategory(categoryId);
+					//ouverture complète de l'arborescence
+					if (rootNode.getChildCount() > 0) {
+						addTree = new TreeModelBase(rootNode);
+						TreeState treeState = new TreeStateBase();
+						treeState.toggleExpanded("0");
+						
+						List<CategoryNode> nodesToCollapse = rootNode.getChildren();
+						ticketController.expandAllTree(treeState, nodesToCollapse);
+						addTree.setTreeState(treeState);
+						ticketController.setAddTree(addTree);
+					}
 				}
 			}
 		}
