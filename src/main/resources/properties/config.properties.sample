@@ -270,7 +270,7 @@ ldap.dnSubPath=ou=people
 #
 # The exhaustive list of the attributes retrieved (defaults to cn,displayName,employeeType,department,homeDirectory,mail).
 #
-ldap.attributes=displayName,mail,supannEmpCorps,supannEntiteAffectation,amuDateFin,amuStatut,supannEmpid,amuCampus,amuComposante,amuSite,eduPersonAffiliation,memberOf
+ldap.attributes=displayName,mail,supannEmpCorps,supannEntiteAffectation,supannEntiteAffectationPrincipale,amuDateFin,amuStatut,supannEmpid,amuCampus,amuComposante,amuSite,eduPersonAffiliation,eduPersonPrimaryAffiliation,memberOf
 
 ldap.attributesNotPersist=telephoneNumber
 #
@@ -311,7 +311,7 @@ ldap.searchAttribute=sn
 # The attributes displayed when LDAP searches return several results,
 # used to differentiate the users (defaults to cn,displayName,employeeType,department).
 #
-ldap.searchDisplayedAttributes=displayName,amuMail,supannEntiteAffectation,amuCampus,amuComposante,amuSite,amuStatut,amuDateFin,supannEmpid,eduPersonAffiliation,memberOf
+ldap.searchDisplayedAttributes=displayName,amuMail,supannEntiteAffectation,supannEntiteAffectationPrincipale,amuCampus,amuComposante,amuSite,amuStatut,amuDateFin,supannEmpid,eduPersonAffiliation,eduPersonPrimaryAffiliation,memberOf
 #-------------------------------------------------------------
 # TEST
 #-------------------------------------------------------------
@@ -599,7 +599,7 @@ userInfo.showTicketCreationDepartments=false
 # The LDAP attributes printed, must be a subset of ldap.attributes.
 # Leave this property empty to print all the attributes (by default).
 #
-userInfo.ldapAttributes=supannEntiteAffectation,amuSite,eduPersonPrimaryAffiliation
+userInfo.ldapAttributes=supannEntiteAffectationPrincipale,amuSite,eduPersonPrimaryAffiliation
 #
 # The user id used by the ant target test-user-info.
 #
