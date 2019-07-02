@@ -4658,6 +4658,16 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (user.getAdmin()) {
 			return true;
 		}
+		//controle d'accès sur les catégories confidentielles
+		//seules les membres de la catégorie confidentielle et le propriétaire ont accès
+		if(ticket.getDepartment().getSrvConfidential()) {
+			if(getMemberCategories(user,ticket.getDepartment()).contains(ticket.getCategory())
+				|| user.equals(ticket.getOwner())){
+				return true;
+			} else {
+				return false;
+			}
+		}
 		if (isDepartmentManager(ticket.getDepartment(), user)) {
 			return true;
 		}
