@@ -311,7 +311,7 @@ public class MonitoringSenderImpl extends AbstractAlertSender implements Monitor
 			logger.debug("sending alerts for ticket #" + ticket.getId()
 					+ " (createLikeAction=" + createLikeAction + ")...");
 		}
-		if(restrictAssign && !assignAction) {
+		if(!restrictAssign || (restrictAssign && !assignAction)) {
 			Department departmentBefore = ticket.getDepartment();
 			for (Action action : theActions) {
 				if (action.getDepartmentBefore() != null) {
