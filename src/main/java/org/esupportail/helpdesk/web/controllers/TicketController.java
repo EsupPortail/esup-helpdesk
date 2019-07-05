@@ -1743,7 +1743,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	    				filter,
 	    				matchFiltre);
 	    		//on supprime la catégorie si son libellé ne correspond pas au filtre
-	    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1 && !matchFiltre){
+	    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1){
 	    			categoryNode.getChildren().remove(subCategoryNode);
 	    		}  
 	    	}
@@ -3005,7 +3005,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	    				filter,
 	    				matchFiltre);
 		    		//on supprime la catégorie si son libellé ne correspond pas au filtre
-		    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1 && !matchFiltre){
+		    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1){
 		    			categoryNode.getChildren().remove(subCategoryNode);
 		    		}    		
 	    		}
