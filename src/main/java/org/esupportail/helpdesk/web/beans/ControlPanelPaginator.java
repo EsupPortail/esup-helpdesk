@@ -100,7 +100,7 @@ extends AbstractHibernatePaginator<ControlPanelEntry> {
 		}
 		//cas ou l'on passe a 'Implication = ...libres...', il faut gérer le cas de 'Gestionnaire = Tous' qui n'est plus proposé dans la liste
 		//dans ce cas on force le currentUser
-		if((selectedManager == null) && 
+		if((selectedManager == null) && getCurrentUser().getControlPanelManagerInvolvementFilter() != null &&
 				(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
 				|| 
 				getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED))
