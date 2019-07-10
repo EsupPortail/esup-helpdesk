@@ -1732,7 +1732,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	        	CategoryNode subCategoryNode = new CategoryNode(realSubCategory, subCategory.getXlabel());
             	categoryNode.getChildren().add(subCategoryNode);
         		categoryNode.setLeaf(false);
-	    		if(subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) || matchFiltre){
+	    		if(subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase())){
 	    			matchFiltre = true;
 	    		}
         		addMoveTreeSubCategories(
@@ -1743,9 +1743,13 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	    				filter,
 	    				matchFiltre);
 	    		//on supprime la catégorie si son libellé ne correspond pas au filtre
-	    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1){
+	    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1 && !matchFiltre){
 	    			categoryNode.getChildren().remove(subCategoryNode);
 	    		}  
+	    		
+	    		if(matchFiltre && subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase())) {
+	    			matchFiltre = false;
+	    		}
 	    	}
 		}
 	}
@@ -2927,7 +2931,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	        	categoryNode.getChildren().add(subCategoryNode);
 	    		categoryNode.setLeaf(false);
 	    		
-	    		if(cateId.equals(subCategory.getId()) || matchFiltre){
+	    		if(cateId.equals(subCategory.getId())){
 	    			matchFiltre = true;
 	    		}
 	    		addAddTreeSubCategories(
@@ -2995,7 +2999,7 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	        	categoryNode.getChildren().add(subCategoryNode);
 	    		categoryNode.setLeaf(false);
 	    		
-	    		if(subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) || matchFiltre){
+	    		if(subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase())){
 	    			matchFiltre = true;
 	    		}
 	    		addAddTreeSubCategories(
@@ -3004,10 +3008,15 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	    				departmentsViewable, 
 	    				filter,
 	    				matchFiltre);
-		    		//on supprime la catégorie si son libellé ne correspond pas au filtre
-		    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1){
+		    		//on supprime la catégorie si son libellé ne correspond pas au filtre et que c'est pas un enfant d'une catégorie matchée
+		    		if(!subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase()) && subCategoryNode.getChildCount() < 1 && !matchFiltre) {
 		    			categoryNode.getChildren().remove(subCategoryNode);
-		    		}    		
+		    		}
+		    		
+		    		//on repasse a false quand on revient sur la catégorie matchée
+		    		if(matchFiltre && subCategory.getXlabel().toLowerCase().contains(filter.toLowerCase())) {
+		    			matchFiltre = false;
+		    		}
 	    		}
 
 		}
