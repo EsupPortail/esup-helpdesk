@@ -63,23 +63,51 @@
             	<f:facet name="header">
                          <h:outputText value="#{msgs['DOMAIN.ACTION_SCOPE.COL.HEADER']}" />
                 </f:facet>
-                <t:htmlTag rendered="#{fie.fileInfo.scope == 'DEFAULT'}" value="div">
-                    <h:panelGroup rendered="#{not fie.canChangeScope}">
-                         <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
-                    </h:panelGroup>
-                    <h:panelGroup  styleClass="action-scope-edit default link" onclick="javascript:{showHideElement('viewTicketForm:fileData:'+#{variable}+':editScope');}" rendered="#{fie.canChangeScope}">
-                        <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
-                    </h:panelGroup>
+                
+               <t:htmlTag  rendered="#{fie.fileInfo.scope == 'DEFAULT' && ticketController.ticket.scope == 'PUBLIC'}"  value="div">
+                      <h:panelGroup  rendered="#{not fie.canChangeScope}">
+                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
+                      </h:panelGroup>
+                      <h:panelGroup styleClass="action-scope-edit default link" onclick="javascript:{showHideElement('viewTicketForm:fileData:'+#{variable}+':editScope');}" rendered="#{fie.canChangeScope}">
+                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
+                      </h:panelGroup>
                 </t:htmlTag>
 
-                <t:htmlTag  rendered="#{fie.fileInfo.scope == 'INVITED'}"  value="div">
-                    <h:panelGroup rendered="#{not fie.canChangeScope}">
-                         <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
-                    </h:panelGroup>
-                    <h:panelGroup  styleClass="action-scope-edit invited link" onclick="javascript:{showHideElement('viewTicketForm:fileData:'+#{variable}+':editScope');}" rendered="#{fie.canChangeScope}">
-                        <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
-                    </h:panelGroup>
+                <t:htmlTag  rendered="#{fie.fileInfo.scope == 'DEFAULT' && ticketController.ticket.scope == 'CAS'}"  value="div">
+                      <h:panelGroup  rendered="#{not fie.canChangeScope}">
+                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.CAS']}"/>
+                      </h:panelGroup>
+                      <h:panelGroup styleClass="action-scope-edit default link" onclick="javascript:{showHideElement('viewTicketForm:fileData:'+#{variable}+':editScope');}" rendered="#{fie.canChangeScope}">
+                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.CAS']}"/>
+                      </h:panelGroup>
                 </t:htmlTag>
+                
+                <t:htmlTag  rendered="#{fie.fileInfo.scope == 'DEFAULT' && ticketController.ticket.scope != 'PUBLIC' && ticketController.ticket.scope != 'CAS' }"  value="div">
+                      <h:panelGroup  rendered="#{not fie.canChangeScope}">
+                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
+                      </h:panelGroup>
+                      <h:panelGroup  styleClass="action-scope-edit default link" onclick="javascript:{showHideElement('viewTicketForm:fileData:'+#{variable}+':editScope');}" rendered="#{fie.canChangeScope}">
+                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
+                      </h:panelGroup>
+                </t:htmlTag>   
+                                             
+                <t:htmlTag  rendered="#{fie.fileInfo.scope == 'INVITED'}"  value="div">
+                      <h:panelGroup   rendered="#{not fie.canChangeScope}">
+                              <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
+                      </h:panelGroup>
+                      <h:panelGroup styleClass="action-scope-edit default link" onclick="javascript:{showHideElement('viewTicketForm:fileData:'+#{variable}+':editScope');}" rendered="#{fie.canChangeScope}">
+                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
+                      </h:panelGroup>
+                </t:htmlTag>
+                
+                <t:htmlTag  rendered="#{fie.fileInfo.scope == 'PUBLIC'}"  value="div">
+                      <h:panelGroup   rendered="#{not fie.canChangeScope}">
+                              <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
+                      </h:panelGroup>
+                      <h:panelGroup styleClass="action-scope-edit default link" onclick="javascript:{showHideElement('viewTicketForm:fileData:'+#{variable}+':editScope');}" rendered="#{fie.canChangeScope}">
+                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
+                      </h:panelGroup>
+                </t:htmlTag>                
 
                 <t:htmlTag rendered="#{fie.fileInfo.scope == 'INVITED_MANAGER'}"  value="div">
                     <h:panelGroup rendered="#{not fie.canChangeScope}">
@@ -111,7 +139,7 @@
                 <h:panelGroup id="editScope" rendered="#{fie.canChangeScope}" style="display: none" styleClass="form-item">
                     <e:selectOneMenu id="fileInfoScope"
                         value="#{fie.newScope}"
-                        onchange="buttonClick('viewTicketForm:fileData:'+#{variable}+':changeFileInfoScopeButton');return false;">
+                        onclick="buttonClick('viewTicketForm:fileData:'+#{variable}+':changeFileInfoScopeButton');return false;">
                         <f:selectItems value="#{ticketController.actionScopeItems}" />
                     </e:selectOneMenu>
                     <e:commandButton
