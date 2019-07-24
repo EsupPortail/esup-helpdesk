@@ -88,6 +88,7 @@ import org.esupportail.helpdesk.exceptions.IconNotFoundException;
 import org.esupportail.helpdesk.exceptions.TicketNotFoundException;
 import org.esupportail.helpdesk.services.indexing.IndexIdProvider;
 import org.springframework.beans.factory.InitializingBean;
+import org.esupportail.commons.services.authentication.AuthUtils;
 
 /**
  * The basic implementation of DomainService.
@@ -4725,6 +4726,14 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		if (user.equals(objectUser)) {
 			return true;
 		}
+		//si ticket publique et visibilité du commentaire publique
+		if(TicketScope.PUBLIC.equals(ticket.getEffectiveScope()) && ActionScope.PUBLIC.equals(objectScope)){
+			return true;
+		}
+		//si ticket intranet et visibilité du commentaire publique
+		if(TicketScope.CAS.equals(ticket.getEffectiveScope()) && ActionScope.PUBLIC.equals(objectScope))  {
+			return true;
+		}
 		if (ActionScope.MANAGER.equals(objectScope)) {
 			// visible si user est gestionnaire du service ou si visibilité
 			// inter service
@@ -4782,10 +4791,34 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 			if (user.equals(ticket.getOwner())) {
 				return true;
 			}
+			// visible si user est gestionnaire du service ou si visibilité
+			// inter service
+			if (!isDepartmentManager(ticket.getDepartment(), user)) {
+				// on vérifie si le ticket appartient à un service dont la
+				// visibilité inter service serait définie au sein d'un de ses
+				// services ou il est manager
+				if (ticket.getDepartment().getVisibilityInterSrv() != null
+						&& ticket.getDepartment().getVisibilityInterSrv() != "") {
+					for (Department department : getManagedDepartments(user)) {
+						if (department.getVisibilityInterSrv() != null) {
+							if (department.getVisibilityInterSrv().equals(ticket.getDepartment().getVisibilityInterSrv())) {
+								return true;
+							}
+						}
+					}
+				}
+			} 
 			return false;
 		}
 		if (ActionScope.DEFAULT.equals(objectScope)) {
-
+			//Si ticket publique, alors Defaut = public
+			if(TicketScope.PUBLIC.equals(ticket.getEffectiveScope())) {
+				return true;
+			}
+			//De meme pour Intranet
+			if(TicketScope.CAS.equals(ticket.getEffectiveScope()) && user.getAuthType().equals(AuthUtils.CAS)) {
+				return true;
+			}
 			// visible si user est gestionnaire du service ou si visibilité
 			// inter service
 			if (!isDepartmentManager(ticket.getDepartment(), user)) {
@@ -4815,7 +4848,7 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 				return true;
 			}
 		}
-		return TicketScope.PUBLIC.equals(ticket.getEffectiveScope());
+		return false;
 	}
 
 	/**

@@ -19,21 +19,39 @@
             </t:htmlTag>
         </t:htmlTag>
 	</t:column>
-	<t:column styleClass="col-main action--scope" rendered="#{departmentsController.currentUserCanViewDepartments}">
+	<t:column styleClass="col-main action--scope">
 		   <f:facet name="header">
 		        <t:htmlTag value="div" >
                     <h:outputText value="#{msgs['DOMAIN.ACTION_SCOPE.COL.HEADER']}"/>
                  </t:htmlTag>
             </f:facet>
         <t:htmlTag styleClass="action-inner" value="div">
-                                <t:htmlTag  rendered="#{he.action.scope == 'DEFAULT'}"  value="div" styleClass="action-scope--default">
+         
+                                <t:htmlTag  rendered="#{he.action.scope == 'DEFAULT' && ticketController.ticket.scope == 'PUBLIC'}"  value="div" styleClass="action-scope--default">
+                                      <h:panelGroup  rendered="#{not he.canChangeScope}">
+                                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
+                                      </h:panelGroup>
+                                      <h:panelGroup  styleClass="action-scope-edit default link" rendered="#{he.canChangeScope}">
+                                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
+                                      </h:panelGroup>
+                                </t:htmlTag>
+
+                                <t:htmlTag  rendered="#{he.action.scope == 'DEFAULT' && ticketController.ticket.scope == 'CAS'}"  value="div" styleClass="action-scope--default">
+                                      <h:panelGroup  rendered="#{not he.canChangeScope}">
+                                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.CAS']}"/>
+                                      </h:panelGroup>
+                                      <h:panelGroup  styleClass="action-scope-edit default link" rendered="#{he.canChangeScope}">
+                                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.CAS']}"/>
+                                      </h:panelGroup>
+                                </t:htmlTag>
+                                <t:htmlTag  rendered="#{he.action.scope == 'DEFAULT' && ticketController.ticket.scope != 'PUBLIC' && ticketController.ticket.scope != 'CAS' }"  value="div" styleClass="action-scope--default">
                                       <h:panelGroup  rendered="#{not he.canChangeScope}">
                                              <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
                                       </h:panelGroup>
                                       <h:panelGroup  styleClass="action-scope-edit default link" rendered="#{he.canChangeScope}">
                                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
                                       </h:panelGroup>
-                                </t:htmlTag>
+                                </t:htmlTag>                                
                                 <t:htmlTag  rendered="#{he.action.scope == 'INVITED'}"  value="div" styleClass="action-scope--invited">
                                       <h:panelGroup   rendered="#{not he.canChangeScope}">
                                               <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
@@ -42,6 +60,14 @@
                                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
                                       </h:panelGroup>
                                 </t:htmlTag>
+                                <t:htmlTag  rendered="#{he.action.scope == 'PUBLIC'}"  value="div" styleClass="action-scope--invited">
+                                      <h:panelGroup   rendered="#{not he.canChangeScope}">
+                                              <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
+                                      </h:panelGroup>
+                                      <h:panelGroup  styleClass="action-scope-edit invited link" rendered="#{he.canChangeScope}">
+                                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
+                                      </h:panelGroup>
+                                </t:htmlTag>                                
                                 <t:htmlTag  rendered="#{he.action.scope == 'INVITED_MANAGER'}"  value="div" styleClass="action-scope--invited-manager">
                                       <h:panelGroup   rendered="#{not he.canChangeScope}">
                                           <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED_MANAGER']}"/>

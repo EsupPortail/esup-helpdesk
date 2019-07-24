@@ -164,7 +164,6 @@ function addInvitation(select) {
                                                                       		value="#{msgs['_.BUTTON.CANCEL']}" immediate="true" />
                            </t:htmlTag>
                       </t:htmlTag>
-
                       <t:htmlTag value="div" id="inviteComment" styleClass="form-block hideme form-body">
                             <t:htmlTag value="div" styleClass="form-item">
                                 <e:outputLabel for="actionMessage" value="#{msgs['TICKET_ACTION.TEXT.INVITE.2']}" />
@@ -188,15 +187,23 @@ function addInvitation(select) {
 
         <t:htmlTag value="div" id="inviteHistory" styleClass="form-block hideme form-body">
 	        <t:htmlTag styleClass="region extended-properties current" value="div">
-	                  <t:htmlTag styleClass="tabs" value="ul">
-	                      <t:htmlTag id="history" styleClass="tab-link current" value="li">
-	                          <h:outputText value="#{msgs['TICKET_ACTION.TAB.HISTORY.TEXT']} " />
-	                      </t:htmlTag>
-	                  </t:htmlTag>
+                <t:htmlTag styleClass="tabs" value="ul">
+	               	<t:htmlTag id="history" styleClass="tab-link current" value="li">
+	                   	<h:outputText value="#{msgs['TICKET_ACTION.TAB.HISTORY.TEXT']} " />
+	               	</t:htmlTag>
+	               	<t:htmlTag>
+	            		<h:panelGroup id="responseItems" styleClass="tab-link current" value="li">
+	                		<h:outputText value="#{msgs['TICKET_ACTION.TAB.RESPONSES.TEXT']} " />
+	            		</h:panelGroup>
+	   	      		</t:htmlTag> 	                  
+   	          	</t:htmlTag> 	                  
 	        </t:htmlTag>                            
 	        <t:htmlTag id="tab-history" styleClass="tab-content view-ticket_history current" value="div">
 	                  <%@include file="_ticketActionHistory.jsp"%>
-	        </t:htmlTag> 
+	        </t:htmlTag>
+	        <t:htmlTag id="tab-responseItems" styleClass="tab-content view-ticket_history" value="div">
+	        	<%@include file="_ticketActionResponses.jsp"%>
+	        </t:htmlTag>
 	    </t:htmlTag> 
 
     </e:form>

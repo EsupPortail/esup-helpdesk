@@ -517,7 +517,10 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	 */
 	protected List<SelectItem> getInvitedActionScopeItems() {
 		List<SelectItem> invitedActionScopeItems = new ArrayList<SelectItem>();
-//		addActionScopeItem(invitedActionScopeItems, ActionScope.DEFAULT, getTicket().getEffectiveScope());
+		if( getTicket().getScope().equals(TicketScope.PUBLIC) ||
+				getTicket().getScope().equals(TicketScope.CAS)) {
+			addActionScopeItem(invitedActionScopeItems, ActionScope.PUBLIC);
+		}
 		addActionScopeItem(invitedActionScopeItems, ActionScope.INVITED);
 		addActionScopeItem(invitedActionScopeItems, ActionScope.INVITED_MANAGER);
 		return invitedActionScopeItems;

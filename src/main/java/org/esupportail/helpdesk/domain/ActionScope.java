@@ -19,6 +19,8 @@ public abstract class ActionScope {
 	public static final String OWNER = "OWNER";
 	/** Action scope value. */
 	public static final String MANAGER = "MANAGER";
+	/** Action scope value. */
+	public static final String PUBLIC = "PUBLIC";
 	
 	/**
 	 * Constructor.
