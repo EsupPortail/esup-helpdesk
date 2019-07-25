@@ -392,6 +392,12 @@ public class TicketController extends TicketControllerStateHolder implements Lda
      * The items for missing columns.
      */
     private List<SelectItem> addColumnItems;
+   
+    /**
+     * The Default department Ticket Scope.
+     */
+    private String departmentDefaultTicketScope;
+
 
 
 	/**
@@ -519,6 +525,11 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 		List<SelectItem> invitedActionScopeItems = new ArrayList<SelectItem>();
 		if( getTicket().getScope().equals(TicketScope.PUBLIC) ||
 				getTicket().getScope().equals(TicketScope.CAS)) {
+			addActionScopeItem(invitedActionScopeItems, ActionScope.PUBLIC);
+		}
+		if(getTicket().getScope().equals(TicketScope.DEFAULT) && (
+				getDepartmentDefaultTicketScope().equals(TicketScope.PUBLIC) ||
+				getDepartmentDefaultTicketScope().equals(TicketScope.CAS))){
 			addActionScopeItem(invitedActionScopeItems, ActionScope.PUBLIC);
 		}
 		addActionScopeItem(invitedActionScopeItems, ActionScope.INVITED);
@@ -4521,5 +4532,11 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	public FaqTreeModel getMoveFaqTree() {
 		return moveFaqTree;
 	}
+	public String getDepartmentDefaultTicketScope() {
+		return departmentDefaultTicketScope;
+	}
 
+	public void setDepartmentDefaultTicketScope(String departmentDefaultTicketScope) {
+		this.departmentDefaultTicketScope = departmentDefaultTicketScope;
+	}
 }

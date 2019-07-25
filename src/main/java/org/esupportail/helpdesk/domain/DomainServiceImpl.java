@@ -6251,6 +6251,32 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		newAction.setScopeAfter(ticketScope);
 		addAction(newAction);
 		ticket.setScope(ticketScope);
+
+		//cas ou l'on passe d'un ticket avec visibilité publique ou intranet a une visibilité moindre, 
+		//on update les actions rattachées qui sont publiques ou intranet en bd en les passant a sujet seulement.  
+		if(newAction.getScopeBefore().equals(TicketScope.PUBLIC) || 
+			newAction.getScopeBefore().equals(TicketScope.CAS) ||
+			(newAction.getScopeBefore().equals(TicketScope.DEFAULT) && getDepartmentDefaultTicketScope().equals(TicketScope.PUBLIC)) ||
+			(newAction.getScopeBefore().equals(TicketScope.DEFAULT) && getDepartmentDefaultTicketScope().equals(TicketScope.CAS))) {
+			
+			if( !newAction.getScopeAfter().equals(TicketScope.PUBLIC) &&
+				!newAction.getScopeAfter().equals(TicketScope.CAS) &&
+				!newAction.getScopeAfter().equals(TicketScope.DEFAULT) ||
+				(
+					(newAction.getScopeAfter().equals(TicketScope.DEFAULT) && !getDepartmentDefaultTicketScope().equals(TicketScope.PUBLIC)) &&
+					(newAction.getScopeAfter().equals(TicketScope.DEFAULT) && !getDepartmentDefaultTicketScope().equals(TicketScope.CAS)))) {
+
+				List<Action> actions = getActions(ticket);
+				for (Action action : actions) {
+					if(action.getScope().equals(ActionScope.PUBLIC) || action.getScope().equals(ActionScope.DEFAULT) ){
+						action.setScope(ActionScope.INVITED);
+						updateAction(action);
+
+					}
+				}
+			}
+		}
+		
 		addActionToTicket(ticket, newAction);
 		if (alerts) {
 			monitoringSender.ticketMonitoringSendAlerts(author, newAction, false);

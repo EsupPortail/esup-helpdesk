@@ -64,7 +64,8 @@
                          <h:outputText value="#{msgs['DOMAIN.ACTION_SCOPE.COL.HEADER']}" />
                 </f:facet>
                 
-               <t:htmlTag  rendered="#{fie.fileInfo.scope == 'DEFAULT' && ticketController.ticket.scope == 'PUBLIC'}"  value="div">
+               <t:htmlTag  rendered="#{fie.fileInfo.scope == 'DEFAULT' && ticketController.ticket.scope == 'DEFAULT' 
+                                && ( ticketController.departmentDefaultTicketScope == 'PUBLIC' || ticketController.departmentDefaultTicketScope == 'CAS' ) }"  value="div">
                       <h:panelGroup  rendered="#{not fie.canChangeScope}">
                              <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
                       </h:panelGroup>
@@ -73,16 +74,17 @@
                       </h:panelGroup>
                 </t:htmlTag>
 
-                <t:htmlTag  rendered="#{fie.fileInfo.scope == 'DEFAULT' && ticketController.ticket.scope == 'CAS'}"  value="div">
+                <t:htmlTag  rendered="#{fie.fileInfo.scope == 'DEFAULT' 
+                && ( ticketController.ticket.scope == 'PUBLIC' || ticketController.ticket.scope == 'CAS' ) }"  value="div">
                       <h:panelGroup  rendered="#{not fie.canChangeScope}">
-                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.CAS']}"/>
+                             <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
                       </h:panelGroup>
                       <h:panelGroup styleClass="action-scope-edit default link" onclick="javascript:{showHideElement('viewTicketForm:fileData:'+#{variable}+':editScope');}" rendered="#{fie.canChangeScope}">
-                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.CAS']}"/>
+                            <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.PUBLIC']}"/>
                       </h:panelGroup>
                 </t:htmlTag>
-                
-                <t:htmlTag  rendered="#{fie.fileInfo.scope == 'DEFAULT' && ticketController.ticket.scope != 'PUBLIC' && ticketController.ticket.scope != 'CAS' }"  value="div">
+
+                <t:htmlTag  rendered="#{fie.fileInfo.scope == 'DEFAULT' && ticketController.departmentDefaultTicketScope != 'PUBLIC' && ticketController.departmentDefaultTicketScope != 'CAS' }"  value="div">
                       <h:panelGroup  rendered="#{not fie.canChangeScope}">
                              <h:outputText escape="false" value="#{msgs['DOMAIN.ACTION_SCOPE.INVITED']}"/>
                       </h:panelGroup>

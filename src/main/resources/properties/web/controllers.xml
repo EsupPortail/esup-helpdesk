@@ -330,6 +330,7 @@
 		<property name="userInfoProvider" ref="userInfoProvider" />
 		<property name="paginator" ref="controlPanelPaginator" />
 		<property name="userFormattingService" ref="userFormattingService" />
+		<property name="departmentDefaultTicketScope" value="${defaultTicketScope}" />
 	</bean>
 
 	<bean id="archivedTicketController"
