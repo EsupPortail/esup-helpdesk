@@ -4039,12 +4039,20 @@ public class TicketController extends TicketControllerStateHolder implements Lda
 	public void setMoveTargetCategory(final Category moveTargetCategory) {
 		this.moveTargetCategory = moveTargetCategory;
 		freeTicket = false;
+		categoryMoveMembers = "";
 		if (moveTargetCategory == null) {
 			return;
 		}
-		 for(CategoryMember categoryMember : getCategoryMembers(moveTargetCategory)){
-			 categoryMoveMembers += categoryMember.getUser().getDisplayName() + "\n";
-		 }		
+		if(moveTargetCategory.getInheritMembers() == true && moveTargetCategory.getParent() != null) {
+			List<DepartmentManager> departmentManagers = getDomainService().getDepartmentManagers(moveTargetCategory.getDepartment());
+			for (DepartmentManager departmentManager : departmentManagers) {
+				categoryMoveMembers += departmentManager.getUser().getDisplayName() + "\n";
+			}
+		} else {
+			for(CategoryMember categoryMember : getCategoryMembers(moveTargetCategory)){
+				categoryMoveMembers += categoryMember.getUser().getDisplayName() + "\n";
+			}
+		}
 		if (getTicket().getManager() == null) {
 			return;
 		}
