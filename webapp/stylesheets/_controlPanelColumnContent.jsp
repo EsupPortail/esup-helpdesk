@@ -24,7 +24,7 @@
 	<h:outputText 
 		styleClass="#{! cpe.ticket.opened ? 'ticket-closed' : ''} #{cpe.ticket.opened && !cpe.ticket.postponed ? priorityStyleClassProvider[cpe.ticket.effectivePriorityLevel] : ''}"
 		style="font-weight: #{cpe.viewed ? 'normal' : 'bold'};" title="#{cpe.ticket.label}"
-		rendered="#{controlPanelController.columnsOrderer[columnIndex] == 'LABEL' && cpe.ticket.sizeLabel > (controlPanelController.maxSizeLabel +1)}"
+		rendered="#{controlPanelController.columnsOrderer[columnIndex] == 'LABEL' && cpe.ticket.sizeLabel >= (controlPanelController.maxSizeLabel)}"
 		value="#{controlPanelSubjectTruncator[cpe.ticket.label]}" />
 	<h:outputText 
 		styleClass="#{! cpe.ticket.opened ? 'ticket-closed' : ''} #{cpe.ticket.opened && !cpe.ticket.postponed ? priorityStyleClassProvider[cpe.ticket.effectivePriorityLevel] : ''}"
