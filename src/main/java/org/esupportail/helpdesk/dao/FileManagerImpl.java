@@ -343,7 +343,7 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	@Override
 	public void deleteArchivedFileInfoContent(final ArchivedFileInfo archivedFileInfo) {
 		checkPath(false, archivedFileInfo);
-		deleteContent(getFilename(archivedFileInfo), archivedFileInfo.getId());
+		deleteContent(getFilename(archivedFileInfo), archivedFileInfo.getFileInfoId());
 	}
 
 	/**
@@ -362,7 +362,7 @@ public class FileManagerImpl implements FileManager, InitializingBean {
 	public byte[] readArchivedFileInfoContent(final ArchivedFileInfo archivedFileInfo) {
 		if (archivedFileInfo.getContent() == null) {
 			checkPath(false, archivedFileInfo);
-			byte[] content = readContent(getFilename(archivedFileInfo), archivedFileInfo.getId());
+			byte[] content = readContent(getFilename(archivedFileInfo), archivedFileInfo.getFileInfoId());
 			archivedFileInfo.setContent(content);
 		}
 		return archivedFileInfo.getContent();
