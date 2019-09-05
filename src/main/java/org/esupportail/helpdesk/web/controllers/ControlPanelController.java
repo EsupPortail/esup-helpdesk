@@ -202,8 +202,9 @@ public class ControlPanelController extends AbstractContextAwareController {
 				}
 			}
 
-			if((getCurrentUser().getControlPanelManagerManagerFilter() == null) && 
-					(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
+			if(getCurrentUser().getControlPanelManagerManagerFilter() == null
+			 && getCurrentUser().getControlPanelManagerInvolvementFilter() != null
+			 && (getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) 
 					|| 
 					getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED))
 				){
