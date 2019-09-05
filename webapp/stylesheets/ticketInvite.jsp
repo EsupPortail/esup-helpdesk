@@ -191,10 +191,8 @@ function addInvitation(select) {
 	               	<t:htmlTag id="history" styleClass="tab-link current" value="li">
 	                   	<h:outputText value="#{msgs['TICKET_ACTION.TAB.HISTORY.TEXT']} " />
 	               	</t:htmlTag>
-	               	<t:htmlTag>
-	            		<h:panelGroup id="responseItems" styleClass="tab-link current" value="li">
-	                		<h:outputText value="#{msgs['TICKET_ACTION.TAB.RESPONSES.TEXT']} " />
-	            		</h:panelGroup>
+	               	<t:htmlTag id="responseItems" styleClass="tab-link current" value="li">
+                		<h:outputText value="#{msgs['TICKET_ACTION.TAB.RESPONSES.TEXT']} " />
 	   	      		</t:htmlTag> 	                  
    	          	</t:htmlTag> 	                  
 	        </t:htmlTag>                            
