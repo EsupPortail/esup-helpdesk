@@ -33,6 +33,7 @@ import org.esupportail.commons.services.logging.LoggerImpl;
 import org.esupportail.commons.utils.Assert;
 import org.esupportail.commons.utils.strings.StringUtils;
 import org.esupportail.helpdesk.domain.Search;
+import org.esupportail.helpdesk.domain.TicketStatus;
 import org.esupportail.helpdesk.domain.beans.Action;
 import org.esupportail.helpdesk.domain.beans.ArchivedAction;
 import org.esupportail.helpdesk.domain.beans.ArchivedTicket;
@@ -226,6 +227,7 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 					"user", userId,
 					Field.Store.NO, Field.Index.TOKENIZED));
 		}
+		
 		return doc;
 	}
 
@@ -292,8 +294,9 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 				content += action.getMessage() + "\n";
 			}
 		}
+
 		return getDocument(
-				TICKET_INDEX_DOCTYPE, getIndexIdProvider().getIndexId(ticket),
+				ticket.getStatus().equals(TicketStatus.CLOSED) ? CLOSED_TICKET_INDEX_DOCTYPE : OPENED_TICKET_INDEX_DOCTYPE, getIndexIdProvider().getIndexId(ticket),
 				content, managerId, ownerId, userId, ticket.getLastActionDate());
 	}
 
@@ -666,15 +669,12 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 			return null;
 		}
 		String queryString;
-		if (Search.TYPE_FILTER_ACTIVE_TICKET_AND_FAQ.equals(searchType)) {
-			queryString = "(doc-type:" + TICKET_INDEX_DOCTYPE + " OR doc-type:" + FAQ_INDEX_DOCTYPE + ")";
-		} else if (Search.TYPE_FILTER_ACTIVE_TICKET.equals(searchType)) {
-			queryString = "doc-type:" + TICKET_INDEX_DOCTYPE;
+		if (Search.TYPE_FILTER_ACTIVE_TICKET_OPENED.equals(searchType)) {
+			queryString = "doc-type:" + OPENED_TICKET_INDEX_DOCTYPE;
+		} else if (Search.TYPE_FILTER_ACTIVE_TICKET_CLOSED.equals(searchType)) {
+			queryString = "doc-type:" + CLOSED_TICKET_INDEX_DOCTYPE;
 		} else if (Search.TYPE_FILTER_ARCHIVED_TICKET.equals(searchType)) {
 			queryString = "doc-type:" + ARCHIVED_TICKET_INDEX_DOCTYPE;
-		} else if (Search.TYPE_FILTER_TICKET.equals(searchType)) {
-			queryString = "(doc-type:" + TICKET_INDEX_DOCTYPE
-			+ " OR doc-type:" + ARCHIVED_TICKET_INDEX_DOCTYPE + ")";
 		} else if (Search.TYPE_FILTER_FAQ.equals(searchType)) {
 			queryString = "doc-type:" + FAQ_INDEX_DOCTYPE;
 		} else {
@@ -1080,7 +1080,7 @@ public class LuceneIndexerImpl extends AbstractIndexer {
 	 */
 @Override
 	public int getTicketsNumber() {
-		return getDocTypeHitsNumber(TICKET_INDEX_DOCTYPE);
+		return getDocTypeHitsNumber(OPENED_TICKET_INDEX_DOCTYPE) + getDocTypeHitsNumber(CLOSED_TICKET_INDEX_DOCTYPE);
 	}
 
 	/**

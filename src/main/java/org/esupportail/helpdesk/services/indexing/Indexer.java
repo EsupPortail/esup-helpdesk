@@ -19,7 +19,12 @@ public interface Indexer extends Serializable {
 	/**
 	 * The doctype used when indexing tickets.
 	 */
-	String TICKET_INDEX_DOCTYPE = "ticket";
+	String OPENED_TICKET_INDEX_DOCTYPE = "openedticket";
+
+	/**
+	 * The doctype used when indexing tickets.
+	 */
+	String CLOSED_TICKET_INDEX_DOCTYPE = "closedticket";
 
 	/**
 	 * The doctype used when indexing archived tickets.

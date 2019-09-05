@@ -225,11 +225,11 @@ public class SearchController extends AbstractContextAwareController {
 				Search.TYPE_FILTER_ALL,
 				getString("SEARCH.TYPE_FILTER.ANY")));
 		searchTypeItems.add(new SelectItem(
-				Search.TYPE_FILTER_ACTIVE_TICKET_AND_FAQ,
-				getString("SEARCH.TYPE_FILTER.ACTIVE_TICKET_AND_FAQ")));
+				Search.TYPE_FILTER_ACTIVE_TICKET_OPENED,
+				getString("SEARCH.TYPE_FILTER.ACTIVE_TICKET_OPENED")));
 		searchTypeItems.add(new SelectItem(
-				Search.TYPE_FILTER_ACTIVE_TICKET,
-				getString("SEARCH.TYPE_FILTER.ACTIVE_TICKET")));
+				Search.TYPE_FILTER_ACTIVE_TICKET_CLOSED,
+				getString("SEARCH.TYPE_FILTER.ACTIVE_TICKET_CLOSED")));
 		searchTypeItems.add(new SelectItem(
 				Search.TYPE_FILTER_ARCHIVED_TICKET,
 				getString("SEARCH.TYPE_FILTER.ARCHIVED_TICKET")));
