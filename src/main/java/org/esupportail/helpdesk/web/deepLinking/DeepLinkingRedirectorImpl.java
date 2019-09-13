@@ -824,6 +824,9 @@ public class DeepLinkingRedirectorImpl extends AbstractDeepLinkingRedirector imp
 			if (CHANGE_PASSWORD_PAGE_VALUE.equals(params.get(PAGE_PARAM))) {
 				return redirectChangePassword(params);
 			}
+			if (user == null) {
+				return null;
+			}
 			if (TICKET_VIEW_PAGE_VALUE.equals(params.get(PAGE_PARAM))
 					|| TICKET_TAKE_PAGE_VALUE.equals(params.get(PAGE_PARAM))
 					|| TICKET_POSTPONE_PAGE_VALUE.equals(params.get(PAGE_PARAM))
