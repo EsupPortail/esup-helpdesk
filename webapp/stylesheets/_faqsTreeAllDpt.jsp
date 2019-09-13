@@ -2,7 +2,7 @@
 
 <t:htmlTag value="div" id="categoriesListAllDpt" styleClass="form-block treeview basic-style" >
    <t:htmlTag value="div" styleClass="form-item">
-        <t:tree2 id="tree1" value="#{faqsController.viewTreeAllDpt}"
+        <t:tree2 id="tree1" value="#{faqsController.viewTreeAllDpt}" rendered="#{faqsController.viewTreeAllDpt != null}"
             var="node" varNodeToggler="t" clientSideToggle="true"
             showRootNode="false" >
             <f:facet name="root">
