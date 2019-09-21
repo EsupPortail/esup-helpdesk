@@ -431,18 +431,21 @@ public class ControlPanelController extends AbstractContextAwareController {
 		Department department = getCurrentUser().getControlPanelManagerDepartmentFilter();
 		if (department != null) {
 			//tickets libres : pas de choix sur le gestionnaire
-			if(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_FREE)) {
-				   managerInvolvementItems.add(
-						new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
-				   return managerInvolvementItems;
+			if(getCurrentUser().getControlPanelManagerInvolvementFilter() != null){
+				if(getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_FREE)) {
+					   managerInvolvementItems.add(
+							new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
+					   return managerInvolvementItems;
+				}
+			
+				//pas de "tous managers" pour les ...,invité
+				if(!getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) && 
+				   !getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)){
+					   managerInvolvementItems.add(
+							new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
+				   
+				} 
 			}
-			//pas de "tous managers" pour les ...,invité
-			if(!getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) && 
-			   !getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)){
-				   managerInvolvementItems.add(
-						new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
-			   
-			} 
 			for (DepartmentManager manager : getDomainService().getDepartmentManagers(department)) {
 				listeDepartmentManagerTriee.add(manager);
 				
@@ -455,12 +458,14 @@ public class ControlPanelController extends AbstractContextAwareController {
 			//cas ou le service = Tous : on alimente la liste des gestionnaires de tous les services ou l'on est gestionnaire 
 			List<DepartmentManager> departments = getDomainService().getDepartmentManagers(getCurrentUser());
 			if (departments != null) {
-				if(!getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) && 
-						   !getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)){
-							   managerInvolvementItems.add(
-									new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
-						   
-				} 
+				if(getCurrentUser().getControlPanelManagerInvolvementFilter() != null){
+					if(!getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_INVITED_OR_FREE) && 
+							   !getCurrentUser().getControlPanelManagerInvolvementFilter().equals(ControlPanel.MANAGER_INVOLVEMENT_FILTER_MANAGED_OR_INVITED)){
+								   managerInvolvementItems.add(
+										new SelectItem("", getString("CONTROL_PANEL.MANAGER_FILTER.ANY")));
+							   
+					} 
+				}
 				for (DepartmentManager depaManager : departments) {
 					for (DepartmentManager manager : getDomainService().getDepartmentManagers(depaManager.getDepartment())) {
 						listeDepartmentManagerTriee.add(manager);
