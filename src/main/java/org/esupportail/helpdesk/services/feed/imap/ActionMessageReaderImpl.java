@@ -66,6 +66,7 @@ public class ActionMessageReaderImpl extends TicketMessageReaderImpl implements 
 	protected void getTextPart(
 			final Part part, 
 			final Ticket ticket,
+			final User sender,
 			@SuppressWarnings("unused")
 			final String partIndex,
 			final ErrorHolder errorHolder) {
@@ -102,6 +103,7 @@ public class ActionMessageReaderImpl extends TicketMessageReaderImpl implements 
 	protected void getHtmlPart(
 			final Part part, 
 			final Ticket ticket,
+			final User sender,
 			@SuppressWarnings("unused")
 			final String partIndex,
 			final ErrorHolder errorHolder) {
@@ -149,7 +151,7 @@ public class ActionMessageReaderImpl extends TicketMessageReaderImpl implements 
 			errorHolder.addInfo(errorHolder.getErrorNumber() + " error(s) found, skiping the mail");
 		} else {
             contentPartSet = false;
-            getMessageParts(message, ticket, errorHolder);
+            getMessageParts(message, ticket, sender, errorHolder);
 		}
 		return sender;
 	}

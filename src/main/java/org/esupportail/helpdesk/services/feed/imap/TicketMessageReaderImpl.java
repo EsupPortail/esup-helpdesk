@@ -281,6 +281,35 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	}
 
 	/**
+	 * @return the Disposition of a message part.
+	 * @param part
+	 * @param errorHolder
+	 */
+	protected String extractContentDisposition(
+			final Part part,
+			final ErrorHolder errorHolder) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("extractContentDisposition(" + part + ")");
+		}
+		String contentDisposition;
+		try {
+			contentDisposition = part.getDisposition();
+		} catch (MessagingException e) {
+			errorHolder.addError("could not get part Disposition: " + e.getMessage());
+			if (logger.isDebugEnabled()) {
+				logger.debug(e);
+			}
+			return null;
+		}
+		if (contentDisposition == null) {
+			errorHolder.addInfo("no Disposition found.");
+			return null;
+		}
+		errorHolder.addInfo("Content-Disposition: " + contentDisposition);
+		return contentDisposition;
+	}
+
+	/**
 	 * @return the content-type of a message part.
 	 * @param message
 	 * @param errorHolder
@@ -542,6 +571,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	protected void getTextPart(
 			final Part part,
 			final Ticket ticket,
+			final User sender,
 			final String partIndex,
 			final ErrorHolder errorHolder) {
 		errorHolder.addInfo("analysing text/plain part " + part + "...");
@@ -557,14 +587,18 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 		getDomainService().addFileInfo(new FileInfo(
 				filename, contentByteArray, ticket, null, ActionScope.DEFAULT));
 		errorHolder.addInfo("added attached file " + filename);
-		content = content.replaceAll("\"", "&quot;");
-		content = content.replaceAll("<", "&lt;");
-		content = content.replaceAll(">", "&gt;");
-		content = content.replaceAll("[\\r\\n]+", "<br />");
-		content = i18nService.getString("TICKET_ACTION.EMAIL_FEED.EXPAND_PART", filename) + content;
-		domainService.giveInformation(
-				null, ticket, content,
-				ActionScope.DEFAULT, false);
+		String contentDisposition = extractContentDisposition(part, errorHolder);
+		if (contentDisposition == null || !contentDisposition.equalsIgnoreCase(Part.ATTACHMENT)) {
+			// Si ce n'est pas une pièce jointe, on l'affiche dans l'interface
+			content = content.replaceAll("\"", "&quot;");
+			content = content.replaceAll("<", "&lt;");
+			content = content.replaceAll(">", "&gt;");
+			content = content.replaceAll("[\\r\\n]+", "<br />");
+			content = i18nService.getString("TICKET_ACTION.EMAIL_FEED.EXPAND_PART") + content;
+			domainService.giveInformation(
+					sender, ticket, content,
+					ActionScope.DEFAULT, false);
+		}
 	}
 
 	/**
@@ -577,6 +611,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	protected void getHtmlPart(
 			final Part part,
 			final Ticket ticket,
+			final User sender,
 			final String partIndex,
 			final ErrorHolder errorHolder) {
 		errorHolder.addInfo("analysing text/html part " + part + "...");
@@ -592,20 +627,24 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 		getDomainService().addFileInfo(new FileInfo(
 				filename, contentByteArray, ticket, null, ActionScope.DEFAULT));
 		errorHolder.addInfo("added attached file " + filename);
-		MessageHtmlCleaner cleaner = new MessageHtmlCleaner(content);
-		String output;
-		try {
-			cleaner.clean();
-			output = i18nService.getString(
-					"TICKET_ACTION.EMAIL_FEED.EXPAND_PART", filename)
-					+ cleaner.getXmlAsString();
-		} catch (IOException e) {
-			errorHolder.addInfo("could not clean the HTML: " + e.getMessage());
-			return;
+                String contentDisposition = extractContentDisposition(part, errorHolder);
+                if (contentDisposition == null || !contentDisposition.equalsIgnoreCase(Part.ATTACHMENT)) {
+                        // Si ce n'est pas une pièce jointe, on l'affiche dans l'interface
+			MessageHtmlCleaner cleaner = new MessageHtmlCleaner(content);
+			String output;
+			try {
+				cleaner.clean();
+				output = i18nService.getString(
+						"TICKET_ACTION.EMAIL_FEED.EXPAND_PART")
+						+ cleaner.getXmlAsString();
+			} catch (IOException e) {
+				errorHolder.addInfo("could not clean the HTML: " + e.getMessage());
+				return;
+			}
+			domainService.giveInformation(
+					sender, ticket, output,
+					ActionScope.DEFAULT, false);
 		}
-		domainService.giveInformation(
-				null, ticket, output,
-				ActionScope.DEFAULT, false);
 	}
 
 	/**
@@ -688,6 +727,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	protected void getAlternativeParts(
 			final MimeMultipart multipart,
 			final Ticket ticket,
+			final User sender,
 			final String partIndex,
 			final ErrorHolder errorHolder) {
 		errorHolder.addInfo("analysing multipart/alternative " + multipart + "...");
@@ -728,10 +768,10 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 		}
 		if (htmlPart != null) {
 			errorHolder.addInfo("adding the text/html part...");
-			getParts(htmlPart, ticket, htmlPartIndex, errorHolder);
+			getParts(htmlPart, ticket, sender, htmlPartIndex, errorHolder);
 		} else if (textPart != null) {
 			errorHolder.addInfo("adding the text/plain part...");
-			getParts(textPart, ticket, textPartIndex, errorHolder);
+			getParts(textPart, ticket, sender, textPartIndex, errorHolder);
 		}
 	}
 
@@ -745,6 +785,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	protected void getMixedParts(
 			final MimeMultipart multipart,
 			final Ticket ticket,
+			final User sender,
 			final String partIndex,
 			final ErrorHolder errorHolder) {
 		errorHolder.addInfo("analysing multipart/mixed " + multipart + "...");
@@ -758,7 +799,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 			}
 			if (bodyPart != null) {
 				errorHolder.addInfo("adding part#" + i + "...");
-				getParts(bodyPart, ticket, getPartIndex(partIndex, i), errorHolder);
+				getParts(bodyPart, ticket, sender, getPartIndex(partIndex, i), errorHolder);
 			}
 		}
 	}
@@ -773,6 +814,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	protected void getSignedParts(
 			final MimeMultipart multipart,
 			final Ticket ticket,
+			final User sender,
 			final String partIndex,
 			final ErrorHolder errorHolder) {
 		errorHolder.addInfo("analysing multipart/signed " + multipart + "...");
@@ -786,7 +828,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 			}
 			if (bodyPart != null) {
 				errorHolder.addInfo("adding part#" + i + "...");
-				getParts(bodyPart, ticket, getPartIndex(partIndex, i), errorHolder);
+				getParts(bodyPart, ticket, sender, getPartIndex(partIndex, i), errorHolder);
 			}
 		}
 	}
@@ -801,6 +843,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	protected void getMessageParts(
 			final Part part,
 			final Ticket ticket,
+			final User sender,
 			final String partIndex,
 			final ErrorHolder errorHolder) {
 		errorHolder.addInfo("analysing message/xxx " + part + "...");
@@ -831,7 +874,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 				filename, contentByteArray, ticket, null, ActionScope.DEFAULT));
 		errorHolder.addInfo("added attached file " + filename);
 		if (part instanceof MimeMultipart) {
-			getMixedParts((MimeMultipart) part, ticket, partIndex, errorHolder);
+			getMixedParts((MimeMultipart) part, ticket, sender, partIndex, errorHolder);
 		}
 	}
 
@@ -845,6 +888,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	protected void getParts(
 			final Part part,
 			final Ticket ticket,
+			final User sender,
 			final String partIndex,
 			final ErrorHolder errorHolder) {
 		errorHolder.addInfo("analysing multipart " + part + "...");
@@ -857,34 +901,34 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 			if (multipart == null) {
 				return;
 			}
-			getAlternativeParts(multipart, ticket, partIndex, errorHolder);
+			getAlternativeParts(multipart, ticket, sender, partIndex, errorHolder);
 		} else if (contentType.toLowerCase().startsWith("multipart/mixed")
 				|| contentType.toLowerCase().startsWith("multipart/related")) {
 			MimeMultipart multipart = getPartContentAsMultipart(part, errorHolder);
 			if (multipart == null) {
 				return;
 			}
-			getMixedParts(multipart, ticket, partIndex, errorHolder);
+			getMixedParts(multipart, ticket, sender, partIndex, errorHolder);
 		} else if (contentType.toLowerCase().startsWith("multipart/signed")) {
 			MimeMultipart multipart = getPartContentAsMultipart(part, errorHolder);
 			if (multipart == null) {
 				return;
 			}
-			getSignedParts(multipart, ticket, partIndex, errorHolder);
+			getSignedParts(multipart, ticket, sender, partIndex, errorHolder);
 		} else if (contentType.toLowerCase().startsWith("multipart/appledouble")) {
 			MimeMultipart multipart = getPartContentAsMultipart(part, errorHolder);
 			if (multipart == null) {
 				return;
 			}
-			getMixedParts(multipart, ticket, partIndex, errorHolder);
+			getMixedParts(multipart, ticket, sender, partIndex, errorHolder);
 		} else if (contentType.toLowerCase().startsWith("multipart")) {
 			errorHolder.addError("unknown multipart content-type: " + contentType);
 		} else if (contentType.toLowerCase().startsWith("message")) {
-			getMessageParts(part, ticket, partIndex, errorHolder);
+			getMessageParts(part, ticket, sender, partIndex, errorHolder);
 		} else if (contentType.toLowerCase().startsWith("text/plain")) {
-			getTextPart(part, ticket, partIndex, errorHolder);
+			getTextPart(part, ticket, sender, partIndex, errorHolder);
 		} else if (contentType.toLowerCase().startsWith("text/html")) {
-			getHtmlPart(part, ticket, partIndex, errorHolder);
+			getHtmlPart(part, ticket, sender, partIndex, errorHolder);
 		} else {
 			getMiscPart(part, ticket, partIndex, errorHolder);
 		}
@@ -900,8 +944,9 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 	protected void getMessageParts(
 			final Message message,
 			final Ticket ticket,
+			final User sender,
 			final ErrorHolder errorHolder) {
-		getParts(message, ticket, "", errorHolder);
+		getParts(message, ticket, sender, "", errorHolder);
 	}
 
 	/**
@@ -944,7 +989,7 @@ public class TicketMessageReaderImpl implements InitializingBean, TicketMessageR
 						sender, address, creationDepartment, targetCategory,
 						subject);
 				errorHolder.addInfo("added ticket #" + ticket.getId());
-				getMessageParts(message, ticket, errorHolder);
+				getMessageParts(message, ticket, sender, errorHolder);
 				domainService.addFileInfo(new FileInfo(
 						ticket.getId() + ".elm", data, ticket, sender, ActionScope.DEFAULT));
 				if (spam) {

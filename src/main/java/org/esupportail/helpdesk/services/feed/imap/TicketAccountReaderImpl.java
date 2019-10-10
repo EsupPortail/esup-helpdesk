@@ -9,6 +9,7 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.AuthenticationFailedException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -150,27 +151,23 @@ public final class TicketAccountReaderImpl extends AbstractImapAccountReader {
 				errorHolder.addInfo("Password: " + "xxxxxxxxx");
 				Integer timeoutVal = new Integer(getTimeout());
 				Properties props = System.getProperties();
-				props.put("mail.imap.class", "com.sun.mail.imap.IMAPStore");
-				props.put("mail.imap.connectiontimeout", timeoutVal);
-				props.put("mail.imap.timeout", timeoutVal);
+				props.put("mail.imaps.connectiontimeout", timeoutVal);
+				props.put("mail.imaps.timeout", timeoutVal);
 				Session session = Session.getInstance(props, null);
-				URLName urln = new URLName(
-						"imap://" + getAccount() + ":" 
-						+ getPassword() + "@" + getServer());
-				store = session.getStore(urln);
+				store = session.getStore("imaps");
 			} catch (NoSuchProviderException e) {
 				errorHolder.addError(
-						"invalid IMAP account [imap://" + getAccount()
+						"invalid IMAPS account [imaps://" + getAccount()
 						+ ":xxxxxxxx@" + getServer() + "]: " + e.getMessage());
 			}
 		}
 		if (!errorHolder.hasErrors()) {
 			try {
-				errorHolder.addInfo("connecting to the server...");
-				store.connect();
+				errorHolder.addInfo("connecting to the imaps server...");
+				store.connect(getServer(),getAccount(),getPassword());
 			} catch (MessagingException e) {
 				errorHolder.addError(
-						"could not connect to [imap://" + getAccount() 
+						"could not connect to [imaps://" + getAccount() 
 						+ ":xxxxxxxx@" + getServer() + "]: " + e.getMessage());
 			}
 		}
@@ -274,11 +271,11 @@ public final class TicketAccountReaderImpl extends AbstractImapAccountReader {
 		}
 		if (errorHolder.hasErrors()) {
 			errorHolder.addInfo(
-					errorHolder.getErrorNumber() + " error(s) found for account [imap://" 
+					errorHolder.getErrorNumber() + " error(s) found for account [imaps://" 
 					+ getAccount() + ":xxxxxxxx@" + getServer() + "]");
 		} else {
 			errorHolder.addInfo(
-					"no error found for account [imap://" 
+					"no error found for account [imaps://" 
 					+ getAccount() + ":xxxxxxxx@" + getServer() + "]");
 		}
 		if (ticket == null) {
