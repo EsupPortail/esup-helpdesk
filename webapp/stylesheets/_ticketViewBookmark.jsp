@@ -1,5 +1,5 @@
 <%@include file="_include.jsp"%>
-
+<t:htmlTag styleClass="action-item separator" value="div" rendered="#{ticketController.bookmark != null}"></t:htmlTag>
 <t:htmlTag styleClass="action-item" value="div"  rendered="#{ticketController.bookmark != null}">
 		<h:panelGroup onclick="simulateLinkClick('viewTicketForm:deleteBookmarkButton');" >
 			<h:outputText value="#{msgs['TICKET_VIEW.BUTTON.DELETE_BOOKMARK']} " />

@@ -1,7 +1,5 @@
 <%@include file="_include.jsp"%>
 
-
-
 		<t:htmlTag styleClass="action-item" value="div" rendered="#{ticketController.userCanChangeLabel}">
 			<h:panelGroup  onclick="showHideElement('viewTicketForm:editTicketLabel');" >
 				<h:outputText value="#{msgs['TICKET_VIEW.PROPERTIES.LABEL']} " />
@@ -107,7 +105,93 @@
             </h:panelGroup>
 		    <e:commandButton id="printButton" style="display: none" value="#{msgs['_.BUTTON.BACK']}" action="#{ticketController.print}" />
         </t:htmlTag>
+        
+        <t:htmlTag styleClass="action-item separator" value="div" rendered="#{ticketController.userCanMove}"></t:htmlTag>
+        <t:htmlTag styleClass="action-item" value="div"  rendered="#{ticketController.userCanMove}">
+                 <h:panelGroup
+                     onclick="buttonClick('viewTicketForm:moveButton');"  >
+                     <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.MOVE']}"/>
+                 </h:panelGroup>
+                    <e:commandButton id="moveButton" style="display: none"
+                        value="#{msgs['TICKET_VIEW.BUTTON.MOVE']}"
+                        action="#{ticketController.move}"
+                        rendered="#{ticketController.userCanMove}" />
+         </t:htmlTag>
+         <t:htmlTag styleClass="action-item" value="div"  rendered="#{ticketController.userCanMoveBack}">
+                 <h:panelGroup style="cursor: pointer"
+                     onclick="buttonClick('viewTicketForm:giveInformationMoveBackButton');"  >
+                     <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.MOVE.BACK']}"/>
+                 </h:panelGroup>
+                    <e:commandButton id="giveInformationMoveBackButton" style="display: none"
+                        value="#{msgs['TICKET_VIEW.BUTTON.MOVE']}"
+                        action="#{ticketController.giveInformationMoveBack}"
+                        rendered="#{ticketController.userCanMoveBack}" />
+        </t:htmlTag>
+                
+        <t:htmlTag styleClass="action-item separator" value="div" rendered="#{ticketController.userCanChangeOwner}"> </t:htmlTag>
+        <t:htmlTag styleClass="action-item" value="div" rendered="#{ticketController.userCanChangeOwner}">
+           <h:panelGroup
+               onclick="buttonClick('viewTicketForm:changeOwnerButton');"
+               rendered="#{ticketController.userCanChangeOwner}">
+               <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.CHANGE_OWNER']}"/>
+           </h:panelGroup>
+           <e:commandButton id="changeOwnerButton"
+               rendered="#{ticketController.userCanChangeOwner}"
+               value="#{msgs['TICKET_VIEW.BUTTON.CHANGE_OWNER']}"
+               action="#{ticketController.changeOwner}"
+               style="display:none" />
+        </t:htmlTag>
 
+        <t:htmlTag styleClass="action-item separator" value="div" rendered="#{ticketController.userCanChangeManager}"></t:htmlTag>
+        <t:htmlTag styleClass="action-item" value="div" rendered="#{ticketController.userCanChangeManager && ticketController.userCanTake}">
+            <h:panelGroup
+                onclick="buttonClick('viewTicketForm:takeButton');"  >
+                <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.TAKE']}"/>
+            </h:panelGroup>
+                <e:commandButton id="takeButton" style="display: none"
+                    value="#{msgs['TICKET_VIEW.BUTTON.TAKE']}"
+                    action="#{ticketController.take}" />
+        </t:htmlTag>
+
+        <t:htmlTag styleClass="action-item" value="div" rendered="#{ticketController.userCanChangeManager && ticketController.userCanTakeAndClose}">
+            <h:panelGroup
+                onclick="buttonClick('viewTicketForm:takeAndCloseButton');"  >
+                <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.TAKE_AND_CLOSE']}"/>
+            </h:panelGroup>
+                <e:commandButton id="takeAndCloseButton" style="display: none"
+                    value="#{msgs['TICKET_VIEW.BUTTON.TAKE_AND_CLOSE']}"
+                    action="#{ticketController.takeAndClose}"/>
+        </t:htmlTag>
+
+        <t:htmlTag styleClass="action-item" value="div" rendered="#{ticketController.userCanChangeManager && ticketController.userCanTakeAndRequestInformation}">
+            <h:panelGroup
+                onclick="buttonClick('viewTicketForm:takeAndRequestInformationButton');"  >
+                <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.TAKE_AND_REQUEST_INFORMATION']}"/>
+            </h:panelGroup>
+                <e:commandButton id="takeAndRequestInformationButton" style="display: none"
+                    value="#{msgs['TICKET_VIEW.BUTTON.TAKE_AND_REQUEST_INFORMATION']}"
+                    action="#{ticketController.takeAndRequestInformation}" />
+        </t:htmlTag>
+
+        <t:htmlTag styleClass="action-item" value="div" rendered="#{ticketController.userCanChangeManager && ticketController.userCanFree}">
+            <h:panelGroup
+                onclick="buttonClick('viewTicketForm:freeButton');"  >
+                <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.FREE']}"/>
+            </h:panelGroup>
+                <e:commandButton id="freeButton" style="display: none"
+                    value="#{msgs['TICKET_VIEW.BUTTON.FREE']}"
+                    action="#{ticketController.free}" />
+        </t:htmlTag>
+
+        <t:htmlTag styleClass="action-item" value="div" rendered="#{ticketController.userCanChangeManager && ticketController.userCanAssign}">
+            <h:panelGroup
+                onclick="buttonClick('viewTicketForm:assignButton');"  >
+                <h:outputText value="#{msgs['TICKET_VIEW.BUTTON.ASSIGN']}"/>
+            </h:panelGroup>
+                <e:commandButton id="assignButton" style="display: none"
+                    value="#{msgs['TICKET_VIEW.BUTTON.ASSIGN']}"
+                    action="#{ticketController.assign}" />
+        </t:htmlTag>
         <%@include file="_ticketViewBookmark.jsp"%>
 
 
