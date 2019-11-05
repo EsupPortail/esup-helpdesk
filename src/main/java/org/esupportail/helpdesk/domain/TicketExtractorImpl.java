@@ -379,30 +379,16 @@ public class TicketExtractorImpl extends AbstractTicketExtractor {
 	 * @return true if the user can see the ticket.
 	 */
 	protected String getManagerVisiblilityTicketCondition(User user,User selectedManager) {
-		//si gestionnaire = "-", on exclu tout les tickets privés sauf ceux de l'utilisateur
-		List <Long> dptIdnotManaged= new ArrayList<Long>();
-		List <Long> dptIdManaged= new ArrayList<Long>();
+		List <Long> dptId= new ArrayList<Long>();
 		
-		//on constitue la liste des départements qui ne sont pas gérés par l'utilisateur
 		List<Department> selectedManagedDepartments = getDomainService().getManagedDepartments(selectedManager);
-		List<Department> userManagedDepartments = getDomainService().getManagedDepartments(user);
-		selectedManagedDepartments.removeAll(userManagedDepartments);
 		for (Department department : selectedManagedDepartments) {
-			dptIdnotManaged.add(department.getId());
-		}
-		for (Department department : userManagedDepartments) {
-			dptIdManaged.add(department.getId());
+			dptId.add(department.getId());
 		}
 		String condition = null;
-		if(!dptIdnotManaged.isEmpty()) {
-			condition = HqlUtils.or(
-					HqlUtils.and(
-						HqlUtils.not(
-							HqlUtils.equals(
-									"ticket.effectiveScope",
-									HqlUtils.quote(TicketScope.PRIVATE))),
-							HqlUtils.longIn("ticket.department.id", dptIdnotManaged)),
-					HqlUtils.longIn("ticket.department.id", dptIdManaged));
+		if(!dptId.isEmpty()) {
+			condition = 
+					HqlUtils.longIn("ticket.department.id", dptId);
 		} else {
 			condition = HqlUtils.alwaysTrue();
 		}
