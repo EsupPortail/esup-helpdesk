@@ -5703,8 +5703,10 @@ public class DomainServiceImpl implements DomainService, InitializingBean {
 		//cas d'un gestionnaire d'un autre service mais qui a accès via la visibilité interservice
 		if(department.getVisibilityInterSrv() != null && department.getVisibilityInterSrv() != "") {
 			for (DepartmentManager departmentManager : getDepartmentManagers(user)) {
-				if(departmentManager.getDepartment().getVisibilityInterSrv().equals(department.getVisibilityInterSrv())) {
-					return true;
+				if(departmentManager.getDepartment().getVisibilityInterSrv() != null) {
+					if(department.getVisibilityInterSrv().equals(departmentManager.getDepartment().getVisibilityInterSrv())) {
+						return true;
+					}
 				}
 			}
 		}
