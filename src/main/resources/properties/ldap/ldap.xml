@@ -115,13 +115,13 @@
 		<!-- To use multiple ldap comment the following line and uncomment next block
 				 Parameters are avalaible in properties/config.properties -->
 		<property name="url" value="${ldap.url}"/>
-      <!--property name="urls">
+      <property name="urls">
          <description>The LDAP URL of the directory.</description>
          <list>
             <value>${ldap.url1}</value>
             <value>${ldap.url2}</value>
          </list>
-      </property-->
+      </property>
 
 		<property name="userName" value="${ldap.userName}">
 			<description>
