@@ -12,7 +12,7 @@
 
 	<context-param>
 		<param-name>webAppRootKey</param-name>
-		<param-value>esup-helpdesk</param-value>
+		<param-value>${urlGeneration.uportalFunctionnalName}</param-value>
 	</context-param>
 
 <!--
