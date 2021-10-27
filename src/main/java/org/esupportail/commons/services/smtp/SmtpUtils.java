@@ -181,6 +181,7 @@ public class SmtpUtils {
 				}
 				// Fill in header
 				message.setFrom(from);
+				message.setSentDate(new java.util.Date());
 				message.addRecipient(Message.RecipientType.TO, to);
 				message.addHeader("Subject", encodedSubject);
 				// Sign the message
